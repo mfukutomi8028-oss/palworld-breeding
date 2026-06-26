@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v5";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v8";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -86,6 +86,7 @@ const EMBEDDED_PALS = [
   { no: "080", name: "シルキーヌ", en: "Sibelyx", elements: ["氷属性"], work: ["製薬", "冷却", "牧場"], iconKey: "SilkWorm" },
   { no: "082", name: "アズレーン", en: "Azurobe", elements: ["水属性", "竜属性"], work: ["水やり"], iconKey: "BlueDragon" },
   { no: "083", name: "ツンドラー", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
+  { no: "083", name: "フブキジカ", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
   { no: "085", name: "ペコドン", en: "Relaxaurus", elements: ["竜属性", "水属性"], work: ["水やり", "運搬"], iconKey: "LazyDragon" },
   { no: "085B", name: "パリピドン", en: "Relaxaurus Lux", elements: ["竜属性", "雷属性"], work: ["発電", "運搬"], iconKey: "LazyDragonElectric" },
   { no: "086", name: "ラブラドン", en: "Broncherry", elements: ["草属性"], work: ["種まき"], iconKey: "SakuraSaurus" },
@@ -119,6 +120,8 @@ const LEGACY_ENGLISH_TO_JP = {
 };
 
 const ROOM_ID = getRoomId();
+const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
+const UNKNOWN_PAL_LABEL = "未発見";
 const state = {
   records: [],
   selectedId: null,
@@ -606,7 +609,7 @@ function updatePickerPreview(id) {
     picker.preview.innerHTML = `<span class="pal-icon small filter-any"><span class="pal-fallback">全</span></span>`;
     return;
   }
-  picker.preview.innerHTML = palIcon(name, "small");
+  picker.preview.innerHTML = palIcon(name, "small", { reveal: isPalDiscovered(name) });
 }
 
 function refreshPickerPreviews() {
@@ -636,7 +639,7 @@ function renderPickerSuggestions(id) {
     picker.list.innerHTML = clearButton + candidates.map(name => {
       const meta = getPalMeta(name) || {};
       const sub = [meta.no, meta.elements?.join("・")].filter(Boolean).join(" / ");
-      return `<button type="button" class="pal-suggestion" data-name="${escapeHtml(name)}">${palIcon(name, "small")}<span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(sub || meta.en || "")}</small></span></button>`;
+      return `<button type="button" class="pal-suggestion" data-name="${escapeHtml(name)}">${palIcon(name, "small", { reveal: isPalDiscovered(name) })}<span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(sub || meta.en || "")}</small></span></button>`;
     }).join("");
   }
   picker.list.querySelectorAll("button[data-name]").forEach(button => {
@@ -721,14 +724,15 @@ function persistLocal() { localStorage.setItem(localKey(), JSON.stringify(state.
 
 function normalizeRecord(record) {
   if (!record) return null;
+  const resultPal = normalizePalName(record.resultPal);
   return {
     id: record.id || crypto.randomUUID(),
     parentA: normalizePalName(record.parentA),
     parentB: normalizePalName(record.parentB),
-    resultPal: normalizePalName(record.resultPal),
+    resultPal,
     passives: normalizePassives(record.passives),
-    status: normalizeStatus(record.status || "確認中"),
-    recorder: record.recorder || "福冨",
+    status: resultPal ? "配合確認済み" : "確認中",
+    recorder: normalizeRecorder(record.recorder),
     note: record.note || "",
     favorite: Boolean(record.favorite),
     updatedAt: Number(record.updatedAt || Date.now())
@@ -789,6 +793,7 @@ function render() {
   renderKpis();
   renderRows(filtered);
   renderDetail();
+  refreshPickerPreviews();
 }
 
 function getFilteredRecords() {
@@ -948,20 +953,44 @@ function recipePal(label, name) {
   return `<div class="recipe-pal"><small>${label}</small>${palIcon(name, "large")}<span>${escapeHtml(name || "未入力")}</span></div>`;
 }
 
-function palIcon(name, size = "normal") {
+function palIcon(name, size = "normal", options = {}) {
   const normalized = normalizePalName(name);
-  const meta = getPalMeta(normalized);
   const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
   if (!normalized) return `<span class="pal-icon${sizeClass} filter-any"><span class="pal-fallback">全</span></span>`;
-  const letter = escapeHtml((normalized || "?").slice(0, 1));
-  if (!meta) return `<span class="pal-icon${sizeClass} unknown"><span class="pal-fallback">${letter}</span></span>`;
+
+  const reveal = options.reveal ?? isPalDiscovered(normalized);
+  if (!reveal) {
+    return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)} / 画像は記録後に表示"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
+  }
+
+  const meta = getPalMeta(normalized);
+  if (!meta) {
+    return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
+  }
   const paldbUrl = meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "";
   const url = meta.icon || paldbUrl;
-  const fallbackUrl = meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : "";
+  const fallbackUrl = meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : UNKNOWN_PAL_ICON;
   const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
-  if (!url) return `<span class="pal-icon${sizeClass} unknown" title="${escapeHtml(title)}"><span class="pal-fallback">${letter}</span></span>`;
+  if (!url) return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(title)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
-  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}"${fallbackAttr} alt="${escapeHtml(normalized)}" loading="lazy" onerror="if(this.dataset.fallback&&!this.dataset.usedFallback){this.dataset.usedFallback='1';this.src=this.dataset.fallback;}else{this.closest('.pal-icon').classList.add('unknown');this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${letter}'}));}"></span>`;
+  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}"${fallbackAttr} alt="${escapeHtml(normalized)}" loading="lazy" onerror="if(this.dataset.fallback&&!this.dataset.usedFallback){this.dataset.usedFallback='1';this.src=this.dataset.fallback;}else{this.src='${UNKNOWN_PAL_ICON}';this.closest('.pal-icon').classList.add('locked');}"></span>`;
+}
+
+function getDiscoveredPalSet() {
+  const set = new Set();
+  for (const record of state.records) {
+    [record.parentA, record.parentB, record.resultPal]
+      .map(normalizePalName)
+      .filter(Boolean)
+      .forEach(name => set.add(name));
+  }
+  return set;
+}
+
+function isPalDiscovered(name) {
+  const normalized = normalizePalName(name);
+  if (!normalized) return false;
+  return getDiscoveredPalSet().has(normalized);
 }
 
 function renderTags(tags) {
@@ -994,7 +1023,6 @@ function openDialog(id = null) {
   $("parentB").value = record?.parentB || "";
   $("resultPal").value = record?.resultPal || "";
   $("recorder").value = normalizeRecorder(record?.recorder || localStorage.getItem("palBoardRecorder") || "福冨");
-  $("status").value = normalizeStatus(record?.status || "確認中");
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
   refreshPickerPreviews();
@@ -1010,7 +1038,7 @@ async function saveFromForm() {
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
     recorder: normalizeRecorder($("recorder").value),
-    status: normalizeStatus($("status").value),
+    status: $("resultPal").value.trim() ? "配合確認済み" : "確認中",
     passives: [],
     note: $("note").value.trim(),
     favorite: existing?.favorite || false,

@@ -549,3 +549,23 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   .board-layout { min-height: calc(100vh - 32px); }
   .detail-body { flex: 1 1 auto; }
 }
+
+/* v7: ネタバレ防止用の未登録パル画像 */
+.pal-icon.locked {
+  background: linear-gradient(145deg, #e8f6ff, #d5eefb);
+}
+.pal-icon.locked img {
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px rgba(18, 96, 140, .20));
+  opacity: .9;
+}
+.brand-mark img {
+  width: 40px;
+  height: 40px;
+}
+.nav-icon img {
+  width: 24px;
+  height: 24px;
+}

@@ -4,6 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>パルワールド配合記録ボード</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-v8-32.png?v=8" />
+  <link rel="shortcut icon" type="image/png" href="assets/favicon-v8.png?v=8" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-v8.png?v=8" />
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
   <link rel="stylesheet" href="style.css" />
   <script src="config.js" defer></script>
@@ -13,7 +16,7 @@
   <div class="app-shell">
     <aside class="sidebar" aria-label="サイドメニュー">
       <div class="brand-mini">
-        <div class="brand-mark" aria-hidden="true"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="平凡なタマゴ" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></div>
+        <div class="brand-mark" aria-hidden="true"><img src="assets/plain-egg.png" alt="平凡なタマゴ" /></div>
         <div>
           <p class="eyebrow">PAL BREEDING</p>
           <strong>配合記録</strong>
@@ -21,7 +24,7 @@
       </div>
 
       <nav class="main-nav" aria-label="メインメニュー">
-        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></span>配合記録</button>
+        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="assets/plain-egg.png" alt="" /></span>配合記録</button>
         <button class="nav-item" data-view="favorites" type="button"><span>★</span>お気に入り</button>
       </nav>
 
@@ -203,12 +206,6 @@
             <option value="福冨">福冨</option>
             <option value="森井">森井</option>
           </select>
-        </label>
-        <label>確認状況
-          <select id="status" name="status">
-            <option value="確認中">確認中</option>
-            <option value="配合確認済み">配合確認済み</option>
-            </select>
         </label>
       </div>
 
