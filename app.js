@@ -1,61 +1,108 @@
-const IMG_BASE = "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/";
-
-const PAL_META = {
-  "モコロン": { en: "Lamball", image: "SheepBall", element: "無属性", work: ["手作業", "運搬", "牧場"] },
-  "ツッパニャン": { en: "Cattiva", image: "PinkCat", element: "無属性", work: ["手作業", "採集", "採掘", "運搬"] },
-  "タマコッコ": { en: "Chikipi", image: "ChickenPal", element: "無属性", work: ["採集", "牧場"] },
-  "クルリス": { en: "Lifmunk", image: "Carbunclo", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬"] },
-  "キツネビ": { en: "Foxparks", image: "Kitsunebi", element: "炎属性", work: ["火おこし"] },
-  "ペンタマ": { en: "Pengullet", image: "Penguin", element: "水属性", work: ["水やり", "手作業", "冷却", "運搬"] },
-  "キャプペン": { en: "Penking", image: "CaptainPenguin", element: "水属性", work: ["水やり", "手作業", "採掘", "冷却", "運搬"] },
-  "ボルトラ": { en: "Sparkit", image: "ElecCat", element: "雷属性", work: ["発電", "手作業", "運搬"] },
-  "ネムラム": { en: "Daedream", image: "DreamDemon", element: "闇属性", work: ["手作業", "採集", "運搬"] },
-  "イノボウ": { en: "Rushoar", image: "Boar", element: "地属性", work: ["採掘"] },
-  "メルパカ": { en: "Melpaca", image: "Alpaca", element: "無属性", work: ["牧場"] },
-  "ツノガミ": { en: "Eikthyrdeer", image: "Deer", element: "無属性", work: ["伐採"] },
-  "ホークウィン": { en: "Nitewing", image: "HawkBird", element: "無属性", work: ["採集"] },
-  "ヘルゴート": { en: "Incineram", image: "Baphomet", element: "炎属性", work: ["火おこし", "手作業", "採掘", "運搬"] },
-  "ササゾー": { en: "Mossanda", image: "GrassPanda", element: "草属性", work: ["種まき", "手作業", "伐採", "運搬"] },
-  "ビーナイト": { en: "Beegarde", image: "SoldierBee", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬", "運搬", "牧場"] },
-  "クインビーナ": { en: "Elizabee", image: "QueenBee", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬"] },
-  "オコチョ": { en: "Chillet", image: "WeaselDragon", element: "氷属性", work: ["採集", "冷却"] },
-  "モモチョ": { en: "Chillet Ignis", image: "WeaselDragonFire", element: "炎属性", work: ["火おこし", "採集"] },
-  "ライコーン": { en: "Univolt", image: "Kirin", element: "雷属性", work: ["発電", "伐採"] },
-  "イヌズマ": { en: "Rayhound", image: "ThunderDog", element: "雷属性", work: ["発電"] },
-  "シラヌイ": { en: "Kitsun", image: "AmaterasuWolf", element: "炎属性", work: ["火おこし"] },
-  "ニャンバット": { en: "Tombat", image: "CatBat", element: "闇属性", work: ["採集", "採掘", "運搬"] },
-  "ラブマンダー": { en: "Lovander", image: "PinkLizard", element: "無属性", work: ["手作業", "採掘", "製薬", "運搬"] },
-  "ツジギリ": { en: "Bushi", image: "Ronin", element: "炎属性", work: ["火おこし", "手作業", "採集", "伐採", "運搬"] },
-  "ライバード": { en: "Beakon", image: "ThunderBird", element: "雷属性", work: ["発電", "採集", "運搬"] },
-  "イグニクス": { en: "Ragnahawk", image: "RedArmorBird", element: "炎属性", work: ["火おこし", "運搬"] },
-  "クレメーオ": { en: "Katress", image: "CatMage", element: "闇属性", work: ["手作業", "製薬", "運搬"] },
-  "フォレーナ": { en: "Wixen", image: "FoxMage", element: "炎属性", work: ["火おこし", "手作業", "運搬"] },
-  "ラベロット": { en: "Verdash", image: "GrassRabbitMan", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "運搬"] },
-  "ペコドン": { en: "Relaxaurus", image: "LazyDragon", element: "竜属性", work: ["水やり", "運搬"] },
-  "パリピドン": { en: "Relaxaurus Lux", image: "LazyDragonElectric", element: "竜属性", work: ["発電", "運搬"] },
-  "ラブラドン": { en: "Broncherry", image: "SakuraSaurus", element: "草属性", work: ["種まき"] },
-  "スプラドン": { en: "Broncherry Aqua", image: "SakuraSaurusWater", element: "水属性", work: ["水やり"] },
-  "アヌビス": { en: "Anubis", image: "Anubis", element: "地属性", work: ["手作業", "採掘", "運搬"] },
-  "レヴィドラ": { en: "Jormuntide", image: "Umihebi", element: "竜属性", work: ["水やり"] },
-  "アグニドラ": { en: "Jormuntide Ignis", image: "UmihebiFire", element: "竜属性", work: ["火おこし"] },
-  "スザク": { en: "Suzaku", image: "Suzaku", element: "炎属性", work: ["火おこし"] },
-  "シヴァ": { en: "Suzaku Aqua", image: "SuzakuWater", element: "水属性", work: ["水やり"] },
-  "エレパンダ": { en: "Grizzbolt", image: "ElecPanda", element: "雷属性", work: ["発電", "手作業", "伐採", "運搬"] },
-  "ホルス": { en: "Faleris", image: "Horus", element: "炎属性", work: ["火おこし", "運搬"] },
-  "デスティング": { en: "Menasting", image: "DarkScorpion", element: "闇属性", work: ["伐採", "採掘"] },
-  "ボルカノン": { en: "Blazamut", image: "VolcanicMonster", element: "炎属性", work: ["火おこし", "採掘"] },
-  "ゼノグリフ": { en: "Shadowbeak", image: "BlackGriffon", element: "闇属性", work: ["採集"] },
-};
-
-const EN_TO_JP = Object.fromEntries(Object.entries(PAL_META).flatMap(([jp, meta]) => [
-  [meta.en.toLowerCase(), jp],
-  [meta.en.replace(/\s+/g, "").toLowerCase(), jp]
-]));
-
-const PAL_NAMES = Object.keys(PAL_META).sort((a, b) => a.localeCompare(b, "ja"));
-const ROOM_ID = getRoomId();
+const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
+const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v3";
 const SAMPLE_PREFIX = "sample-";
 
+const WORKS = ["火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"];
+const ELEMENTS = ["無属性", "炎属性", "水属性", "草属性", "雷属性", "氷属性", "地属性", "闇属性", "竜属性"];
+const EXCLUDED_IMAGE_ALTS = new Set([
+  ...ELEMENTS,
+  ...WORKS,
+  "X", "ポスト", "URLコピー", "テーマの選択", "ダーク", "ライト", "自動",
+  "パルワールド配合・攻略ラボ", "火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"
+]);
+
+// 起動直後・外部取得失敗時の最低限の内蔵データ。
+// Palworld Labの画像URLが分かっているものは優先して使う。
+const EMBEDDED_PALS = [
+  { no: "001", name: "モコロン", en: "Lamball", elements: ["無属性"], work: ["手作業", "運搬", "牧場"], icon: "https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" },
+  { no: "002", name: "ツッパニャン", en: "Cattiva", elements: ["無属性"], work: ["手作業", "採集", "採掘", "運搬"], icon: "https://palworld-lab.com/_astro/002.CqEJyq_i_6gvU0.webp" },
+  { no: "003", name: "タマコッコ", en: "Chikipi", elements: ["無属性"], work: ["採集", "牧場"], icon: "https://palworld-lab.com/_astro/003.DmHGHkzB_1XPiUh.webp" },
+  { no: "004", name: "クルリス", en: "Lifmunk", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], icon: "https://palworld-lab.com/_astro/004.Cnnye9S1_GBlpx.webp" },
+  { no: "005", name: "キツネビ", en: "Foxparks", elements: ["炎属性"], work: ["火おこし"], icon: "https://palworld-lab.com/_astro/005.De-0Pa55_LYewp.webp" },
+  { no: "006", name: "カモノスケ", en: "Fuack", elements: ["水属性"], work: ["水やり", "手作業", "運搬"], iconKey: "ColorfulBird" },
+  { no: "007", name: "ボルトラ", en: "Sparkit", elements: ["雷属性"], work: ["発電", "手作業", "運搬"], iconKey: "ElecCat" },
+  { no: "008", name: "エテッパ", en: "Tanzee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "運搬"], iconKey: "Monkey" },
+  { no: "009", name: "ヒノコジカ", en: "Rooby", elements: ["炎属性"], work: ["火おこし"], iconKey: "FlameDeer" },
+  { no: "010", name: "ペンタマ", en: "Pengullet", elements: ["水属性", "氷属性"], work: ["水やり", "手作業", "冷却", "運搬"], icon: "https://palworld-lab.com/_astro/010.DQvWPP3E_2oiW8l.webp" },
+  { no: "011", name: "キャプペン", en: "Penking", elements: ["水属性", "氷属性"], work: ["水やり", "手作業", "採掘", "冷却", "運搬"], icon: "https://palworld-lab.com/_astro/011.Cqis32qe_Z13PKJd.webp" },
+  { no: "012", name: "パチグリ", en: "Jolthog", elements: ["雷属性"], work: ["発電"], iconKey: "Hedgehog" },
+  { no: "013", name: "ナエモチ", en: "Gumoss", elements: ["草属性", "地属性"], work: ["種まき"], iconKey: "PlantSlime" },
+  { no: "014", name: "タマモ", en: "Vixy", elements: ["無属性"], work: ["採集", "牧場"], iconKey: "CuteFox" },
+  { no: "015", name: "ホウロック", en: "Hoocrates", elements: ["闇属性"], work: ["採集"], iconKey: "Owl" },
+  { no: "016", name: "チョロゾウ", en: "Teafant", elements: ["水属性"], work: ["水やり"], iconKey: "Elephant" },
+  { no: "017", name: "ンダコアラ", en: "Depresso", elements: ["闇属性"], work: ["手作業", "採掘", "運搬"], iconKey: "NegativeKoala" },
+  { no: "018", name: "ミルカルビ", en: "Mozzarina", elements: ["無属性"], work: ["牧場"], iconKey: "CowPal" },
+  { no: "019", name: "イノボウ", en: "Rushoar", elements: ["地属性"], work: ["採掘"], iconKey: "Boar" },
+  { no: "020", name: "ルナティ", en: "Nox", elements: ["闇属性"], work: ["採集"], iconKey: "NaughtyCat" },
+  { no: "031", name: "シャーキッド", en: "Gobfin", elements: ["水属性"], work: ["水やり", "手作業", "運搬"], iconKey: "SharkKid" },
+  { no: "032", name: "シメナワ", en: "Hangyu", elements: ["地属性"], work: ["手作業", "採集", "運搬"], iconKey: "WindChimes" },
+  { no: "033", name: "ササゾー", en: "Mossanda", elements: ["草属性"], work: ["種まき", "手作業", "伐採", "運搬"], icon: "https://palworld-lab.com/_astro/033.CO0kQvDM_Z1mep1i.webp" },
+  { no: "034", name: "メリポップ", en: "Woolipop", elements: ["無属性"], work: ["牧場"], iconKey: "SweetsSheep" },
+  { no: "035", name: "ベリゴート", en: "Caprity", elements: ["草属性"], work: ["種まき", "牧場"], iconKey: "BerryGoat" },
+  { no: "036", name: "メルパカ", en: "Melpaca", elements: ["無属性"], work: ["牧場"], iconKey: "Alpaca" },
+  { no: "037", name: "ツノガミ", en: "Eikthyrdeer", elements: ["無属性"], work: ["伐採"], iconKey: "Deer" },
+  { no: "038", name: "ホークウィン", en: "Nitewing", elements: ["無属性"], work: ["採集"], iconKey: "HawkBird" },
+  { no: "040", name: "ヘルゴート", en: "Incineram", elements: ["炎属性", "闇属性"], work: ["火おこし", "手作業", "採掘", "運搬"], iconKey: "Baphomet" },
+  { no: "041", name: "パピテフ", en: "Cinnamoth", elements: ["草属性"], work: ["種まき", "製薬"], iconKey: "FlowerDinosaur" },
+  { no: "042", name: "アルパオー", en: "Arsox", elements: ["炎属性"], work: ["火おこし", "伐採"], iconKey: "FlameBuffalo" },
+  { no: "043", name: "ニャンバット", en: "Tombat", elements: ["闇属性"], work: ["採集", "採掘", "運搬"], iconKey: "CatBat" },
+  { no: "044", name: "ラブマンダー", en: "Lovander", elements: ["無属性"], work: ["手作業", "採掘", "製薬", "運搬"], iconKey: "PinkLizard" },
+  { no: "045", name: "ボルゼクス", en: "Beakon", elements: ["雷属性"], work: ["発電", "採集", "運搬"], iconKey: "ThunderBird" },
+  { no: "055", name: "オコチョ", en: "Chillet", elements: ["氷属性", "竜属性"], work: ["採集", "冷却"], icon: "https://palworld-lab.com/_astro/055.C3DznTNK_Z1ESlKf.webp" },
+  { no: "055B", name: "モモチョ", en: "Chillet Ignis", elements: ["炎属性", "竜属性"], work: ["火おこし", "採集"], iconKey: "WeaselDragonFire" },
+  { no: "056", name: "ライコーン", en: "Univolt", elements: ["雷属性"], work: ["発電", "伐採"], iconKey: "Kirin" },
+  { no: "057", name: "フブキツネ", en: "Foxcicle", elements: ["氷属性"], work: ["冷却"], iconKey: "IceFox" },
+  { no: "058", name: "サラブレイズ", en: "Pyrin", elements: ["炎属性"], work: ["火おこし", "伐採"], iconKey: "FireKirin" },
+  { no: "059", name: "イヌズマ", en: "Rayhound", elements: ["雷属性"], work: ["発電"], iconKey: "ThunderDog" },
+  { no: "060", name: "シラヌイ", en: "Kitsun", elements: ["炎属性"], work: ["火おこし"], iconKey: "AmaterasuWolf" },
+  { no: "061", name: "マスクロウ", en: "Leezpunk", elements: ["闇属性"], work: ["手作業", "採集", "運搬"], iconKey: "LizardMan" },
+  { no: "064", name: "フラリーナ", en: "Petallia", elements: ["草属性"], work: ["種まき", "手作業", "採集", "製薬", "運搬"], iconKey: "LilyQueen" },
+  { no: "065", name: "ラベロット", en: "Verdash", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "運搬"], iconKey: "GrassRabbitMan" },
+  { no: "067", name: "ドリタス", en: "Digtoise", elements: ["地属性"], work: ["採掘"], iconKey: "DrillGame" },
+  { no: "070", name: "フラリーナ", en: "Petallia", elements: ["草属性"], work: ["種まき", "手作業", "採集", "製薬", "運搬"], iconKey: "LilyQueen" },
+  { no: "071", name: "カバネドリ", en: "Vanwyrm", elements: ["炎属性", "闇属性"], work: ["火おこし", "運搬"], iconKey: "BirdDragon" },
+  { no: "072", name: "ビーナイト", en: "Beegarde", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬", "運搬", "牧場"], iconKey: "SoldierBee" },
+  { no: "073", name: "クインビーナ", en: "Elizabee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], iconKey: "QueenBee" },
+    { no: "075", name: "ツジギリ", en: "Bushi", elements: ["炎属性"], work: ["火おこし", "手作業", "採集", "伐採", "運搬"], iconKey: "Ronin" },
+  { no: "076", name: "フォレーナ", en: "Wixen", elements: ["炎属性"], work: ["火おこし", "手作業", "運搬"], iconKey: "FoxMage" },
+  { no: "077", name: "クレメーオ", en: "Katress", elements: ["闇属性"], work: ["手作業", "製薬", "運搬"], iconKey: "CatMage" },
+  { no: "080", name: "シルキーヌ", en: "Sibelyx", elements: ["氷属性"], work: ["製薬", "冷却", "牧場"], iconKey: "SilkWorm" },
+  { no: "082", name: "アズレーン", en: "Azurobe", elements: ["水属性", "竜属性"], work: ["水やり"], iconKey: "BlueDragon" },
+  { no: "083", name: "ツンドラー", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
+  { no: "085", name: "ペコドン", en: "Relaxaurus", elements: ["竜属性", "水属性"], work: ["水やり", "運搬"], iconKey: "LazyDragon" },
+  { no: "085B", name: "パリピドン", en: "Relaxaurus Lux", elements: ["竜属性", "雷属性"], work: ["発電", "運搬"], iconKey: "LazyDragonElectric" },
+  { no: "086", name: "ラブラドン", en: "Broncherry", elements: ["草属性"], work: ["種まき"], iconKey: "SakuraSaurus" },
+  { no: "086B", name: "スプラドン", en: "Broncherry Aqua", elements: ["水属性"], work: ["水やり"], iconKey: "SakuraSaurusWater" },
+      { no: "098", name: "ジオラーヴァ", en: "Astegon", elements: ["竜属性", "闇属性"], work: ["採掘"], iconKey: "BlackMetalDragon" },
+  { no: "099", name: "デスティング", en: "Menasting", elements: ["地属性", "闇属性"], work: ["伐採", "採掘"], iconKey: "DarkScorpion" },
+  { no: "100", name: "アヌビス", en: "Anubis", elements: ["地属性"], work: ["手作業", "採掘", "運搬"], icon: "https://palworld-lab.com/_astro/100.qJj5_Az6_Zuceq3.webp" },
+  { no: "101", name: "レヴィドラ", en: "Jormuntide", elements: ["竜属性", "水属性"], work: ["水やり"], iconKey: "Umihebi" },
+  { no: "101B", name: "アグニドラ", en: "Jormuntide Ignis", elements: ["竜属性", "炎属性"], work: ["火おこし"], iconKey: "UmihebiFire" },
+  { no: "102", name: "スザク", en: "Suzaku", elements: ["炎属性"], work: ["火おこし"], iconKey: "Suzaku" },
+  { no: "102B", name: "シヴァ", en: "Suzaku Aqua", elements: ["水属性"], work: ["水やり"], iconKey: "SuzakuWater" },
+  { no: "103", name: "エレパンダ", en: "Grizzbolt", elements: ["雷属性"], work: ["発電", "手作業", "伐採", "運搬"], iconKey: "ElecPanda" },
+  { no: "105", name: "ホルス", en: "Faleris", elements: ["炎属性"], work: ["火おこし", "運搬"], iconKey: "Horus" },
+  { no: "107", name: "ゼノグリフ", en: "Shadowbeak", elements: ["闇属性"], work: ["採集"], iconKey: "BlackGriffon" },
+  { no: "110", name: "グレイシャル", en: "Frostallion", elements: ["氷属性"], work: ["冷却"], iconKey: "IceHorse" },
+  { no: "110B", name: "グレイシャドウ", en: "Frostallion Noct", elements: ["闇属性"], work: ["採集"], iconKey: "BlackFurDragon" },
+  { no: "111", name: "ジェッドラン", en: "Jetragon", elements: ["竜属性"], work: ["採集"], iconKey: "JetDragon" },
+  { no: "テラ01", name: "クトゥルフのめだま", en: "Eye of Cthulhu", elements: ["闇属性"], work: ["運搬"], icon: "https://palworld-lab.com/_astro/10001.BJliejgN_1xzcGC.webp" }
+];
+
+const LEGACY_ENGLISH_TO_JP = {
+  lamball: "モコロン", cattiva: "ツッパニャン", chikipi: "タマコッコ", lifmunk: "クルリス", foxparks: "キツネビ",
+  pengullet: "ペンタマ", penking: "キャプペン", sparkit: "ボルトラ", daedream: "ネムラム", rushoar: "イノボウ",
+  melpaca: "メルパカ", eikthyrdeer: "ツノガミ", nitewing: "ホークウィン", incineram: "ヘルゴート", mossanda: "ササゾー",
+  beegarde: "ビーナイト", elizabee: "クインビーナ", chillet: "オコチョ", "chilletignis": "モモチョ", univolt: "ライコーン",
+  rayhound: "イヌズマ", kitsun: "シラヌイ", tombat: "ニャンバット", lovander: "ラブマンダー", bushi: "ツジギリ",
+  beakon: "ボルゼクス", ragnahawk: "イグニクス", katress: "クレメーオ", wixen: "フォレーナ", verdash: "ラベロット",
+  relaxaurus: "ペコドン", "relaxauruslux": "パリピドン", broncherry: "ラブラドン", "broncherryaqua": "スプラドン", anubis: "アヌビス",
+  jormuntide: "レヴィドラ", "jormuntideignis": "アグニドラ", suzaku: "スザク", "suzakuaqua": "シヴァ", grizzbolt: "エレパンダ",
+  faleris: "ホルス", menasting: "デスティング", blazamut: "ボルカイザー", shadowbeak: "ゼノグリフ"
+};
+
+const ROOM_ID = getRoomId();
 const state = {
   records: [],
   selectedId: null,
@@ -63,6 +110,10 @@ const state = {
   db: null,
   dbApi: null,
   dbRef: null,
+  palSource: "内蔵リスト",
+  palMap: new Map(),
+  palNames: [],
+  pickers: {},
 };
 
 const $ = (id) => document.getElementById(id);
@@ -84,15 +135,148 @@ const elements = {
   recordDialog: $("recordDialog"),
   recordForm: $("recordForm"),
   toast: $("toast"),
+  palDataState: $("palDataState"),
 };
 
 init();
 
 async function init() {
+  mergePalData(EMBEDDED_PALS, "内蔵リスト");
   setupPalOptions();
   setupEvents();
+  setupPalPickers();
   await setupStorage();
   render();
+  loadCachedPalData();
+  loadPalworldLabData();
+}
+
+function mergePalData(list, sourceLabel) {
+  if (!Array.isArray(list) || list.length === 0) return;
+  for (const raw of list) {
+    const name = normalizePalDisplayName(raw.name);
+    if (!name) continue;
+    const existing = state.palMap.get(name) || {};
+    state.palMap.set(name, {
+      ...existing,
+      ...raw,
+      name,
+      elements: Array.isArray(raw.elements) ? raw.elements : existing.elements || [],
+      work: Array.isArray(raw.work) ? raw.work : existing.work || [],
+      sortKey: raw.sortKey ?? existing.sortKey ?? makeSortKey(raw.no, name),
+      source: raw.source || sourceLabel,
+    });
+    if (raw.en) {
+      LEGACY_ENGLISH_TO_JP[normalizeKey(raw.en)] = name;
+    }
+  }
+  state.palNames = Array.from(state.palMap.values())
+    .sort((a, b) => String(a.sortKey).localeCompare(String(b.sortKey), "ja", { numeric: true }) || a.name.localeCompare(b.name, "ja"))
+    .map(p => p.name);
+  state.palSource = sourceLabel;
+  updatePalDataState();
+}
+
+function loadCachedPalData() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(PAL_CACHE_KEY) || "null");
+    if (cached?.pals?.length) {
+      mergePalData(cached.pals, `Palworld Labキャッシュ ${cached.pals.length}種`);
+      setupPalOptions(true);
+      render();
+      refreshPickerPreviews();
+    }
+  } catch (error) {
+    console.warn("Pal cache read failed", error);
+  }
+}
+
+async function loadPalworldLabData() {
+  updatePalDataState("Palworld Labから最新一覧を確認中…");
+  const endpoints = [PAL_SOURCE_URL, PAL_SOURCE_PROXY_URL];
+  let lastError = null;
+  for (const url of endpoints) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const html = await response.text();
+      const pals = parsePalworldLabHtml(html);
+      if (pals.length < 100) throw new Error(`取得数が少なすぎます: ${pals.length}`);
+      localStorage.setItem(PAL_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), pals }));
+      mergePalData(pals, `Palworld Lab同期済み ${pals.length}種`);
+      setupPalOptions(true);
+      render();
+      refreshPickerPreviews();
+      toast(`Palworld Labから${pals.length}種類のパル情報を読み込みました`);
+      return;
+    } catch (error) {
+      lastError = error;
+      console.warn("Palworld Lab sync failed:", url, error);
+    }
+  }
+  updatePalDataState(`${state.palSource}で起動中 / 外部同期失敗`);
+  console.warn("Palworld Lab sync gave up:", lastError);
+}
+
+function parsePalworldLabHtml(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const map = new Map();
+  for (const img of doc.querySelectorAll("img[alt][src]")) {
+    const alt = img.getAttribute("alt")?.trim();
+    if (!isLikelyPalName(alt)) continue;
+    const rawSrc = img.getAttribute("src");
+    const icon = new URL(rawSrc, PAL_SOURCE_URL).href;
+    const no = inferNoFromSrc(icon) || inferNoFromNearText(img);
+    if (!map.has(alt)) {
+      map.set(alt, {
+        no,
+        name: alt,
+        icon,
+        sortKey: makeSortKey(no, alt),
+        source: "Palworld Lab",
+      });
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey, "ja", { numeric: true }));
+}
+
+function isLikelyPalName(name) {
+  if (!name || EXCLUDED_IMAGE_ALTS.has(name)) return false;
+  if (name.length > 24) return false;
+  if (/(属性|フィルター|ソート|検索|画像|アイコン|ボタン|Section|Logo|Twitter|X|OBS|Tier|URL|攻略|一覧|ツール|シミュレーター)/.test(name)) return false;
+  if (/^[0-9]+[A-Za-z]?$/.test(name)) return false;
+  if (!/[ぁ-んァ-ン一-龠]/.test(name)) return false;
+  return true;
+}
+
+function inferNoFromSrc(src) {
+  const match = src.match(/\/([0-9]{3,5}[A-Z]?|1000[0-9])\./);
+  if (!match) return "";
+  const raw = match[1];
+  if (raw.length >= 5) return `テラ${raw.slice(-2)}`;
+  return raw;
+}
+
+function inferNoFromNearText(img) {
+  const row = img.closest("tr, li, article, div");
+  const text = row?.textContent || "";
+  const match = text.match(/(\d{3}[A-Z]?|ﾃﾗ\d{2})/);
+  return match?.[1] || "";
+}
+
+function makeSortKey(no, name) {
+  const raw = String(no || "");
+  const tera = raw.match(/(?:テラ|ﾃﾗ)(\d+)/);
+  if (tera) return `9000-${tera[1].padStart(3, "0")}-${name}`;
+  const normal = raw.match(/(\d+)([A-Z])?/);
+  if (normal) return `${normal[1].padStart(4, "0")}${normal[2] || ""}-${name}`;
+  return `9999-${name}`;
+}
+
+function updatePalDataState(text = null) {
+  if (!elements.palDataState) return;
+  const label = text || state.palSource;
+  elements.palDataState.textContent = label;
 }
 
 function getRoomId() {
@@ -114,17 +298,21 @@ function sanitizeRoom(value) {
   return String(value).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 60) || "default";
 }
 
-function setupPalOptions() {
+function setupPalOptions(keepValues = false) {
+  const oldParent = keepValues ? elements.parentFilter.value : "";
+  const oldResult = keepValues ? elements.resultFilter.value : "";
   const datalist = $("palOptions");
-  datalist.innerHTML = PAL_NAMES.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
-  const options = [`<option value="">すべて</option>`, ...PAL_NAMES.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)].join("");
+  if (datalist) datalist.innerHTML = state.palNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
+  const options = [`<option value="">すべて</option>`, ...state.palNames.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)].join("");
   elements.parentFilter.innerHTML = options;
   elements.resultFilter.innerHTML = options;
+  if (oldParent && state.palNames.includes(oldParent)) elements.parentFilter.value = oldParent;
+  if (oldResult && state.palNames.includes(oldResult)) elements.resultFilter.value = oldResult;
 }
 
 function setupEvents() {
   [elements.parentFilter, elements.resultFilter, elements.elementFilter, elements.workFilter, elements.statusFilter, elements.favoriteOnly, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
-    .forEach(el => el.addEventListener("input", render));
+    .forEach(el => el?.addEventListener("input", render));
 
   $("clearFilters").addEventListener("click", () => {
     elements.parentFilter.value = "";
@@ -141,15 +329,7 @@ function setupEvents() {
   $("addRecord").addEventListener("click", () => openDialog());
   $("cancelDialog").addEventListener("click", () => elements.recordDialog.close());
   $("closeDetail").addEventListener("click", () => { state.selectedId = null; render(); });
-  $("copyRoomLink").addEventListener("click", async () => {
-    const url = `${location.origin}${location.pathname}#room=${ROOM_ID}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      toast("共有リンクをコピーしました");
-    } catch {
-      prompt("このURLを友人に共有してください", url);
-    }
-  });
+  $("copyRoomLink").addEventListener("click", copyRoomLink);
 
   elements.recordForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -163,6 +343,91 @@ function setupEvents() {
     await deleteRecord(id);
     elements.recordDialog.close();
   });
+}
+
+function setupPalPickers() {
+  for (const id of ["parentA", "parentB", "resultPal"]) {
+    const input = $(id);
+    if (!input) continue;
+    const picker = input.closest(".pal-picker");
+    const preview = picker?.querySelector(".pal-picker-preview");
+    const list = picker?.querySelector(".pal-suggestions");
+    state.pickers[id] = { input, picker, preview, list };
+
+    input.addEventListener("input", () => {
+      updatePickerPreview(id);
+      renderPickerSuggestions(id);
+    });
+    input.addEventListener("focus", () => renderPickerSuggestions(id));
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") hidePickerSuggestions(id);
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    for (const id of Object.keys(state.pickers)) {
+      if (!state.pickers[id].picker.contains(event.target)) hidePickerSuggestions(id);
+    }
+  });
+}
+
+function updatePickerPreview(id) {
+  const picker = state.pickers[id];
+  if (!picker?.preview) return;
+  const name = normalizePalName(picker.input.value);
+  picker.preview.innerHTML = palIcon(name, "small");
+}
+
+function refreshPickerPreviews() {
+  for (const id of Object.keys(state.pickers)) updatePickerPreview(id);
+}
+
+function renderPickerSuggestions(id) {
+  const picker = state.pickers[id];
+  if (!picker?.list) return;
+  const raw = picker.input.value.trim();
+  const query = normalizeSearch(raw);
+  const candidates = state.palNames
+    .filter(name => {
+      const meta = getPalMeta(name);
+      const target = normalizeSearch([name, meta?.en, meta?.no].filter(Boolean).join(" "));
+      return !query || target.includes(query);
+    })
+    .slice(0, 30);
+
+  if (!candidates.length) {
+    picker.list.innerHTML = `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
+  } else {
+    picker.list.innerHTML = candidates.map(name => {
+      const meta = getPalMeta(name) || {};
+      const sub = [meta.no, meta.elements?.join("・")].filter(Boolean).join(" / ");
+      return `<button type="button" class="pal-suggestion" data-name="${escapeHtml(name)}">${palIcon(name, "small")}<span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(sub || meta.en || "")}</small></span></button>`;
+    }).join("");
+    picker.list.querySelectorAll("button[data-name]").forEach(button => {
+      button.addEventListener("click", () => {
+        picker.input.value = button.dataset.name;
+        updatePickerPreview(id);
+        hidePickerSuggestions(id);
+        picker.input.focus();
+      });
+    });
+  }
+  picker.list.hidden = false;
+}
+
+function hidePickerSuggestions(id) {
+  const list = state.pickers[id]?.list;
+  if (list) list.hidden = true;
+}
+
+async function copyRoomLink() {
+  const url = `${location.origin}${location.pathname}#room=${ROOM_ID}`;
+  try {
+    await navigator.clipboard.writeText(url);
+    toast("共有リンクをコピーしました");
+  } catch {
+    prompt("このURLを友人に共有してください", url);
+  }
 }
 
 async function setupStorage() {
@@ -185,7 +450,6 @@ async function setupStorage() {
         updateConnectionState("共同編集ON", true);
         ensureSelected();
         render();
-
         if (sampleIds.length) {
           await Promise.all(sampleIds.map(id => dbMod.remove(dbMod.ref(state.db, `rooms/${ROOM_ID}/records/${id}`))));
           toast("以前のサンプル記録を削除しました");
@@ -242,11 +506,24 @@ function normalizeRecord(record) {
   };
 }
 
+function normalizePalDisplayName(name) {
+  return String(name || "").replace(/\s+/g, " ").trim();
+}
+
 function normalizePalName(name) {
-  const raw = String(name || "").trim();
+  const raw = normalizePalDisplayName(name);
   if (!raw) return "";
-  if (PAL_META[raw]) return raw;
-  return EN_TO_JP[raw.toLowerCase()] || EN_TO_JP[raw.replace(/\s+/g, "").toLowerCase()] || raw;
+  if (state.palMap.has(raw)) return raw;
+  const key = normalizeKey(raw);
+  return LEGACY_ENGLISH_TO_JP[key] || raw;
+}
+
+function normalizeKey(value) {
+  return String(value || "").toLowerCase().replace(/[\s_\-・'’\.]/g, "");
+}
+
+function normalizeSearch(value) {
+  return String(value || "").toLowerCase().replace(/\s+/g, "");
 }
 
 function stripId(record) { const { id, ...rest } = record; return rest; }
@@ -264,7 +541,7 @@ function render() {
 }
 
 function getFilteredRecords() {
-  const query = elements.searchInput.value.trim().toLowerCase();
+  const query = normalizeSearch(elements.searchInput.value);
   const parent = elements.parentFilter.value;
   const result = elements.resultFilter.value;
   const element = elements.elementFilter.value;
@@ -273,14 +550,16 @@ function getFilteredRecords() {
   let records = [...state.records];
 
   records = records.filter(record => {
-    const meta = PAL_META[record.resultPal] || {};
-    const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => PAL_META[name]?.en || "");
-    const searchTarget = [record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, record.gameVersion, ...record.passives].join(" ").toLowerCase();
+    const meta = getPalMeta(record.resultPal) || {};
+    const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
+    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, record.gameVersion, ...record.passives].join(" "));
+    const recordElements = meta.elements || (meta.element ? [meta.element] : []);
+    const recordWorks = meta.work || [];
     return (!query || searchTarget.includes(query)) &&
       (!parent || record.parentA === parent || record.parentB === parent) &&
       (!result || record.resultPal === result) &&
-      (!element || meta.element === element) &&
-      (!work || (meta.work || []).includes(work)) &&
+      (!element || recordElements.includes(element)) &&
+      (!work || recordWorks.includes(work)) &&
       (!status || record.status === status) &&
       (!elements.favoriteOnly.checked || record.favorite) &&
       (!elements.unverifiedOnly.checked || record.status !== "実機確認済み");
@@ -365,7 +644,7 @@ function renderDetail() {
       <div class="recipe-symbol">→</div>
       ${recipePal("結果", record.resultPal)}
     </div>
-    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}<span class="tag">＋候補を追加</span></div></div>
+    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}<span class="tag subtle">＋候補を追加</span></div></div>
     <div class="detail-section"><h3>メモ</h3><div class="note-box">${escapeHtml(record.note || "メモはまだありません。")}</div></div>
     <div class="detail-section"><h3>確認チェックリスト</h3><div class="check-list">
       ${checkLine(record.checked.bred, "実際に配合済み")}
@@ -388,29 +667,38 @@ function renderDetail() {
   });
 }
 
+function getPalMeta(name) {
+  return state.palMap.get(normalizePalName(name));
+}
+
 function palInline(name) {
   return `<span class="pal-inline">${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></span>`;
 }
 
 function recipePal(label, name) {
-  return `<div class="recipe-pal"><small>${label}</small>${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></div>`;
+  return `<div class="recipe-pal"><small>${label}</small>${palIcon(name, "large")}<span>${escapeHtml(name || "未入力")}</span></div>`;
 }
 
-function palIcon(name) {
-  const meta = PAL_META[name];
-  if (!meta) return `<span class="pal-icon"><span class="pal-fallback">${escapeHtml((name || "?").slice(0, 1))}</span></span>`;
-  const url = `${IMG_BASE}T_${meta.image}_icon_normal.webp`;
-  return `<span class="pal-icon" title="${escapeHtml(`${name} / ${meta.en}`)}"><img src="${url}" alt="${escapeHtml(name)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${escapeHtml(name.slice(0,1))}'}))"></span>`;
+function palIcon(name, size = "normal") {
+  const normalized = normalizePalName(name);
+  const meta = getPalMeta(normalized);
+  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
+  const letter = escapeHtml((normalized || "?").slice(0, 1));
+  if (!meta) return `<span class="pal-icon${sizeClass} unknown"><span class="pal-fallback">${letter}</span></span>`;
+  const url = meta.icon || (meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "");
+  const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
+  if (!url) return `<span class="pal-icon${sizeClass} unknown" title="${escapeHtml(title)}"><span class="pal-fallback">${letter}</span></span>`;
+  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(normalized)}" loading="lazy" onerror="this.closest('.pal-icon').classList.add('unknown');this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${letter}'}))"></span>`;
 }
 
 function renderTags(tags) {
-  if (!tags?.length) return `<span class="tag">未設定</span>`;
+  if (!tags?.length) return `<span class="tag subtle">未設定</span>`;
   return tags.map(tag => `<span class="tag ${tagType(tag)}">${escapeHtml(tag)}</span>`).join("");
 }
 
 function tagType(tag) {
-  if (["職人気質", "まじめ", "社畜", "ワーカーホリック", "発電特化", "運搬", "採掘", "伐採", "拠点"].some(key => tag.includes(key))) return "work";
-  if (["脳筋", "獰猛", "希少", "伝説", "走るのが得意", "神速", "すばしこい"].some(key => tag.includes(key))) return "battle";
+  if (["職人気質", "まじめ", "社畜", "ワーカーホリック", "発電", "運搬", "採掘", "伐採", "拠点", "作業"].some(key => tag.includes(key))) return "work";
+  if (["脳筋", "獰猛", "希少", "伝説", "走るのが得意", "神速", "すばしこい", "鬼神", "不真面目"].some(key => tag.includes(key))) return "battle";
   return "";
 }
 
@@ -439,6 +727,7 @@ function openDialog(id = null) {
   $("checkedPassive").checked = Boolean(record?.checked?.passive);
   $("checkedBattle").checked = Boolean(record?.checked?.battle);
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
+  refreshPickerPreviews();
   elements.recordDialog.showModal();
 }
 
@@ -465,8 +754,14 @@ async function saveFromForm() {
     updatedAt: Date.now()
   });
 
-  if (!PAL_META[record.parentA] || !PAL_META[record.parentB] || !PAL_META[record.resultPal]) {
-    const ok = confirm("入力されたパル名の一部が候補リストにありません。このまま保存しますか？");
+  if (!record.parentA || !record.parentB || !record.resultPal) {
+    toast("親A・親B・結果パルは必須です。", true);
+    return;
+  }
+
+  const missing = [record.parentA, record.parentB, record.resultPal].filter(name => !getPalMeta(name));
+  if (missing.length) {
+    const ok = confirm(`候補リストにないパル名があります：${missing.join("、")}\nこのまま保存しますか？`);
     if (!ok) return;
   }
 
@@ -525,7 +820,7 @@ function toast(message, warn = false) {
   elements.toast.style.background = warn ? "rgba(138, 89, 0, .94)" : "rgba(23, 48, 74, .94)";
   elements.toast.classList.add("show");
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => elements.toast.classList.remove("show"), 2800);
+  toast.timer = setTimeout(() => elements.toast.classList.remove("show"), 3200);
 }
 
 function escapeHtml(value) {

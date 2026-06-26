@@ -1,62 +1,57 @@
 # パルワールド配合記録ボード
 
-友人と配合結果・パッシブ候補・確認状況をリアルタイムで記録するための静的Webアプリです。
-GitHub Pages + Firebase Realtime Databaseで動作します。
+友人とリアルタイムでパルワールドの配合結果・パッシブ候補・確認状況を記録するための静的Webサイトです。
 
-## 今回の修正内容
+## 今回の修正版で変えたこと
 
-- 初期サンプルデータを自動投入しないように修正
-- 以前のバージョンがFirebaseへ作成した `sample-` から始まる記録を自動削除
-- 「条件に合う記録がありません」が一覧に重なる不具合を修正
-- パル名を日本語表記へ変更
-- 英語名で保存済みの古いデータは表示時に日本語名へ変換
-- 左上の「羽」アイコンを削除し、配合記録らしい卵アイコンに変更
-- PalDBのパルアイコン画像を表示するように変更
-- インポート・アップロード機能なし
+- サンプル記録の自動投入を完全停止
+- 既存の `sample-` データは読み込み時に自動削除
+- パル名は日本語表記を優先
+- 英語名で保存済みの古いデータも表示時に日本語へ変換
+- パル画像は Palworld Lab のパル図鑑から最新データを起動時に取得
+- Palworld Lab の取得に失敗した場合でも、内蔵リストで起動
+- パル選択欄を画像付きの検索候補UIへ変更
+- ササゾーなど、PalDB側で画像が出ないパルもPalworld Lab画像で表示
+- 「条件に合う記録がありません」が一覧に重なる問題を修正
+- ヒーロー見出しが不自然に改行されにくいよう調整
+- 左上の羽アイコンを卵アイコンに変更
 
 ## ファイル構成
 
-- `index.html`：画面本体
-- `style.css`：デザイン
-- `app.js`：記録・検索・編集・Firebase連携
-- `config.js`：Firebase設定
-- `config.example.js`：Firebase設定の見本
-- `firebase-rules.json`：Realtime Databaseの簡易ルール例
+- `index.html` サイト本体
+- `style.css` デザイン
+- `app.js` アプリ処理・Firebase連携・Palworld Lab図鑑同期
+- `config.js` Firebase設定
+- `config.example.js` Firebase設定例
+- `firebase-rules.json` Realtime Databaseルール例
 
-## アップロード方法
+## GitHub Pagesへのアップロード
 
-GitHubのリポジトリで以下のファイルをすべてアップロードしてください。
+1. zipを解凍します。
+2. GitHubのリポジトリを開きます。
+3. `Add file` → `Upload files` を選びます。
+4. 解凍した中のファイルをすべてアップロードします。
+5. `Commit changes` を押します。
+6. 公開ページを `Ctrl + F5` で強制更新します。
 
-```text
-index.html
-style.css
-app.js
-config.js
-config.example.js
-firebase-rules.json
-README.md
+## Firebase設定
+
+`config.js` には設定値だけを書いてください。
+`import` や `initializeApp()` は不要です。
+
+```js
+window.firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
 ```
 
-アップロード後、GitHub Pagesの公開URLを `Ctrl + F5` で強制更新してください。
+## 注意
 
-## 重要
-
-今回の `config.js` にはFirebase設定値を入れています。
-`import { initializeApp } from "firebase/app";` のようなコードは入れないでください。
-このサイトでは `app.js` がブラウザ用CDNからFirebaseを読み込みます。
-
-## Firebaseルール
-
-動作確認中は下記で動きます。
-
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
-
-この設定はURLを知っている人が読み書きできる状態です。
-友人以外にURLを共有しない運用なら試しやすいですが、公開範囲を絞りたい場合は後で認証制にしてください。
+Palworld Labのパル図鑑は外部サイトのため、通信制限や仕様変更により取得できない場合があります。
+その場合もサイト自体は動きますが、全パル候補や一部画像は内蔵リストの範囲になります。

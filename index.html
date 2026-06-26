@@ -16,7 +16,7 @@
         <div class="brand-mark" aria-hidden="true">🥚</div>
         <div>
           <p class="eyebrow">PAL BREEDING</p>
-          <strong>配合ボード</strong>
+          <strong>配合記録</strong>
         </div>
       </div>
 
@@ -91,9 +91,9 @@
       </section>
 
       <div class="sidebar-pals" aria-hidden="true">
-        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_icon_normal.webp" alt="" />
-        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp" alt="" />
-        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkCat_icon_normal.webp" alt="" />
+        <img src="https://palworld-lab.com/_astro/010.DQvWPP3E_2oiW8l.webp" alt="" />
+        <img src="https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" alt="" />
+        <img src="https://palworld-lab.com/_astro/002.CqEJyq_i_6gvU0.webp" alt="" />
       </div>
     </aside>
 
@@ -102,12 +102,12 @@
         <div class="hero-bg"></div>
         <div class="hero-copy">
           <p class="eyebrow">PALWORLD COLLAB BOARD</p>
-          <h1>パルワールド配合記録ボード</h1>
+          <h1><span>パルワールド配合記録ボード</span></h1>
           <p>友人とリアルタイムで配合結果・パッシブ候補・確認状況を記録できます。</p>
         </div>
 
         <div class="collab-card">
-          <div class="status-pill" id="connectionState"><span class="live-dot"></span>共同編集 準備中</div>
+          <div class="status-stack"><div class="status-pill" id="connectionState"><span class="live-dot"></span>共同編集 準備中</div><div class="data-source-pill">図鑑：<span id="palDataState">内蔵リスト</span></div></div>
           <div class="avatar-row">
             <span class="avatar owner">福</span><strong>福冨</strong>
             <span class="avatar green">A</span><span>友人A</span>
@@ -117,9 +117,9 @@
         </div>
 
         <div class="hero-pals" aria-hidden="true">
-          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp" alt=""><figcaption>モコロン</figcaption></figure>
-          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_icon_normal.webp" alt=""><figcaption>キツネビ</figcaption></figure>
-          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_icon_normal.webp" alt=""><figcaption>オコチョ</figcaption></figure>
+          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" alt=""><figcaption>モコロン</figcaption></figure>
+          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/005.De-0Pa55_LYewp.webp" alt=""><figcaption>キツネビ</figcaption></figure>
+          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/055.C3DznTNK_Z1ESlKf.webp" alt=""><figcaption>オコチョ</figcaption></figure>
         </div>
       </header>
 
@@ -195,14 +195,26 @@
 
       <input type="hidden" id="recordId" />
       <div class="form-grid">
-        <label>親A
-          <input id="parentA" name="parentA" list="palOptions" required placeholder="例：キャプペン" />
+        <label class="pal-picker-field">親A
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="parentA" name="parentA" required autocomplete="off" placeholder="例：キャプペン" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
-        <label>親B
-          <input id="parentB" name="parentB" list="palOptions" required placeholder="例：ツジギリ" />
+        <label class="pal-picker-field">親B
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="parentB" name="parentB" required autocomplete="off" placeholder="例：ツジギリ" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
-        <label>結果パル
-          <input id="resultPal" name="resultPal" list="palOptions" required placeholder="例：アヌビス" />
+        <label class="pal-picker-field">結果パル
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="resultPal" name="resultPal" required autocomplete="off" placeholder="例：アヌビス" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
         <label>記録者
           <input id="recorder" name="recorder" required placeholder="例：福冨" />
