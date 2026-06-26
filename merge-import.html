@@ -6,9 +6,9 @@
   <title>配合記録インポート</title>
   <script src="config.js" defer></script>
   <style>
-    :root { --ink:#17304a; --muted:#667c91; --line:rgba(24,62,95,.16); --yellow:#ffc740; --green:#36bd62; --bg:#eef7ff; }
+    :root { --ink:#17304a; --muted:#667c91; --line:rgba(24,62,95,.16); --yellow:#ffc740; --green:#36bd62; --bg:#eef7ff; --red:#d84b55; }
     body { margin:0; min-height:100vh; font-family:"Segoe UI","Yu Gothic",Meiryo,sans-serif; color:var(--ink); background:linear-gradient(140deg,#e6f6ff,#fff7e7); display:grid; place-items:center; padding:24px; }
-    main { width:min(860px,100%); background:rgba(255,255,255,.94); border:1px solid var(--line); border-radius:24px; box-shadow:0 22px 60px rgba(27,77,113,.18); padding:28px; }
+    main { width:min(900px,100%); background:rgba(255,255,255,.94); border:1px solid var(--line); border-radius:24px; box-shadow:0 22px 60px rgba(27,77,113,.18); padding:28px; }
     h1 { margin:0 0 8px; font-size:28px; }
     p { line-height:1.7; }
     .box { border:1px solid var(--line); border-radius:16px; padding:16px; background:#f8fbff; margin:16px 0; }
@@ -16,18 +16,30 @@
     input { width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:14px; font:inherit; }
     button { border:0; border-radius:14px; padding:13px 18px; font-weight:900; cursor:pointer; }
     .primary { color:#5b3d00; background:linear-gradient(135deg,#ffe166,#ffb737); }
+    .danger { color:#fff; background:linear-gradient(135deg,#ef6a72,#c93d4a); }
     .secondary { background:#fff; border:1px solid var(--line); color:var(--ink); }
     .actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
     .status { margin-top:16px; padding:14px; border-radius:14px; background:#f7fbff; border:1px solid var(--line); white-space:pre-wrap; }
     .ok { background:#edfff3; color:#237942; border-color:rgba(35,121,66,.2); }
     .warn { background:#fff7e2; color:#8b6100; border-color:rgba(139,97,0,.2); }
+    .danger-note { background:#fff2f3; color:#8f2530; border-color:rgba(216,75,85,.25); }
     code { background:#eef4fb; padding:2px 5px; border-radius:6px; }
+    .summary { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+    .summary div { padding:14px; border:1px solid var(--line); border-radius:14px; background:#fff; }
+    .summary strong { display:block; font-size:24px; }
+    @media (max-width: 680px) { .summary { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
 <main>
   <h1>配合記録インポート</h1>
-  <p>スプレッドシートの配合記録 <strong>55件</strong> を、現在のFirebase Realtime Databaseへ追加します。既存データは消さず、<code>import-20260626-001</code> 形式のIDで上書き/追加します。</p>
+  <p>スプレッドシートの配合記録をFirebaseへ登録します。記録者は <strong>森井</strong>、メモは空欄です。</p>
+
+  <div class="summary">
+    <div><span>総件数</span><strong>65件</strong></div>
+    <div><span>配合確認済み</span><strong>57件</strong></div>
+    <div><span>確認中</span><strong>8件</strong></div>
+  </div>
 
   <div class="box">
     <label for="roomId">インポート先 room ID</label>
@@ -35,8 +47,14 @@
     <p style="color:var(--muted); margin-bottom:0;">通常はサイトURLの <code>#room=...</code> の値が自動入力されます。空の場合は、配合記録ボードのURLからコピーしてください。</p>
   </div>
 
+  <div class="box danger-note">
+    <strong>既存データを完全に入れ替えたい場合</strong>
+    <p style="margin-bottom:0;">「全削除してからインポート」を使うと、指定roomの既存recordsを削除してから今回の全65件を登録します。通常は「追加/上書き」で十分です。</p>
+  </div>
+
   <div class="actions">
-    <button class="primary" id="importBtn" type="button">Firebaseへインポートする</button>
+    <button class="primary" id="importBtn" type="button">追加/上書きインポート</button>
+    <button class="danger" id="replaceBtn" type="button">全削除してからインポート</button>
     <button class="secondary" id="copyBtn" type="button">room IDをURLから再取得</button>
   </div>
 
@@ -50,550 +68,650 @@ const IMPORT_RECORDS = {
     "parentB": "ビーナイト",
     "resultPal": "ムラクモ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468001000
+    "updatedAt": 1782471601000
   },
   "import-20260626-002": {
     "parentA": "ラブラドン",
     "parentB": "フブキジカ",
     "resultPal": "ルミカイト",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468002000
+    "updatedAt": 1782471602000
   },
   "import-20260626-003": {
     "parentA": "マスクロウ",
     "parentB": "ブシガエル",
     "resultPal": "ラブマンダー",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468003000
+    "updatedAt": 1782471603000
   },
   "import-20260626-004": {
     "parentA": "マスクロウ",
     "parentB": "カバネドリ",
     "resultPal": "ルミカイト",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468004000
+    "updatedAt": 1782471604000
   },
   "import-20260626-005": {
     "parentA": "フェスキー",
     "parentB": "スザク",
     "resultPal": "ヘルガルダ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468005000
+    "updatedAt": 1782471605000
   },
   "import-20260626-006": {
     "parentA": "オーマサンダ",
     "parentB": "イヌズマ",
     "resultPal": "アヌビス",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468006000
+    "updatedAt": 1782471606000
   },
   "import-20260626-007": {
     "parentA": "ライバード",
     "parentB": "エテッパ",
     "resultPal": "イヌズマ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468007000
+    "updatedAt": 1782471607000
   },
   "import-20260626-008": {
     "parentA": "フェスキー",
     "parentB": "ヘルガルダ",
     "resultPal": "テラナイト",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468008000
+    "updatedAt": 1782471608000
   },
   "import-20260626-009": {
     "parentA": "イヌズマ",
     "parentB": "スザク",
     "resultPal": "オーマサンダ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468009000
+    "updatedAt": 1782471609000
   },
   "import-20260626-010": {
     "parentA": "ブシガエル",
     "parentB": "ルミカイト",
     "resultPal": "シラヌイ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468010000
+    "updatedAt": 1782471610000
   },
   "import-20260626-011": {
     "parentA": "ヘルガルダ",
     "parentB": "ムラクモ",
     "resultPal": "ヘルゴート",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468011000
+    "updatedAt": 1782471611000
   },
   "import-20260626-012": {
     "parentA": "スザク",
     "parentB": "アグニドラ",
     "resultPal": "ヘルガルダ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468012000
+    "updatedAt": 1782471612000
   },
   "import-20260626-013": {
     "parentA": "オーマサンダ",
     "parentB": "アグニドラ",
     "resultPal": "サラブレイズ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468013000
+    "updatedAt": 1782471613000
   },
   "import-20260626-014": {
     "parentA": "ライバード",
     "parentB": "イヌズマ",
     "resultPal": "トロピティ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468014000
+    "updatedAt": 1782471614000
   },
   "import-20260626-015": {
     "parentA": "スザク",
     "parentB": "ヘルガルダ",
     "resultPal": "ツンドラー",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468015000
+    "updatedAt": 1782471615000
   },
   "import-20260626-016": {
     "parentA": "ルミカイト",
     "parentB": "ガブルミ",
     "resultPal": "マスクロウ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468016000
+    "updatedAt": 1782471616000
   },
   "import-20260626-017": {
     "parentA": "ライバード",
     "parentB": "オーマサンダ",
     "resultPal": "レヴィドラ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468017000
+    "updatedAt": 1782471617000
   },
   "import-20260626-018": {
     "parentA": "ブシガエル",
     "parentB": "シラヌイ",
     "resultPal": "アロアリュー",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468018000
+    "updatedAt": 1782471618000
   },
   "import-20260626-019": {
     "parentA": "マスクロウ",
     "parentB": "ガブルミ",
     "resultPal": "メリポップ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468019000
+    "updatedAt": 1782471619000
   },
   "import-20260626-020": {
     "parentA": "レヴィドラ",
     "parentB": "アグニドラ",
     "resultPal": "レヴィドラ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468020000
+    "updatedAt": 1782471620000
   },
   "import-20260626-021": {
     "parentA": "シラヌイ",
     "parentB": "カバネドリ",
     "resultPal": "バニザラシ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468021000
+    "updatedAt": 1782471621000
   },
   "import-20260626-022": {
     "parentA": "イシス",
     "parentB": "レヴィドラ",
     "resultPal": "ペコドン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468022000
+    "updatedAt": 1782471622000
   },
   "import-20260626-023": {
     "parentA": "モモンパ",
     "parentB": "バニザラシ",
     "resultPal": "シャーキッド",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468023000
+    "updatedAt": 1782471623000
   },
   "import-20260626-024": {
     "parentA": "バニザラシ",
     "parentB": "マスクロウ",
     "resultPal": "ミルカルビ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468024000
+    "updatedAt": 1782471624000
   },
   "import-20260626-025": {
     "parentA": "モモンパ",
     "parentB": "レヴィドラ",
     "resultPal": "ツララジカ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468025000
+    "updatedAt": 1782471625000
   },
   "import-20260626-026": {
     "parentA": "レヴィドラ",
     "parentB": "バニザラシ",
     "resultPal": "アンドーン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468026000
+    "updatedAt": 1782471626000
   },
   "import-20260626-027": {
     "parentA": "レヴィドラ",
     "parentB": "マスクロウ",
     "resultPal": "クレメーオ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468027000
+    "updatedAt": 1782471627000
   },
   "import-20260626-028": {
     "parentA": "レヴィドラ",
     "parentB": "フロスカノン",
     "resultPal": "テラナイト",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468028000
+    "updatedAt": 1782471628000
   },
   "import-20260626-029": {
     "parentA": "アンドーン",
     "parentB": "テラナイト",
     "resultPal": "オーマサンダ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468029000
+    "updatedAt": 1782471629000
   },
   "import-20260626-030": {
     "parentA": "フェスキー",
     "parentB": "アンドーン",
     "resultPal": "コゴエール",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468030000
+    "updatedAt": 1782471630000
   },
   "import-20260626-031": {
     "parentA": "アンドーン",
     "parentB": "スザク",
     "resultPal": "ペコドン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468031000
+    "updatedAt": 1782471631000
   },
   "import-20260626-032": {
     "parentA": "アンドーン",
     "parentB": "ライバード",
     "resultPal": "レヴィドラ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468032000
+    "updatedAt": 1782471632000
   },
   "import-20260626-033": {
     "parentA": "オーマサンダ",
     "parentB": "カバネドリ",
     "resultPal": "アンドーン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468033000
+    "updatedAt": 1782471633000
   },
   "import-20260626-034": {
     "parentA": "オーマサンダ",
     "parentB": "ミステリア",
     "resultPal": "プラムルリム",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468034000
+    "updatedAt": 1782471634000
   },
   "import-20260626-035": {
     "parentA": "オーマサンダ",
     "parentB": "ヘルガルダ",
     "resultPal": "グランモス",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468035000
+    "updatedAt": 1782471635000
   },
   "import-20260626-036": {
     "parentA": "カバネドリ",
     "parentB": "マグピス",
     "resultPal": "エアムルグ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468036000
+    "updatedAt": 1782471636000
   },
   "import-20260626-037": {
     "parentA": "アヌビス",
     "parentB": "オーマサンダ",
     "resultPal": "トロピティ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468037000
+    "updatedAt": 1782471637000
   },
   "import-20260626-038": {
     "parentA": "ツジギリ",
     "parentB": "フラリーナ",
     "resultPal": "ゴクエンオ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468038000
+    "updatedAt": 1782471638000
   },
   "import-20260626-039": {
     "parentA": "イバラヒメ",
     "parentB": "パピテフ",
     "resultPal": "フワフラワ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468039000
+    "updatedAt": 1782471639000
   },
   "import-20260626-040": {
     "parentA": "フワフラワ",
     "parentB": "グランモス",
     "resultPal": "チルウィッチ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468040000
+    "updatedAt": 1782471640000
   },
   "import-20260626-041": {
     "parentA": "イバラヒメ",
     "parentB": "アロアリュー",
     "resultPal": "ビーナイト",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468041000
+    "updatedAt": 1782471641000
   },
   "import-20260626-042": {
     "parentA": "イバラヒメ",
     "parentB": "ビーナイト",
     "resultPal": "ヒメンダコ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468042000
+    "updatedAt": 1782471642000
   },
   "import-20260626-043": {
     "parentA": "イバラヒメ",
     "parentB": "フォレーナ",
     "resultPal": "ナエモチ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468043000
+    "updatedAt": 1782471643000
   },
   "import-20260626-044": {
     "parentA": "フワフラワ",
     "parentB": "アロアリュー",
     "resultPal": "ラブラドン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468044000
+    "updatedAt": 1782471644000
   },
   "import-20260626-045": {
     "parentA": "ゼノベーダ",
     "parentB": "アンドーン",
-    "resultPal": "",
-    "status": "確認中",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "resultPal": "アズレーン",
+    "status": "配合確認済み",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468045000
+    "updatedAt": 1782471645000
   },
   "import-20260626-046": {
     "parentA": "ゼノベーダ",
     "parentB": "オーマサンダ",
     "resultPal": "ササゾー",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468046000
+    "updatedAt": 1782471646000
   },
   "import-20260626-047": {
     "parentA": "イバラヒメ",
     "parentB": "ナエモチ",
     "resultPal": "ポプリーナ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468047000
+    "updatedAt": 1782471647000
   },
   "import-20260626-048": {
     "parentA": "ポプリーナ",
     "parentB": "フォレーナ",
     "resultPal": "モグルン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468048000
+    "updatedAt": 1782471648000
   },
   "import-20260626-049": {
     "parentA": "イバラヒメ",
     "parentB": "エテッパ",
     "resultPal": "ヤミイカ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468049000
+    "updatedAt": 1782471649000
   },
   "import-20260626-050": {
     "parentA": "イバラヒメ",
     "parentB": "ミルフィー",
     "resultPal": "ホウロック",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468050000
+    "updatedAt": 1782471650000
   },
   "import-20260626-051": {
     "parentA": "イバラヒメ",
     "parentB": "クルリス",
     "resultPal": "パチグリ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468051000
+    "updatedAt": 1782471651000
   },
   "import-20260626-052": {
     "parentA": "クインビーナ",
     "parentB": "クルリス",
     "resultPal": "ツララジカ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468052000
+    "updatedAt": 1782471652000
   },
   "import-20260626-053": {
     "parentA": "ラベロット",
     "parentB": "ミルフィー",
     "resultPal": "モグルン",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468053000
+    "updatedAt": 1782471653000
   },
   "import-20260626-054": {
     "parentA": "ラベロット",
     "parentB": "クインビーナ",
     "resultPal": "カバネドリ",
     "status": "配合確認済み",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468054000
+    "updatedAt": 1782471654000
   },
   "import-20260626-055": {
     "parentA": "オーマサンダ",
     "parentB": "エテッパ",
+    "resultPal": "モモンチュラ",
+    "status": "配合確認済み",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471655000
+  },
+  "import-20260626-056": {
+    "parentA": "トドドドン",
+    "parentB": "ベリゴート",
+    "resultPal": "ミルカルビ",
+    "status": "配合確認済み",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471656000
+  },
+  "import-20260626-057": {
+    "parentA": "モモンチュラ",
+    "parentB": "ゴクエンオ",
     "resultPal": "",
     "status": "確認中",
-    "recorder": "福冨",
-    "note": "スプレッドシートから移行",
+    "recorder": "森井",
+    "note": "",
     "favorite": false,
-    "updatedAt": 1782468055000
+    "updatedAt": 1782471657000
+  },
+  "import-20260626-058": {
+    "parentA": "トドドドン",
+    "parentB": "チルウィッチ",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471658000
+  },
+  "import-20260626-059": {
+    "parentA": "サラブレイズ",
+    "parentB": "ラブマンダー",
+    "resultPal": "ニャニミテ",
+    "status": "配合確認済み",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471659000
+  },
+  "import-20260626-060": {
+    "parentA": "トドドドン",
+    "parentB": "シメナワ",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471660000
+  },
+  "import-20260626-061": {
+    "parentA": "サラブレイズ",
+    "parentB": "ラブラドン",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471661000
+  },
+  "import-20260626-062": {
+    "parentA": "モモンチュラ",
+    "parentB": "アロアリュー",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471662000
+  },
+  "import-20260626-063": {
+    "parentA": "トドドドン",
+    "parentB": "モモンパ",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471663000
+  },
+  "import-20260626-064": {
+    "parentA": "ラブラドン",
+    "parentB": "ミステリア",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471664000
+  },
+  "import-20260626-065": {
+    "parentA": "ラブラドン",
+    "parentB": "アロアリュー",
+    "resultPal": "",
+    "status": "確認中",
+    "recorder": "森井",
+    "note": "",
+    "favorite": false,
+    "updatedAt": 1782471665000
   }
 };
 
@@ -614,6 +732,50 @@ function fillRoom() {
   $("roomId").value = getRoomFromLocation();
 }
 
+async function getFirebase(roomId) {
+  if (!window.firebaseConfig?.apiKey || !window.firebaseConfig?.databaseURL) {
+    throw new Error("config.js の Firebase設定が読み込めません。merge-import.html を index.html と同じ階層に置いてください。");
+  }
+  const appMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+  const dbMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js");
+  const app = appMod.initializeApp(window.firebaseConfig);
+  const db = dbMod.getDatabase(app);
+  return { dbMod, db, recordsRef: dbMod.ref(db, `rooms/${roomId}/records`) };
+}
+
+async function runImport(mode) {
+  const roomId = $("roomId").value.trim().replace(/[^a-zA-Z0-9_-]/g, "");
+  if (!roomId) {
+    setStatus("room IDが空です。配合記録ボードのURL末尾にある #room=... の値を入力してください。", "warn");
+    return;
+  }
+
+  if (mode === "replace") {
+    const ok = confirm(`rooms/${roomId}/records を全削除してから、今回の${Object.keys(IMPORT_RECORDS).length}件を登録します。よろしいですか？`);
+    if (!ok) return;
+  }
+
+  try {
+    setStatus("Firebaseへ接続中...");
+    const { dbMod, recordsRef } = await getFirebase(roomId);
+
+    if (mode === "replace") {
+      setStatus("既存recordsを削除中...");
+      await dbMod.remove(recordsRef);
+      setStatus("新しいrecordsを登録中...");
+      await dbMod.set(recordsRef, IMPORT_RECORDS);
+    } else {
+      setStatus("recordsへ追加/上書き中...");
+      await dbMod.update(recordsRef, IMPORT_RECORDS);
+    }
+
+    setStatus(`インポート完了：${Object.keys(IMPORT_RECORDS).length}件を rooms/${roomId}/records へ登録しました。\n\n配合記録ボードを開き、Ctrl + F5 で更新してください。`, "ok");
+  } catch (error) {
+    console.error(error);
+    setStatus(`インポート失敗：${error.message}\n\nFirebaseのルール、config.js、room IDを確認してください。`, "warn");
+  }
+}
+
 fillRoom();
 
 $("copyBtn").addEventListener("click", () => {
@@ -621,30 +783,8 @@ $("copyBtn").addEventListener("click", () => {
   setStatus("URLまたはブラウザ保存値からroom IDを再取得しました。", "warn");
 });
 
-$("importBtn").addEventListener("click", async () => {
-  const roomId = $("roomId").value.trim().replace(/[^a-zA-Z0-9_-]/g, "");
-  if (!roomId) {
-    setStatus("room IDが空です。配合記録ボードのURL末尾にある #room=... の値を入力してください。", "warn");
-    return;
-  }
-  if (!window.firebaseConfig?.apiKey || !window.firebaseConfig?.databaseURL) {
-    setStatus("config.js の Firebase設定が読み込めません。merge-import.html を index.html と同じ階層に置いてください。", "warn");
-    return;
-  }
-
-  try {
-    setStatus("Firebaseへ接続中...");
-    const appMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
-    const dbMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js");
-    const app = appMod.initializeApp(window.firebaseConfig);
-    const db = dbMod.getDatabase(app);
-    await dbMod.update(dbMod.ref(db, `rooms/${roomId}/records`), IMPORT_RECORDS);
-    setStatus(`インポート完了：${Object.keys(IMPORT_RECORDS).length}件を rooms/${roomId}/records へ追加しました。\n\n配合記録ボードを開き、Ctrl + F5 で更新してください。`, "ok");
-  } catch (error) {
-    console.error(error);
-    setStatus(`インポート失敗：${error.message}\n\nFirebaseのルール、config.js、room IDを確認してください。`, "warn");
-  }
-});
+$("importBtn").addEventListener("click", () => runImport("merge"));
+$("replaceBtn").addEventListener("click", () => runImport("replace"));
 </script>
 </body>
 </html>
