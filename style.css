@@ -860,3 +860,10 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   height: 60px !important;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,.10)) !important;
 }
+
+
+/* v23: PalDB Breed一覧の画像URLを静的マップで優先利用 */
+.pal-icon img {
+  image-rendering: auto !important;
+  transform: none !important;
+}

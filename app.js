@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v14";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v23";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v22";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v23";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -673,6 +673,1079 @@ const LEGACY_ENGLISH_TO_JP = {
   faleris: "ホルス", menasting: "デスティング", blazamut: "ボルカイザー", shadowbeak: "ゼノグリフ"
 };
 
+const PALDB_STATIC_ICONS = [
+  {
+    "no": "1",
+    "iconKey": "SheepBall",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp"
+  },
+  {
+    "no": "2",
+    "iconKey": "PinkCat",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkCat_icon_normal.webp"
+  },
+  {
+    "no": "3",
+    "iconKey": "ChickenPal",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ChickenPal_icon_normal.webp"
+  },
+  {
+    "no": "4",
+    "iconKey": "Carbunclo",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Carbunclo_icon_normal.webp"
+  },
+  {
+    "no": "5",
+    "iconKey": "Kitsunebi",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_icon_normal.webp"
+  },
+  {
+    "no": "5B",
+    "iconKey": "Kitsunebi_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_Ice_icon_normal.webp"
+  },
+  {
+    "no": "6",
+    "iconKey": "BluePlatypus",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BluePlatypus_icon_normal.webp"
+  },
+  {
+    "no": "6B",
+    "iconKey": "BluePlatypus_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BluePlatypus_Fire_icon_normal.webp"
+  },
+  {
+    "no": "7",
+    "iconKey": "ElecCat",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ElecCat_icon_normal.webp"
+  },
+  {
+    "no": "8",
+    "iconKey": "Monkey",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Monkey_icon_normal.webp"
+  },
+  {
+    "no": "9",
+    "iconKey": "FlameBambi",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlameBambi_icon_normal.webp"
+  },
+  {
+    "no": "10",
+    "iconKey": "Penguin",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_icon_normal.webp"
+  },
+  {
+    "no": "10B",
+    "iconKey": "Penguin_Electric",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_Electric_icon_normal.webp"
+  },
+  {
+    "no": "11",
+    "iconKey": "CaptainPenguin",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CaptainPenguin_icon_normal.webp"
+  },
+  {
+    "no": "11B",
+    "iconKey": "CaptainPenguin_Black",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CaptainPenguin_Black_icon_normal.webp"
+  },
+  {
+    "no": "12",
+    "iconKey": "Hedgehog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Hedgehog_icon_normal.webp"
+  },
+  {
+    "no": "12B",
+    "iconKey": "Hedgehog_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Hedgehog_Ice_icon_normal.webp"
+  },
+  {
+    "no": "13",
+    "iconKey": "PlantSlime",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PlantSlime_icon_normal.webp"
+  },
+  {
+    "no": "14",
+    "iconKey": "CuteFox",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteFox_icon_normal.webp"
+  },
+  {
+    "no": "15",
+    "iconKey": "WizardOwl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WizardOwl_icon_normal.webp"
+  },
+  {
+    "no": "16",
+    "iconKey": "Ganesha",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ganesha_icon_normal.webp"
+  },
+  {
+    "no": "17",
+    "iconKey": "NegativeKoala",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeKoala_icon_normal.webp"
+  },
+  {
+    "no": "18",
+    "iconKey": "WoolFox",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WoolFox_icon_normal.webp"
+  },
+  {
+    "no": "19",
+    "iconKey": "DreamDemon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DreamDemon_icon_normal.webp"
+  },
+  {
+    "no": "20",
+    "iconKey": "Boar",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Boar_icon_normal.webp"
+  },
+  {
+    "no": "21",
+    "iconKey": "NightFox",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightFox_icon_normal.webp"
+  },
+  {
+    "no": "22",
+    "iconKey": "CuteMole",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteMole_icon_normal.webp"
+  },
+  {
+    "no": "23",
+    "iconKey": "NegativeOctopus",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeOctopus_icon_normal.webp"
+  },
+  {
+    "no": "23B",
+    "iconKey": "NegativeOctopus_Neutral",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeOctopus_Neutral_icon_normal.webp"
+  },
+  {
+    "no": "24",
+    "iconKey": "Bastet",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Bastet_icon_normal.webp"
+  },
+  {
+    "no": "24B",
+    "iconKey": "Bastet_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Bastet_Ice_icon_normal.webp"
+  },
+  {
+    "no": "25",
+    "iconKey": "FlyingManta",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlyingManta_icon_normal.webp"
+  },
+  {
+    "no": "25B",
+    "iconKey": "FlyingManta_Thunder",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlyingManta_Thunder_icon_normal.webp"
+  },
+  {
+    "no": "26",
+    "iconKey": "Garm",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Garm_icon_normal.webp"
+  },
+  {
+    "no": "27",
+    "iconKey": "ColorfulBird",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ColorfulBird_icon_normal.webp"
+  },
+  {
+    "no": "28",
+    "iconKey": "FlowerRabbit",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerRabbit_icon_normal.webp"
+  },
+  {
+    "no": "29",
+    "iconKey": "CowPal",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CowPal_icon_normal.webp"
+  },
+  {
+    "no": "30",
+    "iconKey": "LittleBriarRose",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LittleBriarRose_icon_normal.webp"
+  },
+  {
+    "no": "31",
+    "iconKey": "SharkKid",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SharkKid_icon_normal.webp"
+  },
+  {
+    "no": "31B",
+    "iconKey": "SharkKid_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SharkKid_Fire_icon_normal.webp"
+  },
+  {
+    "no": "32",
+    "iconKey": "WindChimes",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WindChimes_icon_normal.webp"
+  },
+  {
+    "no": "32B",
+    "iconKey": "WindChimes_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WindChimes_Ice_icon_normal.webp"
+  },
+  {
+    "no": "33",
+    "iconKey": "GrassPanda",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassPanda_icon_normal.webp"
+  },
+  {
+    "no": "33B",
+    "iconKey": "GrassPanda_Electric",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassPanda_Electric_icon_normal.webp"
+  },
+  {
+    "no": "34",
+    "iconKey": "SweetsSheep",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SweetsSheep_icon_normal.webp"
+  },
+  {
+    "no": "35",
+    "iconKey": "BerryGoat",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BerryGoat_icon_normal.webp"
+  },
+  {
+    "no": "35B",
+    "iconKey": "BerryGoat_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BerryGoat_Dark_icon_normal.webp"
+  },
+  {
+    "no": "36",
+    "iconKey": "Alpaca",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Alpaca_icon_normal.webp"
+  },
+  {
+    "no": "37",
+    "iconKey": "Deer",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Deer_icon_normal.webp"
+  },
+  {
+    "no": "37B",
+    "iconKey": "Deer_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Deer_Ground_icon_normal.webp"
+  },
+  {
+    "no": "38",
+    "iconKey": "HawkBird",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HawkBird_icon_normal.webp"
+  },
+  {
+    "no": "39",
+    "iconKey": "PinkRabbit",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkRabbit_icon_normal.webp"
+  },
+  {
+    "no": "39B",
+    "iconKey": "PinkRabbit_Grass",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkRabbit_Grass_icon_normal.webp"
+  },
+  {
+    "no": "40",
+    "iconKey": "Baphomet",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Baphomet_icon_normal.webp"
+  },
+  {
+    "no": "40B",
+    "iconKey": "Baphomet_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Baphomet_Dark_icon_normal.webp"
+  },
+  {
+    "no": "41",
+    "iconKey": "CuteButterfly",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteButterfly_icon_normal.webp"
+  },
+  {
+    "no": "42",
+    "iconKey": "FlameBuffalo",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlameBuffalo_icon_normal.webp"
+  },
+  {
+    "no": "43",
+    "iconKey": "LazyCatfish",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyCatfish_icon_normal.webp"
+  },
+  {
+    "no": "43B",
+    "iconKey": "LazyCatfish_Gold",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyCatfish_Gold_icon_normal.webp"
+  },
+  {
+    "no": "44",
+    "iconKey": "DarkCrow",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkCrow_icon_normal.webp"
+  },
+  {
+    "no": "45",
+    "iconKey": "LizardMan",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LizardMan_icon_normal.webp"
+  },
+  {
+    "no": "45B",
+    "iconKey": "LizardMan_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LizardMan_Fire_icon_normal.webp"
+  },
+  {
+    "no": "46",
+    "iconKey": "Werewolf",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Werewolf_icon_normal.webp"
+  },
+  {
+    "no": "46B",
+    "iconKey": "Werewolf_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Werewolf_Ice_icon_normal.webp"
+  },
+  {
+    "no": "47",
+    "iconKey": "Eagle",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Eagle_icon_normal.webp"
+  },
+  {
+    "no": "48",
+    "iconKey": "RobinHood",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RobinHood_icon_normal.webp"
+  },
+  {
+    "no": "48B",
+    "iconKey": "RobinHood_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RobinHood_Ground_icon_normal.webp"
+  },
+  {
+    "no": "49",
+    "iconKey": "Gorilla",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Gorilla_icon_normal.webp"
+  },
+  {
+    "no": "49B",
+    "iconKey": "Gorilla_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Gorilla_Ground_icon_normal.webp"
+  },
+  {
+    "no": "50",
+    "iconKey": "SoldierBee",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SoldierBee_icon_normal.webp"
+  },
+  {
+    "no": "51",
+    "iconKey": "QueenBee",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_QueenBee_icon_normal.webp"
+  },
+  {
+    "no": "52",
+    "iconKey": "NaughtyCat",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NaughtyCat_icon_normal.webp"
+  },
+  {
+    "no": "53",
+    "iconKey": "MopBaby",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MopBaby_icon_normal.webp"
+  },
+  {
+    "no": "54",
+    "iconKey": "MopKing",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MopKing_icon_normal.webp"
+  },
+  {
+    "no": "55",
+    "iconKey": "WeaselDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_icon_normal.webp"
+  },
+  {
+    "no": "55B",
+    "iconKey": "WeaselDragon_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_Fire_icon_normal.webp"
+  },
+  {
+    "no": "56",
+    "iconKey": "Kirin",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kirin_icon_normal.webp"
+  },
+  {
+    "no": "57",
+    "iconKey": "IceFox",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceFox_icon_normal.webp"
+  },
+  {
+    "no": "58",
+    "iconKey": "FireKirin",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FireKirin_icon_normal.webp"
+  },
+  {
+    "no": "58B",
+    "iconKey": "FireKirin_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FireKirin_Dark_icon_normal.webp"
+  },
+  {
+    "no": "59",
+    "iconKey": "IceDeer",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceDeer_icon_normal.webp"
+  },
+  {
+    "no": "60",
+    "iconKey": "ThunderDog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderDog_icon_normal.webp"
+  },
+  {
+    "no": "61",
+    "iconKey": "AmaterasuWolf",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_AmaterasuWolf_icon_normal.webp"
+  },
+  {
+    "no": "61B",
+    "iconKey": "AmaterasuWolf_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_AmaterasuWolf_Dark_icon_normal.webp"
+  },
+  {
+    "no": "62",
+    "iconKey": "RaijinDaughter",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RaijinDaughter_icon_normal.webp"
+  },
+  {
+    "no": "62B",
+    "iconKey": "RaijinDaughter_Water",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RaijinDaughter_Water_icon_normal.webp"
+  },
+  {
+    "no": "63",
+    "iconKey": "Mutant",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Mutant_icon_normal.webp"
+  },
+  {
+    "no": "64",
+    "iconKey": "FlowerDinosaur",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDinosaur_icon_normal.webp"
+  },
+  {
+    "no": "64B",
+    "iconKey": "FlowerDinosaur_Electric",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDinosaur_Electric_icon_normal.webp"
+  },
+  {
+    "no": "65",
+    "iconKey": "Serpent",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Serpent_icon_normal.webp"
+  },
+  {
+    "no": "65B",
+    "iconKey": "Serpent_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Serpent_Ground_icon_normal.webp"
+  },
+  {
+    "no": "66",
+    "iconKey": "GhostBeast",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostBeast_icon_normal.webp"
+  },
+  {
+    "no": "67",
+    "iconKey": "DrillGame",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DrillGame_icon_normal.webp"
+  },
+  {
+    "no": "68",
+    "iconKey": "CatBat",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatBat_icon_normal.webp"
+  },
+  {
+    "no": "69",
+    "iconKey": "PinkLizard",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkLizard_icon_normal.webp"
+  },
+  {
+    "no": "70",
+    "iconKey": "LavaGirl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LavaGirl_icon_normal.webp"
+  },
+  {
+    "no": "71",
+    "iconKey": "BirdDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BirdDragon_icon_normal.webp"
+  },
+  {
+    "no": "71B",
+    "iconKey": "BirdDragon_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BirdDragon_Ice_icon_normal.webp"
+  },
+  {
+    "no": "72",
+    "iconKey": "Ronin",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ronin_icon_normal.webp"
+  },
+  {
+    "no": "72B",
+    "iconKey": "Ronin_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ronin_Dark_icon_normal.webp"
+  },
+  {
+    "no": "73",
+    "iconKey": "ThunderBird",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderBird_icon_normal.webp"
+  },
+  {
+    "no": "74",
+    "iconKey": "RedArmorBird",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RedArmorBird_icon_normal.webp"
+  },
+  {
+    "no": "75",
+    "iconKey": "CatMage",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatMage_icon_normal.webp"
+  },
+  {
+    "no": "75B",
+    "iconKey": "CatMage_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatMage_Fire_icon_normal.webp"
+  },
+  {
+    "no": "76",
+    "iconKey": "FoxMage",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FoxMage_icon_normal.webp"
+  },
+  {
+    "no": "76B",
+    "iconKey": "FoxMage_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FoxMage_Dark_icon_normal.webp"
+  },
+  {
+    "no": "77",
+    "iconKey": "GrassRabbitMan",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassRabbitMan_icon_normal.webp"
+  },
+  {
+    "no": "78",
+    "iconKey": "VioletFairy",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VioletFairy_icon_normal.webp"
+  },
+  {
+    "no": "79",
+    "iconKey": "WhiteMoth",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteMoth_icon_normal.webp"
+  },
+  {
+    "no": "80",
+    "iconKey": "FairyDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FairyDragon_icon_normal.webp"
+  },
+  {
+    "no": "80B",
+    "iconKey": "FairyDragon_Water",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FairyDragon_Water_icon_normal.webp"
+  },
+  {
+    "no": "81",
+    "iconKey": "Kelpie",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kelpie_icon_normal.webp"
+  },
+  {
+    "no": "81B",
+    "iconKey": "Kelpie_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kelpie_Fire_icon_normal.webp"
+  },
+  {
+    "no": "82",
+    "iconKey": "BlueDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueDragon_icon_normal.webp"
+  },
+  {
+    "no": "82B",
+    "iconKey": "BlueDragon_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueDragon_Ice_icon_normal.webp"
+  },
+  {
+    "no": "83",
+    "iconKey": "WhiteTiger",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteTiger_icon_normal.webp"
+  },
+  {
+    "no": "83B",
+    "iconKey": "WhiteTiger_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteTiger_Ground_icon_normal.webp"
+  },
+  {
+    "no": "84",
+    "iconKey": "Manticore",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Manticore_icon_normal.webp"
+  },
+  {
+    "no": "84B",
+    "iconKey": "Manticore_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Manticore_Dark_icon_normal.webp"
+  },
+  {
+    "no": "85",
+    "iconKey": "LazyDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyDragon_icon_normal.webp"
+  },
+  {
+    "no": "85B",
+    "iconKey": "LazyDragon_Electric",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyDragon_Electric_icon_normal.webp"
+  },
+  {
+    "no": "86",
+    "iconKey": "SakuraSaurus",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SakuraSaurus_icon_normal.webp"
+  },
+  {
+    "no": "86B",
+    "iconKey": "SakuraSaurus_Water",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SakuraSaurus_Water_icon_normal.webp"
+  },
+  {
+    "no": "87",
+    "iconKey": "FlowerDoll",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDoll_icon_normal.webp"
+  },
+  {
+    "no": "88",
+    "iconKey": "VolcanicMonster",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VolcanicMonster_icon_normal.webp"
+  },
+  {
+    "no": "88B",
+    "iconKey": "VolcanicMonster_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VolcanicMonster_Ice_icon_normal.webp"
+  },
+  {
+    "no": "89",
+    "iconKey": "KingAlpaca",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingAlpaca_icon_normal.webp"
+  },
+  {
+    "no": "89B",
+    "iconKey": "KingAlpaca_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingAlpaca_Ice_icon_normal.webp"
+  },
+  {
+    "no": "90",
+    "iconKey": "GrassMammoth",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassMammoth_icon_normal.webp"
+  },
+  {
+    "no": "90B",
+    "iconKey": "GrassMammoth_Ice",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassMammoth_Ice_icon_normal.webp"
+  },
+  {
+    "no": "91",
+    "iconKey": "Yeti",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Yeti_icon_normal.webp"
+  },
+  {
+    "no": "91B",
+    "iconKey": "Yeti_Grass",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Yeti_Grass_icon_normal.webp"
+  },
+  {
+    "no": "92",
+    "iconKey": "HerculesBeetle",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HerculesBeetle_icon_normal.webp"
+  },
+  {
+    "no": "92B",
+    "iconKey": "HerculesBeetle_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HerculesBeetle_Ground_icon_normal.webp"
+  },
+  {
+    "no": "93",
+    "iconKey": "FengyunDeeper",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FengyunDeeper_icon_normal.webp"
+  },
+  {
+    "no": "94",
+    "iconKey": "CatVampire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatVampire_icon_normal.webp"
+  },
+  {
+    "no": "95",
+    "iconKey": "SkyDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SkyDragon_icon_normal.webp"
+  },
+  {
+    "no": "95B",
+    "iconKey": "SkyDragon_Grass",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SkyDragon_Grass_icon_normal.webp"
+  },
+  {
+    "no": "96",
+    "iconKey": "KingBahamut",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingBahamut_icon_normal.webp"
+  },
+  {
+    "no": "96B",
+    "iconKey": "KingBahamut_Dragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingBahamut_Dragon_icon_normal.webp"
+  },
+  {
+    "no": "97",
+    "iconKey": "HadesBird",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HadesBird_icon_normal.webp"
+  },
+  {
+    "no": "97B",
+    "iconKey": "HadesBird_Electric",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HadesBird_Electric_icon_normal.webp"
+  },
+  {
+    "no": "98",
+    "iconKey": "BlackMetalDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackMetalDragon_icon_normal.webp"
+  },
+  {
+    "no": "99",
+    "iconKey": "DarkScorpion",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkScorpion_icon_normal.webp"
+  },
+  {
+    "no": "99B",
+    "iconKey": "DarkScorpion_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkScorpion_Ground_icon_normal.webp"
+  },
+  {
+    "no": "100",
+    "iconKey": "Anubis",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Anubis_icon_normal.webp"
+  },
+  {
+    "no": "101",
+    "iconKey": "Umihebi",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Umihebi_icon_normal.webp"
+  },
+  {
+    "no": "101B",
+    "iconKey": "Umihebi_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Umihebi_Fire_icon_normal.webp"
+  },
+  {
+    "no": "102",
+    "iconKey": "Suzaku",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Suzaku_icon_normal.webp"
+  },
+  {
+    "no": "102B",
+    "iconKey": "Suzaku_Water",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Suzaku_Water_icon_normal.webp"
+  },
+  {
+    "no": "103",
+    "iconKey": "ElecPanda",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ElecPanda_icon_normal.webp"
+  },
+  {
+    "no": "104",
+    "iconKey": "LilyQueen",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LilyQueen_icon_normal.webp"
+  },
+  {
+    "no": "104B",
+    "iconKey": "LilyQueen_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LilyQueen_Dark_icon_normal.webp"
+  },
+  {
+    "no": "105",
+    "iconKey": "Horus",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Horus_icon_normal.webp"
+  },
+  {
+    "no": "105B",
+    "iconKey": "Horus_Water",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Horus_Water_icon_normal.webp"
+  },
+  {
+    "no": "106",
+    "iconKey": "ThunderDragonMan",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderDragonMan_icon_normal.webp"
+  },
+  {
+    "no": "107",
+    "iconKey": "BlackGriffon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackGriffon_icon_normal.webp"
+  },
+  {
+    "no": "108",
+    "iconKey": "SaintCentaur",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SaintCentaur_icon_normal.webp"
+  },
+  {
+    "no": "109",
+    "iconKey": "BlackCentaur",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackCentaur_icon_normal.webp"
+  },
+  {
+    "no": "110",
+    "iconKey": "IceHorse",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceHorse_icon_normal.webp"
+  },
+  {
+    "no": "110B",
+    "iconKey": "IceHorse_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceHorse_Dark_icon_normal.webp"
+  },
+  {
+    "no": "111",
+    "iconKey": "JetDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JetDragon_icon_normal.webp"
+  },
+  {
+    "no": "112",
+    "iconKey": "NightLady",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightLady_icon_normal.webp"
+  },
+  {
+    "no": "112B",
+    "iconKey": "NightLady_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightLady_Dark_icon_normal.webp"
+  },
+  {
+    "no": "113",
+    "iconKey": "MoonQueen",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MoonQueen_icon_normal.webp"
+  },
+  {
+    "no": "114",
+    "iconKey": "KendoFrog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KendoFrog_icon_normal.webp"
+  },
+  {
+    "no": "114B",
+    "iconKey": "KendoFrog_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KendoFrog_Dark_icon_normal.webp"
+  },
+  {
+    "no": "115",
+    "iconKey": "LeafPrincess",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LeafPrincess_icon_normal.webp"
+  },
+  {
+    "no": "116",
+    "iconKey": "MushroomDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MushroomDragon_icon_normal.webp"
+  },
+  {
+    "no": "116B",
+    "iconKey": "MushroomDragon_Dark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MushroomDragon_Dark_icon_normal.webp"
+  },
+  {
+    "no": "117",
+    "iconKey": "SmallArmadillo",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SmallArmadillo_icon_normal.webp"
+  },
+  {
+    "no": "118",
+    "iconKey": "CandleGhost",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CandleGhost_icon_normal.webp"
+  },
+  {
+    "no": "119",
+    "iconKey": "ScorpionMan",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ScorpionMan_icon_normal.webp"
+  },
+  {
+    "no": "120",
+    "iconKey": "WingGolem",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WingGolem_icon_normal.webp"
+  },
+  {
+    "no": "121",
+    "iconKey": "GuardianDog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GuardianDog_icon_normal.webp"
+  },
+  {
+    "no": "122",
+    "iconKey": "SifuDog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SifuDog_icon_normal.webp"
+  },
+  {
+    "no": "123",
+    "iconKey": "FeatherOstrich",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FeatherOstrich_icon_normal.webp"
+  },
+  {
+    "no": "124",
+    "iconKey": "MimicDog",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MimicDog_icon_normal.webp"
+  },
+  {
+    "no": "125",
+    "iconKey": "DarkAlien",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkAlien_icon_normal.webp"
+  },
+  {
+    "no": "126",
+    "iconKey": "WhiteAlienDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteAlienDragon_icon_normal.webp"
+  },
+  {
+    "no": "127",
+    "iconKey": "DarkMechaDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkMechaDragon_icon_normal.webp"
+  },
+  {
+    "no": "128",
+    "iconKey": "GhostRabbit",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostRabbit_icon_normal.webp"
+  },
+  {
+    "no": "129",
+    "iconKey": "NightBlueHorse",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightBlueHorse_icon_normal.webp"
+  },
+  {
+    "no": "130",
+    "iconKey": "WhiteShieldDragon",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteShieldDragon_icon_normal.webp"
+  },
+  {
+    "no": "131",
+    "iconKey": "BlackPuppy",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackPuppy_icon_normal.webp"
+  },
+  {
+    "no": "132",
+    "iconKey": "WhiteDeer",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteDeer_icon_normal.webp"
+  },
+  {
+    "no": "133",
+    "iconKey": "MysteryMask",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MysteryMask_icon_normal.webp"
+  },
+  {
+    "no": "134",
+    "iconKey": "GrimGirl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrimGirl_icon_normal.webp"
+  },
+  {
+    "no": "135",
+    "iconKey": "PurpleSpider",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PurpleSpider_icon_normal.webp"
+  },
+  {
+    "no": "136",
+    "iconKey": "BlueThunderHorse",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueThunderHorse_icon_normal.webp"
+  },
+  {
+    "no": "137",
+    "iconKey": "SnowTigerBeastman",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SnowTigerBeastman_icon_normal.webp"
+  },
+  {
+    "no": "138",
+    "iconKey": "BlueberryFairy",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueberryFairy_icon_normal.webp"
+  },
+  {
+    "no": "139",
+    "iconKey": "BadCatgirl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BadCatgirl_icon_normal.webp"
+  },
+  {
+    "no": "140",
+    "iconKey": "GoldenHorse",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GoldenHorse_icon_normal.webp"
+  },
+  {
+    "no": "141",
+    "iconKey": "LeafMomonga",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LeafMomonga_icon_normal.webp"
+  },
+  {
+    "no": "142",
+    "iconKey": "IceWitch",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceWitch_icon_normal.webp"
+  },
+  {
+    "no": "143",
+    "iconKey": "SnowPeafowl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SnowPeafowl_icon_normal.webp"
+  },
+  {
+    "no": "144",
+    "iconKey": "TropicalOstrich",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TropicalOstrich_icon_normal.webp"
+  },
+  {
+    "no": "145",
+    "iconKey": "Plesiosaur",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Plesiosaur_icon_normal.webp"
+  },
+  {
+    "no": "146",
+    "iconKey": "IceCrocodile",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceCrocodile_icon_normal.webp"
+  },
+  {
+    "no": "147",
+    "iconKey": "IceSeal",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceSeal_icon_normal.webp"
+  },
+  {
+    "no": "148",
+    "iconKey": "TentacleTurtle",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TentacleTurtle_icon_normal.webp"
+  },
+  {
+    "no": "148B",
+    "iconKey": "TentacleTurtle_Ground",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TentacleTurtle_Ground_icon_normal.webp"
+  },
+  {
+    "no": "149",
+    "iconKey": "JellyfishGhost",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JellyfishGhost_icon_normal.webp"
+  },
+  {
+    "no": "150",
+    "iconKey": "JellyfishFairy",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JellyfishFairy_icon_normal.webp"
+  },
+  {
+    "no": "151",
+    "iconKey": "OctopusGirl",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_OctopusGirl_icon_normal.webp"
+  },
+  {
+    "no": "152",
+    "iconKey": "StuffedShark",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_StuffedShark_icon_normal.webp"
+  },
+  {
+    "no": "152B",
+    "iconKey": "StuffedShark_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_StuffedShark_Fire_icon_normal.webp"
+  },
+  {
+    "no": "153",
+    "iconKey": "GhostAnglerfish",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostAnglerfish_icon_normal.webp"
+  },
+  {
+    "no": "153B",
+    "iconKey": "GhostAnglerfish_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostAnglerfish_Fire_icon_normal.webp"
+  },
+  {
+    "no": "154",
+    "iconKey": "IceNarwhal",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceNarwhal_icon_normal.webp"
+  },
+  {
+    "no": "154B",
+    "iconKey": "IceNarwhal_Fire",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceNarwhal_Fire_icon_normal.webp"
+  },
+  {
+    "no": "155",
+    "iconKey": "PoseidonOrca",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PoseidonOrca_icon_normal.webp"
+  },
+  {
+    "no": "156",
+    "iconKey": "LegendDeer",
+    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LegendDeer_icon_normal.webp"
+  }
+];
+
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
@@ -686,7 +1759,7 @@ const state = {
   palSource: "内蔵リスト",
   palMap: new Map(),
   palNames: [],
-  paldbIcons: [],
+  paldbIcons: [...PALDB_STATIC_ICONS],
   passiveNames: [...EMBEDDED_PASSIVES],
   pickers: {},
   passivePickers: {},
@@ -1006,7 +2079,13 @@ function findPaldbEnglishName(block) {
 
 function mergePaldbIconData(list, shouldRender = true) {
   if (!Array.isArray(list) || !list.length) return;
-  state.paldbIcons = list;
+  const merged = new Map();
+  for (const item of [...PALDB_STATIC_ICONS, ...(state.paldbIcons || []), ...list]) {
+    const key = `${normalizePalNoKey(item.no)}:${item.iconKey || inferPaldbIconKey(item.icon) || item.icon || ""}`;
+    if (!key || key === ":") continue;
+    merged.set(key, item);
+  }
+  state.paldbIcons = Array.from(merged.values());
   applyPaldbIconsToPalMap(shouldRender);
 }
 
@@ -1021,22 +2100,28 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
 
   const byNo = new Map();
   const byEn = new Map();
+  const byIconKey = new Map();
+
   for (const item of state.paldbIcons) {
     const noKey = normalizePalNoKey(item.no);
+    const iconKey = item.iconKey || inferPaldbIconKey(item.icon);
     if (noKey && !byNo.has(noKey)) byNo.set(noKey, item);
+    if (iconKey && !byIconKey.has(normalizeKey(iconKey))) byIconKey.set(normalizeKey(iconKey), item);
     const enKey = normalizeKey(item.en);
     if (enKey && !byEn.has(enKey)) byEn.set(enKey, item);
   }
 
   for (const [name, meta] of state.palMap.entries()) {
+    const existingIconKey = meta.iconKey ? normalizeKey(meta.iconKey) : "";
     const item =
-      byNo.get(normalizePalNoKey(meta.no)) ||
+      (existingIconKey ? byIconKey.get(existingIconKey) : null) ||
       byEn.get(normalizeKey(meta.en)) ||
-      byEn.get(normalizeKey(name));
+      byEn.get(normalizeKey(name)) ||
+      (!existingIconKey ? byNo.get(normalizePalNoKey(meta.no)) : null);
 
     if (item?.icon) {
       meta.paldbIcon = item.icon;
-      if (item.iconKey) meta.iconKey = item.iconKey;
+      if (!meta.iconKey && item.iconKey) meta.iconKey = item.iconKey;
       state.palMap.set(name, meta);
     }
   }
