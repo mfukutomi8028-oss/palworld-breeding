@@ -135,6 +135,7 @@ const state = {
   filterIconMap: {},
   selectedElements: [],
   selectedWorks: [],
+  currentView: "records",
 };
 
 const $ = (id) => document.getElementById(id);
@@ -162,17 +163,13 @@ init();
 async function init() {
   mergePalData(EMBEDDED_PALS, "内蔵リスト");
   setupPalOptions();
-  setupPassiveOptions();
   setupEvents();
   setupPalPickers();
-  setupPassivePickers();
   setupIconFilters();
   await setupStorage();
   render();
   loadCachedPalData();
-  loadCachedPassiveData();
   loadPalworldLabData();
-  loadPassiveData();
 }
 
 function mergePalData(list, sourceLabel) {
@@ -428,8 +425,16 @@ function setupPalOptions(keepValues = false) {
 }
 
 function setupEvents() {
-  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.favoriteOnly, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
+  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
     .forEach(el => el?.addEventListener("input", render));
+
+  document.querySelectorAll(".nav-item[data-view]").forEach(button => {
+    button.addEventListener("click", () => {
+      state.currentView = button.dataset.view || "records";
+      syncNavItems();
+      render();
+    });
+  });
 
   $("clearFilters").addEventListener("click", () => {
     elements.parentFilter.value = "";
@@ -438,9 +443,11 @@ function setupEvents() {
     state.selectedWorks = [];
     syncIconFilterButtons();
     elements.statusFilter.value = "";
-    elements.favoriteOnly.checked = false;
+    if (elements.favoriteOnly) elements.favoriteOnly.checked = false;
     elements.unverifiedOnly.checked = false;
     elements.searchInput.value = "";
+    state.currentView = "records";
+    syncNavItems();
     refreshPickerPreviews();
     render();
   });
@@ -497,6 +504,14 @@ function syncIconFilterButtons() {
     const active = type === 'element' ? state.selectedElements.includes(value) : state.selectedWorks.includes(value);
     button.classList.toggle('is-active', active);
     button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+function syncNavItems() {
+  document.querySelectorAll(".nav-item[data-view]").forEach(button => {
+    const active = button.dataset.view === state.currentView;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-current", active ? "page" : "false");
   });
 }
 
@@ -736,6 +751,12 @@ function normalizeKey(value) {
   return String(value || "").toLowerCase().replace(/[\s_\-・'’\.]/g, "");
 }
 
+function normalizeRecorder(value) {
+  const raw = String(value || "").trim();
+  if (raw.includes("森")) return "森井";
+  return "福冨";
+}
+
 function normalizeStatus(value) {
   const raw = String(value || "").trim();
   if (raw === "実機確認済み") return "配合確認済み";
@@ -782,7 +803,7 @@ function getFilteredRecords() {
   records = records.filter(record => {
     const meta = getPalMeta(record.resultPal) || {};
     const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
-    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, ...record.passives].join(" "));
+    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status].join(" "));
     const recordElements = meta.elements || (meta.element ? [meta.element] : []);
     const recordWorks = meta.work || [];
     const parentHit = !parent || [record.parentA, record.parentB]
@@ -794,7 +815,8 @@ function getFilteredRecords() {
       (!selectedElements.length || selectedElements.some(element => recordElements.includes(element))) &&
       (!selectedWorks.length || selectedWorks.every(work => hasWorkTrait(meta, work))) &&
       (!status || normalizeStatus(record.status) === status) &&
-      (!elements.favoriteOnly.checked || record.favorite) &&
+      (state.currentView !== "favorites" || record.favorite) &&
+      (!elements.favoriteOnly || !elements.favoriteOnly.checked || record.favorite) &&
       (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み");
   });
 
@@ -827,6 +849,9 @@ function renderRows(records) {
     if (state.records.length === 0) {
       elements.emptyTitle.textContent = "まだ配合記録がありません";
       elements.emptyText.textContent = "「新しい配合記録を追加」から記録を始めてください。";
+    } else if (state.currentView === "favorites") {
+      elements.emptyTitle.textContent = "お気に入り記録がありません";
+      elements.emptyText.textContent = "一覧の星を押すと、ここに表示されます。";
     } else {
       elements.emptyTitle.textContent = "条件に合う記録がありません";
       elements.emptyText.textContent = "絞り込み条件を変更してください。";
@@ -840,8 +865,7 @@ function renderRows(records) {
         <td class="favorite-cell"><button class="star-button ${record.favorite ? "is-favorite" : ""}" data-action="favorite" title="お気に入り">★</button></td>
         <td>${palInline(record.parentA)}</td>
         <td>${palInline(record.parentB)}</td>
-        <td>${palInline(record.resultPal)}</td>
-        <td><div class="tag-list">${renderTags(record.passives)}</div></td>
+        <td>${resultPalInline(record.resultPal, record.status)}</td>
         <td>${statusBadge(record.status)}</td>
         <td><span class="recorder-cell"><span class="tiny-avatar">${escapeHtml(record.recorder.slice(0, 1) || "?")}</span>${escapeHtml(record.recorder)}</span></td>
         <td class="memo-cell" title="${escapeHtml(record.note)}">${escapeHtml(record.note || "—")}</td>
@@ -866,7 +890,7 @@ function renderRows(records) {
 function renderDetail() {
   const record = state.records.find(r => r.id === state.selectedId);
   if (!record) {
-    elements.detailBody.innerHTML = `<div class="info-hint">一覧から配合記録を選択すると、親パル・結果パル・パッシブ候補・メモをここで確認できます。</div>`;
+    elements.detailBody.innerHTML = `<div class="info-hint">一覧から配合記録を選択すると、親パル・結果パル・メモをここで確認できます。</div>`;
     return;
   }
   elements.detailBody.innerHTML = `
@@ -879,9 +903,8 @@ function renderDetail() {
       <div class="recipe-symbol">＋</div>
       ${recipePal("親B", record.parentB)}
       <div class="recipe-symbol">→</div>
-      ${recipePal("結果", record.resultPal)}
+      ${recipePal("結果", record.resultPal || "未確認")}
     </div>
-    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}</div></div>
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
@@ -912,6 +935,13 @@ function hasWorkTrait(meta, work) {
 
 function palInline(name) {
   return `<span class="pal-inline">${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></span>`;
+}
+
+function resultPalInline(name, status = "確認中") {
+  if (!name && normalizeStatus(status) === "確認中") {
+    return `<span class="result-pending">未確認</span>`;
+  }
+  return palInline(name);
 }
 
 function recipePal(label, name) {
@@ -948,8 +978,10 @@ function tagType(tag) {
 function statusBadge(status) {
   const normalized = normalizeStatus(status);
   const className = normalized === "配合確認済み" ? "status-verified" : "status-pending";
-  const icon = normalized === "配合確認済み" ? "✓" : "…";
-  return `<span class="status-badge ${className}">${icon} ${escapeHtml(normalized)}</span>`;
+  if (normalized === "配合確認済み") {
+    return `<span class="status-badge ${className}">✓ ${escapeHtml(normalized)}</span>`;
+  }
+  return `<span class="status-badge ${className}">${escapeHtml(normalized)}</span>`;
 }
 
 function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
@@ -961,10 +993,8 @@ function openDialog(id = null) {
   $("parentA").value = record?.parentA || "";
   $("parentB").value = record?.parentB || "";
   $("resultPal").value = record?.resultPal || "";
-  $("recorder").value = record?.recorder || "福冨";
+  $("recorder").value = normalizeRecorder(record?.recorder || localStorage.getItem("palBoardRecorder") || "福冨");
   $("status").value = normalizeStatus(record?.status || "確認中");
-  const passiveValues = normalizePassives(record?.passives);
-  getPassiveInputs().forEach((input, index) => { input.value = passiveValues[index] || ""; });
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
   refreshPickerPreviews();
@@ -979,20 +1009,25 @@ async function saveFromForm() {
     parentA: $("parentA").value.trim(),
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
-    recorder: $("recorder").value.trim() || "福冨",
+    recorder: normalizeRecorder($("recorder").value),
     status: normalizeStatus($("status").value),
-    passives: collectPassiveInputs(),
+    passives: [],
     note: $("note").value.trim(),
     favorite: existing?.favorite || false,
     updatedAt: Date.now()
   });
 
-  if (!record.parentA || !record.parentB || !record.resultPal) {
-    toast("親A・親B・結果パルは必須です。", true);
+  if (!record.parentA || !record.parentB) {
+    toast("親A・親Bは必須です。", true);
     return;
   }
+  if (record.status === "配合確認済み" && !record.resultPal) {
+    toast("配合確認済みにする場合は、結果パルを入力してください。", true);
+    return;
+  }
+  localStorage.setItem("palBoardRecorder", record.recorder);
 
-  const missing = [record.parentA, record.parentB, record.resultPal].filter(name => !getPalMeta(name));
+  const missing = [record.parentA, record.parentB, record.resultPal].filter(name => name && !getPalMeta(name));
   if (missing.length) {
     const ok = confirm(`候補リストにないパル名があります：${missing.join("、")}\nこのまま保存しますか？`);
     if (!ok) return;

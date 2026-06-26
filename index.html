@@ -13,7 +13,7 @@
   <div class="app-shell">
     <aside class="sidebar" aria-label="サイドメニュー">
       <div class="brand-mini">
-        <div class="brand-mark" aria-hidden="true"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_PalEgg_Normal_01.webp" alt="平凡なタマゴ" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></div>
+        <div class="brand-mark" aria-hidden="true"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="平凡なタマゴ" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></div>
         <div>
           <p class="eyebrow">PAL BREEDING</p>
           <strong>配合記録</strong>
@@ -21,10 +21,8 @@
       </div>
 
       <nav class="main-nav" aria-label="メインメニュー">
-        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_PalEgg_Normal_01.webp" alt="" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></span>配合記録</button>
+        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></span>配合記録</button>
         <button class="nav-item" data-view="favorites" type="button"><span>★</span>お気に入り</button>
-        <button class="nav-item" data-view="notes" type="button"><span>💬</span>共有メモ</button>
-        <button class="nav-item" data-view="stats" type="button"><span>▥</span>統計</button>
       </nav>
 
       <section class="filter-panel" aria-label="絞り込み">
@@ -90,10 +88,6 @@
           <option value="配合確認済み">配合確認済み</option>
         </select>
 
-        <label class="switch-line">
-          <input type="checkbox" id="favoriteOnly" />
-          <span>お気に入りのみ</span>
-        </label>
       </section>
 </aside>
 
@@ -103,7 +97,7 @@
         <div class="hero-copy">
           <p class="eyebrow">PALWORLD COLLAB BOARD</p>
           <h1><span>パルワールド配合記録ボード</span></h1>
-          <p>リアルタイムで配合結果・パッシブ候補・確認状況を記録できます。</p>
+          <p>リアルタイムで配合結果・確認状況を記録できます。</p>
         </div>
 
         <div class="collab-card minimal-collab" title="共有リンクはURLをそのまま友人へ送ってください。">
@@ -125,9 +119,9 @@
             <button class="primary-button" id="addRecord" type="button">＋ 新しい配合記録を追加</button>
             <div class="search-box">
               <span>⌕</span>
-              <input id="searchInput" type="search" placeholder="パル名・メモ・パッシブで検索" />
+              <input id="searchInput" type="search" placeholder="パル名・メモで検索" />
             </div>
-            <label class="toggle-chip"><input id="unverifiedOnly" type="checkbox" /><span>未確認のみ</span></label>
+            <label class="toggle-chip"><input id="unverifiedOnly" type="checkbox" /><span>確認中のみ</span></label>
             <select id="sortSelect" class="sort-select">
               <option value="updatedDesc">更新日時（新しい順）</option>
               <option value="updatedAsc">更新日時（古い順）</option>
@@ -144,7 +138,6 @@
                   <th>親A</th>
                   <th>親B</th>
                   <th>結果パル</th>
-                  <th>パッシブ候補</th>
                   <th>確認状況</th>
                   <th>記録者</th>
                   <th>メモ</th>
@@ -201,12 +194,15 @@
         <label class="pal-picker-field">結果パル
           <div class="pal-picker">
             <span class="pal-picker-preview" aria-hidden="true"></span>
-            <input id="resultPal" name="resultPal" required autocomplete="off" placeholder="例：アヌビス" />
+            <input id="resultPal" name="resultPal" autocomplete="off" placeholder="確認中なら未入力可" />
             <div class="pal-suggestions" hidden></div>
           </div>
         </label>
         <label>記録者
-          <input id="recorder" name="recorder" required placeholder="例：福冨" />
+          <select id="recorder" name="recorder" required>
+            <option value="福冨">福冨</option>
+            <option value="森井">森井</option>
+          </select>
         </label>
         <label>確認状況
           <select id="status" name="status">
@@ -216,38 +212,8 @@
         </label>
       </div>
 
-      <fieldset class="passive-grid-field">
-        <legend>パッシブ候補 <span>最大4つまで</span></legend>
-        <div class="passive-grid">
-          <label class="passive-picker-field">候補1
-            <div class="passive-picker">
-              <input id="passive1" name="passive1" autocomplete="off" placeholder="例：職人気質" />
-              <div class="passive-suggestions" hidden></div>
-            </div>
-          </label>
-          <label class="passive-picker-field">候補2
-            <div class="passive-picker">
-              <input id="passive2" name="passive2" autocomplete="off" placeholder="例：まじめ" />
-              <div class="passive-suggestions" hidden></div>
-            </div>
-          </label>
-          <label class="passive-picker-field">候補3
-            <div class="passive-picker">
-              <input id="passive3" name="passive3" autocomplete="off" placeholder="例：神速" />
-              <div class="passive-suggestions" hidden></div>
-            </div>
-          </label>
-          <label class="passive-picker-field">候補4
-            <div class="passive-picker">
-              <input id="passive4" name="passive4" autocomplete="off" placeholder="例：伝説" />
-              <div class="passive-suggestions" hidden></div>
-            </div>
-          </label>
-        </div>
-      </fieldset>
-
       <label>メモ
-        <textarea id="note" name="note" rows="4" placeholder="継承したいパッシブ、用途、実際に試した結果など"></textarea>
+        <textarea id="note" name="note" rows="4" placeholder="用途、確認した結果、補足など"></textarea>
       </label>
 
       <div class="dialog-actions">
@@ -258,7 +224,6 @@
   </dialog>
 
   <datalist id="palOptions"></datalist>
-  <datalist id="passiveOptions"></datalist>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

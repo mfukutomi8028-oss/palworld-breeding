@@ -1,15 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 112" role="img" aria-label="平凡なタマゴ">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="平凡なタマゴ">
   <defs>
-    <radialGradient id="egg" cx="38%" cy="22%" r="72%">
-      <stop offset="0" stop-color="#fff7dd"/>
-      <stop offset=".42" stop-color="#f3c982"/>
-      <stop offset="1" stop-color="#b87434"/>
+    <radialGradient id="shell" cx="38%" cy="24%" r="76%">
+      <stop offset="0" stop-color="#fff7df"/>
+      <stop offset="0.46" stop-color="#e9c78d"/>
+      <stop offset="1" stop-color="#b8793d"/>
     </radialGradient>
-    <filter id="shadow" x="-30%" y="-20%" width="160%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#06334e" flood-opacity=".25"/></filter>
+    <linearGradient id="rim" x1="24" y1="8" x2="104" y2="122">
+      <stop offset="0" stop-color="#fff8e8"/>
+      <stop offset="1" stop-color="#9e6738"/>
+    </linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#5a321d" flood-opacity=".28"/>
+    </filter>
   </defs>
-  <path d="M48 6C28 6 14 35 14 62c0 29 15 44 34 44s34-15 34-44C82 35 68 6 48 6z" fill="url(#egg)" filter="url(#shadow)"/>
-  <ellipse cx="39" cy="27" rx="10" ry="14" fill="#fff" opacity=".42" transform="rotate(16 39 27)"/>
-  <circle cx="59" cy="50" r="5" fill="#c18449" opacity=".25"/>
-  <circle cx="37" cy="66" r="4" fill="#8d592c" opacity=".22"/>
-  <path d="M27 84c14 9 30 8 43-1" fill="none" stroke="#8d592c" stroke-width="3" opacity=".18" stroke-linecap="round"/>
+  <ellipse cx="64" cy="118" rx="34" ry="7" fill="#5f3924" opacity=".18"/>
+  <path filter="url(#shadow)" d="M64 9c-22 0-39 36-39 66 0 27 15 45 39 45s39-18 39-45C103 45 86 9 64 9Z" fill="url(#rim)"/>
+  <path d="M64 13c-19 0-35 34-35 62 0 25 13 41 35 41s35-16 35-41C99 47 83 13 64 13Z" fill="url(#shell)"/>
+  <path d="M49 22c-8 7-15 25-17 42-2 15 1 29 9 38-14-22-7-64 11-78 5-4 7-6 5-7-2-1-5 1-8 5Z" fill="#fff9e7" opacity=".42"/>
+  <path d="M73 19c9 15 18 36 18 58 0 20-8 33-20 38 17-3 28-18 28-40 0-26-13-56-26-56Z" fill="#9a5c2d" opacity=".14"/>
+  <ellipse cx="49" cy="56" rx="9" ry="12" transform="rotate(-22 49 56)" fill="#a86d3d" opacity=".48"/>
+  <ellipse cx="72" cy="84" rx="11" ry="15" transform="rotate(17 72 84)" fill="#8f5b35" opacity=".38"/>
+  <ellipse cx="69" cy="38" rx="6" ry="8" transform="rotate(24 69 38)" fill="#b9844d" opacity=".32"/>
+  <ellipse cx="51" cy="34" rx="7" ry="5" transform="rotate(-30 51 34)" fill="#fff7dc" opacity=".75"/>
 </svg>
