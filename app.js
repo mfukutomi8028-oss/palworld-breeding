@@ -1,6 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v4";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v5";
+const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
+const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
+const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
 const SAMPLE_PREFIX = "sample-";
 
 const WORKS = ["火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"];
@@ -11,6 +14,19 @@ const EXCLUDED_IMAGE_ALTS = new Set([
   "X", "ポスト", "URLコピー", "テーマの選択", "ダーク", "ライト", "自動",
   "パルワールド配合・攻略ラボ", "火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"
 ]);
+
+const EMBEDDED_PASSIVES = [
+  "ダイヤモンドボディ", "ヌシ", "永炎", "永久機関", "希少", "鬼神", "吸血鬼", "救世主", "侵略者", "神速",
+  "絶食の極み", "超絶技巧", "伝説", "波乗り王", "不動明王の心", "魔女", "ダイエットマスター", "モチベーター", "ワーカーホリック", "泳ぐのが得意",
+  "炎帝", "海皇", "屈強な肉体", "堅城の軍師", "鉱山のチーフ", "高貴", "職人気質", "神龍", "精霊王", "聖天",
+  "走るのが得意", "地帝", "突撃指揮者", "脳筋", "博愛主義者", "伐採リーダー", "氷帝", "無限のスタミナ", "冥王", "雷帝",
+  "冷静沈着", "獰猛", "アブノーマル", "うぬぼれ屋", "オラオラ系", "コンデンサ", "サディスト", "しなやかスイム", "すばしこい", "せっかち",
+  "ドラゴンキラー", "ポジティブ思考", "まじめ", "マゾヒスト", "火遊び好き", "健康優良児", "硬い皮膚", "高温体質", "社畜", "小食",
+  "水遊び好き", "絶縁体", "粗暴", "草木の香り", "耐震構造", "大地の力", "日焼け好き", "防水加工", "防草効果", "未知の生体細胞",
+  "無の境地", "夜の帳", "夜行性", "勇敢", "陽キャラ", "竜の血族", "良い毛並み", "冷血", "うたれ弱い", "ことなかれ主義者",
+  "サボり癖", "すぐ骨折する", "のんびり屋さん", "ビビり", "みすぼらしい", "引きこもり", "手加減", "食いしんぼ", "精神が不安定", "破滅願望",
+  "不器用", "無限の胃袋"
+];
 
 // 起動直後・外部取得失敗時の最低限の内蔵データ。
 // Palworld Labの画像URLが分かっているものは優先して使う。
@@ -113,7 +129,10 @@ const state = {
   palSource: "内蔵リスト",
   palMap: new Map(),
   palNames: [],
+  passiveNames: [...EMBEDDED_PASSIVES],
   pickers: {},
+  passivePickers: {},
+  filterIconMap: {},
   selectedElements: [],
   selectedWorks: [],
 };
@@ -143,13 +162,17 @@ init();
 async function init() {
   mergePalData(EMBEDDED_PALS, "内蔵リスト");
   setupPalOptions();
+  setupPassiveOptions();
   setupEvents();
   setupPalPickers();
+  setupPassivePickers();
   setupIconFilters();
   await setupStorage();
   render();
   loadCachedPalData();
+  loadCachedPassiveData();
   loadPalworldLabData();
+  loadPassiveData();
 }
 
 function mergePalData(list, sourceLabel) {
@@ -192,6 +215,98 @@ function loadCachedPalData() {
   }
 }
 
+function setupPassiveOptions(keepValues = false) {
+  const oldValues = keepValues ? getPassiveInputs().map(input => input.value) : [];
+  state.passiveNames = uniqueStrings(state.passiveNames).sort((a, b) => a.localeCompare(b, "ja"));
+  const datalist = $("passiveOptions");
+  if (datalist) datalist.innerHTML = state.passiveNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
+  if (keepValues) getPassiveInputs().forEach((input, index) => { input.value = oldValues[index] || ""; });
+}
+
+function loadCachedPassiveData() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(PASSIVE_CACHE_KEY) || "null");
+    if (cached?.passives?.length >= 50) {
+      state.passiveNames = uniqueStrings([...state.passiveNames, ...cached.passives]);
+      setupPassiveOptions(true);
+    }
+  } catch (error) {
+    console.warn("Passive cache read failed", error);
+  }
+}
+
+async function loadPassiveData() {
+  const endpoints = [PASSIVE_SOURCE_URL, PASSIVE_SOURCE_PROXY_URL];
+  let lastError = null;
+  for (const url of endpoints) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const html = await response.text();
+      const passives = parsePassivesHtml(html);
+      if (passives.length < 50) throw new Error(`取得数が少なすぎます: ${passives.length}`);
+      state.passiveNames = uniqueStrings([...state.passiveNames, ...passives]);
+      localStorage.setItem(PASSIVE_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), passives: state.passiveNames }));
+      setupPassiveOptions(true);
+      toast(`Palworld Labから${passives.length}種類のパッシブ候補を読み込みました`);
+      return;
+    } catch (error) {
+      lastError = error;
+      console.warn("Passive sync failed:", url, error);
+    }
+  }
+  console.warn("Passive sync gave up:", lastError);
+}
+
+function parsePassivesHtml(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const found = [];
+  for (const link of doc.querySelectorAll("a")) {
+    const text = link.textContent.replace(/\s+/g, " ").trim();
+    const name = text.split(" ")[0];
+    if (isLikelyPassiveName(name)) found.push(name);
+  }
+  const bodyText = doc.body?.textContent || "";
+  for (const name of EMBEDDED_PASSIVES) {
+    if (bodyText.includes(name)) found.push(name);
+  }
+  return uniqueStrings(found);
+}
+
+function isLikelyPassiveName(name) {
+  if (!name || name.length > 18) return false;
+  if (!/[ぁ-んァ-ン一-龠]/.test(name)) return false;
+  if (/(一覧|ツール|攻略|ポスト|URL|フィルター|すべて|次へ|前へ|テーマ|ダーク|ライト|自動|手術台|ボス|レイド|野生|特殊|攻撃|防御|属性|移動速度|作業速度|満腹度|その他)/.test(name)) return false;
+  return true;
+}
+
+function parseFilterIconsFromLabHtml(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const targets = new Set([...ELEMENTS, "夜行性", ...WORKS]);
+  const icons = {};
+  for (const img of doc.querySelectorAll("img[alt][src]")) {
+    const alt = img.getAttribute("alt")?.trim();
+    if (!targets.has(alt) || icons[alt]) continue;
+    icons[alt] = new URL(img.getAttribute("src"), PAL_SOURCE_URL).href;
+  }
+  return icons;
+}
+
+function applyFilterIcons(icons) {
+  if (!icons || !Object.keys(icons).length) return;
+  state.filterIconMap = { ...state.filterIconMap, ...icons };
+  document.querySelectorAll(".icon-filter-button").forEach(button => {
+    const value = button.dataset.value;
+    const icon = state.filterIconMap[value];
+    const img = button.querySelector("img");
+    if (icon && img) img.src = icon;
+  });
+}
+
+function uniqueStrings(list) {
+  return Array.from(new Set((list || []).map(value => String(value || "").trim()).filter(Boolean)));
+}
+
 async function loadPalworldLabData() {
   updatePalDataState("Palworld Labから最新一覧を確認中…");
   const endpoints = [PAL_SOURCE_URL, PAL_SOURCE_PROXY_URL];
@@ -201,6 +316,7 @@ async function loadPalworldLabData() {
       const response = await fetch(url, { cache: "no-store" });
       if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
       const html = await response.text();
+      applyFilterIcons(parseFilterIconsFromLabHtml(html));
       const pals = parsePalworldLabHtml(html);
       if (pals.length < 100) throw new Error(`取得数が少なすぎます: ${pals.length}`);
       localStorage.setItem(PAL_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), pals }));
@@ -342,7 +458,7 @@ function setupEvents() {
   $("addRecord").addEventListener("click", () => openDialog());
   $("cancelDialog").addEventListener("click", () => elements.recordDialog.close());
   $("closeDetail").addEventListener("click", () => { state.selectedId = null; render(); });
-  $("copyRoomLink").addEventListener("click", copyRoomLink);
+  $("copyRoomLink")?.addEventListener("click", copyRoomLink);
 
   elements.recordForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -408,6 +524,63 @@ function setupPalPickers() {
       if (!state.pickers[id].picker.contains(event.target)) hidePickerSuggestions(id);
     }
   });
+}
+
+function setupPassivePickers() {
+  for (const id of ["passive1", "passive2", "passive3", "passive4"]) {
+    const input = $(id);
+    if (!input) continue;
+    const picker = input.closest(".passive-picker");
+    const list = picker?.querySelector(".passive-suggestions");
+    state.passivePickers[id] = { input, picker, list };
+    input.addEventListener("input", () => renderPassiveSuggestions(id));
+    input.addEventListener("focus", () => renderPassiveSuggestions(id));
+    input.addEventListener("keydown", (event) => { if (event.key === "Escape") hidePassiveSuggestions(id); });
+  }
+
+  document.addEventListener("click", (event) => {
+    for (const id of Object.keys(state.passivePickers)) {
+      if (!state.passivePickers[id].picker.contains(event.target)) hidePassiveSuggestions(id);
+    }
+  });
+}
+
+function renderPassiveSuggestions(id) {
+  const picker = state.passivePickers[id];
+  if (!picker?.list) return;
+  const query = normalizeSearch(picker.input.value);
+  const used = new Set(getPassiveInputs().filter(input => input.id !== id).map(input => input.value.trim()).filter(Boolean));
+  const candidates = state.passiveNames
+    .filter(name => !used.has(name))
+    .filter(name => !query || normalizeSearch(name).includes(query))
+    .slice(0, 80);
+  if (!candidates.length) {
+    picker.list.innerHTML = `<div class="passive-suggestion is-empty">候補にありません。このまま自由入力できます。</div>`;
+  } else {
+    picker.list.innerHTML = candidates.map(name => `<button type="button" class="passive-suggestion" data-name="${escapeHtml(name)}"><span class="passive-dot"></span><strong>${escapeHtml(name)}</strong></button>`).join("");
+  }
+  picker.list.querySelectorAll("button[data-name]").forEach(button => {
+    button.addEventListener("click", () => {
+      picker.input.value = button.dataset.name;
+      hidePassiveSuggestions(id);
+      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
+      picker.input.focus();
+    });
+  });
+  picker.list.hidden = false;
+}
+
+function hidePassiveSuggestions(id) {
+  const list = state.passivePickers[id]?.list;
+  if (list) list.hidden = true;
+}
+
+function getPassiveInputs() {
+  return ["passive1", "passive2", "passive3", "passive4"].map(id => $(id)).filter(Boolean);
+}
+
+function collectPassiveInputs() {
+  return uniqueStrings(getPassiveInputs().map(input => input.value)).slice(0, 4);
 }
 
 function updatePickerPreview(id) {
@@ -538,17 +711,11 @@ function normalizeRecord(record) {
     parentA: normalizePalName(record.parentA),
     parentB: normalizePalName(record.parentB),
     resultPal: normalizePalName(record.resultPal),
-    passives: Array.isArray(record.passives) ? record.passives.map(String).map(s => s.trim()).filter(Boolean) : splitTags(record.passives),
+    passives: normalizePassives(record.passives),
     status: normalizeStatus(record.status || "確認中"),
     recorder: record.recorder || "福冨",
     note: record.note || "",
     favorite: Boolean(record.favorite),
-    checked: {
-      bred: Boolean(record.checked?.bred),
-      screenshot: Boolean(record.checked?.screenshot),
-      passive: Boolean(record.checked?.passive),
-      battle: Boolean(record.checked?.battle)
-    },
     updatedAt: Number(record.updatedAt || Date.now())
   };
 }
@@ -572,7 +739,9 @@ function normalizeKey(value) {
 function normalizeStatus(value) {
   const raw = String(value || "").trim();
   if (raw === "実機確認済み") return "配合確認済み";
-  return raw || "確認中";
+  if (raw === "育成候補") return "確認中";
+  if (raw === "配合確認済み") return "配合確認済み";
+  return "確認中";
 }
 
 function normalizeSearch(value) {
@@ -633,7 +802,7 @@ function getFilteredRecords() {
   records.sort((a, b) => {
     if (sort === "updatedAsc") return a.updatedAt - b.updatedAt;
     if (sort === "resultAsc") return a.resultPal.localeCompare(b.resultPal, "ja");
-    if (sort === "statusAsc") return a.status.localeCompare(b.status, "ja");
+    if (sort === "statusAsc") return normalizeStatus(a.status).localeCompare(normalizeStatus(b.status), "ja");
     return b.updatedAt - a.updatedAt;
   });
   return records;
@@ -642,11 +811,11 @@ function getFilteredRecords() {
 function renderKpis() {
   const total = state.records.length;
   const verified = state.records.filter(r => normalizeStatus(r.status) === "配合確認済み").length;
-  const candidates = state.records.filter(r => r.status === "育成候補").length;
+  const pending = state.records.filter(r => normalizeStatus(r.status) === "確認中").length;
   const memos = state.records.filter(r => r.note.trim()).length;
   $("totalCount").textContent = `${total}件`;
   $("verifiedCount").textContent = `${verified}件`;
-  $("candidateCount").textContent = `${candidates}件`;
+  $("pendingCount").textContent = `${pending}件`;
   $("memoCount").textContent = `${memos}件`;
   $("verifiedRate").textContent = total ? `${Math.round((verified / total) * 100)}%` : "0%";
 }
@@ -697,7 +866,7 @@ function renderRows(records) {
 function renderDetail() {
   const record = state.records.find(r => r.id === state.selectedId);
   if (!record) {
-    elements.detailBody.innerHTML = `<div class="info-hint">一覧から配合記録を選択すると、親パル・結果パル・パッシブ候補・確認チェックをここで確認できます。</div>`;
+    elements.detailBody.innerHTML = `<div class="info-hint">一覧から配合記録を選択すると、親パル・結果パル・パッシブ候補・メモをここで確認できます。</div>`;
     return;
   }
   elements.detailBody.innerHTML = `
@@ -714,12 +883,6 @@ function renderDetail() {
     </div>
     <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}</div></div>
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
-    <div class="detail-section"><h3>確認チェックリスト</h3><div class="check-list">
-      ${checkLine(record.checked.bred, "実際に配合済み")}
-      ${checkLine(record.checked.screenshot, "スクリーンショット確認")}
-      ${checkLine(record.checked.passive, "パッシブ継承確認")}
-      ${checkLine(record.checked.battle, "実戦・拠点性能確認")}
-    </div></div>
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
       <p><strong>記録者：</strong>${escapeHtml(record.recorder)}</p>
@@ -784,8 +947,8 @@ function tagType(tag) {
 
 function statusBadge(status) {
   const normalized = normalizeStatus(status);
-  const className = normalized === "配合確認済み" ? "status-verified" : normalized === "育成候補" ? "status-candidate" : "status-pending";
-  const icon = normalized === "配合確認済み" ? "✓" : normalized === "育成候補" ? "★" : "…";
+  const className = normalized === "配合確認済み" ? "status-verified" : "status-pending";
+  const icon = normalized === "配合確認済み" ? "✓" : "…";
   return `<span class="status-badge ${className}">${icon} ${escapeHtml(normalized)}</span>`;
 }
 
@@ -799,13 +962,10 @@ function openDialog(id = null) {
   $("parentB").value = record?.parentB || "";
   $("resultPal").value = record?.resultPal || "";
   $("recorder").value = record?.recorder || "福冨";
-  $("status").value = record?.status || "確認中";
-  $("passives").value = record?.passives?.join(", ") || "";
+  $("status").value = normalizeStatus(record?.status || "確認中");
+  const passiveValues = normalizePassives(record?.passives);
+  getPassiveInputs().forEach((input, index) => { input.value = passiveValues[index] || ""; });
   $("note").value = record?.note || "";
-  $("checkedBred").checked = Boolean(record?.checked?.bred);
-  $("checkedScreenshot").checked = Boolean(record?.checked?.screenshot);
-  $("checkedPassive").checked = Boolean(record?.checked?.passive);
-  $("checkedBattle").checked = Boolean(record?.checked?.battle);
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
   refreshPickerPreviews();
   elements.recordDialog.showModal();
@@ -820,16 +980,10 @@ async function saveFromForm() {
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
     recorder: $("recorder").value.trim() || "福冨",
-    status: $("status").value,
-    passives: splitTags($("passives").value),
+    status: normalizeStatus($("status").value),
+    passives: collectPassiveInputs(),
     note: $("note").value.trim(),
     favorite: existing?.favorite || false,
-    checked: {
-      bred: $("checkedBred").checked,
-      screenshot: $("checkedScreenshot").checked,
-      passive: $("checkedPassive").checked,
-      battle: $("checkedBattle").checked
-    },
     updatedAt: Date.now()
   });
 
@@ -886,6 +1040,10 @@ async function toggleFavorite(id) {
 function splitTags(value) {
   if (Array.isArray(value)) return value.map(String).map(s => s.trim()).filter(Boolean);
   return String(value || "").split(/[,、]/).map(s => s.trim()).filter(Boolean);
+}
+
+function normalizePassives(value) {
+  return uniqueStrings(Array.isArray(value) ? value : splitTags(value)).slice(0, 4);
 }
 
 function formatDate(timestamp, detail = false) {
