@@ -10,7 +10,7 @@
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
   <link rel="stylesheet" href="style.css" />
   <script src="config.js" defer></script>
-  <script type="module" src="app.js?v=11"></script>
+  <script type="module" src="app.js?v=12"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -141,6 +141,7 @@
                   <th>親A</th>
                   <th>親B</th>
                   <th>結果パル</th>
+                  <th>タマゴ</th>
                   <th>確認状況</th>
                   <th>記録者</th>
                   <th>メモ</th>
@@ -201,6 +202,13 @@
             <div class="pal-suggestions" hidden></div>
           </div>
         </label>
+        <label class="egg-picker-field">タマゴの種類
+          <div class="pal-picker egg-picker">
+            <span class="pal-picker-preview egg-picker-preview" aria-hidden="true"></span>
+            <input id="eggType" name="eggType" autocomplete="off" placeholder="例：平凡なタマゴ" />
+            <div class="pal-suggestions egg-suggestions" hidden></div>
+          </div>
+        </label>
         <label>記録者
           <select id="recorder" name="recorder" required>
             <option value="福冨">福冨</option>
@@ -212,6 +220,8 @@
       <label>メモ
         <textarea id="note" name="note" rows="4" placeholder="用途、確認した結果、補足など"></textarea>
       </label>
+
+      <div id="dialogMessage" class="dialog-message" hidden></div>
 
       <div class="dialog-actions">
         <button class="secondary-button" id="deleteRecord" type="button">削除</button>

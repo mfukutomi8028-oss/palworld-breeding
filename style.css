@@ -569,3 +569,47 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   width: 24px;
   height: 24px;
 }
+
+
+/* タマゴ候補・表示 */
+.egg-picker-field { position: relative; }
+.egg-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #fff8e9, #e7f5ff);
+  border: 2px solid rgba(255,255,255,.95);
+  box-shadow: inset 0 -8px 12px rgba(0,0,0,.04), 0 4px 12px rgba(24,62,95,.12);
+  flex: 0 0 auto;
+}
+.egg-icon img { width: 34px; height: 34px; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,.16)); }
+.egg-icon.small { width: 34px; height: 34px; border-radius: 12px; }
+.egg-icon.small img { width: 30px; height: 30px; }
+.egg-icon.large { width: 58px; height: 58px; border-radius: 20px; }
+.egg-icon.large img { width: 52px; height: 52px; }
+.egg-icon.empty { background: linear-gradient(145deg, #eef7ff, #d6e7f6); }
+.egg-inline {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 900;
+}
+.egg-suggestions { max-height: 360px; }
+.dialog-message {
+  margin: 4px 0 14px;
+  padding: 13px 15px;
+  border-radius: 14px;
+  border: 1px solid rgba(196,58,70,.28);
+  background: #fff1f3;
+  color: #a22d38;
+  font-weight: 900;
+  line-height: 1.6;
+}
+.dialog-message[hidden] { display: none !important; }
+
+@media (max-width: 1180px) {
+  .form-grid { grid-template-columns: repeat(2, 1fr); }
+}

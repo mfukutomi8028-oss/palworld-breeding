@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v11";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v12";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -8,6 +8,120 @@ const SAMPLE_PREFIX = "sample-";
 
 const WORKS = ["火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"];
 const ELEMENTS = ["無属性", "炎属性", "水属性", "草属性", "雷属性", "氷属性", "地属性", "闇属性", "竜属性"];
+const EGG_TYPES = [
+  {
+    "name": "平凡なタマゴ",
+    "key": "plain",
+    "icon": "assets/eggs/plain.png",
+    "aliases": [
+      "平凡な",
+      "普通",
+      "へいぼん",
+      "normal",
+      "common"
+    ]
+  },
+  {
+    "name": "熱を帯びたタマゴ",
+    "key": "scorching",
+    "icon": "assets/eggs/scorching.png",
+    "aliases": [
+      "熱を帯びた",
+      "熱",
+      "あつ",
+      "炎",
+      "ほのお",
+      "fire",
+      "scorching"
+    ]
+  },
+  {
+    "name": "しめったタマゴ",
+    "key": "damp",
+    "icon": "assets/eggs/damp.png",
+    "aliases": [
+      "しめった",
+      "湿った",
+      "水",
+      "みず",
+      "water",
+      "damp"
+    ]
+  },
+  {
+    "name": "新緑のタマゴ",
+    "key": "verdant",
+    "icon": "assets/eggs/verdant.png",
+    "aliases": [
+      "新緑",
+      "草",
+      "くさ",
+      "grass",
+      "verdant"
+    ]
+  },
+  {
+    "name": "ビリビリのタマゴ",
+    "key": "electric",
+    "icon": "assets/eggs/electric.png",
+    "aliases": [
+      "ビリビリ",
+      "びりびり",
+      "雷",
+      "かみなり",
+      "electric"
+    ]
+  },
+  {
+    "name": "ゴツゴツしたタマゴ",
+    "key": "rocky",
+    "icon": "assets/eggs/rocky.png",
+    "aliases": [
+      "ゴツゴツ",
+      "ごつごつ",
+      "地",
+      "じめん",
+      "ground",
+      "rocky"
+    ]
+  },
+  {
+    "name": "凍てつくタマゴ",
+    "key": "frozen",
+    "icon": "assets/eggs/frozen.png",
+    "aliases": [
+      "凍てつく",
+      "いてつく",
+      "氷",
+      "こおり",
+      "ice",
+      "frozen"
+    ]
+  },
+  {
+    "name": "暗黒タマゴ",
+    "key": "dark",
+    "icon": "assets/eggs/dark.png",
+    "aliases": [
+      "暗黒",
+      "あんこく",
+      "闇",
+      "やみ",
+      "dark"
+    ]
+  },
+  {
+    "name": "竜のタマゴ",
+    "key": "dragon",
+    "icon": "assets/eggs/dragon.png",
+    "aliases": [
+      "竜",
+      "りゅう",
+      "ドラゴン",
+      "dragon"
+    ]
+  }
+];
 const EXCLUDED_IMAGE_ALTS = new Set([
   ...ELEMENTS,
   ...WORKS,
@@ -135,6 +249,7 @@ const state = {
   passiveNames: [...EMBEDDED_PASSIVES],
   pickers: {},
   passivePickers: {},
+  eggPickers: {},
   filterIconMap: {},
   selectedElements: [],
   selectedWorks: [],
@@ -158,6 +273,7 @@ const elements = {
   recordDialog: $("recordDialog"),
   recordForm: $("recordForm"),
   toast: $("toast"),
+  dialogMessage: $("dialogMessage"),
   palDataState: $("palDataState"),
 };
 
@@ -168,6 +284,7 @@ async function init() {
   setupPalOptions();
   setupEvents();
   setupPalPickers();
+  setupEggPickers();
   setupIconFilters();
   await setupStorage();
   render();
@@ -614,6 +731,7 @@ function updatePickerPreview(id) {
 
 function refreshPickerPreviews() {
   for (const id of Object.keys(state.pickers)) updatePickerPreview(id);
+  refreshEggPreviews();
 }
 
 function renderPickerSuggestions(id) {
@@ -657,6 +775,78 @@ function renderPickerSuggestions(id) {
 
 function hidePickerSuggestions(id) {
   const list = state.pickers[id]?.list;
+  if (list) list.hidden = true;
+}
+
+
+function setupEggPickers() {
+  for (const id of ["eggType"]) {
+    const input = $(id);
+    if (!input) continue;
+    const picker = input.closest(".egg-picker");
+    const preview = picker?.querySelector(".egg-picker-preview");
+    const list = picker?.querySelector(".egg-suggestions");
+    state.eggPickers[id] = { input, picker, preview, list };
+
+    input.addEventListener("input", () => {
+      updateEggPreview(id);
+      renderEggSuggestions(id);
+    });
+    input.addEventListener("focus", () => renderEggSuggestions(id));
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") hideEggSuggestions(id);
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    for (const id of Object.keys(state.eggPickers)) {
+      if (!state.eggPickers[id].picker.contains(event.target)) hideEggSuggestions(id);
+    }
+  });
+}
+
+function updateEggPreview(id) {
+  const picker = state.eggPickers[id];
+  if (!picker?.preview) return;
+  picker.preview.innerHTML = eggIcon(picker.input.value, "small");
+}
+
+function refreshEggPreviews() {
+  for (const id of Object.keys(state.eggPickers)) updateEggPreview(id);
+}
+
+function renderEggSuggestions(id) {
+  const picker = state.eggPickers[id];
+  if (!picker?.list) return;
+  const query = normalizeSearch(picker.input.value);
+  const candidates = EGG_TYPES
+    .filter(egg => !query || eggSearchTarget(egg).includes(query))
+    .slice(0, 30);
+
+  const clearButton = `<button type="button" class="pal-suggestion egg-suggestion clear-choice" data-name=""><span class="egg-icon small empty"><span class="pal-fallback">—</span></span><span><strong>未設定</strong><small>タマゴを記録しない</small></span></button>`;
+
+  if (!candidates.length) {
+    picker.list.innerHTML = clearButton + `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
+  } else {
+    picker.list.innerHTML = clearButton + candidates.map(egg => {
+      return `<button type="button" class="pal-suggestion egg-suggestion" data-name="${escapeHtml(egg.name)}">${eggIcon(egg.name, "small")}<span><strong>${escapeHtml(egg.name)}</strong><small>${escapeHtml((egg.aliases || []).slice(0, 3).join(" / "))}</small></span></button>`;
+    }).join("");
+  }
+
+  picker.list.querySelectorAll("button[data-name]").forEach(button => {
+    button.addEventListener("click", () => {
+      picker.input.value = button.dataset.name;
+      updateEggPreview(id);
+      hideEggSuggestions(id);
+      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
+      picker.input.focus();
+    });
+  });
+  picker.list.hidden = false;
+}
+
+function hideEggSuggestions(id) {
+  const list = state.eggPickers[id]?.list;
   if (list) list.hidden = true;
 }
 
@@ -731,6 +921,7 @@ function normalizeRecord(record) {
     parentA: normalizePalName(record.parentA),
     parentB: normalizePalName(record.parentB),
     resultPal,
+    eggType: normalizeEggName(record.eggType),
     passives: normalizePassives(record.passives),
     status: resultPal ? "配合確認済み" : "確認中",
     recorder: normalizeRecorder(record.recorder),
@@ -765,6 +956,43 @@ function normalizeKey(value) {
     .normalize("NFKC")
     .toLowerCase()
     .replace(/[\s\u3000_\-ーｰ・'’\.]/g, "");
+}
+
+
+function normalizeEggName(value) {
+  const raw = normalizePalDisplayName(value);
+  if (!raw) return "";
+  const rawKey = normalizeSearch(raw);
+  const found = EGG_TYPES.find(egg =>
+    normalizeSearch(egg.name) === rawKey ||
+    egg.aliases?.some(alias => normalizeSearch(alias) === rawKey || normalizeSearch(`${alias}タマゴ`) === rawKey)
+  );
+  if (found) return found.name;
+  return hiraToKata(raw).normalize("NFKC");
+}
+
+function getEggMeta(name) {
+  const normalized = normalizeEggName(name);
+  if (!normalized) return null;
+  return EGG_TYPES.find(egg => egg.name === normalized) || null;
+}
+
+function eggIcon(name, size = "normal") {
+  const meta = getEggMeta(name);
+  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
+  const label = meta?.name || normalizeEggName(name) || "タマゴ";
+  const url = meta?.icon || "assets/plain-egg.png";
+  return `<span class="egg-icon${sizeClass}" title="${escapeHtml(label)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(label)}" loading="lazy"></span>`;
+}
+
+function eggInline(name) {
+  const normalized = normalizeEggName(name);
+  if (!normalized) return `<span class="tag subtle">未設定</span>`;
+  return `<span class="egg-inline">${eggIcon(normalized)}<span>${escapeHtml(normalized)}</span></span>`;
+}
+
+function eggSearchTarget(egg) {
+  return normalizeSearch([egg.name, ...(egg.aliases || [])].join(" "));
 }
 
 function normalizeRecorder(value) {
@@ -841,7 +1069,7 @@ function getFilteredRecords() {
   records = records.filter(record => {
     const meta = getPalMeta(record.resultPal) || {};
     const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
-    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status].join(" "));
+    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, record.eggType, ...englishNames, record.recorder, record.note, record.status].join(" "));
     const recordElements = meta.elements || (meta.element ? [meta.element] : []);
     const recordWorks = meta.work || [];
     const parentHit = !parent || [record.parentA, record.parentB]
@@ -904,6 +1132,7 @@ function renderRows(records) {
         <td>${palInline(record.parentA)}</td>
         <td>${palInline(record.parentB)}</td>
         <td>${resultPalInline(record.resultPal, record.status)}</td>
+        <td>${eggInline(record.eggType)}</td>
         <td>${statusBadge(record.status)}</td>
         <td><span class="recorder-cell"><span class="tiny-avatar">${escapeHtml(record.recorder.slice(0, 1) || "?")}</span>${escapeHtml(record.recorder)}</span></td>
         <td class="memo-cell" title="${escapeHtml(record.note)}">${escapeHtml(record.note || "—")}</td>
@@ -943,6 +1172,7 @@ function renderDetail() {
       <div class="recipe-symbol">→</div>
       ${recipePal("結果", record.resultPal || "未確認")}
     </div>
+    <div class="detail-section"><h3>タマゴの種類</h3>${eggInline(record.eggType)}</div>
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
@@ -1048,6 +1278,19 @@ function statusBadge(status) {
 
 function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
 
+
+function showDialogMessage(message) {
+  if (!elements.dialogMessage) return;
+  elements.dialogMessage.textContent = message;
+  elements.dialogMessage.hidden = false;
+}
+
+function clearDialogMessage() {
+  if (!elements.dialogMessage) return;
+  elements.dialogMessage.textContent = "";
+  elements.dialogMessage.hidden = true;
+}
+
 function openDialog(id = null) {
   const record = id ? state.records.find(r => r.id === id) : null;
   $("dialogTitle").textContent = record ? "配合記録を編集" : "新しい配合記録";
@@ -1055,6 +1298,8 @@ function openDialog(id = null) {
   $("parentA").value = record?.parentA || "";
   $("parentB").value = record?.parentB || "";
   $("resultPal").value = record?.resultPal || "";
+  $("eggType").value = record?.eggType || "";
+  clearDialogMessage();
   $("recorder").value = normalizeRecorder(record?.recorder || localStorage.getItem("palBoardRecorder") || "福冨");
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
@@ -1063,6 +1308,7 @@ function openDialog(id = null) {
 }
 
 async function saveFromForm() {
+  clearDialogMessage();
   const id = $("recordId").value || crypto.randomUUID();
   const existing = state.records.find(r => r.id === id);
   const record = normalizeRecord({
@@ -1070,6 +1316,7 @@ async function saveFromForm() {
     parentA: $("parentA").value.trim(),
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
+    eggType: $("eggType").value.trim(),
     recorder: normalizeRecorder($("recorder").value),
     status: $("resultPal").value.trim() ? "配合確認済み" : "確認中",
     passives: [],
@@ -1093,7 +1340,9 @@ async function saveFromForm() {
     state.selectedId = duplicate.id;
     render();
     const duplicateResult = duplicate.resultPal ? ` → ${duplicate.resultPal}` : "";
-    toast(`同じ親の組み合わせは既に登録されています：${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`, true);
+    const message = `同じ親の組み合わせは既に登録されています：${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`;
+    showDialogMessage(message);
+    toast(message, true);
     return;
   }
 
