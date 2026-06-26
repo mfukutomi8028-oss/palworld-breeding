@@ -644,3 +644,21 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .icon-filter-grid.work-grid .filter-icon-img {
   flex: 0 0 auto;
 }
+
+
+/* v17: 左上ブランドアイコンの配色調整 */
+.brand-mark {
+  background: #DDC100 !important;
+  border: 1px solid rgba(221, 193, 0, 0.92) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    0 8px 22px rgba(0, 0, 0, 0.14) !important;
+}
+
+.brand-mark img {
+  width: 112% !important;
+  height: 112% !important;
+  object-fit: cover !important;
+  position: relative;
+  z-index: 1;
+}
