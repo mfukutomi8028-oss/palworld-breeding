@@ -1,141 +1,60 @@
+const IMG_BASE = "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/";
+
 const PAL_META = {
-  Lamball: { element: "無", work: ["手作業", "運搬", "牧場"] },
-  Cattiva: { element: "無", work: ["手作業", "採掘", "運搬"] },
-  Chikipi: { element: "無", work: ["牧場"] },
-  Foxparks: { element: "炎", work: ["火おこし"] },
-  Pengullet: { element: "水", work: ["水やり", "冷却", "手作業", "運搬"] },
-  Lifmunk: { element: "草", work: ["種まき", "手作業", "伐採", "薬生成", "採集"] },
-  Melpaca: { element: "無", work: ["牧場"] },
-  Rushoar: { element: "地", work: ["採掘"] },
-  Eikthyrdeer: { element: "無", work: ["伐採"] },
-  Tombat: { element: "闇", work: ["採集", "採掘", "運搬"] },
-  Nitewing: { element: "無", work: ["採集"] },
-  Daedream: { element: "闇", work: ["手作業", "運搬", "採集"] },
-  Chillet: { element: "氷", work: ["冷却", "採集"] },
-  Katress: { element: "闇", work: ["手作業", "薬生成", "運搬"] },
-  Relaxaurus: { element: "竜", work: ["水やり", "運搬"] },
-  Broncherry: { element: "草", work: ["種まき"] },
-  Anubis: { element: "地", work: ["手作業", "採掘", "運搬"] },
-  Penking: { element: "水", work: ["水やり", "手作業", "採掘", "冷却", "運搬"] },
-  Bushi: { element: "炎", work: ["火おこし", "手作業", "伐採", "運搬", "採集"] },
-  Quivern: { element: "竜", work: ["手作業", "採集", "採掘", "運搬"] },
-  Mossanda: { element: "草", work: ["種まき", "手作業", "伐採", "運搬"] },
-  Rayhound: { element: "雷", work: ["発電"] },
-  Grizzbolt: { element: "雷", work: ["発電", "手作業", "伐採", "運搬"] },
-  Ragnahawk: { element: "炎", work: ["火おこし", "運搬"] },
-  Jormuntide: { element: "竜", work: ["水やり"] },
-  Kitsun: { element: "炎", work: ["火おこし"] },
-  Celaray: { element: "水", work: ["水やり", "運搬"] },
-  Menasting: { element: "地", work: ["伐採", "採掘"] },
-  Suzaku: { element: "炎", work: ["火おこし"] },
-  Gobfin: { element: "水", work: ["水やり", "手作業", "運搬"] },
-  Sparkit: { element: "雷", work: ["発電", "手作業", "運搬"] },
-  Orserk: { element: "雷", work: ["発電", "手作業", "運搬"] },
-  Sweepa: { element: "氷", work: ["冷却"] },
-  Sweegree: { element: "氷", work: ["冷却"] },
-  Beegarde: { element: "草", work: ["種まき", "手作業", "伐採", "薬生成", "運搬", "採集", "牧場"] },
-  Warsect: { element: "草", work: ["種まき", "手作業", "伐採", "運搬"] },
-  Kingpaca: { element: "無", work: ["採集"] },
-  Wumpo: { element: "氷", work: ["伐採", "冷却", "運搬"] },
-  Faleris: { element: "炎", work: ["火おこし", "運搬"] },
-  Astegon: { element: "竜", work: ["手作業", "採掘"] },
-  Blazamut: { element: "炎", work: ["火おこし", "採掘"] },
-  Shadowbeak: { element: "闇", work: ["採集"] },
-  Jetragon: { element: "竜", work: ["採集"] },
-  Frostallion: { element: "氷", work: ["冷却"] },
-  Necromus: { element: "闇", work: ["採掘"] },
-  Paladius: { element: "無", work: ["伐採", "採掘"] }
+  "モコロン": { en: "Lamball", image: "SheepBall", element: "無属性", work: ["手作業", "運搬", "牧場"] },
+  "ツッパニャン": { en: "Cattiva", image: "PinkCat", element: "無属性", work: ["手作業", "採集", "採掘", "運搬"] },
+  "タマコッコ": { en: "Chikipi", image: "ChickenPal", element: "無属性", work: ["採集", "牧場"] },
+  "クルリス": { en: "Lifmunk", image: "Carbunclo", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬"] },
+  "キツネビ": { en: "Foxparks", image: "Kitsunebi", element: "炎属性", work: ["火おこし"] },
+  "ペンタマ": { en: "Pengullet", image: "Penguin", element: "水属性", work: ["水やり", "手作業", "冷却", "運搬"] },
+  "キャプペン": { en: "Penking", image: "CaptainPenguin", element: "水属性", work: ["水やり", "手作業", "採掘", "冷却", "運搬"] },
+  "ボルトラ": { en: "Sparkit", image: "ElecCat", element: "雷属性", work: ["発電", "手作業", "運搬"] },
+  "ネムラム": { en: "Daedream", image: "DreamDemon", element: "闇属性", work: ["手作業", "採集", "運搬"] },
+  "イノボウ": { en: "Rushoar", image: "Boar", element: "地属性", work: ["採掘"] },
+  "メルパカ": { en: "Melpaca", image: "Alpaca", element: "無属性", work: ["牧場"] },
+  "ツノガミ": { en: "Eikthyrdeer", image: "Deer", element: "無属性", work: ["伐採"] },
+  "ホークウィン": { en: "Nitewing", image: "HawkBird", element: "無属性", work: ["採集"] },
+  "ヘルゴート": { en: "Incineram", image: "Baphomet", element: "炎属性", work: ["火おこし", "手作業", "採掘", "運搬"] },
+  "ササゾー": { en: "Mossanda", image: "GrassPanda", element: "草属性", work: ["種まき", "手作業", "伐採", "運搬"] },
+  "ビーナイト": { en: "Beegarde", image: "SoldierBee", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬", "運搬", "牧場"] },
+  "クインビーナ": { en: "Elizabee", image: "QueenBee", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "製薬"] },
+  "オコチョ": { en: "Chillet", image: "WeaselDragon", element: "氷属性", work: ["採集", "冷却"] },
+  "モモチョ": { en: "Chillet Ignis", image: "WeaselDragonFire", element: "炎属性", work: ["火おこし", "採集"] },
+  "ライコーン": { en: "Univolt", image: "Kirin", element: "雷属性", work: ["発電", "伐採"] },
+  "イヌズマ": { en: "Rayhound", image: "ThunderDog", element: "雷属性", work: ["発電"] },
+  "シラヌイ": { en: "Kitsun", image: "AmaterasuWolf", element: "炎属性", work: ["火おこし"] },
+  "ニャンバット": { en: "Tombat", image: "CatBat", element: "闇属性", work: ["採集", "採掘", "運搬"] },
+  "ラブマンダー": { en: "Lovander", image: "PinkLizard", element: "無属性", work: ["手作業", "採掘", "製薬", "運搬"] },
+  "ツジギリ": { en: "Bushi", image: "Ronin", element: "炎属性", work: ["火おこし", "手作業", "採集", "伐採", "運搬"] },
+  "ライバード": { en: "Beakon", image: "ThunderBird", element: "雷属性", work: ["発電", "採集", "運搬"] },
+  "イグニクス": { en: "Ragnahawk", image: "RedArmorBird", element: "炎属性", work: ["火おこし", "運搬"] },
+  "クレメーオ": { en: "Katress", image: "CatMage", element: "闇属性", work: ["手作業", "製薬", "運搬"] },
+  "フォレーナ": { en: "Wixen", image: "FoxMage", element: "炎属性", work: ["火おこし", "手作業", "運搬"] },
+  "ラベロット": { en: "Verdash", image: "GrassRabbitMan", element: "草属性", work: ["種まき", "手作業", "採集", "伐採", "運搬"] },
+  "ペコドン": { en: "Relaxaurus", image: "LazyDragon", element: "竜属性", work: ["水やり", "運搬"] },
+  "パリピドン": { en: "Relaxaurus Lux", image: "LazyDragonElectric", element: "竜属性", work: ["発電", "運搬"] },
+  "ラブラドン": { en: "Broncherry", image: "SakuraSaurus", element: "草属性", work: ["種まき"] },
+  "スプラドン": { en: "Broncherry Aqua", image: "SakuraSaurusWater", element: "水属性", work: ["水やり"] },
+  "アヌビス": { en: "Anubis", image: "Anubis", element: "地属性", work: ["手作業", "採掘", "運搬"] },
+  "レヴィドラ": { en: "Jormuntide", image: "Umihebi", element: "竜属性", work: ["水やり"] },
+  "アグニドラ": { en: "Jormuntide Ignis", image: "UmihebiFire", element: "竜属性", work: ["火おこし"] },
+  "スザク": { en: "Suzaku", image: "Suzaku", element: "炎属性", work: ["火おこし"] },
+  "シヴァ": { en: "Suzaku Aqua", image: "SuzakuWater", element: "水属性", work: ["水やり"] },
+  "エレパンダ": { en: "Grizzbolt", image: "ElecPanda", element: "雷属性", work: ["発電", "手作業", "伐採", "運搬"] },
+  "ホルス": { en: "Faleris", image: "Horus", element: "炎属性", work: ["火おこし", "運搬"] },
+  "デスティング": { en: "Menasting", image: "DarkScorpion", element: "闇属性", work: ["伐採", "採掘"] },
+  "ボルカノン": { en: "Blazamut", image: "VolcanicMonster", element: "炎属性", work: ["火おこし", "採掘"] },
+  "ゼノグリフ": { en: "Shadowbeak", image: "BlackGriffon", element: "闇属性", work: ["採集"] },
 };
 
-const PAL_NAMES = Object.keys(PAL_META).sort((a, b) => a.localeCompare(b));
-const ROOM_ID = getRoomId();
+const EN_TO_JP = Object.fromEntries(Object.entries(PAL_META).flatMap(([jp, meta]) => [
+  [meta.en.toLowerCase(), jp],
+  [meta.en.replace(/\s+/g, "").toLowerCase(), jp]
+]));
 
-const SAMPLE_RECORDS = [
-  {
-    id: "sample-penking-bushi-anubis",
-    parentA: "Penking",
-    parentB: "Bushi",
-    resultPal: "Anubis",
-    passives: ["職人気質", "まじめ", "走るのが得意"],
-    status: "実機確認済み",
-    recorder: "福冨",
-    note: "序盤〜中盤で作業用Anubisを狙う定番候補。パッシブ継承の記録用。",
-    gameVersion: "記録例",
-    favorite: true,
-    checked: { bred: true, screenshot: true, passive: false, battle: true },
-    updatedAt: Date.now() - 1000 * 60 * 30
-  },
-  {
-    id: "sample-chillet-quivern-anubis",
-    parentA: "Chillet",
-    parentB: "Quivern",
-    resultPal: "Anubis",
-    passives: ["職人気質", "希少"],
-    status: "確認中",
-    recorder: "友人A",
-    note: "Anubis狙いの別ルート。実機で再確認予定。",
-    gameVersion: "記録例",
-    favorite: false,
-    checked: { bred: false, screenshot: false, passive: false, battle: false },
-    updatedAt: Date.now() - 1000 * 60 * 72
-  },
-  {
-    id: "sample-mossanda-rayhound-grizzbolt",
-    parentA: "Mossanda",
-    parentB: "Rayhound",
-    resultPal: "Grizzbolt",
-    passives: ["発電特化", "走るのが得意"],
-    status: "育成候補",
-    recorder: "友人B",
-    note: "発電・戦闘候補。アップデート差異があり得るため確認欄を残す。",
-    gameVersion: "記録例",
-    favorite: true,
-    checked: { bred: false, screenshot: false, passive: false, battle: false },
-    updatedAt: Date.now() - 1000 * 60 * 160
-  },
-  {
-    id: "sample-broncherry-relaxaurus-anubis",
-    parentA: "Broncherry",
-    parentB: "Relaxaurus",
-    resultPal: "Anubis",
-    passives: ["ワーカーホリック", "社畜"],
-    status: "確認中",
-    recorder: "福冨",
-    note: "拠点作業用の厳選候補。継承結果を追記する。",
-    gameVersion: "記録例",
-    favorite: false,
-    checked: { bred: false, screenshot: false, passive: false, battle: false },
-    updatedAt: Date.now() - 1000 * 60 * 300
-  },
-  {
-    id: "sample-celaray-nitewing-bushi",
-    parentA: "Celaray",
-    parentB: "Nitewing",
-    resultPal: "Bushi",
-    passives: ["伐採担当", "火おこし"],
-    status: "確認中",
-    recorder: "友人A",
-    note: "Penking + Bushi ルートの前段として記録。",
-    gameVersion: "記録例",
-    favorite: false,
-    checked: { bred: false, screenshot: false, passive: false, battle: false },
-    updatedAt: Date.now() - 1000 * 60 * 470
-  },
-  {
-    id: "sample-ragnahawk-tombat-anubis",
-    parentA: "Ragnahawk",
-    parentB: "Tombat",
-    resultPal: "Anubis",
-    passives: ["採掘補助", "運搬補助"],
-    status: "確認中",
-    recorder: "友人B",
-    note: "Anubis狙い。親のパッシブを確認してから厳選する。",
-    gameVersion: "記録例",
-    favorite: false,
-    checked: { bred: false, screenshot: false, passive: false, battle: false },
-    updatedAt: Date.now() - 1000 * 60 * 680
-  }
-];
+const PAL_NAMES = Object.keys(PAL_META).sort((a, b) => a.localeCompare(b, "ja"));
+const ROOM_ID = getRoomId();
+const SAMPLE_PREFIX = "sample-";
 
 const state = {
   records: [],
@@ -144,12 +63,9 @@ const state = {
   db: null,
   dbApi: null,
   dbRef: null,
-  unsubscribe: null,
-  saving: false
 };
 
 const $ = (id) => document.getElementById(id);
-
 const elements = {
   parentFilter: $("parentFilter"),
   resultFilter: $("resultFilter"),
@@ -162,10 +78,12 @@ const elements = {
   sortSelect: $("sortSelect"),
   recordRows: $("recordRows"),
   emptyState: $("emptyState"),
+  emptyTitle: $("emptyTitle"),
+  emptyText: $("emptyText"),
   detailBody: $("detailBody"),
   recordDialog: $("recordDialog"),
   recordForm: $("recordForm"),
-  toast: $("toast")
+  toast: $("toast"),
 };
 
 init();
@@ -182,7 +100,10 @@ function getRoomId() {
   const fromHash = params.get("room");
   if (fromHash) return sanitizeRoom(fromHash);
   const existing = localStorage.getItem("palBoardRoomId");
-  if (existing) return existing;
+  if (existing) {
+    history.replaceState(null, "", `#room=${existing}`);
+    return existing;
+  }
   const created = `room-${Math.random().toString(36).slice(2, 9)}`;
   localStorage.setItem("palBoardRoomId", created);
   history.replaceState(null, "", `#room=${created}`);
@@ -219,10 +140,7 @@ function setupEvents() {
 
   $("addRecord").addEventListener("click", () => openDialog());
   $("cancelDialog").addEventListener("click", () => elements.recordDialog.close());
-  $("closeDetail").addEventListener("click", () => {
-    state.selectedId = null;
-    render();
-  });
+  $("closeDetail").addEventListener("click", () => { state.selectedId = null; render(); });
   $("copyRoomLink").addEventListener("click", async () => {
     const url = `${location.origin}${location.pathname}#room=${ROOM_ID}`;
     try {
@@ -257,18 +175,25 @@ async function setupStorage() {
       state.db = dbMod.getDatabase(app);
       state.dbApi = dbMod;
       state.dbRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/records`);
-      dbMod.onValue(state.dbRef, (snapshot) => {
-        const value = snapshot.val();
-        if (!value) {
-          state.records = SAMPLE_RECORDS.map(cloneRecord);
-          saveAllToRemote(state.records);
-        } else {
-          state.records = Object.entries(value).map(([id, record]) => normalizeRecord({ ...record, id }));
-        }
+      dbMod.onValue(state.dbRef, async (snapshot) => {
+        const value = snapshot.val() || {};
+        const entries = Object.entries(value);
+        const sampleIds = entries.filter(([id]) => id.startsWith(SAMPLE_PREFIX)).map(([id]) => id);
+        const realEntries = entries.filter(([id]) => !id.startsWith(SAMPLE_PREFIX));
+        state.records = realEntries.map(([id, record]) => normalizeRecord({ ...record, id })).filter(Boolean);
         state.firebaseReady = true;
         updateConnectionState("共同編集ON", true);
         ensureSelected();
         render();
+
+        if (sampleIds.length) {
+          await Promise.all(sampleIds.map(id => dbMod.remove(dbMod.ref(state.db, `rooms/${ROOM_ID}/records/${id}`))));
+          toast("以前のサンプル記録を削除しました");
+        }
+      }, (error) => {
+        console.warn("Firebase read failed:", error);
+        updateConnectionState("接続エラー", false);
+        toast("Firebaseの読み込み権限を確認してください。", true);
       });
       return;
     } catch (error) {
@@ -279,7 +204,9 @@ async function setupStorage() {
   }
 
   const saved = localStorage.getItem(localKey());
-  state.records = saved ? JSON.parse(saved).map(normalizeRecord) : SAMPLE_RECORDS.map(cloneRecord);
+  const localRecords = saved ? JSON.parse(saved) : [];
+  state.records = localRecords.map(normalizeRecord).filter(record => record && !record.id.startsWith(SAMPLE_PREFIX));
+  if (localRecords.length !== state.records.length) persistLocal();
   updateConnectionState("ローカル保存", false);
   ensureSelected();
 }
@@ -289,36 +216,17 @@ function updateConnectionState(text, online) {
   el.innerHTML = `<span class="live-dot" style="background:${online ? "#39ce64" : "#ffb02e"}; box-shadow:0 0 0 4px ${online ? "rgba(57,206,100,.18)" : "rgba(255,176,46,.2)"}"></span>${text}`;
 }
 
-function localKey() {
-  return `pal-breeding-records:${ROOM_ID}`;
-}
-
-function persistLocal() {
-  localStorage.setItem(localKey(), JSON.stringify(state.records));
-}
-
-async function saveAllToRemote(records) {
-  if (!state.firebaseReady || !state.dbApi || !state.dbRef || state.saving) return;
-  state.saving = true;
-  try {
-    const payload = Object.fromEntries(records.map(r => [r.id, stripId(r)]));
-    await state.dbApi.set(state.dbRef, payload);
-  } finally {
-    state.saving = false;
-  }
-}
-
-function cloneRecord(record) {
-  return normalizeRecord(JSON.parse(JSON.stringify(record)));
-}
+function localKey() { return `pal-breeding-records:${ROOM_ID}`; }
+function persistLocal() { localStorage.setItem(localKey(), JSON.stringify(state.records)); }
 
 function normalizeRecord(record) {
+  if (!record) return null;
   return {
     id: record.id || crypto.randomUUID(),
-    parentA: record.parentA || "",
-    parentB: record.parentB || "",
-    resultPal: record.resultPal || "",
-    passives: Array.isArray(record.passives) ? record.passives : splitTags(record.passives),
+    parentA: normalizePalName(record.parentA),
+    parentB: normalizePalName(record.parentB),
+    resultPal: normalizePalName(record.resultPal),
+    passives: Array.isArray(record.passives) ? record.passives.map(String).map(s => s.trim()).filter(Boolean) : splitTags(record.passives),
     status: record.status || "確認中",
     recorder: record.recorder || "福冨",
     note: record.note || "",
@@ -334,10 +242,14 @@ function normalizeRecord(record) {
   };
 }
 
-function stripId(record) {
-  const { id, ...rest } = record;
-  return rest;
+function normalizePalName(name) {
+  const raw = String(name || "").trim();
+  if (!raw) return "";
+  if (PAL_META[raw]) return raw;
+  return EN_TO_JP[raw.toLowerCase()] || EN_TO_JP[raw.replace(/\s+/g, "").toLowerCase()] || raw;
 }
+
+function stripId(record) { const { id, ...rest } = record; return rest; }
 
 function ensureSelected() {
   if (!state.selectedId && state.records.length) state.selectedId = state.records[0].id;
@@ -362,7 +274,8 @@ function getFilteredRecords() {
 
   records = records.filter(record => {
     const meta = PAL_META[record.resultPal] || {};
-    const searchTarget = [record.parentA, record.parentB, record.resultPal, record.recorder, record.note, record.status, record.gameVersion, ...record.passives].join(" ").toLowerCase();
+    const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => PAL_META[name]?.en || "");
+    const searchTarget = [record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, record.gameVersion, ...record.passives].join(" ").toLowerCase();
     return (!query || searchTarget.includes(query)) &&
       (!parent || record.parentA === parent || record.parentB === parent) &&
       (!result || record.resultPal === result) &&
@@ -376,8 +289,8 @@ function getFilteredRecords() {
   const sort = elements.sortSelect.value;
   records.sort((a, b) => {
     if (sort === "updatedAsc") return a.updatedAt - b.updatedAt;
-    if (sort === "resultAsc") return a.resultPal.localeCompare(b.resultPal);
-    if (sort === "statusAsc") return a.status.localeCompare(b.status);
+    if (sort === "resultAsc") return a.resultPal.localeCompare(b.resultPal, "ja");
+    if (sort === "statusAsc") return a.status.localeCompare(b.status, "ja");
     return b.updatedAt - a.updatedAt;
   });
   return records;
@@ -396,7 +309,18 @@ function renderKpis() {
 }
 
 function renderRows(records) {
-  elements.emptyState.hidden = records.length !== 0;
+  const isEmpty = records.length === 0;
+  elements.emptyState.hidden = !isEmpty;
+  if (isEmpty) {
+    if (state.records.length === 0) {
+      elements.emptyTitle.textContent = "まだ配合記録がありません";
+      elements.emptyText.textContent = "「新しい配合記録を追加」から、友人と記録を始めてください。";
+    } else {
+      elements.emptyTitle.textContent = "条件に合う記録がありません";
+      elements.emptyText.textContent = "絞り込み条件を変更してください。";
+    }
+  }
+
   elements.recordRows.innerHTML = records.map(record => {
     const selected = record.id === state.selectedId ? "selected" : "";
     return `
@@ -441,40 +365,21 @@ function renderDetail() {
       <div class="recipe-symbol">→</div>
       ${recipePal("結果", record.resultPal)}
     </div>
-
-    <div class="detail-section">
-      <h3>パッシブ候補</h3>
-      <div class="tag-list">${renderTags(record.passives)}<span class="tag">＋候補を追加</span></div>
-    </div>
-
-    <div class="detail-section">
-      <h3>メモ</h3>
-      <div class="note-box">${escapeHtml(record.note || "メモはまだありません。")}</div>
-    </div>
-
-    <div class="detail-section">
-      <h3>確認チェックリスト</h3>
-      <div class="check-list">
-        ${checkLine(record.checked.bred, "実際に配合済み")}
-        ${checkLine(record.checked.screenshot, "スクリーンショット確認")}
-        ${checkLine(record.checked.passive, "パッシブ継承確認")}
-        ${checkLine(record.checked.battle, "実戦・拠点性能確認")}
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <h3>記録情報</h3>
+    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}<span class="tag">＋候補を追加</span></div></div>
+    <div class="detail-section"><h3>メモ</h3><div class="note-box">${escapeHtml(record.note || "メモはまだありません。")}</div></div>
+    <div class="detail-section"><h3>確認チェックリスト</h3><div class="check-list">
+      ${checkLine(record.checked.bred, "実際に配合済み")}
+      ${checkLine(record.checked.screenshot, "スクリーンショット確認")}
+      ${checkLine(record.checked.passive, "パッシブ継承確認")}
+      ${checkLine(record.checked.battle, "実戦・拠点性能確認")}
+    </div></div>
+    <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
       <p><strong>記録者：</strong>${escapeHtml(record.recorder)}</p>
       <p><strong>ゲーム版：</strong>${escapeHtml(record.gameVersion || "未入力")}</p>
       <p><strong>更新日時：</strong>${formatDate(record.updatedAt, true)}</p>
     </div>
-
-    <div class="detail-actions">
-      <button class="secondary-button" data-detail-action="delete" type="button">削除</button>
-      <button class="primary-button" data-detail-action="edit" type="button">編集する</button>
-    </div>
-  `;
+    <div class="detail-actions"><button class="secondary-button" data-detail-action="delete" type="button">削除</button><button class="primary-button" data-detail-action="edit" type="button">編集する</button></div>`;
 
   elements.detailBody.querySelector("[data-detail-action='edit']")?.addEventListener("click", () => openDialog(record.id));
   elements.detailBody.querySelector("[data-detail-action='delete']")?.addEventListener("click", async () => {
@@ -484,23 +389,18 @@ function renderDetail() {
 }
 
 function palInline(name) {
-  const meta = PAL_META[name] || { element: "無", work: [] };
-  return `<span class="pal-inline">${palIcon(name, meta)}<span>${escapeHtml(name || "未入力")}</span></span>`;
+  return `<span class="pal-inline">${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></span>`;
 }
 
 function recipePal(label, name) {
-  const meta = PAL_META[name] || { element: "無", work: [] };
-  return `<div class="recipe-pal"><small>${label}</small>${palIcon(name, meta)}<span>${escapeHtml(name || "未入力")}</span></div>`;
+  return `<div class="recipe-pal"><small>${label}</small>${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></div>`;
 }
 
-function palIcon(name, meta) {
-  const className = elementClass(meta.element);
-  const initial = (name || "?").slice(0, 1).toUpperCase();
-  return `<span class="pal-icon ${className}" title="${escapeHtml(meta.element || "")}">${escapeHtml(initial)}</span>`;
-}
-
-function elementClass(element) {
-  return ({ "炎": "fire", "水": "water", "草": "grass", "雷": "elec", "氷": "ice", "闇": "dark", "地": "ground", "竜": "dragon", "無": "neutral" })[element] || "neutral";
+function palIcon(name) {
+  const meta = PAL_META[name];
+  if (!meta) return `<span class="pal-icon"><span class="pal-fallback">${escapeHtml((name || "?").slice(0, 1))}</span></span>`;
+  const url = `${IMG_BASE}T_${meta.image}_icon_normal.webp`;
+  return `<span class="pal-icon" title="${escapeHtml(`${name} / ${meta.en}`)}"><img src="${url}" alt="${escapeHtml(name)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${escapeHtml(name.slice(0,1))}'}))"></span>`;
 }
 
 function renderTags(tags) {
@@ -509,8 +409,8 @@ function renderTags(tags) {
 }
 
 function tagType(tag) {
-  if (["職人気質", "まじめ", "社畜", "ワーカーホリック", "発電特化", "運搬補助", "採掘補助", "伐採担当"].some(key => tag.includes(key))) return "work";
-  if (["脳筋", "獰猛", "希少", "伝説", "走るのが得意"].some(key => tag.includes(key))) return "battle";
+  if (["職人気質", "まじめ", "社畜", "ワーカーホリック", "発電特化", "運搬", "採掘", "伐採", "拠点"].some(key => tag.includes(key))) return "work";
+  if (["脳筋", "獰猛", "希少", "伝説", "走るのが得意", "神速", "すばしこい"].some(key => tag.includes(key))) return "battle";
   return "";
 }
 
@@ -520,9 +420,7 @@ function statusBadge(status) {
   return `<span class="status-badge ${className}">${icon} ${escapeHtml(status)}</span>`;
 }
 
-function checkLine(checked, text) {
-  return `<label><input type="checkbox" ${checked ? "checked" : ""} disabled /> ${escapeHtml(text)}</label>`;
-}
+function checkLine(checked, text) { return `<label><input type="checkbox" ${checked ? "checked" : ""} disabled /> ${escapeHtml(text)}</label>`; }
 
 function openDialog(id = null) {
   const record = id ? state.records.find(r => r.id === id) : null;

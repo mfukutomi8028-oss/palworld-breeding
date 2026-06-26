@@ -13,14 +13,14 @@
   <div class="app-shell">
     <aside class="sidebar" aria-label="サイドメニュー">
       <div class="brand-mini">
-        <div class="brand-mark">羽</div>
+        <div class="brand-mark" aria-hidden="true">🥚</div>
         <div>
           <p class="eyebrow">PAL BREEDING</p>
-          <strong>記録ボード</strong>
+          <strong>配合ボード</strong>
         </div>
       </div>
 
-      <nav class="main-nav">
+      <nav class="main-nav" aria-label="メインメニュー">
         <button class="nav-item active" data-view="records" type="button"><span>🥚</span>配合記録</button>
         <button class="nav-item" data-view="favorites" type="button"><span>★</span>お気に入り</button>
         <button class="nav-item" data-view="notes" type="button"><span>💬</span>共有メモ</button>
@@ -42,15 +42,15 @@
         <label class="field-label" for="elementFilter">属性</label>
         <select id="elementFilter">
           <option value="">すべて</option>
-          <option value="無">無</option>
-          <option value="炎">炎</option>
-          <option value="水">水</option>
-          <option value="草">草</option>
-          <option value="雷">雷</option>
-          <option value="氷">氷</option>
-          <option value="地">地</option>
-          <option value="闇">闇</option>
-          <option value="竜">竜</option>
+          <option value="無属性">無属性</option>
+          <option value="炎属性">炎属性</option>
+          <option value="水属性">水属性</option>
+          <option value="草属性">草属性</option>
+          <option value="雷属性">雷属性</option>
+          <option value="氷属性">氷属性</option>
+          <option value="地属性">地属性</option>
+          <option value="闇属性">闇属性</option>
+          <option value="竜属性">竜属性</option>
         </select>
         <div class="element-dots" aria-hidden="true">
           <span class="dot fire">炎</span><span class="dot water">水</span><span class="dot grass">草</span><span class="dot elec">雷</span><span class="dot ice">氷</span><span class="dot dark">闇</span><span class="dot ground">地</span>
@@ -67,9 +67,13 @@
           <option value="種まき">種まき</option>
           <option value="発電">発電</option>
           <option value="冷却">冷却</option>
+          <option value="牧場">牧場</option>
+          <option value="採集">採集</option>
+          <option value="伐採">伐採</option>
+          <option value="製薬">製薬</option>
         </select>
         <div class="work-icons" aria-hidden="true">
-          <span>🛠</span><span>⛏</span><span>📦</span><span>🔥</span><span>💧</span><span>🌱</span><span>⚡</span><span>❄</span>
+          <span>🔥</span><span>💧</span><span>🌱</span><span>⚡</span><span>🛠</span><span>⛏</span><span>📦</span><span>❄</span>
         </div>
 
         <label class="field-label" for="statusFilter">確認状況</label>
@@ -87,9 +91,9 @@
       </section>
 
       <div class="sidebar-pals" aria-hidden="true">
-        <div class="mini-pal pengullet">P</div>
-        <div class="mini-pal lamball">L</div>
-        <div class="mini-pal cattiva">C</div>
+        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_icon_normal.webp" alt="" />
+        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp" alt="" />
+        <img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkCat_icon_normal.webp" alt="" />
       </div>
     </aside>
 
@@ -113,29 +117,17 @@
         </div>
 
         <div class="hero-pals" aria-hidden="true">
-          <div class="pal-card lamball-large"><span>Lamball</span></div>
-          <div class="pal-card foxparks-large"><span>Foxparks</span></div>
-          <div class="pal-card chillet-large"><span>Chillet</span></div>
+          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp" alt=""><figcaption>モコロン</figcaption></figure>
+          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_icon_normal.webp" alt=""><figcaption>キツネビ</figcaption></figure>
+          <figure class="pal-card"><img src="https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_icon_normal.webp" alt=""><figcaption>オコチョ</figcaption></figure>
         </div>
       </header>
 
       <section class="kpi-grid" aria-label="集計">
-        <article class="kpi-card">
-          <div class="kpi-icon blue">▤</div>
-          <div><p>総記録数</p><strong id="totalCount">0</strong><span>全ての配合記録</span></div>
-        </article>
-        <article class="kpi-card">
-          <div class="kpi-icon green">✓</div>
-          <div><p>実機確認済み</p><strong id="verifiedCount">0</strong><span id="verifiedRate">0%</span></div>
-        </article>
-        <article class="kpi-card">
-          <div class="kpi-icon yellow">★</div>
-          <div><p>育成候補</p><strong id="candidateCount">0</strong><span>検討中の組み合わせ</span></div>
-        </article>
-        <article class="kpi-card">
-          <div class="kpi-icon purple">💬</div>
-          <div><p>共有メモ</p><strong id="memoCount">0</strong><span>メモありの記録</span></div>
-        </article>
+        <article class="kpi-card"><div class="kpi-icon blue">▤</div><div><p>総記録数</p><strong id="totalCount">0件</strong><span>全ての配合記録</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon green">✓</div><div><p>実機確認済み</p><strong id="verifiedCount">0件</strong><span id="verifiedRate">0%</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon yellow">★</div><div><p>育成候補</p><strong id="candidateCount">0件</strong><span>検討中の組み合わせ</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon purple">💬</div><div><p>共有メモ</p><strong id="memoCount">0件</strong><span>メモありの記録</span></div></article>
       </section>
 
       <section class="board-layout">
@@ -146,10 +138,7 @@
               <span>⌕</span>
               <input id="searchInput" type="search" placeholder="パル名・メモ・パッシブで検索" />
             </div>
-            <label class="toggle-chip">
-              <input id="unverifiedOnly" type="checkbox" />
-              <span>未確認のみ</span>
-            </label>
+            <label class="toggle-chip"><input id="unverifiedOnly" type="checkbox" /><span>未確認のみ</span></label>
             <select id="sortSelect" class="sort-select">
               <option value="updatedDesc">更新日時（新しい順）</option>
               <option value="updatedAsc">更新日時（古い順）</option>
@@ -177,8 +166,8 @@
             </table>
             <div id="emptyState" class="empty-state" hidden>
               <div class="empty-egg">🥚</div>
-              <h3>条件に合う記録がありません</h3>
-              <p>絞り込みを変更するか、新しい配合記録を追加してください。</p>
+              <h3 id="emptyTitle">まだ配合記録がありません</h3>
+              <p id="emptyText">「新しい配合記録を追加」から、友人と記録を始めてください。</p>
             </div>
           </div>
         </section>
@@ -207,13 +196,13 @@
       <input type="hidden" id="recordId" />
       <div class="form-grid">
         <label>親A
-          <input id="parentA" name="parentA" list="palOptions" required placeholder="例：Penking" />
+          <input id="parentA" name="parentA" list="palOptions" required placeholder="例：キャプペン" />
         </label>
         <label>親B
-          <input id="parentB" name="parentB" list="palOptions" required placeholder="例：Bushi" />
+          <input id="parentB" name="parentB" list="palOptions" required placeholder="例：ツジギリ" />
         </label>
         <label>結果パル
-          <input id="resultPal" name="resultPal" list="palOptions" required placeholder="例：Anubis" />
+          <input id="resultPal" name="resultPal" list="palOptions" required placeholder="例：アヌビス" />
         </label>
         <label>記録者
           <input id="recorder" name="recorder" required placeholder="例：福冨" />
@@ -225,8 +214,8 @@
             <option value="育成候補">育成候補</option>
           </select>
         </label>
-        <label>ゲーム版・メモ用バージョン
-          <input id="gameVersion" name="gameVersion" placeholder="例：v0.6 / Tides of Terraria後 など" />
+        <label>ゲーム版・補足
+          <input id="gameVersion" name="gameVersion" placeholder="例：v0.6 / アップデート後確認 など" />
         </label>
       </div>
 
@@ -254,7 +243,6 @@
   </dialog>
 
   <datalist id="palOptions"></datalist>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

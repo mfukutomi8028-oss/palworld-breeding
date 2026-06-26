@@ -1,6 +1,6 @@
 // Firebase設定
-// このファイルでは初期化処理は行いません。
-// app.js 側でこの設定を読み込んで Firebase に接続します。
+// GitHub Pagesでリアルタイム共同編集するため、このファイルには設定値だけを書きます。
+// import / initializeApp / getAnalytics は入れないでください。初期化は app.js 側で行います。
 
 window.firebaseConfig = {
   apiKey: "AIzaSyDNyaOvTa9TdiY9-8q00MD0JcRpJY4LX08",
