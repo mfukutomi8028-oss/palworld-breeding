@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v23";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v25";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v23";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v25";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1746,6 +1746,30 @@ const PALDB_STATIC_ICONS = [
   }
 ];
 
+const PALDB_JP_ICON_OVERRIDES = {
+  "ベノッポ": "MushroomDragon_Dark",
+  "キノッポ": "MushroomDragon",
+  "カバネドリ": "BirdDragon",
+  "グラクレス": "HerculesBeetle",
+  "クレメーオ": "CatMage",
+  "オーマサンダ": "ThunderDragonMan",
+  "アヌビス": "Anubis",
+  "ササゾー": "GrassPanda",
+  "ライゾー": "GrassPanda_Electric",
+  "フブキジカ": "IceDeer",
+  "シメナワ": "WindChimes",
+  "オバケナワ": "WindChimes_Ice",
+  "イシス": "Bastet",
+  "ツララジカ": "IceDeer",
+  "レヴィドラ": "Umihebi",
+  "アグニドラ": "Umihebi_Fire",
+  "スザク": "Suzaku",
+  "シヴァ": "Suzaku_Water",
+  "ホルス": "Horus",
+  "エレパンダ": "ElecPanda",
+  "ゼノグリフ": "BlackGriffon"
+};
+
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
@@ -2095,6 +2119,17 @@ function normalizePalNoKey(no) {
   return `${Number(match[1])}${match[2] || ""}`;
 }
 
+function getPaldbStaticIconByNo(no) {
+  const noKey = normalizePalNoKey(no);
+  if (!noKey) return null;
+  return PALDB_STATIC_ICONS.find(item => normalizePalNoKey(item.no) === noKey) || null;
+}
+
+function paldbIconUrlFromKey(iconKey) {
+  const key = String(iconKey || "").trim();
+  return key ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(key)}_icon_normal.webp` : "";
+}
+
 function applyPaldbIconsToPalMap(shouldRender = true) {
   if (!state.paldbIcons?.length || !state.palMap?.size) return;
 
@@ -2102,7 +2137,9 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
   const byEn = new Map();
   const byIconKey = new Map();
 
-  for (const item of state.paldbIcons) {
+  // Pal ID（No）は日本語版・海外版で共通なので、まずNoで紐づけます。
+  // 同じNoがある場合は、ユーザー提供のBreed静的マップを優先します。
+  for (const item of [...PALDB_STATIC_ICONS, ...state.paldbIcons]) {
     const noKey = normalizePalNoKey(item.no);
     const iconKey = item.iconKey || inferPaldbIconKey(item.icon);
     if (noKey && !byNo.has(noKey)) byNo.set(noKey, item);
@@ -2112,16 +2149,25 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
   }
 
   for (const [name, meta] of state.palMap.entries()) {
+    const noItem = byNo.get(normalizePalNoKey(meta.no));
     const existingIconKey = meta.iconKey ? normalizeKey(meta.iconKey) : "";
+    const overrideKey = PALDB_JP_ICON_OVERRIDES[name] || PALDB_JP_ICON_OVERRIDES[normalizePalName(name)] || "";
+    const overrideItem = overrideKey ? byIconKey.get(normalizeKey(overrideKey)) : null;
+
     const item =
+      noItem ||
+      overrideItem ||
       (existingIconKey ? byIconKey.get(existingIconKey) : null) ||
       byEn.get(normalizeKey(meta.en)) ||
-      byEn.get(normalizeKey(name)) ||
-      (!existingIconKey ? byNo.get(normalizePalNoKey(meta.no)) : null);
+      byEn.get(normalizeKey(name));
 
     if (item?.icon) {
       meta.paldbIcon = item.icon;
-      if (!meta.iconKey && item.iconKey) meta.iconKey = item.iconKey;
+      if (item.iconKey) meta.iconKey = item.iconKey;
+      state.palMap.set(name, meta);
+    } else if (overrideKey) {
+      meta.paldbIcon = paldbIconUrlFromKey(overrideKey);
+      meta.iconKey = overrideKey;
       state.palMap.set(name, meta);
     }
   }
@@ -2910,7 +2956,11 @@ function palIcon(name, size = "normal", options = {}) {
   if (!meta) {
     return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   }
-  const paldbUrl = meta.paldbIcon || (meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "");
+  const noItem = getPaldbStaticIconByNo(meta.no);
+  const noUrl = noItem?.icon || "";
+  const overrideKey = PALDB_JP_ICON_OVERRIDES[normalized] || "";
+  const overrideUrl = paldbIconUrlFromKey(overrideKey);
+  const paldbUrl = noUrl || overrideUrl || meta.paldbIcon || paldbIconUrlFromKey(meta.iconKey);
   const labUrl = meta.icon || "";
   const url = paldbUrl || labUrl;
   const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
