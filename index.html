@@ -4,473 +4,1054 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🥚 PAL 配合記録帳</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      min-height: 100vh;
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-alt: #172033;
+      --border: #334155;
+      --teal: #2dd4bf;
+      --teal-dark: #0f766e;
+      --teal-bg: #042f2e;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --green: #4ade80;
+      --green-bg: #052e16;
+      --green-border: #166534;
+      --amber: #fbbf24;
+      --amber-bg: #1c1400;
+      --amber-border: #92400e;
+      --red: #f87171;
+      --red-dark: #7f1d1d;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .55);
     }
-    input, textarea, button, select { font-family: inherit; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #1e293b; }
-    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Noto Sans JP", -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(45, 212, 191, .10), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, .08), transparent 36rem),
+        var(--bg);
+      color: var(--text);
+    }
+
+    input, textarea, button, select { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #111827; }
+    ::-webkit-scrollbar-thumb { background: #475569; border-radius: 999px; }
     ::-webkit-scrollbar-thumb:hover { background: #64748b; }
-    .row-hover { transition: background 0.12s; }
-    .row-hover:hover { background: #1e3a5a !important; }
-    .icon-btn { transition: color 0.12s, background 0.12s; }
-    .icon-btn:hover { background: rgba(255,255,255,0.07) !important; }
-    .filter-btn { transition: all 0.12s; }
-    .filter-btn:hover { opacity: 0.85; }
-    .primary-btn { transition: opacity 0.12s, transform 0.08s; }
-    .primary-btn:hover:not(:disabled) { opacity: 0.88; }
-    .primary-btn:active:not(:disabled) { transform: scale(0.97); }
-    .sec-btn { transition: background 0.12s, border-color 0.12s; }
-    .sec-btn:hover { background: rgba(255,255,255,0.05) !important; }
-    .status-badge { transition: opacity 0.12s; }
-    .status-badge:hover { opacity: 0.8; }
-    input:focus, textarea:focus { border-color: #2dd4bf !important; box-shadow: 0 0 0 2px rgba(45,212,191,0.15); outline: none; }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(30, 41, 59, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+
+    .header-inner,
+    .container {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+      font-weight: 850;
+      letter-spacing: -.03em;
+      color: var(--teal);
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--dim);
+    }
+
+    .header-actions,
+    .toolbar,
+    .filter-group,
+    .modal-actions,
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .container { padding: 24px 0 72px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, .96);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .16);
+    }
+
+    .stat-card { padding: 15px 18px; }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--dim);
+      letter-spacing: .05em;
+      margin-bottom: 4px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 850;
+      letter-spacing: -.04em;
+    }
+
+    .stat-unit {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--dim);
+      margin-left: 4px;
+    }
+
+    .toolbar { margin-bottom: 12px; }
+
+    .search-wrap {
+      position: relative;
+      flex: 1 1 260px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dim);
+      pointer-events: none;
+    }
+
+    .input,
+    .textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #0a1120;
+      color: var(--text);
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .14s, box-shadow .14s;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder { color: #64748b; }
+
+    .input:focus,
+    .textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(45, 212, 191, .14);
+    }
+
+    .search-wrap .input { padding-left: 36px; }
+    .textarea { min-height: 84px; resize: vertical; line-height: 1.65; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      transition: opacity .14s, background .14s, border-color .14s, transform .08s;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) { opacity: .88; }
+    .btn:active:not(:disabled) { transform: scale(.98); }
+    .btn:disabled { opacity: .42; cursor: not-allowed; }
+
+    .btn-primary { background: var(--teal-dark); color: #fff; }
+    .btn-secondary { background: transparent; border-color: var(--border); color: var(--muted); }
+    .btn-secondary:hover:not(:disabled) { background: rgba(255, 255, 255, .05); }
+    .btn-danger { background: var(--red-dark); color: #fff; }
+
+    .filter-btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background .14s, border-color .14s, color .14s, opacity .14s;
+    }
+
+    .filter-btn:hover { opacity: .86; }
+    .filter-btn.active {
+      border-color: var(--teal);
+      background: var(--teal-bg);
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .shown-count {
+      color: var(--dim);
+      font-size: 12px;
+      margin: 0 0 12px;
+    }
+
+    .table-card { overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: var(--card-alt);
+      color: var(--dim);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-align: left;
+      text-transform: uppercase;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    tbody tr:nth-child(even) { background: rgba(23, 32, 51, .58); }
+    tbody tr:hover { background: rgba(30, 58, 90, .66); }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .pal-name { font-weight: 650; }
+    .child-name { color: var(--teal); font-weight: 850; }
+    .plus-cell { text-align: center; color: var(--dim); font-size: 16px; }
+    .muted { color: var(--muted); }
+    .dim { color: var(--dim); }
+    .nowrap { white-space: nowrap; }
+
+    .note-cell {
+      max-width: 210px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 850;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: none;
+      white-space: nowrap;
+    }
+
+    .status-confirmed {
+      background: var(--green-bg);
+      color: var(--green);
+      border-color: var(--green-border);
+    }
+
+    .status-unconfirmed {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border-color: var(--amber-border);
+    }
+
+    .icon-btn {
+      border: 0;
+      background: transparent;
+      color: var(--dim);
+      border-radius: 8px;
+      padding: 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: color .14s, background .14s;
+    }
+
+    .icon-btn:hover { background: rgba(255, 255, 255, .07); color: var(--teal); }
+    .icon-btn.danger:hover { color: var(--red); }
+
+    .empty {
+      text-align: center;
+      padding: 70px 24px;
+    }
+
+    .empty-icon { font-size: 58px; margin-bottom: 14px; }
+    .empty p { margin: 0; color: var(--muted); line-height: 1.8; }
+
+    .hint {
+      margin-top: 18px;
+      padding: 13px 16px;
+      font-size: 12px;
+      line-height: 1.75;
+      color: var(--dim);
+    }
+
+    .hint strong { color: var(--muted); }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      z-index: 200;
+      max-width: min(360px, calc(100vw - 36px));
+      background: var(--teal-dark);
+      color: #fff;
+      border: 1px solid var(--teal);
+      border-radius: 12px;
+      padding: 11px 16px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 700;
+      transform: translateY(-10px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s, transform .18s;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { background: var(--red-dark); border-color: var(--red); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(9, 15, 30, .84);
+      backdrop-filter: blur(10px);
+      z-index: 120;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(470px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 850;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: grid;
+      gap: 15px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 15px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .required { color: var(--red); }
+
+    .checkbox-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-line input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--teal-dark);
+      cursor: pointer;
+    }
+
+    .delete-body {
+      text-align: center;
+      padding: 30px 24px 24px;
+    }
+
+    .delete-icon { font-size: 44px; margin-bottom: 10px; }
+    .delete-title { font-weight: 850; margin-bottom: 10px; }
+    .delete-target { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      .header { padding: 13px 16px; }
+      .header-inner,
+      .container { width: min(100% - 24px, 1080px); }
+      .stats { grid-template-columns: 1fr; }
+      .header-actions, .toolbar, .filter-group { width: 100%; }
+      .header-actions .btn { flex: 1 1 auto; }
+      .filter-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .filter-btn { padding-inline: 8px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .modal-footer { flex-direction: column-reverse; }
+      .modal-footer .btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1 class="title">🥚 PAL 配合記録帳</h1>
+        <div class="subtitle">Palworld Breeding Tracker — みんなで記録・共有</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" id="importJsonBtn" type="button">⬆ データ取り込み</button>
+        <button class="btn btn-secondary" id="exportJsonBtn" type="button">⬇ データ共有</button>
+        <button class="btn btn-secondary" id="exportCsvBtn" type="button">⬇ CSV出力</button>
+        <button class="btn btn-primary" id="addBtn" type="button">＋ 配合を追加</button>
+      </div>
+    </div>
+  </header>
 
-  <script type="text/babel">
-    const { useState, useEffect, useCallback, useRef } = React;
-    const STORAGE_KEY = 'palworld-breeding-v1';
+  <main class="container">
+    <section class="stats" aria-label="記録数">
+      <div class="card stat-card">
+        <div class="stat-label">📋 総記録数</div>
+        <div class="stat-number" style="color: var(--teal);"><span id="totalCount">0</span><span class="stat-unit">件</span></div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-label">✅ 確認済み</div>
+        <div class="stat-number" style="color: var(--green);"><span id="confirmedCount">0</span><span class="stat-unit">件</span></div>
+      </div>
+      <div class="card stat-card">
+        <div class="stat-label">⚠️ 未確認</div>
+        <div class="stat-number" style="color: var(--amber);"><span id="unconfirmedCount">0</span><span class="stat-unit">件</span></div>
+      </div>
+    </section>
 
-    /* ── カラーパレット ── */
-    const C = {
-      bg:'#0f172a', card:'#1e293b', cardAlt:'#172033',
-      border:'#334155',
-      teal:'#2dd4bf', tealDark:'#0f766e', tealBg:'#042f2e',
-      text:'#e2e8f0', muted:'#94a3b8', dim:'#64748b',
-      green:'#4ade80', greenBg:'#052e16', greenBorder:'#166534',
-      amber:'#fbbf24', amberBg:'#1c1400', amberBorder:'#92400e',
-      red:'#f87171', redDark:'#7f1d1d',
-    };
+    <section class="toolbar" aria-label="検索と絞り込み">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input class="input" id="searchInput" type="search" placeholder="パル名・メモで検索…" autocomplete="off">
+      </div>
+      <div class="filter-group" role="group" aria-label="確認状態で絞り込み">
+        <button class="filter-btn active" type="button" data-filter="all">すべて</button>
+        <button class="filter-btn" type="button" data-filter="confirmed">✅ 確認済み</button>
+        <button class="filter-btn" type="button" data-filter="unconfirmed">⚠️ 未確認</button>
+      </div>
+      <button class="btn btn-secondary" id="sortBtn" type="button">↓ 新しい順</button>
+    </section>
 
-    /* ── SVGアイコン ── */
-    const I = {
-      plus:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-      search:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-      edit:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-      trash: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>,
-      x:     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-      check: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
-      down:  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>,
-      up:    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>,
-      dl:    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-      ul:    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-    };
+    <p class="shown-count" id="shownCount">0 件表示</p>
 
-    /* ── 共通スタイルオブジェクト ── */
-    const S = {
-      card:    { background:C.card, border:`1px solid ${C.border}`, borderRadius:12 },
-      btnPri:  { display:'flex', alignItems:'center', gap:6, padding:'8px 14px', background:C.tealDark, border:'none', borderRadius:8, fontSize:13, color:'#fff', fontWeight:600, cursor:'pointer' },
-      btnSec:  { display:'flex', alignItems:'center', gap:6, padding:'8px 12px', background:'transparent', border:`1px solid ${C.border}`, borderRadius:8, fontSize:13, color:C.muted, cursor:'pointer' },
-      btnDang: { display:'flex', alignItems:'center', gap:6, padding:'8px 14px', background:C.redDark, border:'none', borderRadius:8, fontSize:13, color:'#fff', fontWeight:600, cursor:'pointer' },
-      inp:     { width:'100%', background:'#0a1120', border:`1px solid ${C.border}`, borderRadius:8, padding:'9px 12px', fontSize:14, color:C.text, outline:'none', boxSizing:'border-box' },
-      lbl:     { display:'block', fontSize:11, fontWeight:600, color:C.muted, marginBottom:5, letterSpacing:'0.04em', textTransform:'uppercase' },
-      th:      { padding:'10px 14px', fontSize:10, color:C.dim, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', textAlign:'left', background:C.cardAlt, borderBottom:`1px solid ${C.border}`, whiteSpace:'nowrap' },
-      td:      { padding:'10px 14px', fontSize:13, borderBottom:`1px solid ${C.border}`, color:C.text },
-      iconBtn: { background:'none', border:'none', cursor:'pointer', padding:6, borderRadius:5, display:'flex', alignItems:'center', color:C.dim },
-    };
+    <section class="card table-card" id="tableSection">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>親パル 1</th>
+              <th>親パル 2</th>
+              <th style="text-align:center;"> </th>
+              <th>子パル</th>
+              <th>メモ</th>
+              <th>状態</th>
+              <th>追加者</th>
+              <th>日付</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-    /* ══════════════════════════════════
-       メインアプリ
-    ══════════════════════════════════ */
-    function App() {
-      const [entries,  setEntries]  = useState([]);
-      const [search,   setSearch]   = useState('');
-      const [filter,   setFilter]   = useState('all');
-      const [sortDesc, setSortDesc] = useState(true);
-      const [view,     setView]     = useState('main'); // main|form|delete
-      const [editing,  setEditing]  = useState(null);
-      const [deleting, setDeleting] = useState(null);
-      const [toast,    setToast]    = useState(null);
-      const [form,     setForm]     = useState({ parent1:'', parent2:'', child:'', notes:'', confirmed:false, addedBy:'' });
-      const fileRef = useRef(null);
+    <section class="card empty hidden" id="emptySection">
+      <div class="empty-icon">🥚</div>
+      <p id="emptyMessage">まだ配合記録がありません。<br>「配合を追加」ボタンから最初の発見を記録しよう！</p>
+    </section>
 
-      /* ── データ読み込み ── */
-      useEffect(() => {
-        try {
-          const saved = localStorage.getItem(STORAGE_KEY);
-          if (saved) setEntries(JSON.parse(saved));
-        } catch {}
-      }, []);
+    <section class="card hint">
+      💡 <strong>友達とのデータ共有方法：</strong>
+      「データ共有」でJSONファイルを書き出し → Discordなどで友達に送る → 友達は「データ取り込み」で読み込みます。重複は自動でスキップします。
+      <br>
+      ※ このサイトは静的HTMLなので、入力内容は各端末のブラウザ内に保存されます。全員で同じデータを自動共有したい場合は、別途データ保存先が必要です。
+    </section>
+  </main>
 
-      /* ── トースト通知 ── */
-      const showToast = useCallback((msg, type='ok') => {
-        setToast({ msg, type });
-        setTimeout(() => setToast(null), 2800);
-      }, []);
+  <input id="fileInput" class="hidden" type="file" accept="application/json,.json">
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-      /* ── データ保存 ── */
-      const persist = useCallback((next) => {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-          setEntries(next);
-        } catch { showToast('⚠️ 保存に失敗しました', 'err'); }
-      }, [showToast]);
-
-      /* ── フィルター & ソート ── */
-      const shown = entries
-        .filter(e => {
-          const q = search.toLowerCase().trim();
-          if (q && !`${e.parent1} ${e.parent2} ${e.child} ${e.notes||''}`.toLowerCase().includes(q)) return false;
-          if (filter === 'confirmed'   && !e.confirmed) return false;
-          if (filter === 'unconfirmed' &&  e.confirmed) return false;
-          return true;
-        })
-        .sort((a,b) => sortDesc
-          ? new Date(b.createdAt) - new Date(a.createdAt)
-          : new Date(a.createdAt) - new Date(b.createdAt)
-        );
-
-      /* ── モーダル操作 ── */
-      const openAdd    = () => { setEditing(null); setForm({parent1:'',parent2:'',child:'',notes:'',confirmed:false,addedBy:''}); setView('form'); };
-      const openEdit   = (e) => { setEditing(e); setForm({parent1:e.parent1,parent2:e.parent2,child:e.child,notes:e.notes||'',confirmed:e.confirmed,addedBy:e.addedBy||''}); setView('form'); };
-      const openDelete = (e) => { setDeleting(e); setView('delete'); };
-      const closeModal = ()  => { setView('main'); setEditing(null); setDeleting(null); };
-
-      /* ── フォーム送信 ── */
-      const submitForm = () => {
-        if (!form.parent1.trim() || !form.parent2.trim() || !form.child.trim()) return;
-        const now  = new Date().toISOString();
-        const next = editing
-          ? entries.map(e => e.id === editing.id ? {...form, id:e.id, createdAt:e.createdAt, updatedAt:now} : e)
-          : [...entries, {...form, id:`${Date.now()}-${Math.random().toString(36).slice(2,6)}`, createdAt:now}];
-        persist(next);
-        closeModal();
-        showToast(editing ? '✏️ 更新しました！' : '✅ 追加しました！');
-      };
-
-      /* ── 削除 ── */
-      const doDelete = () => {
-        persist(entries.filter(e => e.id !== deleting.id));
-        closeModal();
-        showToast('🗑️ 削除しました');
-      };
-
-      /* ── 確認状態トグル ── */
-      const toggleOK = (e) => {
-        persist(entries.map(x => x.id === e.id ? {...x, confirmed:!x.confirmed} : x));
-        showToast(e.confirmed ? '⚠️ 未確認に戻しました' : '✅ 確認済みにしました！');
-      };
-
-      /* ── CSV書き出し ── */
-      const exportCSV = () => {
-        const BOM  = '\uFEFF';
-        const rows = [
-          ['親パル1','親パル2','子パル','メモ','確認状態','追加者','追加日'],
-          ...entries.map(e => [
-            e.parent1, e.parent2, e.child,
-            `"${(e.notes||'').replace(/"/g,'""')}"`,
-            e.confirmed ? '確認済み' : '未確認',
-            e.addedBy || '',
-            new Date(e.createdAt).toLocaleDateString('ja-JP')
-          ])
-        ];
-        const blob = new Blob([BOM + rows.map(r=>r.join(',')).join('\n')], {type:'text/csv;charset=utf-8;'});
-        const url  = URL.createObjectURL(blob);
-        const a    = Object.assign(document.createElement('a'), {href:url, download:'palworld_breeding.csv'});
-        a.click(); URL.revokeObjectURL(url);
-        showToast('📊 CSVを書き出しました！');
-      };
-
-      /* ── JSONデータ書き出し（友達共有用）── */
-      const exportJSON = () => {
-        const blob = new Blob([JSON.stringify(entries, null, 2)], {type:'application/json'});
-        const url  = URL.createObjectURL(blob);
-        const a    = Object.assign(document.createElement('a'), {href:url, download:'palworld_data.json'});
-        a.click(); URL.revokeObjectURL(url);
-        showToast('📤 データを書き出しました！友達に送ってね');
-      };
-
-      /* ── JSONデータ取り込み（友達から受け取り）── */
-      const handleImport = (ev) => {
-        const file = ev.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          try {
-            const imported = JSON.parse(e.target.result);
-            if (!Array.isArray(imported)) { showToast('⚠️ 無効なファイルです', 'err'); return; }
-            const existIds  = new Set(entries.map(x => x.id));
-            const newItems  = imported.filter(x => !existIds.has(x.id));
-            persist([...entries, ...newItems]);
-            showToast(`🎉 ${newItems.length}件の新しい記録を取り込みました！`);
-          } catch { showToast('⚠️ 読み込みに失敗しました', 'err'); }
-        };
-        reader.readAsText(file);
-        ev.target.value = '';
-      };
-
-      const isValid    = form.parent1.trim() && form.parent2.trim() && form.child.trim();
-      const confirmedN = entries.filter(e => e.confirmed).length;
-
-      /* ════════════════════════════
-         フォームモーダル
-      ════════════════════════════ */
-      if (view === 'form') return (
-        <div style={{minHeight:'100vh', background:'rgba(9,15,30,0.96)', display:'flex', alignItems:'center', justifyContent:'center', padding:20}}>
-          <div style={{...S.card, width:'100%', maxWidth:450, boxShadow:'0 30px 70px rgba(0,0,0,0.7)'}}>
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'18px 20px', borderBottom:`1px solid ${C.border}`}}>
-              <span style={{fontWeight:700, fontSize:15}}>{editing ? '✏️ 配合を編集' : '➕ 新しい配合を追加'}</span>
-              <button style={S.iconBtn} className="icon-btn" onClick={closeModal}>{I.x}</button>
-            </div>
-            <div style={{padding:20, display:'flex', flexDirection:'column', gap:14}}>
-              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
-                <div>
-                  <label style={S.lbl}>親パル 1 <span style={{color:C.red}}>*</span></label>
-                  <input style={S.inp} placeholder="例: ランタン" value={form.parent1}
-                    onChange={e => setForm(f => ({...f, parent1:e.target.value}))} autoFocus/>
-                </div>
-                <div>
-                  <label style={S.lbl}>親パル 2 <span style={{color:C.red}}>*</span></label>
-                  <input style={S.inp} placeholder="例: ダチパル" value={form.parent2}
-                    onChange={e => setForm(f => ({...f, parent2:e.target.value}))}/>
-                </div>
-              </div>
-              <div>
-                <label style={S.lbl}>子パル <span style={{color:C.red}}>*</span></label>
-                <input style={S.inp} placeholder="例: ネコパル" value={form.child}
-                  onChange={e => setForm(f => ({...f, child:e.target.value}))}/>
-              </div>
-              <div>
-                <label style={S.lbl}>メモ</label>
-                <textarea style={{...S.inp, minHeight:68, resize:'vertical', lineHeight:1.6}}
-                  placeholder="特技・特性・確率・気になった点など…"
-                  value={form.notes} onChange={e => setForm(f => ({...f, notes:e.target.value}))}/>
-              </div>
-              <div>
-                <label style={S.lbl}>追加者</label>
-                <input style={S.inp} placeholder="あなたのニックネーム（例: ふくとみ）" value={form.addedBy}
-                  onChange={e => setForm(f => ({...f, addedBy:e.target.value}))}/>
-              </div>
-              <div style={{display:'flex', alignItems:'center', gap:10, cursor:'pointer', userSelect:'none', padding:'2px 0'}}
-                onClick={() => setForm(f => ({...f, confirmed:!f.confirmed}))}>
-                <div style={{width:18, height:18, borderRadius:4, flexShrink:0, border:`2px solid ${form.confirmed?C.teal:C.border}`, background:form.confirmed?C.teal:'transparent', display:'flex', alignItems:'center', justifyContent:'center', transition:'all 0.15s'}}>
-                  {form.confirmed && I.check}
-                </div>
-                <span style={{fontSize:13, color:C.muted}}>実際に配合して結果を確認した</span>
-              </div>
-            </div>
-            <div style={{display:'flex', gap:8, justifyContent:'flex-end', padding:'14px 20px', borderTop:`1px solid ${C.border}`}}>
-              <button style={S.btnSec} className="sec-btn" onClick={closeModal}>キャンセル</button>
-              <button style={{...S.btnPri, opacity:isValid?1:0.38, cursor:isValid?'pointer':'not-allowed'}}
-                className="primary-btn" onClick={submitForm} disabled={!isValid}>
-                {I.check} {editing ? '更新する' : '追加する'}
-              </button>
-            </div>
+  <div class="modal-backdrop" id="formModal" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+    <form class="modal" id="entryForm">
+      <div class="modal-header">
+        <span id="formTitle">＋ 新しい配合を追加</span>
+        <button class="icon-btn" id="closeFormBtn" type="button" aria-label="閉じる">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-2">
+          <div>
+            <label for="parent1Input">親パル 1 <span class="required">*</span></label>
+            <input class="input" id="parent1Input" type="text" placeholder="例：ランタン" autocomplete="off" required>
+          </div>
+          <div>
+            <label for="parent2Input">親パル 2 <span class="required">*</span></label>
+            <input class="input" id="parent2Input" type="text" placeholder="例：ダチパル" autocomplete="off" required>
           </div>
         </div>
-      );
-
-      /* ════════════════════════════
-         削除確認モーダル
-      ════════════════════════════ */
-      if (view === 'delete' && deleting) return (
-        <div style={{minHeight:'100vh', background:'rgba(9,15,30,0.96)', display:'flex', alignItems:'center', justifyContent:'center', padding:20}}>
-          <div style={{...S.card, width:'100%', maxWidth:340, padding:'30px 24px', textAlign:'center'}}>
-            <div style={{fontSize:42, marginBottom:14}}>🗑️</div>
-            <div style={{fontWeight:700, fontSize:15, marginBottom:10}}>本当に削除しますか？</div>
-            <div style={{fontSize:13, color:C.muted, marginBottom:4}}>
-              <span style={{color:C.teal, fontWeight:600}}>{deleting.parent1} × {deleting.parent2}</span>
-              <span style={{color:C.dim}}> → </span>
-              <span style={{color:C.teal, fontWeight:700}}>{deleting.child}</span>
-            </div>
-            <div style={{fontSize:12, color:C.dim, marginBottom:24}}>この操作は元に戻せません。</div>
-            <div style={{display:'flex', gap:10, justifyContent:'center'}}>
-              <button style={S.btnSec} className="sec-btn" onClick={closeModal}>キャンセル</button>
-              <button style={S.btnDang} className="primary-btn" onClick={doDelete}>{I.trash} 削除する</button>
-            </div>
-          </div>
+        <div>
+          <label for="childInput">子パル <span class="required">*</span></label>
+          <input class="input" id="childInput" type="text" placeholder="例：ネコパル" autocomplete="off" required>
         </div>
-      );
-
-      /* ════════════════════════════
-         メイン画面
-      ════════════════════════════ */
-      return (
-        <div style={{minHeight:'100vh', background:C.bg}}>
-
-          {/* トースト通知 */}
-          {toast && (
-            <div style={{position:'fixed', top:18, right:18, background:toast.type==='err'?'#7f1d1d':C.tealDark, color:'#fff', padding:'10px 18px', borderRadius:9, fontSize:13, fontWeight:500, zIndex:9999, boxShadow:'0 6px 24px rgba(0,0,0,0.45)', border:`1px solid ${toast.type==='err'?C.red:C.teal}`, maxWidth:340}}>
-              {toast.msg}
-            </div>
-          )}
-
-          {/* 隠しファイル入力 */}
-          <input ref={fileRef} type="file" accept=".json" style={{display:'none'}} onChange={handleImport}/>
-
-          {/* ヘッダー */}
-          <div style={{background:C.card, borderBottom:`1px solid ${C.border}`, padding:'13px 24px', position:'sticky', top:0, zIndex:200}}>
-            <div style={{maxWidth:1050, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap'}}>
-              <div>
-                <div style={{fontSize:19, fontWeight:800, color:C.teal, letterSpacing:-0.5}}>🥚 PAL 配合記録帳</div>
-                <div style={{fontSize:11, color:C.dim, marginTop:1}}>Palworld Breeding Tracker — みんなで記録・共有</div>
-              </div>
-              <div style={{display:'flex', gap:7, flexWrap:'wrap', alignItems:'center'}}>
-                <button style={S.btnSec} className="sec-btn" onClick={() => fileRef.current.click()} title="友達のJSONデータを取り込む">
-                  {I.ul} データ取り込み
-                </button>
-                <button style={S.btnSec} className="sec-btn" onClick={exportJSON} title="データをJSONファイルに書き出し、友達に共有する">
-                  {I.dl} データ共有
-                </button>
-                <button style={S.btnSec} className="sec-btn" onClick={exportCSV}>
-                  {I.dl} CSV出力
-                </button>
-                <button style={S.btnPri} className="primary-btn" onClick={openAdd}>
-                  {I.plus} 配合を追加
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div style={{maxWidth:1050, margin:'0 auto', padding:'22px 24px 64px'}}>
-
-            {/* 統計カード */}
-            <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:22}}>
-              {[
-                ['📋 総記録数', entries.length, C.teal],
-                ['✅ 確認済み', confirmedN, C.green],
-                ['⚠️ 未確認',  entries.length - confirmedN, C.amber],
-              ].map(([label, n, color]) => (
-                <div key={label} style={{...S.card, padding:'13px 18px'}}>
-                  <div style={{fontSize:10, color:C.dim, marginBottom:4, letterSpacing:'0.05em', textTransform:'uppercase'}}>{label}</div>
-                  <div style={{fontSize:28, fontWeight:800, color}}>
-                    {n} <span style={{fontSize:13, fontWeight:400, color:C.dim}}>件</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* ツールバー */}
-            <div style={{display:'flex', gap:8, marginBottom:10, flexWrap:'wrap'}}>
-              <div style={{position:'relative', flex:1, minWidth:200}}>
-                <span style={{position:'absolute', left:11, top:'50%', transform:'translateY(-50%)', color:C.dim, pointerEvents:'none', lineHeight:0}}>
-                  {I.search}
-                </span>
-                <input style={{...S.inp, paddingLeft:34}} placeholder="パル名・メモで検索…"
-                  value={search} onChange={e => setSearch(e.target.value)}/>
-              </div>
-              <div style={{display:'flex', gap:6}}>
-                {[
-                  ['all',          'すべて'],
-                  ['confirmed',    '✅ 確認済み'],
-                  ['unconfirmed',  '⚠️ 未確認'],
-                ].map(([v, l]) => (
-                  <button key={v} className="filter-btn" onClick={() => setFilter(v)} style={{
-                    padding:'8px 12px', borderRadius:8, fontSize:12, cursor:'pointer',
-                    border:`1px solid ${filter===v ? C.teal : C.border}`,
-                    background: filter===v ? C.tealBg : 'transparent',
-                    color:      filter===v ? C.teal   : C.muted,
-                    fontWeight: filter===v ? 700 : 400,
-                  }}>{l}</button>
-                ))}
-              </div>
-              <button style={S.btnSec} className="sec-btn" onClick={() => setSortDesc(d => !d)}>
-                {sortDesc ? I.down : I.up} {sortDesc ? '新しい順' : '古い順'}
-              </button>
-            </div>
-
-            <div style={{fontSize:12, color:C.dim, marginBottom:12}}>
-              {shown.length} 件表示{search && ` — 「${search}」`}
-              {entries.length > 0 && ` / 合計 ${entries.length} 件`}
-            </div>
-
-            {/* テーブル / 空状態 */}
-            {shown.length === 0 ? (
-              <div style={{...S.card, padding:'64px 24px', textAlign:'center'}}>
-                <div style={{fontSize:54, marginBottom:14}}>🥚</div>
-                <div style={{color:C.muted, fontSize:14, lineHeight:1.8}}>
-                  {entries.length === 0
-                    ? <>まだ配合記録がありません。<br/>「配合を追加」ボタンから最初の発見を記録しよう！</>
-                    : '検索・フィルター条件に一致する記録がありませんでした。'}
-                </div>
-              </div>
-            ) : (
-              <div style={{...S.card, overflow:'hidden'}}>
-                <div style={{overflowX:'auto'}}>
-                  <table style={{width:'100%', borderCollapse:'collapse', minWidth:680}}>
-                    <thead>
-                      <tr>
-                        {['親パル 1','親パル 2','','子パル','メモ','状態','追加者','日付',''].map((h,i) => (
-                          <th key={i} style={{...S.th, textAlign:i===2?'center':'left'}}>{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {shown.map((e, i) => (
-                        <tr key={e.id} className="row-hover"
-                          style={{background: i%2===1 ? '#172033' : 'transparent'}}>
-                          <td style={{...S.td, fontWeight:500}}>{e.parent1}</td>
-                          <td style={{...S.td, fontWeight:500}}>{e.parent2}</td>
-                          <td style={{...S.td, textAlign:'center', color:C.dim, fontSize:16}}>＋</td>
-                          <td style={{...S.td, color:C.teal, fontWeight:700}}>{e.child}</td>
-                          <td style={{...S.td, fontSize:12, color:C.muted, maxWidth:160}}>
-                            <span style={{display:'block', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}} title={e.notes}>
-                              {e.notes || '—'}
-                            </span>
-                          </td>
-                          <td style={{...S.td, textAlign:'center'}}>
-                            <button className="status-badge" onClick={() => toggleOK(e)} style={{
-                              display:'inline-flex', alignItems:'center', gap:4,
-                              padding:'3px 10px', borderRadius:999, fontSize:11, fontWeight:700, cursor:'pointer',
-                              background: e.confirmed ? C.greenBg   : C.amberBg,
-                              color:      e.confirmed ? C.green     : C.amber,
-                              border:`1px solid ${e.confirmed ? C.greenBorder : C.amberBorder}`,
-                            }}>
-                              {e.confirmed && I.check}
-                              {e.confirmed ? '確認済' : '未確認'}
-                            </button>
-                          </td>
-                          <td style={{...S.td, fontSize:12, color:C.dim}}>{e.addedBy || '—'}</td>
-                          <td style={{...S.td, fontSize:11, color:C.dim, whiteSpace:'nowrap'}}>
-                            {new Date(e.createdAt).toLocaleDateString('ja-JP')}
-                          </td>
-                          <td style={S.td}>
-                            <div style={{display:'flex', gap:2}}>
-                              <button style={S.iconBtn} className="icon-btn" onClick={() => openEdit(e)} title="編集"
-                                onMouseEnter={ev => ev.currentTarget.style.color=C.teal}
-                                onMouseLeave={ev => ev.currentTarget.style.color=C.dim}>
-                                {I.edit}
-                              </button>
-                              <button style={S.iconBtn} className="icon-btn" onClick={() => openDelete(e)} title="削除"
-                                onMouseEnter={ev => ev.currentTarget.style.color=C.red}
-                                onMouseLeave={ev => ev.currentTarget.style.color=C.dim}>
-                                {I.trash}
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* フッターヒント */}
-            <div style={{marginTop:18, padding:'12px 16px', background:C.card, border:`1px solid ${C.border}`, borderRadius:9, fontSize:12, color:C.dim, lineHeight:1.7}}>
-              💡 <span style={{color:C.muted, fontWeight:600}}>友達とのデータ共有方法：</span>
-              「データ共有」でJSONファイルを書き出し → Discordなどで友達に送る → 友達は「データ取り込み」で読み込む。重複は自動でスキップされます！
-            </div>
-          </div>
+        <div>
+          <label for="notesInput">メモ</label>
+          <textarea class="textarea" id="notesInput" placeholder="特技・特性・確率・気になった点など…"></textarea>
         </div>
-      );
+        <div>
+          <label for="addedByInput">追加者</label>
+          <input class="input" id="addedByInput" type="text" placeholder="あなたのニックネーム（例：ふくとみ）" autocomplete="off">
+        </div>
+        <label class="checkbox-line" for="confirmedInput">
+          <input id="confirmedInput" type="checkbox">
+          <span>実際に配合して結果を確認した</span>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelFormBtn" type="button">キャンセル</button>
+        <button class="btn btn-primary" id="submitFormBtn" type="submit">追加する</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+    <div class="modal" style="max-width: 360px;">
+      <div class="delete-body">
+        <div class="delete-icon">🗑️</div>
+        <div class="delete-title" id="deleteTitle">本当に削除しますか？</div>
+        <div class="delete-target" id="deleteTarget"></div>
+        <div class="dim" style="font-size:12px; margin-top:8px;">この操作は元に戻せません。</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelDeleteBtn" type="button">キャンセル</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn" type="button">削除する</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+
+    const STORAGE_KEY = 'palworld-breeding-v2';
+    const OLD_STORAGE_KEY = 'palworld-breeding-v1';
+
+    const state = {
+      entries: [],
+      search: '',
+      filter: 'all',
+      sortDesc: true,
+      editingId: null,
+      deletingId: null,
+      toastTimer: null,
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+    const els = {
+      totalCount: $('#totalCount'),
+      confirmedCount: $('#confirmedCount'),
+      unconfirmedCount: $('#unconfirmedCount'),
+      searchInput: $('#searchInput'),
+      filterButtons: $$('.filter-btn'),
+      sortBtn: $('#sortBtn'),
+      shownCount: $('#shownCount'),
+      entriesBody: $('#entriesBody'),
+      tableSection: $('#tableSection'),
+      emptySection: $('#emptySection'),
+      emptyMessage: $('#emptyMessage'),
+      addBtn: $('#addBtn'),
+      exportJsonBtn: $('#exportJsonBtn'),
+      exportCsvBtn: $('#exportCsvBtn'),
+      importJsonBtn: $('#importJsonBtn'),
+      fileInput: $('#fileInput'),
+      toast: $('#toast'),
+      formModal: $('#formModal'),
+      entryForm: $('#entryForm'),
+      formTitle: $('#formTitle'),
+      closeFormBtn: $('#closeFormBtn'),
+      cancelFormBtn: $('#cancelFormBtn'),
+      submitFormBtn: $('#submitFormBtn'),
+      parent1Input: $('#parent1Input'),
+      parent2Input: $('#parent2Input'),
+      childInput: $('#childInput'),
+      notesInput: $('#notesInput'),
+      addedByInput: $('#addedByInput'),
+      confirmedInput: $('#confirmedInput'),
+      deleteModal: $('#deleteModal'),
+      deleteTarget: $('#deleteTarget'),
+      cancelDeleteBtn: $('#cancelDeleteBtn'),
+      confirmDeleteBtn: $('#confirmDeleteBtn'),
+    };
+
+    function uid() {
+      return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     }
 
-    /* ── レンダリング ── */
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    function normalizeEntry(entry) {
+      const now = new Date().toISOString();
+      return {
+        id: String(entry.id || uid()),
+        parent1: String(entry.parent1 || '').trim(),
+        parent2: String(entry.parent2 || '').trim(),
+        child: String(entry.child || '').trim(),
+        notes: String(entry.notes || '').trim(),
+        confirmed: Boolean(entry.confirmed),
+        addedBy: String(entry.addedBy || '').trim(),
+        createdAt: entry.createdAt || now,
+        updatedAt: entry.updatedAt || entry.createdAt || now,
+      };
+    }
+
+    function loadEntries() {
+      try {
+        const current = localStorage.getItem(STORAGE_KEY);
+        const old = localStorage.getItem(OLD_STORAGE_KEY);
+        const source = current || old;
+        state.entries = source ? JSON.parse(source).map(normalizeEntry).filter(isValidEntry) : [];
+        if (!current && old) saveEntries(false);
+      } catch (error) {
+        state.entries = [];
+        showToast('保存済みデータの読み込みに失敗しました', true);
+      }
+    }
+
+    function saveEntries(shouldRender = true) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
+      } catch (error) {
+        showToast('保存に失敗しました。ブラウザ容量を確認してください', true);
+      }
+      if (shouldRender) render();
+    }
+
+    function isValidEntry(entry) {
+      return Boolean(entry.parent1 && entry.parent2 && entry.child);
+    }
+
+    function escapeCsv(value) {
+      const text = String(value ?? '');
+      return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '—';
+      return date.toLocaleDateString('ja-JP');
+    }
+
+    function getShownEntries() {
+      const keyword = state.search.trim().toLowerCase();
+      return state.entries
+        .filter((entry) => {
+          if (keyword) {
+            const target = `${entry.parent1} ${entry.parent2} ${entry.child} ${entry.notes} ${entry.addedBy}`.toLowerCase();
+            if (!target.includes(keyword)) return false;
+          }
+          if (state.filter === 'confirmed' && !entry.confirmed) return false;
+          if (state.filter === 'unconfirmed' && entry.confirmed) return false;
+          return true;
+        })
+        .sort((a, b) => {
+          const at = new Date(a.createdAt).getTime() || 0;
+          const bt = new Date(b.createdAt).getTime() || 0;
+          return state.sortDesc ? bt - at : at - bt;
+        });
+    }
+
+    function render() {
+      const shown = getShownEntries();
+      const confirmedCount = state.entries.filter((entry) => entry.confirmed).length;
+
+      els.totalCount.textContent = state.entries.length;
+      els.confirmedCount.textContent = confirmedCount;
+      els.unconfirmedCount.textContent = state.entries.length - confirmedCount;
+      els.shownCount.textContent = `${shown.length} 件表示${state.search ? ` — 「${state.search}」` : ''}${state.entries.length ? ` / 合計 ${state.entries.length} 件` : ''}`;
+      els.sortBtn.textContent = state.sortDesc ? '↓ 新しい順' : '↑ 古い順';
+
+      els.filterButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.filter === state.filter);
+      });
+
+      els.entriesBody.replaceChildren();
+
+      if (!shown.length) {
+        els.tableSection.classList.add('hidden');
+        els.emptySection.classList.remove('hidden');
+        els.emptyMessage.innerHTML = state.entries.length === 0
+          ? 'まだ配合記録がありません。<br>「配合を追加」ボタンから最初の発見を記録しよう！'
+          : '検索・フィルター条件に一致する記録がありませんでした。';
+        return;
+      }
+
+      els.tableSection.classList.remove('hidden');
+      els.emptySection.classList.add('hidden');
+
+      const fragment = document.createDocumentFragment();
+      shown.forEach((entry) => {
+        const tr = document.createElement('tr');
+        tr.append(
+          td(entry.parent1, 'pal-name'),
+          td(entry.parent2, 'pal-name'),
+          td('＋', 'plus-cell'),
+          td(entry.child, 'child-name'),
+          td(entry.notes || '—', 'note-cell', entry.notes || ''),
+          statusTd(entry),
+          td(entry.addedBy || '—', 'dim'),
+          td(formatDate(entry.createdAt), 'dim nowrap'),
+          actionTd(entry)
+        );
+        fragment.appendChild(tr);
+      });
+      els.entriesBody.appendChild(fragment);
+    }
+
+    function td(text, className = '', title = '') {
+      const cell = document.createElement('td');
+      cell.textContent = text;
+      if (className) cell.className = className;
+      if (title) cell.title = title;
+      return cell;
+    }
+
+    function statusTd(entry) {
+      const cell = document.createElement('td');
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `status-badge ${entry.confirmed ? 'status-confirmed' : 'status-unconfirmed'}`;
+      button.textContent = entry.confirmed ? '✓ 確認済' : '⚠ 未確認';
+      button.addEventListener('click', () => toggleConfirmed(entry.id));
+      cell.appendChild(button);
+      return cell;
+    }
+
+    function actionTd(entry) {
+      const cell = document.createElement('td');
+      const wrap = document.createElement('div');
+      wrap.className = 'row-actions';
+
+      const edit = document.createElement('button');
+      edit.type = 'button';
+      edit.className = 'icon-btn';
+      edit.title = '編集';
+      edit.textContent = '✎';
+      edit.addEventListener('click', () => openForm(entry.id));
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'icon-btn danger';
+      del.title = '削除';
+      del.textContent = '🗑';
+      del.addEventListener('click', () => openDelete(entry.id));
+
+      wrap.append(edit, del);
+      cell.appendChild(wrap);
+      return cell;
+    }
+
+    function showToast(message, isError = false) {
+      clearTimeout(state.toastTimer);
+      els.toast.textContent = message;
+      els.toast.classList.toggle('error', isError);
+      els.toast.classList.add('show');
+      state.toastTimer = setTimeout(() => els.toast.classList.remove('show'), 2800);
+    }
+
+    function openForm(id = null) {
+      state.editingId = id;
+      const entry = id ? state.entries.find((item) => item.id === id) : null;
+
+      els.formTitle.textContent = entry ? '✎ 配合を編集' : '＋ 新しい配合を追加';
+      els.submitFormBtn.textContent = entry ? '更新する' : '追加する';
+      els.parent1Input.value = entry?.parent1 || '';
+      els.parent2Input.value = entry?.parent2 || '';
+      els.childInput.value = entry?.child || '';
+      els.notesInput.value = entry?.notes || '';
+      els.addedByInput.value = entry?.addedBy || '';
+      els.confirmedInput.checked = Boolean(entry?.confirmed);
+
+      els.formModal.classList.add('show');
+      setTimeout(() => els.parent1Input.focus(), 0);
+    }
+
+    function closeForm() {
+      state.editingId = null;
+      els.formModal.classList.remove('show');
+      els.entryForm.reset();
+    }
+
+    function submitForm(event) {
+      event.preventDefault();
+      const now = new Date().toISOString();
+      const next = normalizeEntry({
+        id: state.editingId || uid(),
+        parent1: els.parent1Input.value,
+        parent2: els.parent2Input.value,
+        child: els.childInput.value,
+        notes: els.notesInput.value,
+        addedBy: els.addedByInput.value,
+        confirmed: els.confirmedInput.checked,
+        createdAt: state.editingId ? state.entries.find((item) => item.id === state.editingId)?.createdAt : now,
+        updatedAt: now,
+      });
+
+      if (!isValidEntry(next)) {
+        showToast('親パル1・親パル2・子パルは必須です', true);
+        return;
+      }
+
+      if (state.editingId) {
+        state.entries = state.entries.map((entry) => entry.id === state.editingId ? next : entry);
+        showToast('更新しました');
+      } else {
+        state.entries.push(next);
+        showToast('追加しました');
+      }
+
+      saveEntries();
+      closeForm();
+    }
+
+    function openDelete(id) {
+      const entry = state.entries.find((item) => item.id === id);
+      if (!entry) return;
+      state.deletingId = id;
+      els.deleteTarget.textContent = `${entry.parent1} × ${entry.parent2} → ${entry.child}`;
+      els.deleteModal.classList.add('show');
+    }
+
+    function closeDelete() {
+      state.deletingId = null;
+      els.deleteModal.classList.remove('show');
+    }
+
+    function deleteEntry() {
+      if (!state.deletingId) return;
+      state.entries = state.entries.filter((entry) => entry.id !== state.deletingId);
+      saveEntries();
+      closeDelete();
+      showToast('削除しました');
+    }
+
+    function toggleConfirmed(id) {
+      state.entries = state.entries.map((entry) => {
+        if (entry.id !== id) return entry;
+        return { ...entry, confirmed: !entry.confirmed, updatedAt: new Date().toISOString() };
+      });
+      saveEntries();
+    }
+
+    function exportJson() {
+      if (!state.entries.length) {
+        showToast('書き出すデータがありません', true);
+        return;
+      }
+      downloadFile(
+        JSON.stringify(state.entries, null, 2),
+        `palworld_data_${new Date().toISOString().slice(0, 10)}.json`,
+        'application/json;charset=utf-8'
+      );
+      showToast('JSONデータを書き出しました');
+    }
+
+    function exportCsv() {
+      if (!state.entries.length) {
+        showToast('書き出すデータがありません', true);
+        return;
+      }
+      const rows = [
+        ['親パル1', '親パル2', '子パル', 'メモ', '確認状態', '追加者', '追加日', '更新日'],
+        ...state.entries.map((entry) => [
+          entry.parent1,
+          entry.parent2,
+          entry.child,
+          entry.notes,
+          entry.confirmed ? '確認済み' : '未確認',
+          entry.addedBy,
+          formatDate(entry.createdAt),
+          formatDate(entry.updatedAt),
+        ]),
+      ];
+      const csv = '\uFEFF' + rows.map((row) => row.map(escapeCsv).join(',')).join('\r\n');
+      downloadFile(csv, `palworld_breeding_${new Date().toISOString().slice(0, 10)}.csv`, 'text/csv;charset=utf-8');
+      showToast('CSVを書き出しました');
+    }
+
+    function downloadFile(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJsonFile(event) {
+      const file = event.target.files?.[0];
+      event.target.value = '';
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(String(reader.result || ''));
+          if (!Array.isArray(imported)) {
+            showToast('無効なJSONファイルです', true);
+            return;
+          }
+
+          const normalized = imported.map(normalizeEntry).filter(isValidEntry);
+          const existingKeys = new Set(state.entries.map((entry) => entry.id));
+          let added = 0;
+
+          normalized.forEach((entry) => {
+            if (!existingKeys.has(entry.id)) {
+              state.entries.push(entry);
+              existingKeys.add(entry.id);
+              added += 1;
+            }
+          });
+
+          saveEntries();
+          showToast(`${added}件の新しい記録を取り込みました`);
+        } catch (error) {
+          showToast('JSONの読み込みに失敗しました', true);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function bindEvents() {
+      els.addBtn.addEventListener('click', () => openForm());
+      els.closeFormBtn.addEventListener('click', closeForm);
+      els.cancelFormBtn.addEventListener('click', closeForm);
+      els.entryForm.addEventListener('submit', submitForm);
+
+      els.cancelDeleteBtn.addEventListener('click', closeDelete);
+      els.confirmDeleteBtn.addEventListener('click', deleteEntry);
+
+      els.searchInput.addEventListener('input', (event) => {
+        state.search = event.target.value;
+        render();
+      });
+
+      els.filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          state.filter = button.dataset.filter || 'all';
+          render();
+        });
+      });
+
+      els.sortBtn.addEventListener('click', () => {
+        state.sortDesc = !state.sortDesc;
+        render();
+      });
+
+      els.exportJsonBtn.addEventListener('click', exportJson);
+      els.exportCsvBtn.addEventListener('click', exportCsv);
+      els.importJsonBtn.addEventListener('click', () => els.fileInput.click());
+      els.fileInput.addEventListener('change', importJsonFile);
+
+      els.formModal.addEventListener('click', (event) => {
+        if (event.target === els.formModal) closeForm();
+      });
+      els.deleteModal.addEventListener('click', (event) => {
+        if (event.target === els.deleteModal) closeDelete();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeForm();
+          closeDelete();
+        }
+      });
+    }
+
+    loadEntries();
+    bindEvents();
+    render();
   </script>
 </body>
 </html>
