@@ -699,3 +699,45 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   font-size: 10.5px !important;
   letter-spacing: -0.08em !important;
 }
+
+
+/* v19: 詳細欄の配合パル名を横に収めやすく調整 */
+.recipe-line {
+  grid-template-columns: minmax(72px, 1fr) 18px minmax(72px, 1fr) 18px minmax(72px, 1fr) !important;
+  gap: 6px !important;
+  align-items: center !important;
+}
+
+.recipe-pal {
+  display: grid !important;
+  grid-template-rows: auto 62px minmax(22px, auto) !important;
+  align-items: center !important;
+  justify-items: center !important;
+  min-width: 0 !important;
+}
+
+.recipe-pal small {
+  line-height: 1.1 !important;
+}
+
+.recipe-pal > span:last-child {
+  display: block !important;
+  max-width: 7.5em !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.04em !important;
+  word-break: keep-all !important;
+}
+
+.recipe-pal .pal-icon {
+  margin: 0 auto 4px !important;
+}
+
+.recipe-symbol {
+  text-align: center !important;
+  font-size: 21px !important;
+}
