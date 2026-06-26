@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v10";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v11";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -790,6 +790,24 @@ function normalizeSearch(value) {
 
 function stripId(record) { const { id, ...rest } = record; return rest; }
 
+function breedingPairKey(parentA, parentB) {
+  const names = [parentA, parentB]
+    .map(name => normalizeKey(normalizePalName(name)))
+    .filter(Boolean)
+    .sort();
+  return names.length === 2 ? names.join("::") : "";
+}
+
+function findDuplicateBreedingPair(record) {
+  const key = breedingPairKey(record.parentA, record.parentB);
+  if (!key) return null;
+  return state.records.find(existing =>
+    existing.id !== record.id &&
+    breedingPairKey(existing.parentA, existing.parentB) === key
+  ) || null;
+}
+
+
 function palFilterMatches(palName, filterValue) {
   const filter = normalizeSearch(filterValue);
   if (!filter) return true;
@@ -1069,6 +1087,15 @@ async function saveFromForm() {
     return;
   }
   localStorage.setItem("palBoardRecorder", record.recorder);
+
+  const duplicate = findDuplicateBreedingPair(record);
+  if (duplicate) {
+    state.selectedId = duplicate.id;
+    render();
+    const duplicateResult = duplicate.resultPal ? ` → ${duplicate.resultPal}` : "";
+    toast(`同じ親の組み合わせは既に登録されています：${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`, true);
+    return;
+  }
 
   const missing = [record.parentA, record.parentB, record.resultPal].filter(name => name && !getPalMeta(name));
   if (missing.length) {
