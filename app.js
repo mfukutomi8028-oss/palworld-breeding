@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v12";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v13";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -12,9 +12,13 @@ const EGG_TYPES = [
   {
     "name": "平凡なタマゴ",
     "key": "plain",
+    "size": "通常",
     "icon": "assets/eggs/plain.png",
     "aliases": [
+      "平凡なタマゴ",
       "平凡な",
+      "ふつう",
+      "通常",
       "普通",
       "へいぼん",
       "normal",
@@ -22,11 +26,59 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカ平凡なタマゴ",
+    "key": "plain",
+    "size": "デカ",
+    "icon": "assets/eggs/plain.png",
+    "aliases": [
+      "デカ平凡なタマゴ",
+      "デカ平凡な",
+      "でか",
+      "大きい",
+      "デカ",
+      "平凡な",
+      "普通",
+      "へいぼん",
+      "normal",
+      "common",
+      "でか平凡な",
+      "でか平凡なたまご",
+      "デカ 平凡な",
+      "デカ平凡なのタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ平凡なタマゴ",
+    "key": "plain",
+    "size": "キョダイ",
+    "icon": "assets/eggs/plain.png",
+    "aliases": [
+      "キョダイ平凡なタマゴ",
+      "キョダイ平凡な",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "平凡な",
+      "普通",
+      "へいぼん",
+      "normal",
+      "common",
+      "きょだい平凡な",
+      "きょだい平凡なたまご",
+      "キョダイ 平凡な",
+      "キョダイ平凡なのタマゴ"
+    ]
+  },
+  {
     "name": "熱を帯びたタマゴ",
     "key": "scorching",
+    "size": "通常",
     "icon": "assets/eggs/scorching.png",
     "aliases": [
+      "熱を帯びたタマゴ",
       "熱を帯びた",
+      "ふつう",
+      "通常",
       "熱",
       "あつ",
       "炎",
@@ -36,11 +88,63 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカ熱を帯びたタマゴ",
+    "key": "scorching",
+    "size": "デカ",
+    "icon": "assets/eggs/scorching.png",
+    "aliases": [
+      "デカ熱を帯びたタマゴ",
+      "デカ熱を帯びた",
+      "でか",
+      "大きい",
+      "デカ",
+      "熱を帯びた",
+      "熱",
+      "あつ",
+      "炎",
+      "ほのお",
+      "fire",
+      "scorching",
+      "でか熱を帯びた",
+      "でか熱を帯びたたまご",
+      "デカ 熱を帯びた",
+      "デカ熱を帯びたのタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ熱を帯びたタマゴ",
+    "key": "scorching",
+    "size": "キョダイ",
+    "icon": "assets/eggs/scorching.png",
+    "aliases": [
+      "キョダイ熱を帯びたタマゴ",
+      "キョダイ熱を帯びた",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "熱を帯びた",
+      "熱",
+      "あつ",
+      "炎",
+      "ほのお",
+      "fire",
+      "scorching",
+      "きょだい熱を帯びた",
+      "きょだい熱を帯びたたまご",
+      "キョダイ 熱を帯びた",
+      "キョダイ熱を帯びたのタマゴ"
+    ]
+  },
+  {
     "name": "しめったタマゴ",
     "key": "damp",
+    "size": "通常",
     "icon": "assets/eggs/damp.png",
     "aliases": [
+      "しめったタマゴ",
       "しめった",
+      "ふつう",
+      "通常",
       "湿った",
       "水",
       "みず",
@@ -49,10 +153,61 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカしめったタマゴ",
+    "key": "damp",
+    "size": "デカ",
+    "icon": "assets/eggs/damp.png",
+    "aliases": [
+      "デカしめったタマゴ",
+      "デカしめった",
+      "でか",
+      "大きい",
+      "デカ",
+      "しめった",
+      "湿った",
+      "水",
+      "みず",
+      "water",
+      "damp",
+      "でかしめった",
+      "でかしめったたまご",
+      "デカ しめった",
+      "デカしめったのタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイしめったタマゴ",
+    "key": "damp",
+    "size": "キョダイ",
+    "icon": "assets/eggs/damp.png",
+    "aliases": [
+      "キョダイしめったタマゴ",
+      "キョダイしめった",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "しめった",
+      "湿った",
+      "水",
+      "みず",
+      "water",
+      "damp",
+      "きょだいしめった",
+      "きょだいしめったたまご",
+      "キョダイ しめった",
+      "キョダイしめったのタマゴ"
+    ]
+  },
+  {
     "name": "新緑のタマゴ",
     "key": "verdant",
+    "size": "通常",
     "icon": "assets/eggs/verdant.png",
     "aliases": [
+      "新緑のタマゴ",
+      "新緑の",
+      "ふつう",
+      "通常",
       "新緑",
       "草",
       "くさ",
@@ -61,10 +216,59 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカ新緑のタマゴ",
+    "key": "verdant",
+    "size": "デカ",
+    "icon": "assets/eggs/verdant.png",
+    "aliases": [
+      "デカ新緑のタマゴ",
+      "デカ新緑の",
+      "でか",
+      "大きい",
+      "デカ",
+      "新緑",
+      "草",
+      "くさ",
+      "grass",
+      "verdant",
+      "でか新緑の",
+      "でか新緑のたまご",
+      "デカ 新緑の",
+      "デカ新緑ののタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ新緑のタマゴ",
+    "key": "verdant",
+    "size": "キョダイ",
+    "icon": "assets/eggs/verdant.png",
+    "aliases": [
+      "キョダイ新緑のタマゴ",
+      "キョダイ新緑の",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "新緑",
+      "草",
+      "くさ",
+      "grass",
+      "verdant",
+      "きょだい新緑の",
+      "きょだい新緑のたまご",
+      "キョダイ 新緑の",
+      "キョダイ新緑ののタマゴ"
+    ]
+  },
+  {
     "name": "ビリビリのタマゴ",
     "key": "electric",
+    "size": "通常",
     "icon": "assets/eggs/electric.png",
     "aliases": [
+      "ビリビリのタマゴ",
+      "ビリビリの",
+      "ふつう",
+      "通常",
       "ビリビリ",
       "びりびり",
       "雷",
@@ -73,10 +277,59 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカビリビリのタマゴ",
+    "key": "electric",
+    "size": "デカ",
+    "icon": "assets/eggs/electric.png",
+    "aliases": [
+      "デカビリビリのタマゴ",
+      "デカビリビリの",
+      "でか",
+      "大きい",
+      "デカ",
+      "ビリビリ",
+      "びりびり",
+      "雷",
+      "かみなり",
+      "electric",
+      "でかビリビリの",
+      "でかビリビリのたまご",
+      "デカ ビリビリの",
+      "デカビリビリののタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイビリビリのタマゴ",
+    "key": "electric",
+    "size": "キョダイ",
+    "icon": "assets/eggs/electric.png",
+    "aliases": [
+      "キョダイビリビリのタマゴ",
+      "キョダイビリビリの",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "ビリビリ",
+      "びりびり",
+      "雷",
+      "かみなり",
+      "electric",
+      "きょだいビリビリの",
+      "きょだいビリビリのたまご",
+      "キョダイ ビリビリの",
+      "キョダイビリビリののタマゴ"
+    ]
+  },
+  {
     "name": "ゴツゴツしたタマゴ",
     "key": "rocky",
+    "size": "通常",
     "icon": "assets/eggs/rocky.png",
     "aliases": [
+      "ゴツゴツしたタマゴ",
+      "ゴツゴツした",
+      "ふつう",
+      "通常",
       "ゴツゴツ",
       "ごつごつ",
       "地",
@@ -86,11 +339,61 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカゴツゴツしたタマゴ",
+    "key": "rocky",
+    "size": "デカ",
+    "icon": "assets/eggs/rocky.png",
+    "aliases": [
+      "デカゴツゴツしたタマゴ",
+      "デカゴツゴツした",
+      "でか",
+      "大きい",
+      "デカ",
+      "ゴツゴツ",
+      "ごつごつ",
+      "地",
+      "じめん",
+      "ground",
+      "rocky",
+      "でかゴツゴツした",
+      "でかゴツゴツしたたまご",
+      "デカ ゴツゴツした",
+      "デカゴツゴツしたのタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイゴツゴツしたタマゴ",
+    "key": "rocky",
+    "size": "キョダイ",
+    "icon": "assets/eggs/rocky.png",
+    "aliases": [
+      "キョダイゴツゴツしたタマゴ",
+      "キョダイゴツゴツした",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "ゴツゴツ",
+      "ごつごつ",
+      "地",
+      "じめん",
+      "ground",
+      "rocky",
+      "きょだいゴツゴツした",
+      "きょだいゴツゴツしたたまご",
+      "キョダイ ゴツゴツした",
+      "キョダイゴツゴツしたのタマゴ"
+    ]
+  },
+  {
     "name": "凍てつくタマゴ",
     "key": "frozen",
+    "size": "通常",
     "icon": "assets/eggs/frozen.png",
     "aliases": [
+      "凍てつくタマゴ",
       "凍てつく",
+      "ふつう",
+      "通常",
       "いてつく",
       "氷",
       "こおり",
@@ -99,11 +402,61 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカ凍てつくタマゴ",
+    "key": "frozen",
+    "size": "デカ",
+    "icon": "assets/eggs/frozen.png",
+    "aliases": [
+      "デカ凍てつくタマゴ",
+      "デカ凍てつく",
+      "でか",
+      "大きい",
+      "デカ",
+      "凍てつく",
+      "いてつく",
+      "氷",
+      "こおり",
+      "ice",
+      "frozen",
+      "でか凍てつく",
+      "でか凍てつくたまご",
+      "デカ 凍てつく",
+      "デカ凍てつくのタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ凍てつくタマゴ",
+    "key": "frozen",
+    "size": "キョダイ",
+    "icon": "assets/eggs/frozen.png",
+    "aliases": [
+      "キョダイ凍てつくタマゴ",
+      "キョダイ凍てつく",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "凍てつく",
+      "いてつく",
+      "氷",
+      "こおり",
+      "ice",
+      "frozen",
+      "きょだい凍てつく",
+      "きょだい凍てつくたまご",
+      "キョダイ 凍てつく",
+      "キョダイ凍てつくのタマゴ"
+    ]
+  },
+  {
     "name": "暗黒タマゴ",
     "key": "dark",
+    "size": "通常",
     "icon": "assets/eggs/dark.png",
     "aliases": [
+      "暗黒タマゴ",
       "暗黒",
+      "ふつう",
+      "通常",
       "あんこく",
       "闇",
       "やみ",
@@ -111,14 +464,105 @@ const EGG_TYPES = [
     ]
   },
   {
+    "name": "デカ暗黒タマゴ",
+    "key": "dark",
+    "size": "デカ",
+    "icon": "assets/eggs/dark.png",
+    "aliases": [
+      "デカ暗黒タマゴ",
+      "デカ暗黒",
+      "でか",
+      "大きい",
+      "デカ",
+      "暗黒",
+      "あんこく",
+      "闇",
+      "やみ",
+      "dark",
+      "でか暗黒",
+      "でか暗黒たまご",
+      "デカ 暗黒",
+      "デカ暗黒のタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ暗黒タマゴ",
+    "key": "dark",
+    "size": "キョダイ",
+    "icon": "assets/eggs/dark.png",
+    "aliases": [
+      "キョダイ暗黒タマゴ",
+      "キョダイ暗黒",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "暗黒",
+      "あんこく",
+      "闇",
+      "やみ",
+      "dark",
+      "きょだい暗黒",
+      "きょだい暗黒たまご",
+      "キョダイ 暗黒",
+      "キョダイ暗黒のタマゴ"
+    ]
+  },
+  {
     "name": "竜のタマゴ",
     "key": "dragon",
+    "size": "通常",
     "icon": "assets/eggs/dragon.png",
     "aliases": [
+      "竜のタマゴ",
+      "竜の",
+      "ふつう",
+      "通常",
       "竜",
       "りゅう",
       "ドラゴン",
       "dragon"
+    ]
+  },
+  {
+    "name": "デカ竜のタマゴ",
+    "key": "dragon",
+    "size": "デカ",
+    "icon": "assets/eggs/dragon.png",
+    "aliases": [
+      "デカ竜のタマゴ",
+      "デカ竜の",
+      "でか",
+      "大きい",
+      "デカ",
+      "竜",
+      "りゅう",
+      "ドラゴン",
+      "dragon",
+      "でか竜の",
+      "でか竜のたまご",
+      "デカ 竜の",
+      "デカ竜ののタマゴ"
+    ]
+  },
+  {
+    "name": "キョダイ竜のタマゴ",
+    "key": "dragon",
+    "size": "キョダイ",
+    "icon": "assets/eggs/dragon.png",
+    "aliases": [
+      "キョダイ竜のタマゴ",
+      "キョダイ竜の",
+      "きょだい",
+      "巨大",
+      "キョダイ",
+      "竜",
+      "りゅう",
+      "ドラゴン",
+      "dragon",
+      "きょだい竜の",
+      "きょだい竜のたまご",
+      "キョダイ 竜の",
+      "キョダイ竜ののタマゴ"
     ]
   }
 ];
@@ -829,7 +1273,7 @@ function renderEggSuggestions(id) {
     picker.list.innerHTML = clearButton + `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
   } else {
     picker.list.innerHTML = clearButton + candidates.map(egg => {
-      return `<button type="button" class="pal-suggestion egg-suggestion" data-name="${escapeHtml(egg.name)}">${eggIcon(egg.name, "small")}<span><strong>${escapeHtml(egg.name)}</strong><small>${escapeHtml((egg.aliases || []).slice(0, 3).join(" / "))}</small></span></button>`;
+      return `<button type="button" class="pal-suggestion egg-suggestion" data-name="${escapeHtml(egg.name)}">${eggIcon(egg.name, "small")}<span><strong>${escapeHtml(egg.name)}</strong><small>${escapeHtml(egg.size || "通常")} / 同じ見た目のタマゴ画像を使用</small></span></button>`;
     }).join("");
   }
 
