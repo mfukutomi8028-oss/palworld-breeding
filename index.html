@@ -34,10 +34,20 @@
         </div>
 
         <label class="field-label" for="parentFilter">親パル</label>
-        <select id="parentFilter"></select>
+        <div class="pal-picker filter-pal-picker">
+          <span class="pal-picker-preview" aria-hidden="true"></span>
+          <input id="parentFilter" type="search" autocomplete="off" placeholder="すべて" aria-label="親パルで絞り込み" />
+          <button class="field-clear-button" type="button" data-clear-filter="parentFilter" title="親パルの絞り込みを解除">×</button>
+          <div class="pal-suggestions" hidden></div>
+        </div>
 
         <label class="field-label" for="resultFilter">結果パル</label>
-        <select id="resultFilter"></select>
+        <div class="pal-picker filter-pal-picker">
+          <span class="pal-picker-preview" aria-hidden="true"></span>
+          <input id="resultFilter" type="search" autocomplete="off" placeholder="すべて" aria-label="結果パルで絞り込み" />
+          <button class="field-clear-button" type="button" data-clear-filter="resultFilter" title="結果パルの絞り込みを解除">×</button>
+          <div class="pal-suggestions" hidden></div>
+        </div>
 
         <label class="field-label" for="elementFilter">属性</label>
         <select id="elementFilter">
@@ -225,9 +235,6 @@
             <option value="実機確認済み">実機確認済み</option>
             <option value="育成候補">育成候補</option>
           </select>
-        </label>
-        <label>ゲーム版・補足
-          <input id="gameVersion" name="gameVersion" placeholder="例：v0.6 / アップデート後確認 など" />
         </label>
       </div>
 

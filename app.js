@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v3";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v4";
 const SAMPLE_PREFIX = "sample-";
 
 const WORKS = ["火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"];
@@ -37,7 +37,7 @@ const EMBEDDED_PALS = [
   { no: "020", name: "ルナティ", en: "Nox", elements: ["闇属性"], work: ["採集"], iconKey: "NaughtyCat" },
   { no: "031", name: "シャーキッド", en: "Gobfin", elements: ["水属性"], work: ["水やり", "手作業", "運搬"], iconKey: "SharkKid" },
   { no: "032", name: "シメナワ", en: "Hangyu", elements: ["地属性"], work: ["手作業", "採集", "運搬"], iconKey: "WindChimes" },
-  { no: "033", name: "ササゾー", en: "Mossanda", elements: ["草属性"], work: ["種まき", "手作業", "伐採", "運搬"], icon: "https://palworld-lab.com/_astro/033.CO0kQvDM_Z1mep1i.webp" },
+  { no: "033", name: "ササゾー", en: "Mossanda", elements: ["草属性"], work: ["種まき", "手作業", "伐採", "運搬"], icon: "https://palworld-lab.com/_astro/033.CO0kQvDM_Z1mep1i.webp", iconKey: "GrassPanda" },
   { no: "034", name: "メリポップ", en: "Woolipop", elements: ["無属性"], work: ["牧場"], iconKey: "SweetsSheep" },
   { no: "035", name: "ベリゴート", en: "Caprity", elements: ["草属性"], work: ["種まき", "牧場"], iconKey: "BerryGoat" },
   { no: "036", name: "メルパカ", en: "Melpaca", elements: ["無属性"], work: ["牧場"], iconKey: "Alpaca" },
@@ -180,7 +180,7 @@ function mergePalData(list, sourceLabel) {
 function loadCachedPalData() {
   try {
     const cached = JSON.parse(localStorage.getItem(PAL_CACHE_KEY) || "null");
-    if (cached?.pals?.length) {
+    if (cached?.pals?.length >= 100) {
       mergePalData(cached.pals, `Palworld Labキャッシュ ${cached.pals.length}種`);
       setupPalOptions(true);
       render();
@@ -303,11 +303,11 @@ function setupPalOptions(keepValues = false) {
   const oldResult = keepValues ? elements.resultFilter.value : "";
   const datalist = $("palOptions");
   if (datalist) datalist.innerHTML = state.palNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
-  const options = [`<option value="">すべて</option>`, ...state.palNames.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)].join("");
-  elements.parentFilter.innerHTML = options;
-  elements.resultFilter.innerHTML = options;
-  if (oldParent && state.palNames.includes(oldParent)) elements.parentFilter.value = oldParent;
-  if (oldResult && state.palNames.includes(oldResult)) elements.resultFilter.value = oldResult;
+  if (keepValues) {
+    elements.parentFilter.value = oldParent;
+    elements.resultFilter.value = oldResult;
+  }
+  refreshPickerPreviews();
 }
 
 function setupEvents() {
@@ -323,7 +323,18 @@ function setupEvents() {
     elements.favoriteOnly.checked = false;
     elements.unverifiedOnly.checked = false;
     elements.searchInput.value = "";
+    refreshPickerPreviews();
     render();
+  });
+
+  document.querySelectorAll("[data-clear-filter]").forEach(button => {
+    button.addEventListener("click", () => {
+      const target = $(button.dataset.clearFilter);
+      if (!target) return;
+      target.value = "";
+      updatePickerPreview(button.dataset.clearFilter);
+      target.dispatchEvent(new Event("input", { bubbles: true }));
+    });
   });
 
   $("addRecord").addEventListener("click", () => openDialog());
@@ -346,7 +357,7 @@ function setupEvents() {
 }
 
 function setupPalPickers() {
-  for (const id of ["parentA", "parentB", "resultPal"]) {
+  for (const id of ["parentA", "parentB", "resultPal", "parentFilter", "resultFilter"]) {
     const input = $(id);
     if (!input) continue;
     const picker = input.closest(".pal-picker");
@@ -375,6 +386,10 @@ function updatePickerPreview(id) {
   const picker = state.pickers[id];
   if (!picker?.preview) return;
   const name = normalizePalName(picker.input.value);
+  if (!name && id.endsWith("Filter")) {
+    picker.preview.innerHTML = `<span class="pal-icon small filter-any"><span class="pal-fallback">全</span></span>`;
+    return;
+  }
   picker.preview.innerHTML = palIcon(name, "small");
 }
 
@@ -387,31 +402,36 @@ function renderPickerSuggestions(id) {
   if (!picker?.list) return;
   const raw = picker.input.value.trim();
   const query = normalizeSearch(raw);
+  const isFilter = id.endsWith("Filter");
   const candidates = state.palNames
     .filter(name => {
       const meta = getPalMeta(name);
       const target = normalizeSearch([name, meta?.en, meta?.no].filter(Boolean).join(" "));
       return !query || target.includes(query);
-    })
-    .slice(0, 30);
+    });
+
+  const clearButton = isFilter
+    ? `<button type="button" class="pal-suggestion clear-choice" data-name="">${palIcon("", "small")}<span><strong>すべて</strong><small>絞り込みを解除</small></span></button>`
+    : "";
 
   if (!candidates.length) {
-    picker.list.innerHTML = `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
+    picker.list.innerHTML = clearButton || `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
   } else {
-    picker.list.innerHTML = candidates.map(name => {
+    picker.list.innerHTML = clearButton + candidates.map(name => {
       const meta = getPalMeta(name) || {};
       const sub = [meta.no, meta.elements?.join("・")].filter(Boolean).join(" / ");
       return `<button type="button" class="pal-suggestion" data-name="${escapeHtml(name)}">${palIcon(name, "small")}<span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(sub || meta.en || "")}</small></span></button>`;
     }).join("");
-    picker.list.querySelectorAll("button[data-name]").forEach(button => {
-      button.addEventListener("click", () => {
-        picker.input.value = button.dataset.name;
-        updatePickerPreview(id);
-        hidePickerSuggestions(id);
-        picker.input.focus();
-      });
-    });
   }
+  picker.list.querySelectorAll("button[data-name]").forEach(button => {
+    button.addEventListener("click", () => {
+      picker.input.value = button.dataset.name;
+      updatePickerPreview(id);
+      hidePickerSuggestions(id);
+      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
+      picker.input.focus();
+    });
+  });
   picker.list.hidden = false;
 }
 
@@ -494,7 +514,6 @@ function normalizeRecord(record) {
     status: record.status || "確認中",
     recorder: record.recorder || "福冨",
     note: record.note || "",
-    gameVersion: record.gameVersion || "",
     favorite: Boolean(record.favorite),
     checked: {
       bred: Boolean(record.checked?.bred),
@@ -528,6 +547,14 @@ function normalizeSearch(value) {
 
 function stripId(record) { const { id, ...rest } = record; return rest; }
 
+function palFilterMatches(palName, filterValue) {
+  const filter = normalizeSearch(filterValue);
+  if (!filter) return true;
+  const meta = getPalMeta(palName) || {};
+  const target = normalizeSearch([palName, meta.en, meta.no].filter(Boolean).join(" "));
+  return target.includes(filter);
+}
+
 function ensureSelected() {
   if (!state.selectedId && state.records.length) state.selectedId = state.records[0].id;
   if (state.selectedId && !state.records.some(r => r.id === state.selectedId)) state.selectedId = state.records[0]?.id || null;
@@ -552,12 +579,15 @@ function getFilteredRecords() {
   records = records.filter(record => {
     const meta = getPalMeta(record.resultPal) || {};
     const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
-    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, record.gameVersion, ...record.passives].join(" "));
+    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, ...englishNames, record.recorder, record.note, record.status, ...record.passives].join(" "));
     const recordElements = meta.elements || (meta.element ? [meta.element] : []);
     const recordWorks = meta.work || [];
+    const parentHit = !parent || [record.parentA, record.parentB]
+      .some(name => palFilterMatches(name, parent));
+    const resultHit = !result || palFilterMatches(record.resultPal, result);
     return (!query || searchTarget.includes(query)) &&
-      (!parent || record.parentA === parent || record.parentB === parent) &&
-      (!result || record.resultPal === result) &&
+      parentHit &&
+      resultHit &&
       (!element || recordElements.includes(element)) &&
       (!work || recordWorks.includes(work)) &&
       (!status || record.status === status) &&
@@ -637,6 +667,10 @@ function renderDetail() {
     return;
   }
   elements.detailBody.innerHTML = `
+    <div class="detail-toolbar">
+      <button class="secondary-button" data-detail-action="delete" type="button">削除</button>
+      <button class="primary-button" data-detail-action="edit" type="button">編集する</button>
+    </div>
     <div class="recipe-line">
       ${recipePal("親A", record.parentA)}
       <div class="recipe-symbol">＋</div>
@@ -644,8 +678,8 @@ function renderDetail() {
       <div class="recipe-symbol">→</div>
       ${recipePal("結果", record.resultPal)}
     </div>
-    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}<span class="tag subtle">＋候補を追加</span></div></div>
-    <div class="detail-section"><h3>メモ</h3><div class="note-box">${escapeHtml(record.note || "メモはまだありません。")}</div></div>
+    <div class="detail-section"><h3>パッシブ候補</h3><div class="tag-list">${renderTags(record.passives)}</div></div>
+    <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
     <div class="detail-section"><h3>確認チェックリスト</h3><div class="check-list">
       ${checkLine(record.checked.bred, "実際に配合済み")}
       ${checkLine(record.checked.screenshot, "スクリーンショット確認")}
@@ -655,10 +689,8 @@ function renderDetail() {
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
       <p><strong>記録者：</strong>${escapeHtml(record.recorder)}</p>
-      <p><strong>ゲーム版：</strong>${escapeHtml(record.gameVersion || "未入力")}</p>
       <p><strong>更新日時：</strong>${formatDate(record.updatedAt, true)}</p>
-    </div>
-    <div class="detail-actions"><button class="secondary-button" data-detail-action="delete" type="button">削除</button><button class="primary-button" data-detail-action="edit" type="button">編集する</button></div>`;
+    </div>`;
 
   elements.detailBody.querySelector("[data-detail-action='edit']")?.addEventListener("click", () => openDialog(record.id));
   elements.detailBody.querySelector("[data-detail-action='delete']")?.addEventListener("click", async () => {
@@ -683,12 +715,16 @@ function palIcon(name, size = "normal") {
   const normalized = normalizePalName(name);
   const meta = getPalMeta(normalized);
   const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
+  if (!normalized) return `<span class="pal-icon${sizeClass} filter-any"><span class="pal-fallback">全</span></span>`;
   const letter = escapeHtml((normalized || "?").slice(0, 1));
   if (!meta) return `<span class="pal-icon${sizeClass} unknown"><span class="pal-fallback">${letter}</span></span>`;
-  const url = meta.icon || (meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "");
+  const paldbUrl = meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "";
+  const url = meta.icon || paldbUrl;
+  const fallbackUrl = meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : "";
   const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
   if (!url) return `<span class="pal-icon${sizeClass} unknown" title="${escapeHtml(title)}"><span class="pal-fallback">${letter}</span></span>`;
-  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(normalized)}" loading="lazy" onerror="this.closest('.pal-icon').classList.add('unknown');this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${letter}'}))"></span>`;
+  const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
+  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}"${fallbackAttr} alt="${escapeHtml(normalized)}" loading="lazy" onerror="if(this.dataset.fallback&&!this.dataset.usedFallback){this.dataset.usedFallback='1';this.src=this.dataset.fallback;}else{this.closest('.pal-icon').classList.add('unknown');this.replaceWith(Object.assign(document.createElement('span'),{className:'pal-fallback',textContent:'${letter}'}));}"></span>`;
 }
 
 function renderTags(tags) {
@@ -708,7 +744,7 @@ function statusBadge(status) {
   return `<span class="status-badge ${className}">${icon} ${escapeHtml(status)}</span>`;
 }
 
-function checkLine(checked, text) { return `<label><input type="checkbox" ${checked ? "checked" : ""} disabled /> ${escapeHtml(text)}</label>`; }
+function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
 
 function openDialog(id = null) {
   const record = id ? state.records.find(r => r.id === id) : null;
@@ -719,7 +755,6 @@ function openDialog(id = null) {
   $("resultPal").value = record?.resultPal || "";
   $("recorder").value = record?.recorder || "福冨";
   $("status").value = record?.status || "確認中";
-  $("gameVersion").value = record?.gameVersion || "";
   $("passives").value = record?.passives?.join(", ") || "";
   $("note").value = record?.note || "";
   $("checkedBred").checked = Boolean(record?.checked?.bred);
@@ -741,7 +776,6 @@ async function saveFromForm() {
     resultPal: $("resultPal").value.trim(),
     recorder: $("recorder").value.trim() || "福冨",
     status: $("status").value,
-    gameVersion: $("gameVersion").value.trim(),
     passives: splitTags($("passives").value),
     note: $("note").value.trim(),
     favorite: existing?.favorite || false,
