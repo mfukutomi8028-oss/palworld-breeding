@@ -8,9 +8,9 @@
   <link rel="shortcut icon" type="image/png" href="assets/favicon-v8.png?v=8" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon-v8.png?v=8" />
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
-  <link rel="stylesheet" href="style.css?v=21" />
+  <link rel="stylesheet" href="style.css?v=22" />
   <script src="config.js" defer></script>
-  <script type="module" src="app.js?v=21"></script>
+  <script type="module" src="app.js?v=22"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -53,15 +53,15 @@
         <div class="filter-block">
           <div class="field-label">属性（OR検索）</div>
           <div class="icon-filter-group" id="elementFilterGroup" aria-label="属性で絞り込み">
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="無属性"><img src="assets/filter-icons/element-none.svg" alt="" /><span>無属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="炎属性"><img src="assets/filter-icons/element-fire.svg" alt="" /><span>炎属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="水属性"><img src="assets/filter-icons/element-water.svg" alt="" /><span>水属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="草属性"><img src="assets/filter-icons/element-grass.svg" alt="" /><span>草属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="雷属性"><img src="assets/filter-icons/element-electric.svg" alt="" /><span>雷属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="氷属性"><img src="assets/filter-icons/element-ice.svg" alt="" /><span>氷属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="地属性"><img src="assets/filter-icons/element-ground.svg" alt="" /><span>地属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="闇属性"><img src="assets/filter-icons/element-dark.svg" alt="" /><span>闇属性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="竜属性"><img src="assets/filter-icons/element-dragon.svg" alt="" /><span>竜属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="無属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_00.webp" alt="" /><span>無属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="炎属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_01.webp" alt="" /><span>炎属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="水属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_02.webp" alt="" /><span>水属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="草属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_04.webp" alt="" /><span>草属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="雷属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_03.webp" alt="" /><span>雷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="氷属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_08.webp" alt="" /><span>氷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="地属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_07.webp" alt="" /><span>地属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="闇属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_05.webp" alt="" /><span>闇属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="竜属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_06.webp" alt="" /><span>竜属性</span></button>
           </div>
         </div>
 
@@ -69,18 +69,18 @@
           <div class="field-label">作業適性（AND検索）</div>
           <div class="icon-filter-group work-filter-group" id="workFilterGroup" aria-label="作業適性で絞り込み">
             <button class="icon-filter-button" type="button" data-filter-type="work" data-value="夜行性"><img src="assets/filter-icons/work-nocturnal.svg" alt="" /><span>夜行性</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="火おこし"><img src="assets/filter-icons/work-kindle.svg" alt="" /><span>火おこし</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="水やり"><img src="assets/filter-icons/work-watering.svg" alt="" /><span>水やり</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="種まき"><img src="assets/filter-icons/work-planting.svg" alt="" /><span>種まき</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="発電"><img src="assets/filter-icons/work-generating.svg" alt="" /><span>発電</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="手作業"><img src="assets/filter-icons/work-handiwork.svg" alt="" /><span>手作業</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採集"><img src="assets/filter-icons/work-gathering.svg" alt="" /><span>採集</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="伐採"><img src="assets/filter-icons/work-lumbering.svg" alt="" /><span>伐採</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採掘"><img src="assets/filter-icons/work-mining.svg" alt="" /><span>採掘</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="製薬"><img src="assets/filter-icons/work-medicine.svg" alt="" /><span>製薬</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="冷却"><img src="assets/filter-icons/work-cooling.svg" alt="" /><span>冷却</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="運搬"><img src="assets/filter-icons/work-transporting.svg" alt="" /><span>運搬</span></button>
-            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="牧場"><img src="assets/filter-icons/work-farming.svg" alt="" /><span>牧場</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="火おこし"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_00.webp" alt="" /><span>火おこし</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="水やり"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_01.webp" alt="" /><span>水やり</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="種まき"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_02.webp" alt="" /><span>種まき</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="発電"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_03.webp" alt="" /><span>発電</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="手作業"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_04.webp" alt="" /><span>手作業</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採集"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_05.webp" alt="" /><span>採集</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="伐採"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_06.webp" alt="" /><span>伐採</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採掘"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_07.webp" alt="" /><span>採掘</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="製薬"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_08.webp" alt="" /><span>製薬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="冷却"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_10.webp" alt="" /><span>冷却</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="運搬"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_11.webp" alt="" /><span>運搬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="牧場"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_12.webp" alt="" /><span>牧場</span></button>
           </div>
         </div>
 

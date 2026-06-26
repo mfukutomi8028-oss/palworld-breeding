@@ -842,3 +842,21 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .recipe-pal > span:last-child {
   max-width: 8.2em !important;
 }
+
+
+/* v22: PalDB画像を優先するため、パル画像表示を少しだけ広めに調整 */
+.pal-icon img {
+  image-rendering: auto !important;
+}
+
+.recipe-pal .pal-icon {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 22px !important;
+}
+
+.recipe-pal .pal-icon img {
+  width: 60px !important;
+  height: 60px !important;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.10)) !important;
+}

@@ -1,6 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
 const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v14";
+const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
+const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v22";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -683,6 +686,7 @@ const state = {
   palSource: "内蔵リスト",
   palMap: new Map(),
   palNames: [],
+  paldbIcons: [],
   passiveNames: [...EMBEDDED_PASSIVES],
   pickers: {},
   passivePickers: {},
@@ -726,7 +730,9 @@ async function init() {
   await setupStorage();
   render();
   loadCachedPalData();
+  loadCachedPaldbData();
   loadPalworldLabData();
+  loadPaldbData();
 }
 
 function mergePalData(list, sourceLabel) {
@@ -752,6 +758,7 @@ function mergePalData(list, sourceLabel) {
     .sort((a, b) => String(a.sortKey).localeCompare(String(b.sortKey), "ja", { numeric: true }) || a.name.localeCompare(b.name, "ja"))
     .map(p => p.name);
   state.palSource = sourceLabel;
+  applyPaldbIconsToPalMap(false);
   updatePalDataState();
 }
 
@@ -879,6 +886,8 @@ async function loadPalworldLabData() {
       render();
       refreshPickerPreviews();
       toast(`Palworld Labから${pals.length}種類のパル情報を読み込みました`);
+      applyPaldbIconsToPalMap(true);
+      loadPaldbData();
       return;
     } catch (error) {
       lastError = error;
@@ -887,6 +896,155 @@ async function loadPalworldLabData() {
   }
   updatePalDataState(`${state.palSource}で起動中 / 外部同期失敗`);
   console.warn("Palworld Lab sync gave up:", lastError);
+}
+
+
+function loadCachedPaldbData() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(PALDB_CACHE_KEY) || "null");
+    if (cached?.icons?.length) {
+      mergePaldbIconData(cached.icons, false);
+    }
+  } catch (error) {
+    console.warn("PalDB cache read failed", error);
+  }
+}
+
+async function loadPaldbData() {
+  const endpoints = [PALDB_SOURCE_URL, PALDB_SOURCE_PROXY_URL];
+  let lastError = null;
+  for (const url of endpoints) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      const html = await response.text();
+      const icons = parsePaldbHtml(html);
+      if (icons.length < 100) throw new Error(`PalDBの取得数が少なすぎます: ${icons.length}`);
+      localStorage.setItem(PALDB_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), icons }));
+      mergePaldbIconData(icons, true);
+      console.info(`PalDBから${icons.length}件のパル画像情報を読み込みました`);
+      return;
+    } catch (error) {
+      lastError = error;
+      console.warn("PalDB sync failed:", url, error);
+    }
+  }
+  console.warn("PalDB sync gave up:", lastError);
+}
+
+function parsePaldbHtml(html) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const icons = [];
+  const seen = new Set();
+
+  for (const img of doc.querySelectorAll("img[alt][src]")) {
+    const alt = img.getAttribute("alt") || "";
+    const compactAlt = alt.replace(/[^A-Za-z0-9]/g, "");
+    if (!/^T.+iconnormal$/i.test(compactAlt)) continue;
+    if (/palwork|element/i.test(compactAlt)) continue;
+
+    const icon = normalizePaldbImageUrl(img.getAttribute("src"));
+    if (!icon) continue;
+
+    const block = findPaldbPalBlock(img, doc);
+    const text = block?.textContent || "";
+    const no = (text.match(/#\s*(\d+[A-Z]?)/i) || [])[1] || "";
+    if (!no) continue;
+
+    const en = findPaldbEnglishName(block);
+    const key = `${normalizePalNoKey(no)}:${icon}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    icons.push({
+      no,
+      en,
+      icon,
+      iconKey: inferPaldbIconKey(icon),
+    });
+  }
+
+  return icons;
+}
+
+function normalizePaldbImageUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (raw.startsWith("https://cdn.paldb.cc/")) return raw;
+  if (raw.startsWith("/image/")) return `https://cdn.paldb.cc${raw}`;
+  try {
+    return new URL(raw, PALDB_SOURCE_URL).href;
+  } catch {
+    return "";
+  }
+}
+
+function inferPaldbIconKey(url) {
+  const match = String(url || "").match(/\/T_([^/]+?)_icon_normal\.webp/i);
+  return match?.[1] || "";
+}
+
+function findPaldbPalBlock(img, doc) {
+  let node = img.parentElement;
+  while (node && node !== doc.body) {
+    const text = node.textContent || "";
+    if (/#\s*\d+[A-Z]?/.test(text) && text.length < 700) return node;
+    node = node.parentElement;
+  }
+  return img.closest("tr, li, article, div");
+}
+
+function findPaldbEnglishName(block) {
+  if (!block) return "";
+  const links = Array.from(block.querySelectorAll("a"))
+    .map(link => (link.textContent || "").trim())
+    .filter(Boolean)
+    .filter(text => !/^#?\d+[A-Z]?$/i.test(text))
+    .filter(text => !/Image:/i.test(text));
+  return links[0] || "";
+}
+
+function mergePaldbIconData(list, shouldRender = true) {
+  if (!Array.isArray(list) || !list.length) return;
+  state.paldbIcons = list;
+  applyPaldbIconsToPalMap(shouldRender);
+}
+
+function normalizePalNoKey(no) {
+  const match = String(no || "").toUpperCase().match(/(\d+)([A-Z])?/);
+  if (!match) return "";
+  return `${Number(match[1])}${match[2] || ""}`;
+}
+
+function applyPaldbIconsToPalMap(shouldRender = true) {
+  if (!state.paldbIcons?.length || !state.palMap?.size) return;
+
+  const byNo = new Map();
+  const byEn = new Map();
+  for (const item of state.paldbIcons) {
+    const noKey = normalizePalNoKey(item.no);
+    if (noKey && !byNo.has(noKey)) byNo.set(noKey, item);
+    const enKey = normalizeKey(item.en);
+    if (enKey && !byEn.has(enKey)) byEn.set(enKey, item);
+  }
+
+  for (const [name, meta] of state.palMap.entries()) {
+    const item =
+      byNo.get(normalizePalNoKey(meta.no)) ||
+      byEn.get(normalizeKey(meta.en)) ||
+      byEn.get(normalizeKey(name));
+
+    if (item?.icon) {
+      meta.paldbIcon = item.icon;
+      if (item.iconKey) meta.iconKey = item.iconKey;
+      state.palMap.set(name, meta);
+    }
+  }
+
+  if (shouldRender) {
+    render();
+    refreshPickerPreviews();
+  }
 }
 
 function parsePalworldLabHtml(html) {
@@ -1667,10 +1825,10 @@ function palIcon(name, size = "normal", options = {}) {
   if (!meta) {
     return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   }
-  const paldbUrl = meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "";
-  const preferPaldb = size === "large" && Boolean(paldbUrl);
-  const url = preferPaldb ? paldbUrl : (meta.icon || paldbUrl);
-  const fallbackUrl = preferPaldb ? (meta.icon || UNKNOWN_PAL_ICON) : (meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : UNKNOWN_PAL_ICON);
+  const paldbUrl = meta.paldbIcon || (meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "");
+  const labUrl = meta.icon || "";
+  const url = paldbUrl || labUrl;
+  const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
   const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
   if (!url) return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(title)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
