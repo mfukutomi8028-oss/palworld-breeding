@@ -794,3 +794,51 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .recipe-symbol {
   font-size: 22px !important;
 }
+
+
+/* v21: 作業適性アイコン拡大 */
+.work-filter-group .icon-filter-button {
+  min-height: 38px !important;
+  gap: 8px !important;
+  padding: 7px 9px !important;
+}
+
+.work-filter-group .icon-filter-button img {
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px !important;
+  border-radius: 6px !important;
+  image-rendering: auto !important;
+}
+
+.work-filter-group .icon-filter-button span {
+  font-size: 11.5px !important;
+  line-height: 1 !important;
+}
+
+.work-filter-group .icon-filter-button[data-value="火おこし"] span {
+  font-size: 10.5px !important;
+  letter-spacing: -0.08em !important;
+}
+
+/* v21: 詳細欄のパル画像を少し鮮明に見える方向へ調整 */
+.recipe-pal .pal-icon {
+  width: 62px !important;
+  height: 62px !important;
+  border-radius: 21px !important;
+  background: linear-gradient(145deg, #edf7ff, #c7e5ff) !important;
+}
+
+.recipe-pal .pal-icon img {
+  width: 58px !important;
+  height: 58px !important;
+  object-fit: contain !important;
+  image-rendering: auto !important;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,.12)) !important;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.recipe-pal > span:last-child {
+  max-width: 8.2em !important;
+}

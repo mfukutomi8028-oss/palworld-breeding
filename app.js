@@ -1668,8 +1668,9 @@ function palIcon(name, size = "normal", options = {}) {
     return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   }
   const paldbUrl = meta.iconKey ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(meta.iconKey)}_icon_normal.webp` : "";
-  const url = meta.icon || paldbUrl;
-  const fallbackUrl = meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : UNKNOWN_PAL_ICON;
+  const preferPaldb = size === "large" && Boolean(paldbUrl);
+  const url = preferPaldb ? paldbUrl : (meta.icon || paldbUrl);
+  const fallbackUrl = preferPaldb ? (meta.icon || UNKNOWN_PAL_ICON) : (meta.icon && paldbUrl && meta.icon !== paldbUrl ? paldbUrl : UNKNOWN_PAL_ICON);
   const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
   if (!url) return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(title)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
