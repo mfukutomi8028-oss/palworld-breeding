@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>パルワールド配合記録ボード</title>
-  <meta name="description" content="友人とリアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
+  <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
   <link rel="stylesheet" href="style.css" />
   <script src="config.js" defer></script>
   <script type="module" src="app.js"></script>
@@ -13,7 +13,7 @@
   <div class="app-shell">
     <aside class="sidebar" aria-label="サイドメニュー">
       <div class="brand-mini">
-        <div class="brand-mark" aria-hidden="true">🥚</div>
+        <div class="brand-mark" aria-hidden="true"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="平凡なタマゴ" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></div>
         <div>
           <p class="eyebrow">PAL BREEDING</p>
           <strong>配合記録</strong>
@@ -21,7 +21,7 @@
       </div>
 
       <nav class="main-nav" aria-label="メインメニュー">
-        <button class="nav-item active" data-view="records" type="button"><span>🥚</span>配合記録</button>
+        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="https://cdn.paldb.cc/image/Others/InventoryItemIcon/Texture/T_itemicon_Material_PalEgg.webp" alt="" onerror="this.onerror=null;this.src='assets/common-egg.svg';" /></span>配合記録</button>
         <button class="nav-item" data-view="favorites" type="button"><span>★</span>お気に入り</button>
         <button class="nav-item" data-view="notes" type="button"><span>💬</span>共有メモ</button>
         <button class="nav-item" data-view="stats" type="button"><span>▥</span>統計</button>
@@ -49,48 +49,45 @@
           <div class="pal-suggestions" hidden></div>
         </div>
 
-        <label class="field-label" for="elementFilter">属性</label>
-        <select id="elementFilter">
-          <option value="">すべて</option>
-          <option value="無属性">無属性</option>
-          <option value="炎属性">炎属性</option>
-          <option value="水属性">水属性</option>
-          <option value="草属性">草属性</option>
-          <option value="雷属性">雷属性</option>
-          <option value="氷属性">氷属性</option>
-          <option value="地属性">地属性</option>
-          <option value="闇属性">闇属性</option>
-          <option value="竜属性">竜属性</option>
-        </select>
-        <div class="element-dots" aria-hidden="true">
-          <span class="dot fire">炎</span><span class="dot water">水</span><span class="dot grass">草</span><span class="dot elec">雷</span><span class="dot ice">氷</span><span class="dot dark">闇</span><span class="dot ground">地</span>
+        <div class="filter-block">
+          <div class="field-label">属性（OR検索）</div>
+          <div class="icon-filter-group" id="elementFilterGroup" aria-label="属性で絞り込み">
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="無属性"><img src="assets/filter-icons/element-none.png" alt="" /><span>無属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="炎属性"><img src="assets/filter-icons/element-fire.png" alt="" /><span>炎属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="水属性"><img src="assets/filter-icons/element-water.png" alt="" /><span>水属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="草属性"><img src="assets/filter-icons/element-grass.png" alt="" /><span>草属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="雷属性"><img src="assets/filter-icons/element-electric.png" alt="" /><span>雷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="氷属性"><img src="assets/filter-icons/element-ice.png" alt="" /><span>氷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="地属性"><img src="assets/filter-icons/element-ground.png" alt="" /><span>地属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="闇属性"><img src="assets/filter-icons/element-dark.png" alt="" /><span>闇属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="竜属性"><img src="assets/filter-icons/element-dragon.png" alt="" /><span>竜属性</span></button>
+          </div>
         </div>
 
-        <label class="field-label" for="workFilter">作業適性</label>
-        <select id="workFilter">
-          <option value="">すべて</option>
-          <option value="手作業">手作業</option>
-          <option value="採掘">採掘</option>
-          <option value="運搬">運搬</option>
-          <option value="火おこし">火おこし</option>
-          <option value="水やり">水やり</option>
-          <option value="種まき">種まき</option>
-          <option value="発電">発電</option>
-          <option value="冷却">冷却</option>
-          <option value="牧場">牧場</option>
-          <option value="採集">採集</option>
-          <option value="伐採">伐採</option>
-          <option value="製薬">製薬</option>
-        </select>
-        <div class="work-icons" aria-hidden="true">
-          <span>🔥</span><span>💧</span><span>🌱</span><span>⚡</span><span>🛠</span><span>⛏</span><span>📦</span><span>❄</span>
+        <div class="filter-block">
+          <div class="field-label">作業適性（AND検索）</div>
+          <div class="icon-filter-group work-filter-group" id="workFilterGroup" aria-label="作業適性で絞り込み">
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="夜行性"><img src="assets/filter-icons/work-nocturnal.png" alt="" /><span>夜行性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="火おこし"><img src="assets/filter-icons/work-kindle.png" alt="" /><span>火おこし</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="水やり"><img src="assets/filter-icons/work-watering.png" alt="" /><span>水やり</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="種まき"><img src="assets/filter-icons/work-planting.png" alt="" /><span>種まき</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="発電"><img src="assets/filter-icons/work-generating.png" alt="" /><span>発電</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="手作業"><img src="assets/filter-icons/work-handiwork.png" alt="" /><span>手作業</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採集"><img src="assets/filter-icons/work-gathering.png" alt="" /><span>採集</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="伐採"><img src="assets/filter-icons/work-lumbering.png" alt="" /><span>伐採</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採掘"><img src="assets/filter-icons/work-mining.png" alt="" /><span>採掘</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="製薬"><img src="assets/filter-icons/work-medicine.png" alt="" /><span>製薬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="冷却"><img src="assets/filter-icons/work-cooling.png" alt="" /><span>冷却</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="運搬"><img src="assets/filter-icons/work-transporting.png" alt="" /><span>運搬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="牧場"><img src="assets/filter-icons/work-farming.png" alt="" /><span>牧場</span></button>
+          </div>
         </div>
 
         <label class="field-label" for="statusFilter">確認状況</label>
         <select id="statusFilter">
           <option value="">すべて</option>
           <option value="確認中">確認中</option>
-          <option value="実機確認済み">実機確認済み</option>
+          <option value="配合確認済み">配合確認済み</option>
           <option value="育成候補">育成候補</option>
         </select>
 
@@ -101,19 +98,19 @@
       </section>
 
       <div class="sidebar-pals" aria-hidden="true">
-        <img src="https://palworld-lab.com/_astro/010.DQvWPP3E_2oiW8l.webp" alt="" />
-        <img src="https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" alt="" />
-        <img src="https://palworld-lab.com/_astro/002.CqEJyq_i_6gvU0.webp" alt="" />
+        <figure class="sidebar-pal"><img src="https://palworld-lab.com/_astro/010.DQvWPP3E_2oiW8l.webp" alt="" /><figcaption>ペンタマ</figcaption></figure>
+        <figure class="sidebar-pal"><img src="https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" alt="" /><figcaption>モコロン</figcaption></figure>
+        <figure class="sidebar-pal"><img src="https://palworld-lab.com/_astro/002.CqEJyq_i_6gvU0.webp" alt="" /><figcaption>ツッパニャン</figcaption></figure>
       </div>
     </aside>
 
     <main class="content">
       <header class="hero">
-        <div class="hero-bg"></div>
+        <div class="hero-bg" aria-hidden="true"></div>
         <div class="hero-copy">
           <p class="eyebrow">PALWORLD COLLAB BOARD</p>
           <h1><span>パルワールド配合記録ボード</span></h1>
-          <p>友人とリアルタイムで配合結果・パッシブ候補・確認状況を記録できます。</p>
+          <p>リアルタイムで配合結果・パッシブ候補・確認状況を記録できます。</p>
         </div>
 
         <div class="collab-card">
@@ -125,17 +122,11 @@
             <button class="icon-button" id="copyRoomLink" type="button" title="共有リンクをコピー">🔗</button>
           </div>
         </div>
-
-        <div class="hero-pals" aria-hidden="true">
-          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" alt=""><figcaption>モコロン</figcaption></figure>
-          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/005.De-0Pa55_LYewp.webp" alt=""><figcaption>キツネビ</figcaption></figure>
-          <figure class="pal-card"><img src="https://palworld-lab.com/_astro/055.C3DznTNK_Z1ESlKf.webp" alt=""><figcaption>オコチョ</figcaption></figure>
-        </div>
       </header>
 
       <section class="kpi-grid" aria-label="集計">
         <article class="kpi-card"><div class="kpi-icon blue">▤</div><div><p>総記録数</p><strong id="totalCount">0件</strong><span>全ての配合記録</span></div></article>
-        <article class="kpi-card"><div class="kpi-icon green">✓</div><div><p>実機確認済み</p><strong id="verifiedCount">0件</strong><span id="verifiedRate">0%</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon green">✓</div><div><p>配合確認済み</p><strong id="verifiedCount">0件</strong><span id="verifiedRate">0%</span></div></article>
         <article class="kpi-card"><div class="kpi-icon yellow">★</div><div><p>育成候補</p><strong id="candidateCount">0件</strong><span>検討中の組み合わせ</span></div></article>
         <article class="kpi-card"><div class="kpi-icon purple">💬</div><div><p>共有メモ</p><strong id="memoCount">0件</strong><span>メモありの記録</span></div></article>
       </section>
@@ -177,7 +168,7 @@
             <div id="emptyState" class="empty-state" hidden>
               <div class="empty-egg">🥚</div>
               <h3 id="emptyTitle">まだ配合記録がありません</h3>
-              <p id="emptyText">「新しい配合記録を追加」から、友人と記録を始めてください。</p>
+              <p id="emptyText">「新しい配合記録を追加」から記録を始めてください。</p>
             </div>
           </div>
         </section>
@@ -232,7 +223,7 @@
         <label>確認状況
           <select id="status" name="status">
             <option value="確認中">確認中</option>
-            <option value="実機確認済み">実機確認済み</option>
+            <option value="配合確認済み">配合確認済み</option>
             <option value="育成候補">育成候補</option>
           </select>
         </label>

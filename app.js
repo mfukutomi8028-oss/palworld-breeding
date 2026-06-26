@@ -114,14 +114,14 @@ const state = {
   palMap: new Map(),
   palNames: [],
   pickers: {},
+  selectedElements: [],
+  selectedWorks: [],
 };
 
 const $ = (id) => document.getElementById(id);
 const elements = {
   parentFilter: $("parentFilter"),
   resultFilter: $("resultFilter"),
-  elementFilter: $("elementFilter"),
-  workFilter: $("workFilter"),
   statusFilter: $("statusFilter"),
   favoriteOnly: $("favoriteOnly"),
   unverifiedOnly: $("unverifiedOnly"),
@@ -145,6 +145,7 @@ async function init() {
   setupPalOptions();
   setupEvents();
   setupPalPickers();
+  setupIconFilters();
   await setupStorage();
   render();
   loadCachedPalData();
@@ -311,14 +312,15 @@ function setupPalOptions(keepValues = false) {
 }
 
 function setupEvents() {
-  [elements.parentFilter, elements.resultFilter, elements.elementFilter, elements.workFilter, elements.statusFilter, elements.favoriteOnly, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
+  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.favoriteOnly, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
     .forEach(el => el?.addEventListener("input", render));
 
   $("clearFilters").addEventListener("click", () => {
     elements.parentFilter.value = "";
     elements.resultFilter.value = "";
-    elements.elementFilter.value = "";
-    elements.workFilter.value = "";
+    state.selectedElements = [];
+    state.selectedWorks = [];
+    syncIconFilterButtons();
     elements.statusFilter.value = "";
     elements.favoriteOnly.checked = false;
     elements.unverifiedOnly.checked = false;
@@ -353,6 +355,32 @@ function setupEvents() {
     if (!confirm("この配合記録を削除しますか？")) return;
     await deleteRecord(id);
     elements.recordDialog.close();
+  });
+}
+
+function setupIconFilters() {
+  document.querySelectorAll(".icon-filter-button").forEach(button => {
+    button.addEventListener("click", () => {
+      const type = button.dataset.filterType;
+      const value = button.dataset.value;
+      const key = type === "element" ? "selectedElements" : "selectedWorks";
+      const list = new Set(state[key]);
+      if (list.has(value)) list.delete(value); else list.add(value);
+      state[key] = Array.from(list);
+      syncIconFilterButtons();
+      render();
+    });
+  });
+  syncIconFilterButtons();
+}
+
+function syncIconFilterButtons() {
+  document.querySelectorAll('.icon-filter-button').forEach(button => {
+    const type = button.dataset.filterType;
+    const value = button.dataset.value;
+    const active = type === 'element' ? state.selectedElements.includes(value) : state.selectedWorks.includes(value);
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
   });
 }
 
@@ -511,7 +539,7 @@ function normalizeRecord(record) {
     parentB: normalizePalName(record.parentB),
     resultPal: normalizePalName(record.resultPal),
     passives: Array.isArray(record.passives) ? record.passives.map(String).map(s => s.trim()).filter(Boolean) : splitTags(record.passives),
-    status: record.status || "確認中",
+    status: normalizeStatus(record.status || "確認中"),
     recorder: record.recorder || "福冨",
     note: record.note || "",
     favorite: Boolean(record.favorite),
@@ -539,6 +567,12 @@ function normalizePalName(name) {
 
 function normalizeKey(value) {
   return String(value || "").toLowerCase().replace(/[\s_\-・'’\.]/g, "");
+}
+
+function normalizeStatus(value) {
+  const raw = String(value || "").trim();
+  if (raw === "実機確認済み") return "配合確認済み";
+  return raw || "確認中";
 }
 
 function normalizeSearch(value) {
@@ -571,8 +605,8 @@ function getFilteredRecords() {
   const query = normalizeSearch(elements.searchInput.value);
   const parent = elements.parentFilter.value;
   const result = elements.resultFilter.value;
-  const element = elements.elementFilter.value;
-  const work = elements.workFilter.value;
+  const selectedElements = state.selectedElements;
+  const selectedWorks = state.selectedWorks;
   const status = elements.statusFilter.value;
   let records = [...state.records];
 
@@ -588,11 +622,11 @@ function getFilteredRecords() {
     return (!query || searchTarget.includes(query)) &&
       parentHit &&
       resultHit &&
-      (!element || recordElements.includes(element)) &&
-      (!work || recordWorks.includes(work)) &&
-      (!status || record.status === status) &&
+      (!selectedElements.length || selectedElements.some(element => recordElements.includes(element))) &&
+      (!selectedWorks.length || selectedWorks.every(work => hasWorkTrait(meta, work))) &&
+      (!status || normalizeStatus(record.status) === status) &&
       (!elements.favoriteOnly.checked || record.favorite) &&
-      (!elements.unverifiedOnly.checked || record.status !== "実機確認済み");
+      (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み");
   });
 
   const sort = elements.sortSelect.value;
@@ -607,7 +641,7 @@ function getFilteredRecords() {
 
 function renderKpis() {
   const total = state.records.length;
-  const verified = state.records.filter(r => r.status === "実機確認済み").length;
+  const verified = state.records.filter(r => normalizeStatus(r.status) === "配合確認済み").length;
   const candidates = state.records.filter(r => r.status === "育成候補").length;
   const memos = state.records.filter(r => r.note.trim()).length;
   $("totalCount").textContent = `${total}件`;
@@ -623,7 +657,7 @@ function renderRows(records) {
   if (isEmpty) {
     if (state.records.length === 0) {
       elements.emptyTitle.textContent = "まだ配合記録がありません";
-      elements.emptyText.textContent = "「新しい配合記録を追加」から、友人と記録を始めてください。";
+      elements.emptyText.textContent = "「新しい配合記録を追加」から記録を始めてください。";
     } else {
       elements.emptyTitle.textContent = "条件に合う記録がありません";
       elements.emptyText.textContent = "絞り込み条件を変更してください。";
@@ -703,6 +737,16 @@ function getPalMeta(name) {
   return state.palMap.get(normalizePalName(name));
 }
 
+function hasWorkTrait(meta, work) {
+  if (!meta) return false;
+  if (work === "夜行性") {
+    const explicit = meta.nocturnal;
+    if (typeof explicit === "boolean") return explicit;
+    return (meta.elements || []).includes("闇属性");
+  }
+  return (meta.work || []).includes(work);
+}
+
 function palInline(name) {
   return `<span class="pal-inline">${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></span>`;
 }
@@ -739,9 +783,10 @@ function tagType(tag) {
 }
 
 function statusBadge(status) {
-  const className = status === "実機確認済み" ? "status-verified" : status === "育成候補" ? "status-candidate" : "status-pending";
-  const icon = status === "実機確認済み" ? "✓" : status === "育成候補" ? "★" : "…";
-  return `<span class="status-badge ${className}">${icon} ${escapeHtml(status)}</span>`;
+  const normalized = normalizeStatus(status);
+  const className = normalized === "配合確認済み" ? "status-verified" : normalized === "育成候補" ? "status-candidate" : "status-pending";
+  const icon = normalized === "配合確認済み" ? "✓" : normalized === "育成候補" ? "★" : "…";
+  return `<span class="status-badge ${className}">${icon} ${escapeHtml(normalized)}</span>`;
 }
 
 function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
