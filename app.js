@@ -1,6 +1,6 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v8";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v10";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -620,6 +620,7 @@ function renderPickerSuggestions(id) {
   const picker = state.pickers[id];
   if (!picker?.list) return;
   const raw = picker.input.value.trim();
+  // normalizeSearchでひらがな→カタカナ変換して比較します。
   const query = normalizeSearch(raw);
   const isFilter = id.endsWith("Filter");
   const candidates = state.palNames
@@ -740,19 +741,30 @@ function normalizeRecord(record) {
 }
 
 function normalizePalDisplayName(name) {
-  return String(name || "").replace(/\s+/g, " ").trim();
+  return String(name || "").normalize("NFKC").replace(/\s+/g, " ").trim();
+}
+
+function hiraToKata(value) {
+  return String(value || "").replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
 }
 
 function normalizePalName(name) {
   const raw = normalizePalDisplayName(name);
   if (!raw) return "";
   if (state.palMap.has(raw)) return raw;
-  const key = normalizeKey(raw);
-  return LEGACY_ENGLISH_TO_JP[key] || raw;
+
+  const kana = hiraToKata(raw).normalize("NFKC");
+  if (state.palMap.has(kana)) return kana;
+
+  const key = normalizeKey(kana);
+  return LEGACY_ENGLISH_TO_JP[key] || kana;
 }
 
 function normalizeKey(value) {
-  return String(value || "").toLowerCase().replace(/[\s_\-・'’\.]/g, "");
+  return hiraToKata(String(value || ""))
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[\s\u3000_\-ーｰ・'’\.]/g, "");
 }
 
 function normalizeRecorder(value) {
@@ -770,7 +782,10 @@ function normalizeStatus(value) {
 }
 
 function normalizeSearch(value) {
-  return String(value || "").toLowerCase().replace(/\s+/g, "");
+  return hiraToKata(String(value || ""))
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[\s\u3000]/g, "");
 }
 
 function stripId(record) { const { id, ...rest } = record; return rest; }
