@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=34") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=36") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=34") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=36") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
@@ -1615,4 +1615,129 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 
 .detail-body .recipe-symbol {
   font-size: 18px !important;
+}
+
+
+/* v36: 詳細画面の3体カードを大枠内に収める */
+.detail-body .recipe-line {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 12px 10px !important;
+  overflow: hidden !important;
+}
+
+.detail-body .recipe-pal {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 92px !important;
+  min-height: 122px !important;
+  padding: 10px 5px 9px !important;
+  box-sizing: border-box !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  grid-template-rows: auto 68px auto !important;
+  align-items: center !important;
+  justify-items: center !important;
+  overflow: hidden !important;
+  transform: none !important;
+}
+
+.detail-body .recipe-pal.is-parent,
+.detail-body .recipe-pal.is-result {
+  min-width: 0 !important;
+  max-width: 92px !important;
+  min-height: 122px !important;
+  padding: 10px 5px 9px !important;
+  transform: none !important;
+}
+
+.detail-body .recipe-pal.is-result {
+  flex: 1.08 1 0 !important;
+  max-width: 96px !important;
+  min-height: 126px !important;
+}
+
+.detail-body .recipe-pal .pal-icon,
+.detail-body .recipe-pal.is-parent .pal-icon,
+.detail-body .recipe-pal.is-result .pal-icon {
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 21px !important;
+  margin: 0 auto 5px !important;
+  overflow: hidden !important;
+}
+
+.detail-body .recipe-pal .pal-icon img,
+.detail-body .recipe-pal.is-parent .pal-icon img,
+.detail-body .recipe-pal.is-result .pal-icon img {
+  width: 60px !important;
+  height: 60px !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  display: block !important;
+  margin: auto !important;
+}
+
+.detail-body .recipe-pal small {
+  width: 100% !important;
+  text-align: center !important;
+  margin: 0 0 3px !important;
+  line-height: 1.1 !important;
+}
+
+.detail-body .recipe-pal > span:last-child,
+.detail-body .recipe-pal.is-parent > span:last-child,
+.detail-body .recipe-pal.is-result > span:last-child {
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 10.8px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.055em !important;
+}
+
+.detail-body .recipe-symbol {
+  flex: 0 0 12px !important;
+  width: 12px !important;
+  min-width: 12px !important;
+  text-align: center !important;
+  font-size: 17px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  color: #6d8294 !important;
+}
+
+@media (max-width: 1320px) {
+  .detail-body .recipe-line {
+    gap: 4px !important;
+    padding-inline: 8px !important;
+  }
+  .detail-body .recipe-pal,
+  .detail-body .recipe-pal.is-parent,
+  .detail-body .recipe-pal.is-result {
+    max-width: 88px !important;
+    padding-inline: 4px !important;
+  }
+  .detail-body .recipe-pal .pal-icon,
+  .detail-body .recipe-pal.is-parent .pal-icon,
+  .detail-body .recipe-pal.is-result .pal-icon {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 20px !important;
+  }
+  .detail-body .recipe-pal .pal-icon img,
+  .detail-body .recipe-pal.is-parent .pal-icon img,
+  .detail-body .recipe-pal.is-result .pal-icon img {
+    width: 56px !important;
+    height: 56px !important;
+  }
 }
