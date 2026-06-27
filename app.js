@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v39";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v40";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v39";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v40";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -3445,19 +3445,8 @@ function checkLine(checked, text) { return `<div class="check-item ${checked ? "
 function showDialogMessage(message, options = {}) {
   if (!elements.dialogMessage) return;
   const detail = options.detail ? `<div class="dialog-message-detail">${escapeHtml(options.detail)}</div>` : "";
-  const action = options.recordId
-    ? `<button type="button" class="dialog-message-action" data-open-existing="${escapeHtml(options.recordId)}">既存記録を開く</button>`
-    : "";
-  elements.dialogMessage.innerHTML = `<div class="dialog-message-title">${escapeHtml(message)}</div>${detail}${action ? `<div class="dialog-message-actions">${action}</div>` : ""}`;
+  elements.dialogMessage.innerHTML = `<div class="dialog-message-title">${escapeHtml(message)}</div>${detail}`;
   elements.dialogMessage.hidden = false;
-  elements.dialogMessage.querySelector("[data-open-existing]")?.addEventListener("click", (event) => {
-    const id = event.currentTarget.dataset.openExisting;
-    if (!id) return;
-    state.selectedId = id;
-    elements.recordDialog.close();
-    render();
-    toast("既存記録を開きました");
-  });
 }
 
 function clearDialogMessage() {
@@ -3510,14 +3499,9 @@ async function saveFromForm() {
   }
   const duplicate = findDuplicateBreedingPair(record);
   if (duplicate) {
-    state.selectedId = duplicate.id;
-    render();
     const duplicateResult = duplicate.resultPal ? ` → ${duplicate.resultPal}` : "";
     const detail = `${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`;
-    showDialogMessage("この組み合わせは既に登録済みです", {
-      detail,
-      recordId: duplicate.id
-    });
+    showDialogMessage("この組み合わせは既に登録済みです", { detail });
     toast("同じ親の組み合わせは既に登録されています", true);
     return;
   }
