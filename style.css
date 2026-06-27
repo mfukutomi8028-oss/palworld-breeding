@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=36") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=37") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=36") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=37") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
@@ -1739,5 +1739,83 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   .detail-body .recipe-pal.is-result .pal-icon img {
     width: 56px !important;
     height: 56px !important;
+  }
+}
+
+
+/* v37: ヒーロー内の不要要素を非表示、ワールド名を強調 */
+.hero .eyebrow,
+.hero .hero-copy > p,
+.hero-collab {
+  display: none !important;
+}
+
+.hero {
+  align-items: center !important;
+}
+
+.hero-copy {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  gap: 14px !important;
+}
+
+.hero-copy h1 {
+  margin-bottom: 0 !important;
+}
+
+.hero-world-pill {
+  order: 2;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  align-self: flex-start !important;
+  padding: 12px 18px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(145deg, rgba(43,83,145,.78), rgba(66,128,214,.72)) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  box-shadow:
+    0 10px 24px rgba(11, 36, 61, .22),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+  color: #fff !important;
+  font-weight: 1000 !important;
+  font-size: 24px !important;
+  line-height: 1.1 !important;
+  letter-spacing: -.02em !important;
+}
+
+.hero-world-pill .world-icon {
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  font-size: 18px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.16) !important;
+  flex: 0 0 auto !important;
+}
+
+.hero-world-pill .world-name {
+  color: #fff !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+}
+
+@media (max-width: 980px) {
+  .hero-world-pill {
+    font-size: 20px !important;
+    padding: 10px 15px !important;
+  }
+  .hero-world-pill .world-icon {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 16px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-world-pill {
+    font-size: 18px !important;
   }
 }
