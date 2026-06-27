@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v32";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v34";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v32";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v34";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1774,8 +1774,13 @@ const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
 const DEFAULT_RECORDERS = ["福冨", "森井"];
+const DEFAULT_RECORDER_COLORS = {
+  "福冨": "#3c92df",
+  "森井": "#4ebd69"
+};
 const RECORDER_STORAGE_KEY = "palBoardRecorder";
 const RECORDER_LIST_STORAGE_PREFIX = "pal-breeding-recorders:";
+const RECORDER_COLOR_STORAGE_PREFIX = "pal-breeding-recorder-colors:";
 const WORLD_NAME_STORAGE_PREFIX = "pal-breeding-world-name:";
 const state = {
   records: [],
@@ -1787,6 +1792,7 @@ const state = {
   dbMetaRef: null,
   palSource: "内蔵リスト",
   recorders: loadRecorderList(),
+  recorderColors: loadRecorderColors(),
   currentRecorder: localStorage.getItem(RECORDER_STORAGE_KEY) || "",
   worldName: localStorage.getItem(worldNameLocalKey()) || "",
   palMap: new Map(),
@@ -1829,6 +1835,7 @@ const elements = {
   recorderManageForm: $("recorderManageForm"),
   closeRecorderManage: $("closeRecorderManage"),
   newRecorderName: $("newRecorderName"),
+  newRecorderColor: $("newRecorderColor"),
   recorderList: $("recorderList"),
   worldNameInput: $("worldNameInput"),
   worldNameBadge: $("worldNameBadge"),
@@ -2657,6 +2664,9 @@ async function setupStorage() {
         if (Array.isArray(meta.recorders)) {
           setRecorderList(meta.recorders, { persist: false, silent: true });
         }
+        if (meta.recorderColors && typeof meta.recorderColors === "object") {
+          setRecorderColors(meta.recorderColors, { persist: false, silent: true });
+        }
         if (typeof meta.worldName === "string") {
           state.worldName = meta.worldName.trim();
           localStorage.setItem(worldNameLocalKey(), state.worldName);
@@ -2796,12 +2806,21 @@ function recorderListLocalKey() {
   return `${RECORDER_LIST_STORAGE_PREFIX}${ROOM_ID}`;
 }
 
+function recorderColorLocalKey() {
+  return `${RECORDER_COLOR_STORAGE_PREFIX}${ROOM_ID}`;
+}
+
 function sanitizeRecorderName(value) {
   return String(value || "")
     .normalize("NFKC")
     .replace(/\s+/g, "")
     .trim()
     .slice(0, 12);
+}
+
+function normalizeColor(value, fallback = "#9067e9") {
+  const raw = String(value || "").trim();
+  return /^#[0-9a-fA-F]{6}$/.test(raw) ? raw.toLowerCase() : fallback;
 }
 
 function uniqueRecorderList(list) {
@@ -2816,6 +2835,15 @@ function uniqueRecorderList(list) {
   return result.length ? result : [...DEFAULT_RECORDERS];
 }
 
+function defaultRecorderColor(name) {
+  const normalized = sanitizeRecorderName(name);
+  if (DEFAULT_RECORDER_COLORS[normalized]) return DEFAULT_RECORDER_COLORS[normalized];
+  const palette = ["#9067e9", "#ff9f43", "#ef5d68", "#21b6a8", "#8f7a4a", "#64748b"];
+  let sum = 0;
+  for (const ch of normalized) sum += ch.charCodeAt(0);
+  return palette[sum % palette.length];
+}
+
 function loadRecorderList() {
   try {
     const saved = JSON.parse(localStorage.getItem(recorderListLocalKey()) || "null");
@@ -2826,6 +2854,23 @@ function loadRecorderList() {
   return [...DEFAULT_RECORDERS];
 }
 
+function loadRecorderColors() {
+  const colors = {};
+  try {
+    const saved = JSON.parse(localStorage.getItem(recorderColorLocalKey()) || "null");
+    if (saved && typeof saved === "object" && !Array.isArray(saved)) {
+      for (const [name, color] of Object.entries(saved)) {
+        const normalized = sanitizeRecorderName(name);
+        if (normalized) colors[normalized] = normalizeColor(color, defaultRecorderColor(normalized));
+      }
+    }
+  } catch (error) {
+    console.warn("Recorder colors read failed", error);
+  }
+  for (const name of DEFAULT_RECORDERS) colors[name] = colors[name] || DEFAULT_RECORDER_COLORS[name];
+  return colors;
+}
+
 function normalizeRecorder(value) {
   const raw = sanitizeRecorderName(value);
   const options = state?.recorders?.length ? state.recorders : DEFAULT_RECORDERS;
@@ -2833,12 +2878,21 @@ function normalizeRecorder(value) {
   const exact = options.find(name => normalizeKey(name) === normalizeKey(raw));
   if (exact) return exact;
 
-  // 旧データ・短縮入力向けのゆるい補正
   const loose = options.find(name =>
     (raw.includes("森") && name.includes("森")) ||
     (raw.includes("福") && name.includes("福"))
   );
   return loose || raw;
+}
+
+function recorderColor(name) {
+  const recorder = normalizeRecorder(name);
+  return normalizeColor(state.recorderColors?.[recorder], defaultRecorderColor(recorder));
+}
+
+function recorderBadgeStyle(name) {
+  const color = recorderColor(name);
+  return `--recorder-color:${escapeHtml(color)};`;
 }
 
 function getCurrentRecorder() {
@@ -2858,28 +2912,59 @@ function setCurrentRecorder(value, options = {}) {
 
 function setRecorderList(list, options = {}) {
   state.recorders = uniqueRecorderList(list);
+  for (const name of state.recorders) {
+    state.recorderColors[name] = normalizeColor(state.recorderColors[name], defaultRecorderColor(name));
+  }
   localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
+  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
+
   if (!state.recorders.includes(getCurrentRecorder())) {
     state.currentRecorder = state.recorders[0] || DEFAULT_RECORDERS[0];
     localStorage.setItem(RECORDER_STORAGE_KEY, state.currentRecorder);
   }
   syncRecorderUi();
   renderRecorderManager();
-  if (options.persist !== false) saveRecorderList();
+  if (options.persist !== false) saveRecorderSettings();
   if (!options.silent) render();
 }
 
-async function saveRecorderList() {
+function setRecorderColors(colors, options = {}) {
+  const next = { ...(state.recorderColors || {}) };
+  if (colors && typeof colors === "object" && !Array.isArray(colors)) {
+    for (const [name, color] of Object.entries(colors)) {
+      const recorder = sanitizeRecorderName(name);
+      if (recorder) next[recorder] = normalizeColor(color, defaultRecorderColor(recorder));
+    }
+  }
+  for (const name of state.recorders) {
+    next[name] = normalizeColor(next[name], defaultRecorderColor(name));
+  }
+  state.recorderColors = next;
+  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
+  syncRecorderUi();
+  renderRecorderManager();
+  if (options.persist !== false) saveRecorderSettings();
+  if (!options.silent) render();
+}
+
+async function saveRecorderSettings() {
   localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
+  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
   if (state.firebaseReady && state.dbApi && state.db && state.dbMetaRef) {
     try {
-      await state.dbApi.update(state.dbMetaRef, { recorders: state.recorders, recordersUpdatedAt: Date.now() });
+      await state.dbApi.update(state.dbMetaRef, {
+        recorders: state.recorders,
+        recorderColors: state.recorderColors,
+        recordersUpdatedAt: Date.now()
+      });
     } catch (error) {
-      console.warn("Recorder list save failed:", error);
-      toast("ユーザー一覧の保存に失敗しました。", true);
+      console.warn("Recorder settings save failed:", error);
+      toast("ユーザー設定の保存に失敗しました。", true);
     }
   }
 }
+
+const saveRecorderList = saveRecorderSettings;
 
 function syncRecorderOptions(selectElement) {
   if (!selectElement) return;
@@ -2897,7 +2982,10 @@ function syncRecorderUi() {
   if (elements.currentRecorderSelect) elements.currentRecorderSelect.value = current;
   if (elements.startupRecorder) elements.startupRecorder.value = current;
   if (elements.currentRecorderLabel) elements.currentRecorderLabel.textContent = current;
-  if (elements.currentRecorderDot) elements.currentRecorderDot.textContent = current.slice(0, 1);
+  if (elements.currentRecorderDot) {
+    elements.currentRecorderDot.textContent = current.slice(0, 1);
+    elements.currentRecorderDot.style.setProperty("--recorder-color", recorderColor(current));
+  }
 }
 
 function showUserDialogIfNeeded() {
@@ -2914,9 +3002,13 @@ function renderRecorderManager() {
   elements.recorderList.innerHTML = state.recorders.map(name => {
     const isCurrent = name === current;
     const disableDelete = state.recorders.length <= 1;
+    const color = recorderColor(name);
     return `<div class="recorder-list-item ${isCurrent ? "is-current" : ""}">
-      <span class="recorder-badge ${name.includes("森") ? "morii" : "fukutomi"}"><span class="recorder-avatar">${escapeHtml(name.slice(0, 1))}</span><span>${escapeHtml(name)}</span></span>
+      <span class="recorder-badge custom" style="${recorderBadgeStyle(name)}"><span class="recorder-avatar">${escapeHtml(name.slice(0, 1))}</span><span>${escapeHtml(name)}</span></span>
       <div class="recorder-list-actions">
+        <label class="recorder-color-control" title="ユーザーカラー">
+          <input type="color" value="${escapeHtml(color)}" data-color-recorder="${escapeHtml(name)}" />
+        </label>
         ${isCurrent ? `<span class="current-user-chip">選択中</span>` : `<button type="button" class="mini-action-button" data-select-recorder="${escapeHtml(name)}">選択</button>`}
         <button type="button" class="mini-action-button danger" data-delete-recorder="${escapeHtml(name)}" ${disableDelete ? "disabled" : ""}>削除</button>
       </div>
@@ -2929,10 +3021,27 @@ function renderRecorderManager() {
   elements.recorderList.querySelectorAll("[data-delete-recorder]").forEach(button => {
     button.addEventListener("click", async () => deleteRecorder(button.dataset.deleteRecorder));
   });
+  elements.recorderList.querySelectorAll("[data-color-recorder]").forEach(input => {
+    input.addEventListener("input", () => {
+      const recorder = normalizeRecorder(input.dataset.colorRecorder);
+      state.recorderColors[recorder] = normalizeColor(input.value, defaultRecorderColor(recorder));
+      localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
+      syncRecorderUi();
+      render();
+    });
+    input.addEventListener("change", async () => {
+      const recorder = normalizeRecorder(input.dataset.colorRecorder);
+      state.recorderColors[recorder] = normalizeColor(input.value, defaultRecorderColor(recorder));
+      await saveRecorderSettings();
+      renderRecorderManager();
+      toast(`${recorder}のカラーを変更しました`);
+    });
+  });
 }
 
 async function addRecorderFromForm() {
   const name = sanitizeRecorderName(elements.newRecorderName?.value || "");
+  const color = normalizeColor(elements.newRecorderColor?.value || "", defaultRecorderColor(name));
   if (!name) {
     toast("追加するユーザー名を入力してください。", true);
     return;
@@ -2942,8 +3051,11 @@ async function addRecorderFromForm() {
     return;
   }
   state.recorders.push(name);
+  state.recorderColors[name] = color;
   elements.newRecorderName.value = "";
+  if (elements.newRecorderColor) elements.newRecorderColor.value = defaultRecorderColor(name);
   setRecorderList(state.recorders, { silent: true });
+  await saveRecorderSettings();
   toast(`${name}を追加しました`);
 }
 
@@ -2956,9 +3068,10 @@ async function deleteRecorder(name) {
   if (!confirm(`${target}をユーザー一覧から削除しますか？\\n既存の配合記録の記録者名は残ります。`)) return;
   const nextList = state.recorders.filter(item => item !== target);
   const wasCurrent = getCurrentRecorder() === target;
+  delete state.recorderColors[target];
   setRecorderList(nextList, { silent: true });
   if (wasCurrent) setCurrentRecorder(state.recorders[0], { silent: true });
-  await saveRecorderList();
+  await saveRecorderSettings();
   toast(`${target}を削除しました`);
 }
 
@@ -3209,8 +3322,7 @@ function hasWorkTrait(meta, work) {
 
 function recorderBadge(name) {
   const recorder = normalizeRecorder(name);
-  const className = recorder.includes("森") ? "morii" : recorder.includes("福") ? "fukutomi" : "custom";
-  return `<span class="recorder-badge ${className}"><span class="recorder-avatar">${escapeHtml(recorder.slice(0, 1))}</span><span>${escapeHtml(recorder)}</span></span>`;
+  return `<span class="recorder-badge custom" style="${recorderBadgeStyle(recorder)}"><span class="recorder-avatar">${escapeHtml(recorder.slice(0, 1))}</span><span>${escapeHtml(recorder)}</span></span>`;
 }
 
 function pendingPalIcon(size = "normal") {

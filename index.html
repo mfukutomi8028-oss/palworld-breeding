@@ -8,9 +8,9 @@
   <link rel="shortcut icon" type="image/png" href="assets/favicon-v8.png?v=8" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon-v8.png?v=8" />
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
-  <link rel="stylesheet" href="style.css?v=32" />
+  <link rel="stylesheet" href="style.css?v=34" />
   <script src="config.js" defer></script>
-  <script type="module" src="app.js?v=32"></script>
+  <script type="module" src="app.js?v=34"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -226,6 +226,7 @@
 
       <div class="recorder-add-row">
         <input id="newRecorderName" type="text" maxlength="12" placeholder="例：田中" autocomplete="off" />
+        <input id="newRecorderColor" class="recorder-color-input" type="color" value="#9067e9" title="ユーザーカラー" />
         <button class="primary-button" id="addRecorderUser" type="submit">追加</button>
       </div>
 

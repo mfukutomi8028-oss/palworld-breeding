@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=32") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=34") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=32") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=34") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
@@ -1510,4 +1510,109 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   background: linear-gradient(145deg, #f5e8ff, #d7b7ff) !important;
   border-color: rgba(133, 61, 201, .62) !important;
   box-shadow: inset 0 -8px 12px rgba(133,61,201,.12), 0 4px 12px rgba(133,61,201,.18) !important;
+}
+
+
+/* v33: ユーザーカラー対応 */
+.user-dot,
+.recorder-avatar {
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--recorder-color, #3c92df) 78%, white), var(--recorder-color, #3c92df)) !important;
+}
+
+.recorder-badge.custom {
+  --recorder-color: #9067e9;
+  border-color: color-mix(in srgb, var(--recorder-color) 38%, transparent) !important;
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--recorder-color) 15%, white),
+      rgba(255,255,255,.88)) !important;
+}
+
+.recorder-badge.custom .recorder-avatar {
+  background:
+    linear-gradient(145deg,
+      color-mix(in srgb, var(--recorder-color) 78%, white),
+      var(--recorder-color)) !important;
+}
+
+.recorder-color-input,
+.recorder-color-control input[type="color"] {
+  width: 42px;
+  height: 42px;
+  padding: 3px;
+  border-radius: 14px;
+  border: 1px solid rgba(24,62,95,.18);
+  background: #fff;
+  cursor: pointer;
+}
+
+.recorder-color-control {
+  display: inline-grid;
+  place-items: center;
+}
+
+.recorder-add-row {
+  grid-template-columns: 1fr 48px auto !important;
+}
+
+@supports not (background: color-mix(in srgb, #000 50%, #fff)) {
+  .user-dot,
+  .recorder-avatar,
+  .recorder-badge.custom .recorder-avatar {
+    background: var(--recorder-color, #3c92df) !important;
+  }
+  .recorder-badge.custom {
+    border-color: rgba(60,146,223,.24) !important;
+    background: rgba(255,255,255,.88) !important;
+  }
+}
+
+
+/* v34: 詳細画面の親A・親Bカードの画像はみ出し対策 */
+.detail-body .recipe-line {
+  grid-template-columns:
+    minmax(84px, 1fr)
+    10px
+    minmax(84px, 1fr)
+    10px
+    minmax(94px, 1.16fr) !important;
+  gap: 5px !important;
+  padding: 14px 10px !important;
+  overflow: visible !important;
+}
+
+.detail-body .recipe-pal.is-parent {
+  min-width: 84px !important;
+  min-height: 132px !important;
+  padding: 12px 7px 10px !important;
+  border-radius: 21px !important;
+  grid-template-rows: auto 74px auto !important;
+}
+
+.detail-body .recipe-pal.is-parent .pal-icon {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 24px !important;
+  margin: 0 auto 5px !important;
+}
+
+.detail-body .recipe-pal.is-parent .pal-icon img {
+  width: 66px !important;
+  height: 66px !important;
+  object-fit: contain !important;
+}
+
+.detail-body .recipe-pal.is-parent > span:last-child {
+  max-width: 8.4em !important;
+  font-size: 11px !important;
+  letter-spacing: -0.055em !important;
+}
+
+.detail-body .recipe-pal.is-result {
+  min-width: 94px !important;
+}
+
+.detail-body .recipe-symbol {
+  font-size: 18px !important;
 }
