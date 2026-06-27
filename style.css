@@ -934,3 +934,156 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
   font-size: 10.5px !important;
   letter-spacing: -0.08em !important;
 }
+
+
+/* v27: ユーザー選択・ワールド名 */
+.user-panel {
+  margin: -8px 0 22px;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.07));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.user-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.user-panel-head p {
+  margin: 0 0 2px;
+  color: rgba(223,245,255,.74);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.user-panel-head strong {
+  display: block;
+  color: #fff;
+  font-size: 16px;
+  letter-spacing: .04em;
+}
+
+.user-dot {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  color: #fff;
+  font-weight: 1000;
+  background: linear-gradient(145deg, #48c4f0, #3472de);
+  box-shadow: 0 8px 18px rgba(0,0,0,.16);
+}
+
+.sidebar-field-label {
+  display: block;
+  margin: 10px 0 6px;
+  color: #cdeeff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.recorder-select,
+.world-name-input {
+  color: #eaf8ff;
+  background: rgba(9, 60, 96, .82);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 14px;
+  padding: 10px 11px;
+}
+
+.world-name-input::placeholder { color: rgba(234,248,255,.58); }
+
+.world-name-badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: min(560px, 100%);
+  margin: -4px 0 12px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: #eaffff;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.24);
+  font-weight: 900;
+  letter-spacing: .03em;
+  backdrop-filter: blur(10px);
+}
+
+.user-dialog::backdrop {
+  background: rgba(10, 34, 51, .62);
+  backdrop-filter: blur(8px);
+}
+
+.user-dialog {
+  width: min(460px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 26px;
+  padding: 0;
+  color: var(--ink);
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 30px 90px rgba(12,39,59,.34);
+}
+
+.user-dialog form { padding: 26px; }
+.user-dialog-lead {
+  margin: 8px 0 18px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+.dialog-actions.single {
+  justify-content: flex-end;
+}
+
+.recorder-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px 5px 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(60,146,223,.18);
+  background: linear-gradient(145deg, rgba(60,146,223,.12), rgba(255,255,255,.86));
+  color: #25445f;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.recorder-badge.morii {
+  border-color: rgba(78,189,105,.20);
+  background: linear-gradient(145deg, rgba(78,189,105,.14), rgba(255,255,255,.88));
+}
+
+.recorder-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, #48c4f0, #3472de);
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.recorder-badge.morii .recorder-avatar {
+  background: linear-gradient(145deg, #5bd17a, #2e9f64);
+}
+
+/* v27: 作業適性アイコンの大きさを維持 */
+.work-filter-group .icon-filter-button img {
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px !important;
+}
+
+/* v27: ヒーロー背景の作成目安
+   PC向け推奨画像サイズ: 1600px × 320px
+   CSS上の表示領域: 横幅可変 / min-height 210px / border-radius 28px
+*/

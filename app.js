@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v25";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v27";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v25";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v27";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1773,6 +1773,9 @@ const PALDB_JP_ICON_OVERRIDES = {
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
+const RECORDER_OPTIONS = ["福冨", "森井"];
+const RECORDER_STORAGE_KEY = "palBoardRecorder";
+const WORLD_NAME_STORAGE_PREFIX = "pal-breeding-world-name:";
 const state = {
   records: [],
   selectedId: null,
@@ -1780,7 +1783,10 @@ const state = {
   db: null,
   dbApi: null,
   dbRef: null,
+  dbMetaRef: null,
   palSource: "内蔵リスト",
+  currentRecorder: localStorage.getItem(RECORDER_STORAGE_KEY) || "",
+  worldName: localStorage.getItem(worldNameLocalKey()) || "",
   palMap: new Map(),
   palNames: [],
   paldbIcons: [...PALDB_STATIC_ICONS],
@@ -1810,6 +1816,14 @@ const elements = {
   detailBody: $("detailBody"),
   recordDialog: $("recordDialog"),
   recordForm: $("recordForm"),
+  userDialog: $("userDialog"),
+  userForm: $("userForm"),
+  startupRecorder: $("startupRecorder"),
+  currentRecorderSelect: $("currentRecorderSelect"),
+  currentRecorderLabel: $("currentRecorderLabel"),
+  currentRecorderDot: $("currentRecorderDot"),
+  worldNameInput: $("worldNameInput"),
+  worldNameBadge: $("worldNameBadge"),
   toast: $("toast"),
   dialogMessage: $("dialogMessage"),
   palDataState: $("palDataState"),
@@ -1820,6 +1834,8 @@ init();
 async function init() {
   mergePalData(EMBEDDED_PALS, "内蔵リスト");
   setupPalOptions();
+  syncRecorderUi();
+  syncWorldNameUi();
   setupEvents();
   setupPalPickers();
   setupEggPickers();
@@ -1830,6 +1846,7 @@ async function init() {
   loadCachedPaldbData();
   loadPalworldLabData();
   loadPaldbData();
+  showUserDialogIfNeeded();
 }
 
 function mergePalData(list, sourceLabel) {
@@ -2274,6 +2291,25 @@ function setupEvents() {
   [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
     .forEach(el => el?.addEventListener("input", render));
 
+  elements.currentRecorderSelect?.addEventListener("change", () => {
+    setCurrentRecorder(elements.currentRecorderSelect.value);
+  });
+
+  elements.userForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    setCurrentRecorder(elements.startupRecorder.value);
+    elements.userDialog.close();
+    toast(`${getCurrentRecorder()}で開始しました`);
+  });
+
+  let worldNameTimer = null;
+  elements.worldNameInput?.addEventListener("input", () => {
+    state.worldName = elements.worldNameInput.value.trim();
+    syncWorldNameUi(false);
+    clearTimeout(worldNameTimer);
+    worldNameTimer = setTimeout(() => saveWorldName(), 450);
+  });
+
   document.querySelectorAll(".nav-item[data-view]").forEach(button => {
     button.addEventListener("click", () => {
       state.currentView = button.dataset.view || "records";
@@ -2596,6 +2632,17 @@ async function setupStorage() {
       state.db = dbMod.getDatabase(app);
       state.dbApi = dbMod;
       state.dbRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/records`);
+      state.dbMetaRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/meta`);
+      dbMod.onValue(state.dbMetaRef, (snapshot) => {
+        const meta = snapshot.val() || {};
+        if (typeof meta.worldName === "string") {
+          state.worldName = meta.worldName.trim();
+          localStorage.setItem(worldNameLocalKey(), state.worldName);
+          syncWorldNameUi();
+        } else if (state.worldName) {
+          saveWorldName();
+        }
+      }, (error) => console.warn("Firebase meta read failed:", error));
       dbMod.onValue(state.dbRef, async (snapshot) => {
         const value = snapshot.val() || {};
         const entries = Object.entries(value);
@@ -2652,6 +2699,7 @@ function normalizeRecord(record) {
     status: resultPal ? "配合確認済み" : "確認中",
     recorder: normalizeRecorder(record.recorder),
     note: record.note || "",
+    favorites: normalizeFavorites(record.favorites, record.favorite, record.recorder),
     favorite: Boolean(record.favorite),
     updatedAt: Number(record.updatedAt || Date.now())
   };
@@ -2725,6 +2773,78 @@ function normalizeRecorder(value) {
   const raw = String(value || "").trim();
   if (raw.includes("森")) return "森井";
   return "福冨";
+}
+
+function getCurrentRecorder() {
+  return normalizeRecorder(state.currentRecorder || localStorage.getItem(RECORDER_STORAGE_KEY) || "福冨");
+}
+
+function setCurrentRecorder(value, options = {}) {
+  state.currentRecorder = normalizeRecorder(value);
+  localStorage.setItem(RECORDER_STORAGE_KEY, state.currentRecorder);
+  syncRecorderUi();
+  render();
+  if (!options.silent) toast(`現在のユーザーを${state.currentRecorder}にしました`);
+}
+
+function syncRecorderUi() {
+  const current = getCurrentRecorder();
+  if (elements.currentRecorderSelect) elements.currentRecorderSelect.value = current;
+  if (elements.startupRecorder) elements.startupRecorder.value = current;
+  if (elements.currentRecorderLabel) elements.currentRecorderLabel.textContent = current;
+  if (elements.currentRecorderDot) elements.currentRecorderDot.textContent = current.slice(0, 1);
+}
+
+function showUserDialogIfNeeded() {
+  if (localStorage.getItem(RECORDER_STORAGE_KEY)) return;
+  if (!elements.userDialog?.showModal) return;
+  elements.startupRecorder.value = "福冨";
+  elements.userDialog.showModal();
+}
+
+function worldNameLocalKey() {
+  return `${WORLD_NAME_STORAGE_PREFIX}${ROOM_ID}`;
+}
+
+function syncWorldNameUi(updateInput = true) {
+  const value = String(state.worldName || "").trim();
+  if (updateInput && elements.worldNameInput && document.activeElement !== elements.worldNameInput) {
+    elements.worldNameInput.value = value;
+  }
+  if (elements.worldNameBadge) {
+    elements.worldNameBadge.hidden = !value;
+    elements.worldNameBadge.textContent = value ? `🌏 ${value}` : "";
+  }
+}
+
+async function saveWorldName() {
+  state.worldName = String(state.worldName || "").trim();
+  localStorage.setItem(worldNameLocalKey(), state.worldName);
+  syncWorldNameUi(false);
+  if (state.firebaseReady && state.dbApi && state.db && state.dbMetaRef) {
+    try {
+      await state.dbApi.update(state.dbMetaRef, { worldName: state.worldName, updatedAt: Date.now() });
+    } catch (error) {
+      console.warn("World name save failed:", error);
+    }
+  }
+}
+
+function normalizeFavorites(value, legacyFavorite = false, legacyRecorder = "") {
+  const favorites = {};
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    for (const [name, checked] of Object.entries(value)) {
+      if (checked) favorites[normalizeRecorder(name)] = true;
+    }
+  }
+  if (!Object.keys(favorites).length && legacyFavorite) {
+    favorites[normalizeRecorder(legacyRecorder || getCurrentRecorder())] = true;
+  }
+  return favorites;
+}
+
+function isRecordFavorite(record, recorder = getCurrentRecorder()) {
+  return Boolean(record?.favorites?.[normalizeRecorder(recorder)]);
 }
 
 function normalizeStatus(value) {
@@ -2807,8 +2927,8 @@ function getFilteredRecords() {
       (!selectedElements.length || selectedElements.some(element => recordElements.includes(element))) &&
       (!selectedWorks.length || selectedWorks.every(work => hasWorkTrait(meta, work))) &&
       (!status || normalizeStatus(record.status) === status) &&
-      (state.currentView !== "favorites" || record.favorite) &&
-      (!elements.favoriteOnly || !elements.favoriteOnly.checked || record.favorite) &&
+      (state.currentView !== "favorites" || isRecordFavorite(record)) &&
+      (!elements.favoriteOnly || !elements.favoriteOnly.checked || isRecordFavorite(record)) &&
       (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み");
   });
 
@@ -2854,13 +2974,13 @@ function renderRows(records) {
     const selected = record.id === state.selectedId ? "selected" : "";
     return `
       <tr class="${selected}" data-id="${record.id}">
-        <td class="favorite-cell"><button class="star-button ${record.favorite ? "is-favorite" : ""}" data-action="favorite" title="お気に入り">★</button></td>
+        <td class="favorite-cell"><button class="star-button ${isRecordFavorite(record) ? "is-favorite" : ""}" data-action="favorite" title="${escapeHtml(getCurrentRecorder())}のお気に入り">★</button></td>
         <td>${palInline(record.parentA)}</td>
         <td>${palInline(record.parentB)}</td>
         <td>${resultPalInline(record.resultPal, record.status)}</td>
         <td>${eggInline(record.eggType)}</td>
         <td>${statusBadge(record.status)}</td>
-        <td><span class="recorder-cell"><span class="tiny-avatar">${escapeHtml(record.recorder.slice(0, 1) || "?")}</span>${escapeHtml(record.recorder)}</span></td>
+        <td>${recorderBadge(record.recorder)}</td>
         <td class="memo-cell" title="${escapeHtml(record.note)}">${escapeHtml(record.note || "—")}</td>
         <td>${formatDate(record.updatedAt)}</td>
       </tr>`;
@@ -2902,7 +3022,7 @@ function renderDetail() {
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
-      <p><strong>記録者：</strong>${escapeHtml(record.recorder)}</p>
+      <p><strong>記録者：</strong>${recorderBadge(record.recorder)}</p>
       <p><strong>更新日時：</strong>${formatDate(record.updatedAt, true)}</p>
     </div>`;
 
@@ -2925,6 +3045,12 @@ function hasWorkTrait(meta, work) {
     return (meta.elements || []).includes("闇属性");
   }
   return (meta.work || []).includes(work);
+}
+
+function recorderBadge(name) {
+  const recorder = normalizeRecorder(name);
+  const className = recorder === "森井" ? "morii" : "fukutomi";
+  return `<span class="recorder-badge ${className}"><span class="recorder-avatar">${escapeHtml(recorder.slice(0, 1))}</span><span>${escapeHtml(recorder)}</span></span>`;
 }
 
 function palInline(name) {
@@ -3031,7 +3157,6 @@ function openDialog(id = null) {
   $("resultPal").value = record?.resultPal || "";
   $("eggType").value = record?.eggType || "";
   clearDialogMessage();
-  $("recorder").value = normalizeRecorder(record?.recorder || localStorage.getItem("palBoardRecorder") || "福冨");
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
   refreshPickerPreviews();
@@ -3048,11 +3173,12 @@ async function saveFromForm() {
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
     eggType: $("eggType").value.trim(),
-    recorder: normalizeRecorder($("recorder").value),
+    recorder: getCurrentRecorder(),
     status: $("resultPal").value.trim() ? "配合確認済み" : "確認中",
     passives: [],
     note: $("note").value.trim(),
-    favorite: existing?.favorite || false,
+    favorites: existing?.favorites || {},
+    favorite: isRecordFavorite(existing),
     updatedAt: Date.now()
   });
 
@@ -3064,8 +3190,6 @@ async function saveFromForm() {
     toast("配合確認済みにする場合は、結果パルを入力してください。", true);
     return;
   }
-  localStorage.setItem("palBoardRecorder", record.recorder);
-
   const duplicate = findDuplicateBreedingPair(record);
   if (duplicate) {
     state.selectedId = duplicate.id;
@@ -3116,7 +3240,11 @@ async function deleteRecord(id) {
 async function toggleFavorite(id) {
   const record = state.records.find(r => r.id === id);
   if (!record) return;
-  record.favorite = !record.favorite;
+  const recorder = getCurrentRecorder();
+  record.favorites = { ...(record.favorites || {}) };
+  record.favorites[recorder] = !record.favorites[recorder];
+  if (!record.favorites[recorder]) delete record.favorites[recorder];
+  record.favorite = isRecordFavorite(record);
   record.updatedAt = Date.now();
   await persistRecord(record);
   render();
