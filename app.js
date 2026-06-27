@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v38";
-const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v39";
+const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v38";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v39";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -2080,14 +2080,14 @@ function parsePaldbHtml(html) {
     const no = (text.match(/#\s*(\d+[A-Z]?)/i) || [])[1] || "";
     if (!no) continue;
 
-    const en = findPaldbEnglishName(block);
+    const displayName = findPaldbDisplayName(block);
     const key = `${normalizePalNoKey(no)}:${icon}`;
     if (seen.has(key)) continue;
     seen.add(key);
 
     icons.push({
       no,
-      en,
+      displayName,
       icon,
       iconKey: inferPaldbIconKey(icon),
     });
@@ -2123,7 +2123,7 @@ function findPaldbPalBlock(img, doc) {
   return img.closest("tr, li, article, div");
 }
 
-function findPaldbEnglishName(block) {
+function findPaldbDisplayName(block) {
   if (!block) return "";
   const links = Array.from(block.querySelectorAll("a"))
     .map(link => (link.textContent || "").trim())
@@ -2176,7 +2176,7 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
     const iconKey = item.iconKey || inferPaldbIconKey(item.icon);
     if (noKey && !byNo.has(noKey)) byNo.set(noKey, item);
     if (iconKey && !byIconKey.has(normalizeKey(iconKey))) byIconKey.set(normalizeKey(iconKey), item);
-    const enKey = normalizeKey(item.en);
+    const enKey = normalizeKey(item.displayName || item.en);
     if (enKey && !byEn.has(enKey)) byEn.set(enKey, item);
   }
 
@@ -2532,7 +2532,7 @@ function renderPickerSuggestions(id) {
   const candidates = state.palNames
     .filter(name => {
       const meta = getPalMeta(name);
-      const target = normalizeSearch([name, meta?.en, meta?.no].filter(Boolean).join(" "));
+      const target = normalizeSearch([name, meta?.displayName, meta?.no].filter(Boolean).join(" "));
       return !query || target.includes(query);
     });
 
@@ -3161,7 +3161,7 @@ function palFilterMatches(palName, filterValue) {
   const filter = normalizeSearch(filterValue);
   if (!filter) return true;
   const meta = getPalMeta(palName) || {};
-  const target = normalizeSearch([palName, meta.en, meta.no].filter(Boolean).join(" "));
+  const target = normalizeSearch([palName, meta.displayName, meta.no].filter(Boolean).join(" "));
   return target.includes(filter);
 }
 
@@ -3396,7 +3396,7 @@ function palIcon(name, size = "normal", options = {}) {
   const labUrl = meta.icon || "";
   const url = paldbUrl || labUrl;
   const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
-  const title = [normalized, meta.en, meta.no].filter(Boolean).join(" / ");
+  const title = [normalized, meta.displayName, meta.no].filter(Boolean).join(" / ");
   if (!url) return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(title)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
   const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
   return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}"${fallbackAttr} alt="${escapeHtml(normalized)}" loading="lazy" onerror="if(this.dataset.fallback&&!this.dataset.usedFallback){this.dataset.usedFallback='1';this.src=this.dataset.fallback;}else{this.src='${UNKNOWN_PAL_ICON}';this.closest('.pal-icon').classList.add('locked');}"></span>`;
