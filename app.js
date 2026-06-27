@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v31";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v32";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v31";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v32";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -2776,9 +2776,10 @@ function getEggMeta(name) {
 function eggIcon(name, size = "normal") {
   const meta = getEggMeta(name);
   const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
+  const eggClass = meta?.key ? ` egg-${meta.key}` : " egg-plain";
   const label = meta?.name || normalizeEggName(name) || "タマゴ";
   const url = meta?.icon || "assets/plain-egg.png";
-  return `<span class="egg-icon${sizeClass}" title="${escapeHtml(label)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(label)}" loading="lazy"></span>`;
+  return `<span class="egg-icon${sizeClass}${eggClass}" title="${escapeHtml(label)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(label)}" loading="lazy"></span>`;
 }
 
 function eggInline(name) {
