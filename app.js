@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v27";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v29";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v27";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v29";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -3245,7 +3245,7 @@ async function toggleFavorite(id) {
   record.favorites[recorder] = !record.favorites[recorder];
   if (!record.favorites[recorder]) delete record.favorites[recorder];
   record.favorite = isRecordFavorite(record);
-  record.updatedAt = Date.now();
+  // お気に入りの登録・解除は配合記録の内容変更ではないため、updatedAtは更新しません。
   await persistRecord(record);
   render();
 }
