@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v29";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v31";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v29";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v31";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1773,8 +1773,9 @@ const PALDB_JP_ICON_OVERRIDES = {
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
-const RECORDER_OPTIONS = ["福冨", "森井"];
+const DEFAULT_RECORDERS = ["福冨", "森井"];
 const RECORDER_STORAGE_KEY = "palBoardRecorder";
+const RECORDER_LIST_STORAGE_PREFIX = "pal-breeding-recorders:";
 const WORLD_NAME_STORAGE_PREFIX = "pal-breeding-world-name:";
 const state = {
   records: [],
@@ -1785,6 +1786,7 @@ const state = {
   dbRef: null,
   dbMetaRef: null,
   palSource: "内蔵リスト",
+  recorders: loadRecorderList(),
   currentRecorder: localStorage.getItem(RECORDER_STORAGE_KEY) || "",
   worldName: localStorage.getItem(worldNameLocalKey()) || "",
   palMap: new Map(),
@@ -1822,6 +1824,12 @@ const elements = {
   currentRecorderSelect: $("currentRecorderSelect"),
   currentRecorderLabel: $("currentRecorderLabel"),
   currentRecorderDot: $("currentRecorderDot"),
+  manageUsers: $("manageUsers"),
+  recorderManageDialog: $("recorderManageDialog"),
+  recorderManageForm: $("recorderManageForm"),
+  closeRecorderManage: $("closeRecorderManage"),
+  newRecorderName: $("newRecorderName"),
+  recorderList: $("recorderList"),
   worldNameInput: $("worldNameInput"),
   worldNameBadge: $("worldNameBadge"),
   toast: $("toast"),
@@ -2302,6 +2310,17 @@ function setupEvents() {
     toast(`${getCurrentRecorder()}で開始しました`);
   });
 
+  elements.manageUsers?.addEventListener("click", () => {
+    renderRecorderManager();
+    elements.recorderManageDialog?.showModal();
+    elements.newRecorderName?.focus();
+  });
+  elements.closeRecorderManage?.addEventListener("click", () => elements.recorderManageDialog?.close());
+  elements.recorderManageForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await addRecorderFromForm();
+  });
+
   let worldNameTimer = null;
   elements.worldNameInput?.addEventListener("input", () => {
     state.worldName = elements.worldNameInput.value.trim();
@@ -2635,6 +2654,9 @@ async function setupStorage() {
       state.dbMetaRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/meta`);
       dbMod.onValue(state.dbMetaRef, (snapshot) => {
         const meta = snapshot.val() || {};
+        if (Array.isArray(meta.recorders)) {
+          setRecorderList(meta.recorders, { persist: false, silent: true });
+        }
         if (typeof meta.worldName === "string") {
           state.worldName = meta.worldName.trim();
           localStorage.setItem(worldNameLocalKey(), state.worldName);
@@ -2769,14 +2791,60 @@ function eggSearchTarget(egg) {
   return normalizeSearch([egg.name, ...(egg.aliases || [])].join(" "));
 }
 
+function recorderListLocalKey() {
+  return `${RECORDER_LIST_STORAGE_PREFIX}${ROOM_ID}`;
+}
+
+function sanitizeRecorderName(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .replace(/\s+/g, "")
+    .trim()
+    .slice(0, 12);
+}
+
+function uniqueRecorderList(list) {
+  const result = [];
+  for (const value of Array.isArray(list) ? list : []) {
+    const name = sanitizeRecorderName(value);
+    if (name && !result.includes(name)) result.push(name);
+  }
+  for (const name of DEFAULT_RECORDERS) {
+    if (!result.includes(name)) result.push(name);
+  }
+  return result.length ? result : [...DEFAULT_RECORDERS];
+}
+
+function loadRecorderList() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(recorderListLocalKey()) || "null");
+    if (Array.isArray(saved)) return uniqueRecorderList(saved);
+  } catch (error) {
+    console.warn("Recorder list read failed", error);
+  }
+  return [...DEFAULT_RECORDERS];
+}
+
 function normalizeRecorder(value) {
-  const raw = String(value || "").trim();
-  if (raw.includes("森")) return "森井";
-  return "福冨";
+  const raw = sanitizeRecorderName(value);
+  const options = state?.recorders?.length ? state.recorders : DEFAULT_RECORDERS;
+  if (!raw) return options[0] || DEFAULT_RECORDERS[0];
+  const exact = options.find(name => normalizeKey(name) === normalizeKey(raw));
+  if (exact) return exact;
+
+  // 旧データ・短縮入力向けのゆるい補正
+  const loose = options.find(name =>
+    (raw.includes("森") && name.includes("森")) ||
+    (raw.includes("福") && name.includes("福"))
+  );
+  return loose || raw;
 }
 
 function getCurrentRecorder() {
-  return normalizeRecorder(state.currentRecorder || localStorage.getItem(RECORDER_STORAGE_KEY) || "福冨");
+  const options = state.recorders?.length ? state.recorders : DEFAULT_RECORDERS;
+  const saved = sanitizeRecorderName(state.currentRecorder || localStorage.getItem(RECORDER_STORAGE_KEY) || "");
+  const exact = options.find(name => normalizeKey(name) === normalizeKey(saved));
+  return exact || options[0] || DEFAULT_RECORDERS[0];
 }
 
 function setCurrentRecorder(value, options = {}) {
@@ -2787,8 +2855,44 @@ function setCurrentRecorder(value, options = {}) {
   if (!options.silent) toast(`現在のユーザーを${state.currentRecorder}にしました`);
 }
 
+function setRecorderList(list, options = {}) {
+  state.recorders = uniqueRecorderList(list);
+  localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
+  if (!state.recorders.includes(getCurrentRecorder())) {
+    state.currentRecorder = state.recorders[0] || DEFAULT_RECORDERS[0];
+    localStorage.setItem(RECORDER_STORAGE_KEY, state.currentRecorder);
+  }
+  syncRecorderUi();
+  renderRecorderManager();
+  if (options.persist !== false) saveRecorderList();
+  if (!options.silent) render();
+}
+
+async function saveRecorderList() {
+  localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
+  if (state.firebaseReady && state.dbApi && state.db && state.dbMetaRef) {
+    try {
+      await state.dbApi.update(state.dbMetaRef, { recorders: state.recorders, recordersUpdatedAt: Date.now() });
+    } catch (error) {
+      console.warn("Recorder list save failed:", error);
+      toast("ユーザー一覧の保存に失敗しました。", true);
+    }
+  }
+}
+
+function syncRecorderOptions(selectElement) {
+  if (!selectElement) return;
+  const current = getCurrentRecorder();
+  selectElement.innerHTML = state.recorders
+    .map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+    .join("");
+  if (state.recorders.includes(current)) selectElement.value = current;
+}
+
 function syncRecorderUi() {
   const current = getCurrentRecorder();
+  syncRecorderOptions(elements.currentRecorderSelect);
+  syncRecorderOptions(elements.startupRecorder);
   if (elements.currentRecorderSelect) elements.currentRecorderSelect.value = current;
   if (elements.startupRecorder) elements.startupRecorder.value = current;
   if (elements.currentRecorderLabel) elements.currentRecorderLabel.textContent = current;
@@ -2798,8 +2902,63 @@ function syncRecorderUi() {
 function showUserDialogIfNeeded() {
   if (localStorage.getItem(RECORDER_STORAGE_KEY)) return;
   if (!elements.userDialog?.showModal) return;
-  elements.startupRecorder.value = "福冨";
+  syncRecorderUi();
+  elements.startupRecorder.value = getCurrentRecorder();
   elements.userDialog.showModal();
+}
+
+function renderRecorderManager() {
+  if (!elements.recorderList) return;
+  const current = getCurrentRecorder();
+  elements.recorderList.innerHTML = state.recorders.map(name => {
+    const isCurrent = name === current;
+    const disableDelete = state.recorders.length <= 1;
+    return `<div class="recorder-list-item ${isCurrent ? "is-current" : ""}">
+      <span class="recorder-badge ${name.includes("森") ? "morii" : "fukutomi"}"><span class="recorder-avatar">${escapeHtml(name.slice(0, 1))}</span><span>${escapeHtml(name)}</span></span>
+      <div class="recorder-list-actions">
+        ${isCurrent ? `<span class="current-user-chip">選択中</span>` : `<button type="button" class="mini-action-button" data-select-recorder="${escapeHtml(name)}">選択</button>`}
+        <button type="button" class="mini-action-button danger" data-delete-recorder="${escapeHtml(name)}" ${disableDelete ? "disabled" : ""}>削除</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  elements.recorderList.querySelectorAll("[data-select-recorder]").forEach(button => {
+    button.addEventListener("click", () => setCurrentRecorder(button.dataset.selectRecorder));
+  });
+  elements.recorderList.querySelectorAll("[data-delete-recorder]").forEach(button => {
+    button.addEventListener("click", async () => deleteRecorder(button.dataset.deleteRecorder));
+  });
+}
+
+async function addRecorderFromForm() {
+  const name = sanitizeRecorderName(elements.newRecorderName?.value || "");
+  if (!name) {
+    toast("追加するユーザー名を入力してください。", true);
+    return;
+  }
+  if (state.recorders.some(existing => normalizeKey(existing) === normalizeKey(name))) {
+    toast("同じユーザー名が既にあります。", true);
+    return;
+  }
+  state.recorders.push(name);
+  elements.newRecorderName.value = "";
+  setRecorderList(state.recorders, { silent: true });
+  toast(`${name}を追加しました`);
+}
+
+async function deleteRecorder(name) {
+  const target = normalizeRecorder(name);
+  if (state.recorders.length <= 1) {
+    toast("ユーザーは最低1人必要です。", true);
+    return;
+  }
+  if (!confirm(`${target}をユーザー一覧から削除しますか？\\n既存の配合記録の記録者名は残ります。`)) return;
+  const nextList = state.recorders.filter(item => item !== target);
+  const wasCurrent = getCurrentRecorder() === target;
+  setRecorderList(nextList, { silent: true });
+  if (wasCurrent) setCurrentRecorder(state.recorders[0], { silent: true });
+  await saveRecorderList();
+  toast(`${target}を削除しました`);
 }
 
 function worldNameLocalKey() {
@@ -2975,9 +3134,9 @@ function renderRows(records) {
     return `
       <tr class="${selected}" data-id="${record.id}">
         <td class="favorite-cell"><button class="star-button ${isRecordFavorite(record) ? "is-favorite" : ""}" data-action="favorite" title="${escapeHtml(getCurrentRecorder())}のお気に入り">★</button></td>
-        <td>${palInline(record.parentA)}</td>
-        <td>${palInline(record.parentB)}</td>
-        <td>${resultPalInline(record.resultPal, record.status)}</td>
+        <td>${palRecordCard(record.parentA, { role: "parent" })}</td>
+        <td>${palRecordCard(record.parentB, { role: "parent" })}</td>
+        <td>${palRecordCard(record.resultPal, { role: "result", status: record.status })}</td>
         <td>${eggInline(record.eggType)}</td>
         <td>${statusBadge(record.status)}</td>
         <td>${recorderBadge(record.recorder)}</td>
@@ -3012,11 +3171,11 @@ function renderDetail() {
       <button class="primary-button" data-detail-action="edit" type="button">編集する</button>
     </div>
     <div class="recipe-line">
-      ${recipePal("親A", record.parentA)}
+      ${recipePal("親A", record.parentA, { role: "parent" })}
       <div class="recipe-symbol">＋</div>
-      ${recipePal("親B", record.parentB)}
+      ${recipePal("親B", record.parentB, { role: "parent" })}
       <div class="recipe-symbol">→</div>
-      ${recipePal("結果", record.resultPal || "未確認")}
+      ${recipePal("結果", record.resultPal || "未確認", { role: "result", status: record.status })}
     </div>
     <div class="detail-section"><h3>タマゴの種類</h3>${eggInline(record.eggType)}</div>
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
@@ -3049,8 +3208,13 @@ function hasWorkTrait(meta, work) {
 
 function recorderBadge(name) {
   const recorder = normalizeRecorder(name);
-  const className = recorder === "森井" ? "morii" : "fukutomi";
+  const className = recorder.includes("森") ? "morii" : recorder.includes("福") ? "fukutomi" : "custom";
   return `<span class="recorder-badge ${className}"><span class="recorder-avatar">${escapeHtml(recorder.slice(0, 1))}</span><span>${escapeHtml(recorder)}</span></span>`;
+}
+
+function pendingPalIcon(size = "normal") {
+  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
+  return `<span class="pal-icon${sizeClass} locked pending-pal-icon" title="未確認"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
 }
 
 function palInline(name) {
@@ -3058,14 +3222,41 @@ function palInline(name) {
 }
 
 function resultPalInline(name, status = "確認中") {
-  if (!name && normalizeStatus(status) === "確認中") {
-    return `<span class="result-pending">未確認</span>`;
-  }
-  return palInline(name);
+  return palRecordCard(name, { role: "result", status });
 }
 
-function recipePal(label, name) {
-  return `<div class="recipe-pal"><small>${label}</small>${palIcon(name, "large")}<span>${escapeHtml(name || "未入力")}</span></div>`;
+function palRecordCard(name, options = {}) {
+  const role = options.role || "parent";
+  const status = normalizeStatus(options.status || "");
+  const isResult = role === "result";
+  const isVerified = isResult && status === "配合確認済み";
+  const isPending = isResult && !name;
+  const className = [
+    "pal-record-card",
+    isResult ? "is-result" : "is-parent",
+    isVerified ? "is-verified" : "",
+    isPending ? "is-pending" : ""
+  ].filter(Boolean).join(" ");
+  const label = isPending ? "未確認" : (name || "未入力");
+  const icon = isPending ? pendingPalIcon("small") : palIcon(name, "small");
+  return `<span class="${className}">${icon}<span class="pal-record-name">${escapeHtml(label)}</span></span>`;
+}
+
+function recipePal(label, name, options = {}) {
+  const role = options.role || "parent";
+  const status = normalizeStatus(options.status || "");
+  const isResult = role === "result";
+  const isVerified = isResult && status === "配合確認済み";
+  const isPending = isResult && (!name || name === "未確認");
+  const className = [
+    "recipe-pal",
+    isResult ? "is-result" : "is-parent",
+    isVerified ? "is-verified" : "",
+    isPending ? "is-pending" : ""
+  ].filter(Boolean).join(" ");
+  const displayName = isPending ? "未確認" : (name || "未入力");
+  const icon = isPending ? pendingPalIcon("large") : palIcon(name, "large");
+  return `<div class="${className}"><small>${escapeHtml(label)}</small>${icon}<span>${escapeHtml(displayName)}</span></div>`;
 }
 
 function palIcon(name, size = "normal", options = {}) {
@@ -3136,10 +3327,22 @@ function statusBadge(status) {
 function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
 
 
-function showDialogMessage(message) {
+function showDialogMessage(message, options = {}) {
   if (!elements.dialogMessage) return;
-  elements.dialogMessage.textContent = message;
+  const detail = options.detail ? `<div class="dialog-message-detail">${escapeHtml(options.detail)}</div>` : "";
+  const action = options.recordId
+    ? `<button type="button" class="dialog-message-action" data-open-existing="${escapeHtml(options.recordId)}">既存記録を開く</button>`
+    : "";
+  elements.dialogMessage.innerHTML = `<div class="dialog-message-title">${escapeHtml(message)}</div>${detail}${action ? `<div class="dialog-message-actions">${action}</div>` : ""}`;
   elements.dialogMessage.hidden = false;
+  elements.dialogMessage.querySelector("[data-open-existing]")?.addEventListener("click", (event) => {
+    const id = event.currentTarget.dataset.openExisting;
+    if (!id) return;
+    state.selectedId = id;
+    elements.recordDialog.close();
+    render();
+    toast("既存記録を開きました");
+  });
 }
 
 function clearDialogMessage() {
@@ -3195,9 +3398,12 @@ async function saveFromForm() {
     state.selectedId = duplicate.id;
     render();
     const duplicateResult = duplicate.resultPal ? ` → ${duplicate.resultPal}` : "";
-    const message = `同じ親の組み合わせは既に登録されています：${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`;
-    showDialogMessage(message);
-    toast(message, true);
+    const detail = `${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`;
+    showDialogMessage("この組み合わせは既に登録済みです", {
+      detail,
+      recordId: duplicate.id
+    });
+    toast("同じ親の組み合わせは既に登録されています", true);
     return;
   }
 

@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=29") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=31") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=29") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=31") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
@@ -1087,3 +1087,292 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
    PC向け推奨画像サイズ: 1600px × 320px
    CSS上の表示領域: 横幅可変 / min-height 210px / border-radius 28px
 */
+
+
+/* v30: 配合パルのカード化・結果強調 */
+.records-table td:nth-child(2),
+.records-table td:nth-child(3),
+.records-table td:nth-child(4) {
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.pal-record-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 132px;
+  max-width: 190px;
+  padding: 6px 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(58, 117, 154, .16);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.96), rgba(229,244,255,.78));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.76),
+    0 5px 14px rgba(24,62,95,.08);
+  color: #17304a;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.pal-record-card .pal-icon {
+  flex: 0 0 auto;
+}
+
+.pal-record-card .pal-record-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.pal-record-card.is-result {
+  min-width: 146px;
+  padding: 7px 12px;
+  border-color: rgba(70, 138, 201, .22);
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255,255,255,.92), transparent 38%),
+    linear-gradient(145deg, rgba(232,247,255,.98), rgba(213,238,255,.88));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.82),
+    0 8px 20px rgba(24,62,95,.12);
+  font-size: 14px;
+}
+
+.pal-record-card.is-result .pal-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 16px !important;
+}
+
+.pal-record-card.is-result .pal-icon img {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.pal-record-card.is-result.is-verified {
+  border: 2px solid rgba(57, 184, 100, .58);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,.95), transparent 40%),
+    linear-gradient(145deg, #f3fff6, #dcf9e5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.88),
+    0 8px 22px rgba(57,184,100,.16);
+}
+
+.pal-record-card.is-result.is-pending {
+  color: #7a5a00;
+  border-color: rgba(218, 161, 30, .36);
+  background: linear-gradient(145deg, #fffaf0, #fff1c8);
+}
+
+.recipe-pal {
+  min-width: 0;
+  padding: 10px 8px 9px;
+  border-radius: 18px;
+  border: 1px solid rgba(58,117,154,.14);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.95), transparent 42%),
+    linear-gradient(145deg, rgba(255,255,255,.96), rgba(229,244,255,.82));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.72),
+    0 6px 16px rgba(24,62,95,.08);
+}
+
+.recipe-pal.is-result {
+  transform: scale(1.04);
+  border-color: rgba(70,138,201,.24);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.98), transparent 42%),
+    linear-gradient(145deg, #eaf8ff, #d5efff);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.84),
+    0 10px 24px rgba(24,62,95,.14);
+}
+
+.recipe-pal.is-result .pal-icon {
+  width: 70px !important;
+  height: 70px !important;
+  border-radius: 24px !important;
+}
+
+.recipe-pal.is-result .pal-icon img {
+  width: 66px !important;
+  height: 66px !important;
+}
+
+.recipe-pal.is-result.is-verified {
+  border: 2px solid rgba(57,184,100,.62);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.98), transparent 42%),
+    linear-gradient(145deg, #f3fff6, #ddfae6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.86),
+    0 10px 26px rgba(57,184,100,.18);
+}
+
+.recipe-pal.is-result.is-pending {
+  color: #7a5a00;
+  border-color: rgba(218,161,30,.42);
+  background:
+    radial-gradient(circle at 24% 18%, rgba(255,255,255,.98), transparent 42%),
+    linear-gradient(145deg, #fffaf0, #fff1c8);
+}
+
+.pending-pal-icon img {
+  opacity: .94;
+}
+
+/* v30: 重複時の登録画面内メッセージ */
+.dialog-message-title {
+  font-size: 15px;
+  color: #9a2633;
+}
+
+.dialog-message-detail {
+  margin-top: 4px;
+  color: #5c3d16;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.dialog-message-actions {
+  margin-top: 10px;
+}
+
+.dialog-message-action {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 13px;
+  color: #fff;
+  background: linear-gradient(145deg, #3472de, #48c4f0);
+  font-weight: 1000;
+  box-shadow: 0 8px 18px rgba(52,114,222,.20);
+}
+.dialog-message-action:hover {
+  transform: translateY(-1px);
+}
+
+
+/* v31: ユーザー管理ボタン・管理画面 */
+.user-panel-head {
+  position: relative;
+}
+
+.user-panel-head > div {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.user-manage-button {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  color: rgba(234,248,255,.86);
+  background: rgba(255,255,255,.10);
+  font-weight: 1000;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.user-manage-button:hover {
+  color: #fff;
+  background: rgba(255,255,255,.18);
+  transform: translateY(-1px);
+}
+
+.recorder-manage-dialog {
+  width: min(540px, calc(100vw - 32px));
+}
+
+.recorder-add-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin: 12px 0 18px;
+}
+
+.recorder-add-row input {
+  padding: 13px 14px;
+  color: var(--ink);
+  background: #f8fbff;
+  border: 1px solid rgba(24,62,95,.16);
+}
+
+.recorder-list {
+  display: grid;
+  gap: 9px;
+  max-height: 320px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.recorder-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid rgba(24,62,95,.12);
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f1f8ff);
+}
+
+.recorder-list-item.is-current {
+  border-color: rgba(60,146,223,.26);
+  background: linear-gradient(145deg, #f4fbff, #eaf6ff);
+}
+
+.recorder-list-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.current-user-chip {
+  padding: 7px 9px;
+  border-radius: 999px;
+  color: #236aa3;
+  background: #e8f4ff;
+  border: 1px solid rgba(60,146,223,.18);
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.mini-action-button {
+  border: 1px solid rgba(60,146,223,.18);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: #236aa3;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.mini-action-button:hover {
+  background: #eef8ff;
+}
+
+.mini-action-button.danger {
+  color: #b23a43;
+  border-color: rgba(178,58,67,.20);
+}
+
+.mini-action-button.danger:hover {
+  background: #fff1f3;
+}
+
+.mini-action-button:disabled {
+  opacity: .42;
+  cursor: not-allowed;
+}
+
+.recorder-badge.custom .recorder-avatar {
+  background: linear-gradient(145deg, #9d7bf2, #6b7be8);
+}

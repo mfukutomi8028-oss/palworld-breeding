@@ -8,9 +8,9 @@
   <link rel="shortcut icon" type="image/png" href="assets/favicon-v8.png?v=8" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon-v8.png?v=8" />
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
-  <link rel="stylesheet" href="style.css?v=29" />
+  <link rel="stylesheet" href="style.css?v=31" />
   <script src="config.js" defer></script>
-  <script type="module" src="app.js?v=29"></script>
+  <script type="module" src="app.js?v=31"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -35,6 +35,7 @@
             <p>現在のユーザー</p>
             <strong id="currentRecorderLabel">未選択</strong>
           </div>
+          <button class="user-manage-button" id="manageUsers" type="button" title="ユーザーを管理">＋</button>
         </div>
 
         <label class="sidebar-field-label" for="currentRecorderSelect">記録者</label>
@@ -208,6 +209,27 @@
       <div class="dialog-actions single">
         <button class="primary-button" type="submit">このユーザーで始める</button>
       </div>
+    </form>
+  </dialog>
+
+
+  <dialog id="recorderManageDialog" class="user-dialog recorder-manage-dialog">
+    <form id="recorderManageForm" method="dialog">
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">USER MANAGE</p>
+          <h2>ユーザー管理</h2>
+        </div>
+        <button class="icon-button" id="closeRecorderManage" value="cancel" type="button">×</button>
+      </div>
+      <p class="user-dialog-lead">ここで追加したユーザーは、左メニューの記録者プルダウンに表示されます。</p>
+
+      <div class="recorder-add-row">
+        <input id="newRecorderName" type="text" maxlength="12" placeholder="例：田中" autocomplete="off" />
+        <button class="primary-button" id="addRecorderUser" type="submit">追加</button>
+      </div>
+
+      <div id="recorderList" class="recorder-list" aria-label="登録済みユーザー"></div>
     </form>
   </dialog>
 
