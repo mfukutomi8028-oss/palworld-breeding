@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v37";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v38";
 const PALDB_SOURCE_URL = "https://paldb.cc/en/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v37";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v38";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -3086,7 +3086,9 @@ function syncWorldNameUi(updateInput = true) {
   }
   if (elements.worldNameBadge) {
     elements.worldNameBadge.hidden = !value;
-    elements.worldNameBadge.textContent = value ? `🌏 ${value}` : "";
+    elements.worldNameBadge.innerHTML = value
+      ? `<span class="world-label">WORLD</span><span class="world-name">🌏 ${escapeHtml(value)}</span>`
+      : "";
   }
 }
 
