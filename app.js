@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v41";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v43";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v41";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v43";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -640,7 +640,6 @@ const EMBEDDED_PALS = [
   { no: "080", name: "シルキーヌ", en: "Sibelyx", elements: ["氷属性"], work: ["製薬", "冷却", "牧場"], iconKey: "SilkWorm" },
   { no: "082", name: "アズレーン", en: "Azurobe", elements: ["水属性", "竜属性"], work: ["水やり"], iconKey: "BlueDragon" },
   { no: "083", name: "ツンドラー", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
-  { no: "083", name: "フブキジカ", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
   { no: "085", name: "ペコドン", en: "Relaxaurus", elements: ["竜属性", "水属性"], work: ["水やり", "運搬"], iconKey: "LazyDragon" },
   { no: "085B", name: "パリピドン", en: "Relaxaurus Lux", elements: ["竜属性", "雷属性"], work: ["発電", "運搬"], iconKey: "LazyDragonElectric" },
   { no: "086", name: "ラブラドン", en: "Broncherry", elements: ["草属性"], work: ["種まき"], iconKey: "SakuraSaurus" },
@@ -671,6 +670,13 @@ const LEGACY_ENGLISH_TO_JP = {
   relaxaurus: "ペコドン", "relaxauruslux": "パリピドン", broncherry: "ラブラドン", "broncherryaqua": "スプラドン", anubis: "アヌビス",
   jormuntide: "レヴィドラ", "jormuntideignis": "アグニドラ", suzaku: "スザク", "suzakuaqua": "シヴァ", grizzbolt: "エレパンダ",
   faleris: "ホルス", menasting: "デスティング", blazamut: "ボルカイザー", shadowbeak: "ゼノグリフ"
+};
+
+const PAL_NAME_ALIASES = {
+  "フブキジカ": "ツンドラー",
+  "ふぶきじか": "ツンドラー",
+  "フブキシカ": "ツンドラー",
+  "ふぶきしか": "ツンドラー"
 };
 
 const PALDB_STATIC_ICONS = [
@@ -1756,7 +1762,6 @@ const PALDB_JP_ICON_OVERRIDES = {
   "アヌビス": "Anubis",
   "ササゾー": "GrassPanda",
   "ライゾー": "GrassPanda_Electric",
-  "フブキジカ": "IceDeer",
   "シメナワ": "WindChimes",
   "オバケナワ": "WindChimes_Ice",
   "イシス": "Bastet",
@@ -1770,7 +1775,7 @@ const PALDB_JP_ICON_OVERRIDES = {
   "ゼノグリフ": "BlackGriffon"
 };
 
-const PALDB_OVERRIDE_PRIORITY_NAMES = new Set(["フブキジカ"]);
+const PALDB_OVERRIDE_PRIORITY_NAMES = new Set();
 
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
@@ -2752,13 +2757,17 @@ function hiraToKata(value) {
 function normalizePalName(name) {
   const raw = normalizePalDisplayName(name);
   if (!raw) return "";
+  const rawAlias = PAL_NAME_ALIASES[raw];
+  if (rawAlias) return rawAlias;
   if (state.palMap.has(raw)) return raw;
 
   const kana = hiraToKata(raw).normalize("NFKC");
+  const kanaAlias = PAL_NAME_ALIASES[kana];
+  if (kanaAlias) return kanaAlias;
   if (state.palMap.has(kana)) return kana;
 
   const key = normalizeKey(kana);
-  return LEGACY_ENGLISH_TO_JP[key] || kana;
+  return PAL_NAME_ALIASES[key] || LEGACY_ENGLISH_TO_JP[key] || kana;
 }
 
 function normalizeKey(value) {
@@ -3396,7 +3405,10 @@ function palIcon(name, size = "normal", options = {}) {
   const noUrl = noItem?.icon || "";
   const overrideKey = PALDB_JP_ICON_OVERRIDES[normalized] || "";
   const overrideUrl = paldbIconUrlFromKey(overrideKey);
-  const paldbUrl = noUrl || overrideUrl || meta.paldbIcon || paldbIconUrlFromKey(meta.iconKey);
+  const preferOverride = PALDB_OVERRIDE_PRIORITY_NAMES.has(normalized) || PALDB_OVERRIDE_PRIORITY_NAMES.has(normalizePalName(normalized));
+  const paldbUrl = preferOverride
+    ? (overrideUrl || meta.paldbIcon || noUrl || paldbIconUrlFromKey(meta.iconKey))
+    : (noUrl || overrideUrl || meta.paldbIcon || paldbIconUrlFromKey(meta.iconKey));
   const labUrl = meta.icon || "";
   const url = paldbUrl || labUrl;
   const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
