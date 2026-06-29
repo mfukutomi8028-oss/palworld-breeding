@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v40";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v41";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v40";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v41";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1770,6 +1770,8 @@ const PALDB_JP_ICON_OVERRIDES = {
   "ゼノグリフ": "BlackGriffon"
 };
 
+const PALDB_OVERRIDE_PRIORITY_NAMES = new Set(["フブキジカ"]);
+
 const ROOM_ID = getRoomId();
 const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
 const UNKNOWN_PAL_LABEL = "未発見";
@@ -2186,7 +2188,9 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
     const overrideKey = PALDB_JP_ICON_OVERRIDES[name] || PALDB_JP_ICON_OVERRIDES[normalizePalName(name)] || "";
     const overrideItem = overrideKey ? byIconKey.get(normalizeKey(overrideKey)) : null;
 
+    const preferOverride = PALDB_OVERRIDE_PRIORITY_NAMES.has(name) || PALDB_OVERRIDE_PRIORITY_NAMES.has(normalizePalName(name));
     const item =
+      (preferOverride ? overrideItem : null) ||
       noItem ||
       overrideItem ||
       (existingIconKey ? byIconKey.get(existingIconKey) : null) ||
