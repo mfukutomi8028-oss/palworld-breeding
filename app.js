@@ -1,3583 +1,1657 @@
-const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
-const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v40";
-const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
-const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v40";
-const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
-const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
-const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
-const SAMPLE_PREFIX = "sample-";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {
+  getDatabase, ref, onValue, set, update, push, remove, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-const WORKS = ["火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"];
-const ELEMENTS = ["無属性", "炎属性", "水属性", "草属性", "雷属性", "氷属性", "地属性", "闇属性", "竜属性"];
-const EGG_TYPES = [
-  {
-    "name": "平凡なタマゴ",
-    "key": "plain",
-    "size": "通常",
-    "icon": "assets/eggs/plain.png",
-    "aliases": [
-      "平凡なタマゴ",
-      "平凡な",
-      "平凡",
-      "普通",
-      "へいぼん",
-      "normal",
-      "common"
-    ]
-  },
-  {
-    "name": "平凡なデカタマゴ",
-    "key": "plain",
-    "size": "デカ",
-    "icon": "assets/eggs/plain.png",
-    "aliases": [
-      "平凡なデカタマゴ",
-      "平凡なデカ",
-      "平凡なタマゴ",
-      "平凡な",
-      "平凡",
-      "普通",
-      "へいぼん",
-      "normal",
-      "common",
-      "デカ",
-      "平凡なデカたまご",
-      "平凡な デカタマゴ",
-      "平凡なのデカタマゴ",
-      "デカ平凡なタマゴ",
-      "デカ平凡な"
-    ]
-  },
-  {
-    "name": "平凡なキョダイタマゴ",
-    "key": "plain",
-    "size": "キョダイ",
-    "icon": "assets/eggs/plain.png",
-    "aliases": [
-      "平凡なキョダイタマゴ",
-      "平凡なキョダイ",
-      "平凡なタマゴ",
-      "平凡な",
-      "平凡",
-      "普通",
-      "へいぼん",
-      "normal",
-      "common",
-      "キョダイ",
-      "平凡なキョダイたまご",
-      "平凡な キョダイタマゴ",
-      "平凡なのキョダイタマゴ",
-      "キョダイ平凡なタマゴ",
-      "キョダイ平凡な"
-    ]
-  },
-  {
-    "name": "熱を帯びたタマゴ",
-    "key": "scorching",
-    "size": "通常",
-    "icon": "assets/eggs/scorching.png",
-    "aliases": [
-      "熱を帯びたタマゴ",
-      "熱を帯びた",
-      "熱",
-      "あつ",
-      "炎",
-      "ほのお",
-      "fire",
-      "scorching"
-    ]
-  },
-  {
-    "name": "熱を帯びたデカタマゴ",
-    "key": "scorching",
-    "size": "デカ",
-    "icon": "assets/eggs/scorching.png",
-    "aliases": [
-      "熱を帯びたデカタマゴ",
-      "熱を帯びたデカ",
-      "熱を帯びたタマゴ",
-      "熱を帯びた",
-      "熱",
-      "あつ",
-      "炎",
-      "ほのお",
-      "fire",
-      "scorching",
-      "デカ",
-      "熱を帯びたデカたまご",
-      "熱を帯びた デカタマゴ",
-      "熱を帯びたのデカタマゴ",
-      "デカ熱を帯びたタマゴ",
-      "デカ熱を帯びた"
-    ]
-  },
-  {
-    "name": "熱を帯びたキョダイタマゴ",
-    "key": "scorching",
-    "size": "キョダイ",
-    "icon": "assets/eggs/scorching.png",
-    "aliases": [
-      "熱を帯びたキョダイタマゴ",
-      "熱を帯びたキョダイ",
-      "熱を帯びたタマゴ",
-      "熱を帯びた",
-      "熱",
-      "あつ",
-      "炎",
-      "ほのお",
-      "fire",
-      "scorching",
-      "キョダイ",
-      "熱を帯びたキョダイたまご",
-      "熱を帯びた キョダイタマゴ",
-      "熱を帯びたのキョダイタマゴ",
-      "キョダイ熱を帯びたタマゴ",
-      "キョダイ熱を帯びた"
-    ]
-  },
-  {
-    "name": "しめったタマゴ",
-    "key": "damp",
-    "size": "通常",
-    "icon": "assets/eggs/damp.png",
-    "aliases": [
-      "しめったタマゴ",
-      "しめった",
-      "湿った",
-      "水",
-      "みず",
-      "water",
-      "damp"
-    ]
-  },
-  {
-    "name": "しめったデカタマゴ",
-    "key": "damp",
-    "size": "デカ",
-    "icon": "assets/eggs/damp.png",
-    "aliases": [
-      "しめったデカタマゴ",
-      "しめったデカ",
-      "しめったタマゴ",
-      "しめった",
-      "湿った",
-      "水",
-      "みず",
-      "water",
-      "damp",
-      "デカ",
-      "しめったデカたまご",
-      "しめった デカタマゴ",
-      "しめったのデカタマゴ",
-      "デカしめったタマゴ",
-      "デカしめった"
-    ]
-  },
-  {
-    "name": "しめったキョダイタマゴ",
-    "key": "damp",
-    "size": "キョダイ",
-    "icon": "assets/eggs/damp.png",
-    "aliases": [
-      "しめったキョダイタマゴ",
-      "しめったキョダイ",
-      "しめったタマゴ",
-      "しめった",
-      "湿った",
-      "水",
-      "みず",
-      "water",
-      "damp",
-      "キョダイ",
-      "しめったキョダイたまご",
-      "しめった キョダイタマゴ",
-      "しめったのキョダイタマゴ",
-      "キョダイしめったタマゴ",
-      "キョダイしめった"
-    ]
-  },
-  {
-    "name": "新緑のタマゴ",
-    "key": "verdant",
-    "size": "通常",
-    "icon": "assets/eggs/verdant.png",
-    "aliases": [
-      "新緑のタマゴ",
-      "新緑の",
-      "新緑",
-      "草",
-      "くさ",
-      "grass",
-      "verdant"
-    ]
-  },
-  {
-    "name": "新緑のデカタマゴ",
-    "key": "verdant",
-    "size": "デカ",
-    "icon": "assets/eggs/verdant.png",
-    "aliases": [
-      "新緑のデカタマゴ",
-      "新緑のデカ",
-      "新緑のタマゴ",
-      "新緑の",
-      "新緑",
-      "草",
-      "くさ",
-      "grass",
-      "verdant",
-      "デカ",
-      "新緑のデカたまご",
-      "新緑の デカタマゴ",
-      "新緑ののデカタマゴ",
-      "デカ新緑のタマゴ",
-      "デカ新緑の"
-    ]
-  },
-  {
-    "name": "新緑のキョダイタマゴ",
-    "key": "verdant",
-    "size": "キョダイ",
-    "icon": "assets/eggs/verdant.png",
-    "aliases": [
-      "新緑のキョダイタマゴ",
-      "新緑のキョダイ",
-      "新緑のタマゴ",
-      "新緑の",
-      "新緑",
-      "草",
-      "くさ",
-      "grass",
-      "verdant",
-      "キョダイ",
-      "新緑のキョダイたまご",
-      "新緑の キョダイタマゴ",
-      "新緑ののキョダイタマゴ",
-      "キョダイ新緑のタマゴ",
-      "キョダイ新緑の"
-    ]
-  },
-  {
-    "name": "ビリビリのタマゴ",
-    "key": "electric",
-    "size": "通常",
-    "icon": "assets/eggs/electric.png",
-    "aliases": [
-      "ビリビリのタマゴ",
-      "ビリビリの",
-      "ビリビリ",
-      "びりびり",
-      "雷",
-      "かみなり",
-      "electric"
-    ]
-  },
-  {
-    "name": "ビリビリのデカタマゴ",
-    "key": "electric",
-    "size": "デカ",
-    "icon": "assets/eggs/electric.png",
-    "aliases": [
-      "ビリビリのデカタマゴ",
-      "ビリビリのデカ",
-      "ビリビリのタマゴ",
-      "ビリビリの",
-      "ビリビリ",
-      "びりびり",
-      "雷",
-      "かみなり",
-      "electric",
-      "デカ",
-      "ビリビリのデカたまご",
-      "ビリビリの デカタマゴ",
-      "ビリビリののデカタマゴ",
-      "デカビリビリのタマゴ",
-      "デカビリビリの"
-    ]
-  },
-  {
-    "name": "ビリビリのキョダイタマゴ",
-    "key": "electric",
-    "size": "キョダイ",
-    "icon": "assets/eggs/electric.png",
-    "aliases": [
-      "ビリビリのキョダイタマゴ",
-      "ビリビリのキョダイ",
-      "ビリビリのタマゴ",
-      "ビリビリの",
-      "ビリビリ",
-      "びりびり",
-      "雷",
-      "かみなり",
-      "electric",
-      "キョダイ",
-      "ビリビリのキョダイたまご",
-      "ビリビリの キョダイタマゴ",
-      "ビリビリののキョダイタマゴ",
-      "キョダイビリビリのタマゴ",
-      "キョダイビリビリの"
-    ]
-  },
-  {
-    "name": "ゴツゴツしたタマゴ",
-    "key": "rocky",
-    "size": "通常",
-    "icon": "assets/eggs/rocky.png",
-    "aliases": [
-      "ゴツゴツしたタマゴ",
-      "ゴツゴツした",
-      "ゴツゴツ",
-      "ごつごつ",
-      "地",
-      "じめん",
-      "ground",
-      "rocky"
-    ]
-  },
-  {
-    "name": "ゴツゴツしたデカタマゴ",
-    "key": "rocky",
-    "size": "デカ",
-    "icon": "assets/eggs/rocky.png",
-    "aliases": [
-      "ゴツゴツしたデカタマゴ",
-      "ゴツゴツしたデカ",
-      "ゴツゴツしたタマゴ",
-      "ゴツゴツした",
-      "ゴツゴツ",
-      "ごつごつ",
-      "地",
-      "じめん",
-      "ground",
-      "rocky",
-      "デカ",
-      "ゴツゴツしたデカたまご",
-      "ゴツゴツした デカタマゴ",
-      "ゴツゴツしたのデカタマゴ",
-      "デカゴツゴツしたタマゴ",
-      "デカゴツゴツした"
-    ]
-  },
-  {
-    "name": "ゴツゴツしたキョダイタマゴ",
-    "key": "rocky",
-    "size": "キョダイ",
-    "icon": "assets/eggs/rocky.png",
-    "aliases": [
-      "ゴツゴツしたキョダイタマゴ",
-      "ゴツゴツしたキョダイ",
-      "ゴツゴツしたタマゴ",
-      "ゴツゴツした",
-      "ゴツゴツ",
-      "ごつごつ",
-      "地",
-      "じめん",
-      "ground",
-      "rocky",
-      "キョダイ",
-      "ゴツゴツしたキョダイたまご",
-      "ゴツゴツした キョダイタマゴ",
-      "ゴツゴツしたのキョダイタマゴ",
-      "キョダイゴツゴツしたタマゴ",
-      "キョダイゴツゴツした"
-    ]
-  },
-  {
-    "name": "凍てつくタマゴ",
-    "key": "frozen",
-    "size": "通常",
-    "icon": "assets/eggs/frozen.png",
-    "aliases": [
-      "凍てつくタマゴ",
-      "凍てつく",
-      "いてつく",
-      "氷",
-      "こおり",
-      "ice",
-      "frozen"
-    ]
-  },
-  {
-    "name": "凍てつくデカタマゴ",
-    "key": "frozen",
-    "size": "デカ",
-    "icon": "assets/eggs/frozen.png",
-    "aliases": [
-      "凍てつくデカタマゴ",
-      "凍てつくデカ",
-      "凍てつくタマゴ",
-      "凍てつく",
-      "いてつく",
-      "氷",
-      "こおり",
-      "ice",
-      "frozen",
-      "デカ",
-      "凍てつくデカたまご",
-      "凍てつく デカタマゴ",
-      "凍てつくのデカタマゴ",
-      "デカ凍てつくタマゴ",
-      "デカ凍てつく"
-    ]
-  },
-  {
-    "name": "凍てつくキョダイタマゴ",
-    "key": "frozen",
-    "size": "キョダイ",
-    "icon": "assets/eggs/frozen.png",
-    "aliases": [
-      "凍てつくキョダイタマゴ",
-      "凍てつくキョダイ",
-      "凍てつくタマゴ",
-      "凍てつく",
-      "いてつく",
-      "氷",
-      "こおり",
-      "ice",
-      "frozen",
-      "キョダイ",
-      "凍てつくキョダイたまご",
-      "凍てつく キョダイタマゴ",
-      "凍てつくのキョダイタマゴ",
-      "キョダイ凍てつくタマゴ",
-      "キョダイ凍てつく"
-    ]
-  },
-  {
-    "name": "暗黒タマゴ",
-    "key": "dark",
-    "size": "通常",
-    "icon": "assets/eggs/dark.png",
-    "aliases": [
-      "暗黒タマゴ",
-      "暗黒",
-      "あんこく",
-      "闇",
-      "やみ",
-      "dark"
-    ]
-  },
-  {
-    "name": "暗黒デカタマゴ",
-    "key": "dark",
-    "size": "デカ",
-    "icon": "assets/eggs/dark.png",
-    "aliases": [
-      "暗黒デカタマゴ",
-      "暗黒デカ",
-      "暗黒タマゴ",
-      "暗黒",
-      "あんこく",
-      "闇",
-      "やみ",
-      "dark",
-      "デカ",
-      "暗黒デカたまご",
-      "暗黒 デカタマゴ",
-      "暗黒のデカタマゴ",
-      "デカ暗黒タマゴ",
-      "デカ暗黒"
-    ]
-  },
-  {
-    "name": "暗黒キョダイタマゴ",
-    "key": "dark",
-    "size": "キョダイ",
-    "icon": "assets/eggs/dark.png",
-    "aliases": [
-      "暗黒キョダイタマゴ",
-      "暗黒キョダイ",
-      "暗黒タマゴ",
-      "暗黒",
-      "あんこく",
-      "闇",
-      "やみ",
-      "dark",
-      "キョダイ",
-      "暗黒キョダイたまご",
-      "暗黒 キョダイタマゴ",
-      "暗黒のキョダイタマゴ",
-      "キョダイ暗黒タマゴ",
-      "キョダイ暗黒"
-    ]
-  },
-  {
-    "name": "竜のタマゴ",
-    "key": "dragon",
-    "size": "通常",
-    "icon": "assets/eggs/dragon.png",
-    "aliases": [
-      "竜のタマゴ",
-      "竜の",
-      "竜",
-      "りゅう",
-      "ドラゴン",
-      "dragon"
-    ]
-  },
-  {
-    "name": "竜のデカタマゴ",
-    "key": "dragon",
-    "size": "デカ",
-    "icon": "assets/eggs/dragon.png",
-    "aliases": [
-      "竜のデカタマゴ",
-      "竜のデカ",
-      "竜のタマゴ",
-      "竜の",
-      "竜",
-      "りゅう",
-      "ドラゴン",
-      "dragon",
-      "デカ",
-      "竜のデカたまご",
-      "竜の デカタマゴ",
-      "竜ののデカタマゴ",
-      "デカ竜のタマゴ",
-      "デカ竜の"
-    ]
-  },
-  {
-    "name": "竜のキョダイタマゴ",
-    "key": "dragon",
-    "size": "キョダイ",
-    "icon": "assets/eggs/dragon.png",
-    "aliases": [
-      "竜のキョダイタマゴ",
-      "竜のキョダイ",
-      "竜のタマゴ",
-      "竜の",
-      "竜",
-      "りゅう",
-      "ドラゴン",
-      "dragon",
-      "キョダイ",
-      "竜のキョダイたまご",
-      "竜の キョダイタマゴ",
-      "竜ののキョダイタマゴ",
-      "キョダイ竜のタマゴ",
-      "キョダイ竜の"
-    ]
-  }
-];
-const EXCLUDED_IMAGE_ALTS = new Set([
-  ...ELEMENTS,
-  ...WORKS,
-  "X", "ポスト", "URLコピー", "テーマの選択", "ダーク", "ライト", "自動",
-  "パルワールド配合・攻略ラボ", "火おこし", "水やり", "種まき", "発電", "手作業", "採集", "伐採", "採掘", "製薬", "冷却", "運搬", "牧場"
-]);
+const $ = (id) => document.getElementById(id);
 
-const EMBEDDED_PASSIVES = [
-  "ダイヤモンドボディ", "ヌシ", "永炎", "永久機関", "希少", "鬼神", "吸血鬼", "救世主", "侵略者", "神速",
-  "絶食の極み", "超絶技巧", "伝説", "波乗り王", "不動明王の心", "魔女", "ダイエットマスター", "モチベーター", "ワーカーホリック", "泳ぐのが得意",
-  "炎帝", "海皇", "屈強な肉体", "堅城の軍師", "鉱山のチーフ", "高貴", "職人気質", "神龍", "精霊王", "聖天",
-  "走るのが得意", "地帝", "突撃指揮者", "脳筋", "博愛主義者", "伐採リーダー", "氷帝", "無限のスタミナ", "冥王", "雷帝",
-  "冷静沈着", "獰猛", "アブノーマル", "うぬぼれ屋", "オラオラ系", "コンデンサ", "サディスト", "しなやかスイム", "すばしこい", "せっかち",
-  "ドラゴンキラー", "ポジティブ思考", "まじめ", "マゾヒスト", "火遊び好き", "健康優良児", "硬い皮膚", "高温体質", "社畜", "小食",
-  "水遊び好き", "絶縁体", "粗暴", "草木の香り", "耐震構造", "大地の力", "日焼け好き", "防水加工", "防草効果", "未知の生体細胞",
-  "無の境地", "夜の帳", "夜行性", "勇敢", "陽キャラ", "竜の血族", "良い毛並み", "冷血", "うたれ弱い", "ことなかれ主義者",
-  "サボり癖", "すぐ骨折する", "のんびり屋さん", "ビビり", "みすぼらしい", "引きこもり", "手加減", "食いしんぼ", "精神が不安定", "破滅願望",
-  "不器用", "無限の胃袋"
-];
-
-// 起動直後・外部取得失敗時の最低限の内蔵データ。
-// Palworld Labの画像URLが分かっているものは優先して使う。
-const EMBEDDED_PALS = [
-  { no: "001", name: "モコロン", en: "Lamball", elements: ["無属性"], work: ["手作業", "運搬", "牧場"], icon: "https://palworld-lab.com/_astro/001.DJmpYbIq_1vhnwH.webp" },
-  { no: "002", name: "ツッパニャン", en: "Cattiva", elements: ["無属性"], work: ["手作業", "採集", "採掘", "運搬"], icon: "https://palworld-lab.com/_astro/002.CqEJyq_i_6gvU0.webp" },
-  { no: "003", name: "タマコッコ", en: "Chikipi", elements: ["無属性"], work: ["採集", "牧場"], icon: "https://palworld-lab.com/_astro/003.DmHGHkzB_1XPiUh.webp" },
-  { no: "004", name: "クルリス", en: "Lifmunk", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], icon: "https://palworld-lab.com/_astro/004.Cnnye9S1_GBlpx.webp" },
-  { no: "005", name: "キツネビ", en: "Foxparks", elements: ["炎属性"], work: ["火おこし"], icon: "https://palworld-lab.com/_astro/005.De-0Pa55_LYewp.webp" },
-  { no: "006", name: "カモノスケ", en: "Fuack", elements: ["水属性"], work: ["水やり", "手作業", "運搬"], iconKey: "ColorfulBird" },
-  { no: "007", name: "ボルトラ", en: "Sparkit", elements: ["雷属性"], work: ["発電", "手作業", "運搬"], iconKey: "ElecCat" },
-  { no: "008", name: "エテッパ", en: "Tanzee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "運搬"], iconKey: "Monkey" },
-  { no: "009", name: "ヒノコジカ", en: "Rooby", elements: ["炎属性"], work: ["火おこし"], iconKey: "FlameDeer" },
-  { no: "010", name: "ペンタマ", en: "Pengullet", elements: ["水属性", "氷属性"], work: ["水やり", "手作業", "冷却", "運搬"], icon: "https://palworld-lab.com/_astro/010.DQvWPP3E_2oiW8l.webp" },
-  { no: "011", name: "キャプペン", en: "Penking", elements: ["水属性", "氷属性"], work: ["水やり", "手作業", "採掘", "冷却", "運搬"], icon: "https://palworld-lab.com/_astro/011.Cqis32qe_Z13PKJd.webp" },
-  { no: "012", name: "パチグリ", en: "Jolthog", elements: ["雷属性"], work: ["発電"], iconKey: "Hedgehog" },
-  { no: "013", name: "ナエモチ", en: "Gumoss", elements: ["草属性", "地属性"], work: ["種まき"], iconKey: "PlantSlime" },
-  { no: "014", name: "タマモ", en: "Vixy", elements: ["無属性"], work: ["採集", "牧場"], iconKey: "CuteFox" },
-  { no: "015", name: "ホウロック", en: "Hoocrates", elements: ["闇属性"], work: ["採集"], iconKey: "Owl" },
-  { no: "016", name: "チョロゾウ", en: "Teafant", elements: ["水属性"], work: ["水やり"], iconKey: "Elephant" },
-  { no: "017", name: "ンダコアラ", en: "Depresso", elements: ["闇属性"], work: ["手作業", "採掘", "運搬"], iconKey: "NegativeKoala" },
-  { no: "018", name: "ミルカルビ", en: "Mozzarina", elements: ["無属性"], work: ["牧場"], iconKey: "CowPal" },
-  { no: "019", name: "イノボウ", en: "Rushoar", elements: ["地属性"], work: ["採掘"], iconKey: "Boar" },
-  { no: "020", name: "ルナティ", en: "Nox", elements: ["闇属性"], work: ["採集"], iconKey: "NaughtyCat" },
-  { no: "031", name: "シャーキッド", en: "Gobfin", elements: ["水属性"], work: ["水やり", "手作業", "運搬"], iconKey: "SharkKid" },
-  { no: "032", name: "シメナワ", en: "Hangyu", elements: ["地属性"], work: ["手作業", "採集", "運搬"], iconKey: "WindChimes" },
-  { no: "033", name: "ササゾー", en: "Mossanda", elements: ["草属性"], work: ["種まき", "手作業", "伐採", "運搬"], icon: "https://palworld-lab.com/_astro/033.CO0kQvDM_Z1mep1i.webp", iconKey: "GrassPanda" },
-  { no: "034", name: "メリポップ", en: "Woolipop", elements: ["無属性"], work: ["牧場"], iconKey: "SweetsSheep" },
-  { no: "035", name: "ベリゴート", en: "Caprity", elements: ["草属性"], work: ["種まき", "牧場"], iconKey: "BerryGoat" },
-  { no: "036", name: "メルパカ", en: "Melpaca", elements: ["無属性"], work: ["牧場"], iconKey: "Alpaca" },
-  { no: "037", name: "ツノガミ", en: "Eikthyrdeer", elements: ["無属性"], work: ["伐採"], iconKey: "Deer" },
-  { no: "038", name: "ホークウィン", en: "Nitewing", elements: ["無属性"], work: ["採集"], iconKey: "HawkBird" },
-  { no: "040", name: "ヘルゴート", en: "Incineram", elements: ["炎属性", "闇属性"], work: ["火おこし", "手作業", "採掘", "運搬"], iconKey: "Baphomet" },
-  { no: "041", name: "パピテフ", en: "Cinnamoth", elements: ["草属性"], work: ["種まき", "製薬"], iconKey: "FlowerDinosaur" },
-  { no: "042", name: "アルパオー", en: "Arsox", elements: ["炎属性"], work: ["火おこし", "伐採"], iconKey: "FlameBuffalo" },
-  { no: "043", name: "ニャンバット", en: "Tombat", elements: ["闇属性"], work: ["採集", "採掘", "運搬"], iconKey: "CatBat" },
-  { no: "044", name: "ラブマンダー", en: "Lovander", elements: ["無属性"], work: ["手作業", "採掘", "製薬", "運搬"], iconKey: "PinkLizard" },
-  { no: "045", name: "ボルゼクス", en: "Beakon", elements: ["雷属性"], work: ["発電", "採集", "運搬"], iconKey: "ThunderBird" },
-  { no: "055", name: "オコチョ", en: "Chillet", elements: ["氷属性", "竜属性"], work: ["採集", "冷却"], icon: "https://palworld-lab.com/_astro/055.C3DznTNK_Z1ESlKf.webp" },
-  { no: "055B", name: "モモチョ", en: "Chillet Ignis", elements: ["炎属性", "竜属性"], work: ["火おこし", "採集"], iconKey: "WeaselDragonFire" },
-  { no: "056", name: "ライコーン", en: "Univolt", elements: ["雷属性"], work: ["発電", "伐採"], iconKey: "Kirin" },
-  { no: "057", name: "フブキツネ", en: "Foxcicle", elements: ["氷属性"], work: ["冷却"], iconKey: "IceFox" },
-  { no: "058", name: "サラブレイズ", en: "Pyrin", elements: ["炎属性"], work: ["火おこし", "伐採"], iconKey: "FireKirin" },
-  { no: "059", name: "イヌズマ", en: "Rayhound", elements: ["雷属性"], work: ["発電"], iconKey: "ThunderDog" },
-  { no: "060", name: "シラヌイ", en: "Kitsun", elements: ["炎属性"], work: ["火おこし"], iconKey: "AmaterasuWolf" },
-  { no: "061", name: "マスクロウ", en: "Leezpunk", elements: ["闇属性"], work: ["手作業", "採集", "運搬"], iconKey: "LizardMan" },
-  { no: "064", name: "フラリーナ", en: "Petallia", elements: ["草属性"], work: ["種まき", "手作業", "採集", "製薬", "運搬"], iconKey: "LilyQueen" },
-  { no: "065", name: "ラベロット", en: "Verdash", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "運搬"], iconKey: "GrassRabbitMan" },
-  { no: "067", name: "ドリタス", en: "Digtoise", elements: ["地属性"], work: ["採掘"], iconKey: "DrillGame" },
-  { no: "070", name: "フラリーナ", en: "Petallia", elements: ["草属性"], work: ["種まき", "手作業", "採集", "製薬", "運搬"], iconKey: "LilyQueen" },
-  { no: "071", name: "カバネドリ", en: "Vanwyrm", elements: ["炎属性", "闇属性"], work: ["火おこし", "運搬"], iconKey: "BirdDragon" },
-  { no: "072", name: "ビーナイト", en: "Beegarde", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬", "運搬", "牧場"], iconKey: "SoldierBee" },
-  { no: "073", name: "クインビーナ", en: "Elizabee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], iconKey: "QueenBee" },
-    { no: "075", name: "ツジギリ", en: "Bushi", elements: ["炎属性"], work: ["火おこし", "手作業", "採集", "伐採", "運搬"], iconKey: "Ronin" },
-  { no: "076", name: "フォレーナ", en: "Wixen", elements: ["炎属性"], work: ["火おこし", "手作業", "運搬"], iconKey: "FoxMage" },
-  { no: "077", name: "クレメーオ", en: "Katress", elements: ["闇属性"], work: ["手作業", "製薬", "運搬"], iconKey: "CatMage" },
-  { no: "080", name: "シルキーヌ", en: "Sibelyx", elements: ["氷属性"], work: ["製薬", "冷却", "牧場"], iconKey: "SilkWorm" },
-  { no: "082", name: "アズレーン", en: "Azurobe", elements: ["水属性", "竜属性"], work: ["水やり"], iconKey: "BlueDragon" },
-  { no: "083", name: "ツンドラー", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
-  { no: "083", name: "フブキジカ", en: "Reindrix", elements: ["氷属性"], work: ["伐採", "冷却"], iconKey: "IceDeer" },
-  { no: "085", name: "ペコドン", en: "Relaxaurus", elements: ["竜属性", "水属性"], work: ["水やり", "運搬"], iconKey: "LazyDragon" },
-  { no: "085B", name: "パリピドン", en: "Relaxaurus Lux", elements: ["竜属性", "雷属性"], work: ["発電", "運搬"], iconKey: "LazyDragonElectric" },
-  { no: "086", name: "ラブラドン", en: "Broncherry", elements: ["草属性"], work: ["種まき"], iconKey: "SakuraSaurus" },
-  { no: "086B", name: "スプラドン", en: "Broncherry Aqua", elements: ["水属性"], work: ["水やり"], iconKey: "SakuraSaurusWater" },
-      { no: "098", name: "ジオラーヴァ", en: "Astegon", elements: ["竜属性", "闇属性"], work: ["採掘"], iconKey: "BlackMetalDragon" },
-  { no: "099", name: "デスティング", en: "Menasting", elements: ["地属性", "闇属性"], work: ["伐採", "採掘"], iconKey: "DarkScorpion" },
-  { no: "100", name: "アヌビス", en: "Anubis", elements: ["地属性"], work: ["手作業", "採掘", "運搬"], icon: "https://palworld-lab.com/_astro/100.qJj5_Az6_Zuceq3.webp" },
-  { no: "101", name: "レヴィドラ", en: "Jormuntide", elements: ["竜属性", "水属性"], work: ["水やり"], iconKey: "Umihebi" },
-  { no: "101B", name: "アグニドラ", en: "Jormuntide Ignis", elements: ["竜属性", "炎属性"], work: ["火おこし"], iconKey: "UmihebiFire" },
-  { no: "102", name: "スザク", en: "Suzaku", elements: ["炎属性"], work: ["火おこし"], iconKey: "Suzaku" },
-  { no: "102B", name: "シヴァ", en: "Suzaku Aqua", elements: ["水属性"], work: ["水やり"], iconKey: "SuzakuWater" },
-  { no: "103", name: "エレパンダ", en: "Grizzbolt", elements: ["雷属性"], work: ["発電", "手作業", "伐採", "運搬"], iconKey: "ElecPanda" },
-  { no: "105", name: "ホルス", en: "Faleris", elements: ["炎属性"], work: ["火おこし", "運搬"], iconKey: "Horus" },
-  { no: "107", name: "ゼノグリフ", en: "Shadowbeak", elements: ["闇属性"], work: ["採集"], iconKey: "BlackGriffon" },
-  { no: "110", name: "グレイシャル", en: "Frostallion", elements: ["氷属性"], work: ["冷却"], iconKey: "IceHorse" },
-  { no: "110B", name: "グレイシャドウ", en: "Frostallion Noct", elements: ["闇属性"], work: ["採集"], iconKey: "BlackFurDragon" },
-  { no: "111", name: "ジェッドラン", en: "Jetragon", elements: ["竜属性"], work: ["採集"], iconKey: "JetDragon" },
-  { no: "テラ01", name: "クトゥルフのめだま", en: "Eye of Cthulhu", elements: ["闇属性"], work: ["運搬"], icon: "https://palworld-lab.com/_astro/10001.BJliejgN_1xzcGC.webp" }
-];
-
-const LEGACY_ENGLISH_TO_JP = {
-  lamball: "モコロン", cattiva: "ツッパニャン", chikipi: "タマコッコ", lifmunk: "クルリス", foxparks: "キツネビ",
-  pengullet: "ペンタマ", penking: "キャプペン", sparkit: "ボルトラ", daedream: "ネムラム", rushoar: "イノボウ",
-  melpaca: "メルパカ", eikthyrdeer: "ツノガミ", nitewing: "ホークウィン", incineram: "ヘルゴート", mossanda: "ササゾー",
-  beegarde: "ビーナイト", elizabee: "クインビーナ", chillet: "オコチョ", "chilletignis": "モモチョ", univolt: "ライコーン",
-  rayhound: "イヌズマ", kitsun: "シラヌイ", tombat: "ニャンバット", lovander: "ラブマンダー", bushi: "ツジギリ",
-  beakon: "ボルゼクス", ragnahawk: "イグニクス", katress: "クレメーオ", wixen: "フォレーナ", verdash: "ラベロット",
-  relaxaurus: "ペコドン", "relaxauruslux": "パリピドン", broncherry: "ラブラドン", "broncherryaqua": "スプラドン", anubis: "アヌビス",
-  jormuntide: "レヴィドラ", "jormuntideignis": "アグニドラ", suzaku: "スザク", "suzakuaqua": "シヴァ", grizzbolt: "エレパンダ",
-  faleris: "ホルス", menasting: "デスティング", blazamut: "ボルカイザー", shadowbeak: "ゼノグリフ"
-};
-
-const PALDB_STATIC_ICONS = [
-  {
-    "no": "1",
-    "iconKey": "SheepBall",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SheepBall_icon_normal.webp"
-  },
-  {
-    "no": "2",
-    "iconKey": "PinkCat",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkCat_icon_normal.webp"
-  },
-  {
-    "no": "3",
-    "iconKey": "ChickenPal",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ChickenPal_icon_normal.webp"
-  },
-  {
-    "no": "4",
-    "iconKey": "Carbunclo",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Carbunclo_icon_normal.webp"
-  },
-  {
-    "no": "5",
-    "iconKey": "Kitsunebi",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_icon_normal.webp"
-  },
-  {
-    "no": "5B",
-    "iconKey": "Kitsunebi_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kitsunebi_Ice_icon_normal.webp"
-  },
-  {
-    "no": "6",
-    "iconKey": "BluePlatypus",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BluePlatypus_icon_normal.webp"
-  },
-  {
-    "no": "6B",
-    "iconKey": "BluePlatypus_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BluePlatypus_Fire_icon_normal.webp"
-  },
-  {
-    "no": "7",
-    "iconKey": "ElecCat",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ElecCat_icon_normal.webp"
-  },
-  {
-    "no": "8",
-    "iconKey": "Monkey",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Monkey_icon_normal.webp"
-  },
-  {
-    "no": "9",
-    "iconKey": "FlameBambi",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlameBambi_icon_normal.webp"
-  },
-  {
-    "no": "10",
-    "iconKey": "Penguin",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_icon_normal.webp"
-  },
-  {
-    "no": "10B",
-    "iconKey": "Penguin_Electric",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Penguin_Electric_icon_normal.webp"
-  },
-  {
-    "no": "11",
-    "iconKey": "CaptainPenguin",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CaptainPenguin_icon_normal.webp"
-  },
-  {
-    "no": "11B",
-    "iconKey": "CaptainPenguin_Black",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CaptainPenguin_Black_icon_normal.webp"
-  },
-  {
-    "no": "12",
-    "iconKey": "Hedgehog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Hedgehog_icon_normal.webp"
-  },
-  {
-    "no": "12B",
-    "iconKey": "Hedgehog_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Hedgehog_Ice_icon_normal.webp"
-  },
-  {
-    "no": "13",
-    "iconKey": "PlantSlime",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PlantSlime_icon_normal.webp"
-  },
-  {
-    "no": "14",
-    "iconKey": "CuteFox",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteFox_icon_normal.webp"
-  },
-  {
-    "no": "15",
-    "iconKey": "WizardOwl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WizardOwl_icon_normal.webp"
-  },
-  {
-    "no": "16",
-    "iconKey": "Ganesha",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ganesha_icon_normal.webp"
-  },
-  {
-    "no": "17",
-    "iconKey": "NegativeKoala",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeKoala_icon_normal.webp"
-  },
-  {
-    "no": "18",
-    "iconKey": "WoolFox",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WoolFox_icon_normal.webp"
-  },
-  {
-    "no": "19",
-    "iconKey": "DreamDemon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DreamDemon_icon_normal.webp"
-  },
-  {
-    "no": "20",
-    "iconKey": "Boar",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Boar_icon_normal.webp"
-  },
-  {
-    "no": "21",
-    "iconKey": "NightFox",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightFox_icon_normal.webp"
-  },
-  {
-    "no": "22",
-    "iconKey": "CuteMole",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteMole_icon_normal.webp"
-  },
-  {
-    "no": "23",
-    "iconKey": "NegativeOctopus",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeOctopus_icon_normal.webp"
-  },
-  {
-    "no": "23B",
-    "iconKey": "NegativeOctopus_Neutral",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NegativeOctopus_Neutral_icon_normal.webp"
-  },
-  {
-    "no": "24",
-    "iconKey": "Bastet",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Bastet_icon_normal.webp"
-  },
-  {
-    "no": "24B",
-    "iconKey": "Bastet_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Bastet_Ice_icon_normal.webp"
-  },
-  {
-    "no": "25",
-    "iconKey": "FlyingManta",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlyingManta_icon_normal.webp"
-  },
-  {
-    "no": "25B",
-    "iconKey": "FlyingManta_Thunder",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlyingManta_Thunder_icon_normal.webp"
-  },
-  {
-    "no": "26",
-    "iconKey": "Garm",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Garm_icon_normal.webp"
-  },
-  {
-    "no": "27",
-    "iconKey": "ColorfulBird",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ColorfulBird_icon_normal.webp"
-  },
-  {
-    "no": "28",
-    "iconKey": "FlowerRabbit",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerRabbit_icon_normal.webp"
-  },
-  {
-    "no": "29",
-    "iconKey": "CowPal",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CowPal_icon_normal.webp"
-  },
-  {
-    "no": "30",
-    "iconKey": "LittleBriarRose",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LittleBriarRose_icon_normal.webp"
-  },
-  {
-    "no": "31",
-    "iconKey": "SharkKid",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SharkKid_icon_normal.webp"
-  },
-  {
-    "no": "31B",
-    "iconKey": "SharkKid_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SharkKid_Fire_icon_normal.webp"
-  },
-  {
-    "no": "32",
-    "iconKey": "WindChimes",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WindChimes_icon_normal.webp"
-  },
-  {
-    "no": "32B",
-    "iconKey": "WindChimes_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WindChimes_Ice_icon_normal.webp"
-  },
-  {
-    "no": "33",
-    "iconKey": "GrassPanda",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassPanda_icon_normal.webp"
-  },
-  {
-    "no": "33B",
-    "iconKey": "GrassPanda_Electric",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassPanda_Electric_icon_normal.webp"
-  },
-  {
-    "no": "34",
-    "iconKey": "SweetsSheep",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SweetsSheep_icon_normal.webp"
-  },
-  {
-    "no": "35",
-    "iconKey": "BerryGoat",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BerryGoat_icon_normal.webp"
-  },
-  {
-    "no": "35B",
-    "iconKey": "BerryGoat_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BerryGoat_Dark_icon_normal.webp"
-  },
-  {
-    "no": "36",
-    "iconKey": "Alpaca",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Alpaca_icon_normal.webp"
-  },
-  {
-    "no": "37",
-    "iconKey": "Deer",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Deer_icon_normal.webp"
-  },
-  {
-    "no": "37B",
-    "iconKey": "Deer_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Deer_Ground_icon_normal.webp"
-  },
-  {
-    "no": "38",
-    "iconKey": "HawkBird",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HawkBird_icon_normal.webp"
-  },
-  {
-    "no": "39",
-    "iconKey": "PinkRabbit",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkRabbit_icon_normal.webp"
-  },
-  {
-    "no": "39B",
-    "iconKey": "PinkRabbit_Grass",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkRabbit_Grass_icon_normal.webp"
-  },
-  {
-    "no": "40",
-    "iconKey": "Baphomet",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Baphomet_icon_normal.webp"
-  },
-  {
-    "no": "40B",
-    "iconKey": "Baphomet_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Baphomet_Dark_icon_normal.webp"
-  },
-  {
-    "no": "41",
-    "iconKey": "CuteButterfly",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CuteButterfly_icon_normal.webp"
-  },
-  {
-    "no": "42",
-    "iconKey": "FlameBuffalo",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlameBuffalo_icon_normal.webp"
-  },
-  {
-    "no": "43",
-    "iconKey": "LazyCatfish",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyCatfish_icon_normal.webp"
-  },
-  {
-    "no": "43B",
-    "iconKey": "LazyCatfish_Gold",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyCatfish_Gold_icon_normal.webp"
-  },
-  {
-    "no": "44",
-    "iconKey": "DarkCrow",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkCrow_icon_normal.webp"
-  },
-  {
-    "no": "45",
-    "iconKey": "LizardMan",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LizardMan_icon_normal.webp"
-  },
-  {
-    "no": "45B",
-    "iconKey": "LizardMan_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LizardMan_Fire_icon_normal.webp"
-  },
-  {
-    "no": "46",
-    "iconKey": "Werewolf",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Werewolf_icon_normal.webp"
-  },
-  {
-    "no": "46B",
-    "iconKey": "Werewolf_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Werewolf_Ice_icon_normal.webp"
-  },
-  {
-    "no": "47",
-    "iconKey": "Eagle",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Eagle_icon_normal.webp"
-  },
-  {
-    "no": "48",
-    "iconKey": "RobinHood",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RobinHood_icon_normal.webp"
-  },
-  {
-    "no": "48B",
-    "iconKey": "RobinHood_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RobinHood_Ground_icon_normal.webp"
-  },
-  {
-    "no": "49",
-    "iconKey": "Gorilla",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Gorilla_icon_normal.webp"
-  },
-  {
-    "no": "49B",
-    "iconKey": "Gorilla_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Gorilla_Ground_icon_normal.webp"
-  },
-  {
-    "no": "50",
-    "iconKey": "SoldierBee",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SoldierBee_icon_normal.webp"
-  },
-  {
-    "no": "51",
-    "iconKey": "QueenBee",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_QueenBee_icon_normal.webp"
-  },
-  {
-    "no": "52",
-    "iconKey": "NaughtyCat",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NaughtyCat_icon_normal.webp"
-  },
-  {
-    "no": "53",
-    "iconKey": "MopBaby",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MopBaby_icon_normal.webp"
-  },
-  {
-    "no": "54",
-    "iconKey": "MopKing",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MopKing_icon_normal.webp"
-  },
-  {
-    "no": "55",
-    "iconKey": "WeaselDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_icon_normal.webp"
-  },
-  {
-    "no": "55B",
-    "iconKey": "WeaselDragon_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WeaselDragon_Fire_icon_normal.webp"
-  },
-  {
-    "no": "56",
-    "iconKey": "Kirin",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kirin_icon_normal.webp"
-  },
-  {
-    "no": "57",
-    "iconKey": "IceFox",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceFox_icon_normal.webp"
-  },
-  {
-    "no": "58",
-    "iconKey": "FireKirin",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FireKirin_icon_normal.webp"
-  },
-  {
-    "no": "58B",
-    "iconKey": "FireKirin_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FireKirin_Dark_icon_normal.webp"
-  },
-  {
-    "no": "59",
-    "iconKey": "IceDeer",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceDeer_icon_normal.webp"
-  },
-  {
-    "no": "60",
-    "iconKey": "ThunderDog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderDog_icon_normal.webp"
-  },
-  {
-    "no": "61",
-    "iconKey": "AmaterasuWolf",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_AmaterasuWolf_icon_normal.webp"
-  },
-  {
-    "no": "61B",
-    "iconKey": "AmaterasuWolf_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_AmaterasuWolf_Dark_icon_normal.webp"
-  },
-  {
-    "no": "62",
-    "iconKey": "RaijinDaughter",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RaijinDaughter_icon_normal.webp"
-  },
-  {
-    "no": "62B",
-    "iconKey": "RaijinDaughter_Water",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RaijinDaughter_Water_icon_normal.webp"
-  },
-  {
-    "no": "63",
-    "iconKey": "Mutant",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Mutant_icon_normal.webp"
-  },
-  {
-    "no": "64",
-    "iconKey": "FlowerDinosaur",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDinosaur_icon_normal.webp"
-  },
-  {
-    "no": "64B",
-    "iconKey": "FlowerDinosaur_Electric",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDinosaur_Electric_icon_normal.webp"
-  },
-  {
-    "no": "65",
-    "iconKey": "Serpent",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Serpent_icon_normal.webp"
-  },
-  {
-    "no": "65B",
-    "iconKey": "Serpent_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Serpent_Ground_icon_normal.webp"
-  },
-  {
-    "no": "66",
-    "iconKey": "GhostBeast",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostBeast_icon_normal.webp"
-  },
-  {
-    "no": "67",
-    "iconKey": "DrillGame",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DrillGame_icon_normal.webp"
-  },
-  {
-    "no": "68",
-    "iconKey": "CatBat",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatBat_icon_normal.webp"
-  },
-  {
-    "no": "69",
-    "iconKey": "PinkLizard",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PinkLizard_icon_normal.webp"
-  },
-  {
-    "no": "70",
-    "iconKey": "LavaGirl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LavaGirl_icon_normal.webp"
-  },
-  {
-    "no": "71",
-    "iconKey": "BirdDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BirdDragon_icon_normal.webp"
-  },
-  {
-    "no": "71B",
-    "iconKey": "BirdDragon_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BirdDragon_Ice_icon_normal.webp"
-  },
-  {
-    "no": "72",
-    "iconKey": "Ronin",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ronin_icon_normal.webp"
-  },
-  {
-    "no": "72B",
-    "iconKey": "Ronin_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Ronin_Dark_icon_normal.webp"
-  },
-  {
-    "no": "73",
-    "iconKey": "ThunderBird",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderBird_icon_normal.webp"
-  },
-  {
-    "no": "74",
-    "iconKey": "RedArmorBird",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_RedArmorBird_icon_normal.webp"
-  },
-  {
-    "no": "75",
-    "iconKey": "CatMage",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatMage_icon_normal.webp"
-  },
-  {
-    "no": "75B",
-    "iconKey": "CatMage_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatMage_Fire_icon_normal.webp"
-  },
-  {
-    "no": "76",
-    "iconKey": "FoxMage",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FoxMage_icon_normal.webp"
-  },
-  {
-    "no": "76B",
-    "iconKey": "FoxMage_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FoxMage_Dark_icon_normal.webp"
-  },
-  {
-    "no": "77",
-    "iconKey": "GrassRabbitMan",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassRabbitMan_icon_normal.webp"
-  },
-  {
-    "no": "78",
-    "iconKey": "VioletFairy",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VioletFairy_icon_normal.webp"
-  },
-  {
-    "no": "79",
-    "iconKey": "WhiteMoth",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteMoth_icon_normal.webp"
-  },
-  {
-    "no": "80",
-    "iconKey": "FairyDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FairyDragon_icon_normal.webp"
-  },
-  {
-    "no": "80B",
-    "iconKey": "FairyDragon_Water",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FairyDragon_Water_icon_normal.webp"
-  },
-  {
-    "no": "81",
-    "iconKey": "Kelpie",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kelpie_icon_normal.webp"
-  },
-  {
-    "no": "81B",
-    "iconKey": "Kelpie_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Kelpie_Fire_icon_normal.webp"
-  },
-  {
-    "no": "82",
-    "iconKey": "BlueDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueDragon_icon_normal.webp"
-  },
-  {
-    "no": "82B",
-    "iconKey": "BlueDragon_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueDragon_Ice_icon_normal.webp"
-  },
-  {
-    "no": "83",
-    "iconKey": "WhiteTiger",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteTiger_icon_normal.webp"
-  },
-  {
-    "no": "83B",
-    "iconKey": "WhiteTiger_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteTiger_Ground_icon_normal.webp"
-  },
-  {
-    "no": "84",
-    "iconKey": "Manticore",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Manticore_icon_normal.webp"
-  },
-  {
-    "no": "84B",
-    "iconKey": "Manticore_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Manticore_Dark_icon_normal.webp"
-  },
-  {
-    "no": "85",
-    "iconKey": "LazyDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyDragon_icon_normal.webp"
-  },
-  {
-    "no": "85B",
-    "iconKey": "LazyDragon_Electric",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LazyDragon_Electric_icon_normal.webp"
-  },
-  {
-    "no": "86",
-    "iconKey": "SakuraSaurus",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SakuraSaurus_icon_normal.webp"
-  },
-  {
-    "no": "86B",
-    "iconKey": "SakuraSaurus_Water",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SakuraSaurus_Water_icon_normal.webp"
-  },
-  {
-    "no": "87",
-    "iconKey": "FlowerDoll",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FlowerDoll_icon_normal.webp"
-  },
-  {
-    "no": "88",
-    "iconKey": "VolcanicMonster",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VolcanicMonster_icon_normal.webp"
-  },
-  {
-    "no": "88B",
-    "iconKey": "VolcanicMonster_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_VolcanicMonster_Ice_icon_normal.webp"
-  },
-  {
-    "no": "89",
-    "iconKey": "KingAlpaca",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingAlpaca_icon_normal.webp"
-  },
-  {
-    "no": "89B",
-    "iconKey": "KingAlpaca_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingAlpaca_Ice_icon_normal.webp"
-  },
-  {
-    "no": "90",
-    "iconKey": "GrassMammoth",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassMammoth_icon_normal.webp"
-  },
-  {
-    "no": "90B",
-    "iconKey": "GrassMammoth_Ice",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrassMammoth_Ice_icon_normal.webp"
-  },
-  {
-    "no": "91",
-    "iconKey": "Yeti",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Yeti_icon_normal.webp"
-  },
-  {
-    "no": "91B",
-    "iconKey": "Yeti_Grass",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Yeti_Grass_icon_normal.webp"
-  },
-  {
-    "no": "92",
-    "iconKey": "HerculesBeetle",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HerculesBeetle_icon_normal.webp"
-  },
-  {
-    "no": "92B",
-    "iconKey": "HerculesBeetle_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HerculesBeetle_Ground_icon_normal.webp"
-  },
-  {
-    "no": "93",
-    "iconKey": "FengyunDeeper",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FengyunDeeper_icon_normal.webp"
-  },
-  {
-    "no": "94",
-    "iconKey": "CatVampire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CatVampire_icon_normal.webp"
-  },
-  {
-    "no": "95",
-    "iconKey": "SkyDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SkyDragon_icon_normal.webp"
-  },
-  {
-    "no": "95B",
-    "iconKey": "SkyDragon_Grass",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SkyDragon_Grass_icon_normal.webp"
-  },
-  {
-    "no": "96",
-    "iconKey": "KingBahamut",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingBahamut_icon_normal.webp"
-  },
-  {
-    "no": "96B",
-    "iconKey": "KingBahamut_Dragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KingBahamut_Dragon_icon_normal.webp"
-  },
-  {
-    "no": "97",
-    "iconKey": "HadesBird",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HadesBird_icon_normal.webp"
-  },
-  {
-    "no": "97B",
-    "iconKey": "HadesBird_Electric",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_HadesBird_Electric_icon_normal.webp"
-  },
-  {
-    "no": "98",
-    "iconKey": "BlackMetalDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackMetalDragon_icon_normal.webp"
-  },
-  {
-    "no": "99",
-    "iconKey": "DarkScorpion",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkScorpion_icon_normal.webp"
-  },
-  {
-    "no": "99B",
-    "iconKey": "DarkScorpion_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkScorpion_Ground_icon_normal.webp"
-  },
-  {
-    "no": "100",
-    "iconKey": "Anubis",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Anubis_icon_normal.webp"
-  },
-  {
-    "no": "101",
-    "iconKey": "Umihebi",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Umihebi_icon_normal.webp"
-  },
-  {
-    "no": "101B",
-    "iconKey": "Umihebi_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Umihebi_Fire_icon_normal.webp"
-  },
-  {
-    "no": "102",
-    "iconKey": "Suzaku",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Suzaku_icon_normal.webp"
-  },
-  {
-    "no": "102B",
-    "iconKey": "Suzaku_Water",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Suzaku_Water_icon_normal.webp"
-  },
-  {
-    "no": "103",
-    "iconKey": "ElecPanda",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ElecPanda_icon_normal.webp"
-  },
-  {
-    "no": "104",
-    "iconKey": "LilyQueen",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LilyQueen_icon_normal.webp"
-  },
-  {
-    "no": "104B",
-    "iconKey": "LilyQueen_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LilyQueen_Dark_icon_normal.webp"
-  },
-  {
-    "no": "105",
-    "iconKey": "Horus",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Horus_icon_normal.webp"
-  },
-  {
-    "no": "105B",
-    "iconKey": "Horus_Water",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Horus_Water_icon_normal.webp"
-  },
-  {
-    "no": "106",
-    "iconKey": "ThunderDragonMan",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ThunderDragonMan_icon_normal.webp"
-  },
-  {
-    "no": "107",
-    "iconKey": "BlackGriffon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackGriffon_icon_normal.webp"
-  },
-  {
-    "no": "108",
-    "iconKey": "SaintCentaur",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SaintCentaur_icon_normal.webp"
-  },
-  {
-    "no": "109",
-    "iconKey": "BlackCentaur",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackCentaur_icon_normal.webp"
-  },
-  {
-    "no": "110",
-    "iconKey": "IceHorse",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceHorse_icon_normal.webp"
-  },
-  {
-    "no": "110B",
-    "iconKey": "IceHorse_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceHorse_Dark_icon_normal.webp"
-  },
-  {
-    "no": "111",
-    "iconKey": "JetDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JetDragon_icon_normal.webp"
-  },
-  {
-    "no": "112",
-    "iconKey": "NightLady",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightLady_icon_normal.webp"
-  },
-  {
-    "no": "112B",
-    "iconKey": "NightLady_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightLady_Dark_icon_normal.webp"
-  },
-  {
-    "no": "113",
-    "iconKey": "MoonQueen",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MoonQueen_icon_normal.webp"
-  },
-  {
-    "no": "114",
-    "iconKey": "KendoFrog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KendoFrog_icon_normal.webp"
-  },
-  {
-    "no": "114B",
-    "iconKey": "KendoFrog_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_KendoFrog_Dark_icon_normal.webp"
-  },
-  {
-    "no": "115",
-    "iconKey": "LeafPrincess",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LeafPrincess_icon_normal.webp"
-  },
-  {
-    "no": "116",
-    "iconKey": "MushroomDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MushroomDragon_icon_normal.webp"
-  },
-  {
-    "no": "116B",
-    "iconKey": "MushroomDragon_Dark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MushroomDragon_Dark_icon_normal.webp"
-  },
-  {
-    "no": "117",
-    "iconKey": "SmallArmadillo",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SmallArmadillo_icon_normal.webp"
-  },
-  {
-    "no": "118",
-    "iconKey": "CandleGhost",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_CandleGhost_icon_normal.webp"
-  },
-  {
-    "no": "119",
-    "iconKey": "ScorpionMan",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_ScorpionMan_icon_normal.webp"
-  },
-  {
-    "no": "120",
-    "iconKey": "WingGolem",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WingGolem_icon_normal.webp"
-  },
-  {
-    "no": "121",
-    "iconKey": "GuardianDog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GuardianDog_icon_normal.webp"
-  },
-  {
-    "no": "122",
-    "iconKey": "SifuDog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SifuDog_icon_normal.webp"
-  },
-  {
-    "no": "123",
-    "iconKey": "FeatherOstrich",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_FeatherOstrich_icon_normal.webp"
-  },
-  {
-    "no": "124",
-    "iconKey": "MimicDog",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MimicDog_icon_normal.webp"
-  },
-  {
-    "no": "125",
-    "iconKey": "DarkAlien",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkAlien_icon_normal.webp"
-  },
-  {
-    "no": "126",
-    "iconKey": "WhiteAlienDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteAlienDragon_icon_normal.webp"
-  },
-  {
-    "no": "127",
-    "iconKey": "DarkMechaDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_DarkMechaDragon_icon_normal.webp"
-  },
-  {
-    "no": "128",
-    "iconKey": "GhostRabbit",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostRabbit_icon_normal.webp"
-  },
-  {
-    "no": "129",
-    "iconKey": "NightBlueHorse",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_NightBlueHorse_icon_normal.webp"
-  },
-  {
-    "no": "130",
-    "iconKey": "WhiteShieldDragon",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteShieldDragon_icon_normal.webp"
-  },
-  {
-    "no": "131",
-    "iconKey": "BlackPuppy",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlackPuppy_icon_normal.webp"
-  },
-  {
-    "no": "132",
-    "iconKey": "WhiteDeer",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_WhiteDeer_icon_normal.webp"
-  },
-  {
-    "no": "133",
-    "iconKey": "MysteryMask",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_MysteryMask_icon_normal.webp"
-  },
-  {
-    "no": "134",
-    "iconKey": "GrimGirl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GrimGirl_icon_normal.webp"
-  },
-  {
-    "no": "135",
-    "iconKey": "PurpleSpider",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PurpleSpider_icon_normal.webp"
-  },
-  {
-    "no": "136",
-    "iconKey": "BlueThunderHorse",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueThunderHorse_icon_normal.webp"
-  },
-  {
-    "no": "137",
-    "iconKey": "SnowTigerBeastman",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SnowTigerBeastman_icon_normal.webp"
-  },
-  {
-    "no": "138",
-    "iconKey": "BlueberryFairy",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BlueberryFairy_icon_normal.webp"
-  },
-  {
-    "no": "139",
-    "iconKey": "BadCatgirl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_BadCatgirl_icon_normal.webp"
-  },
-  {
-    "no": "140",
-    "iconKey": "GoldenHorse",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GoldenHorse_icon_normal.webp"
-  },
-  {
-    "no": "141",
-    "iconKey": "LeafMomonga",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LeafMomonga_icon_normal.webp"
-  },
-  {
-    "no": "142",
-    "iconKey": "IceWitch",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceWitch_icon_normal.webp"
-  },
-  {
-    "no": "143",
-    "iconKey": "SnowPeafowl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_SnowPeafowl_icon_normal.webp"
-  },
-  {
-    "no": "144",
-    "iconKey": "TropicalOstrich",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TropicalOstrich_icon_normal.webp"
-  },
-  {
-    "no": "145",
-    "iconKey": "Plesiosaur",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_Plesiosaur_icon_normal.webp"
-  },
-  {
-    "no": "146",
-    "iconKey": "IceCrocodile",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceCrocodile_icon_normal.webp"
-  },
-  {
-    "no": "147",
-    "iconKey": "IceSeal",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceSeal_icon_normal.webp"
-  },
-  {
-    "no": "148",
-    "iconKey": "TentacleTurtle",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TentacleTurtle_icon_normal.webp"
-  },
-  {
-    "no": "148B",
-    "iconKey": "TentacleTurtle_Ground",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_TentacleTurtle_Ground_icon_normal.webp"
-  },
-  {
-    "no": "149",
-    "iconKey": "JellyfishGhost",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JellyfishGhost_icon_normal.webp"
-  },
-  {
-    "no": "150",
-    "iconKey": "JellyfishFairy",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_JellyfishFairy_icon_normal.webp"
-  },
-  {
-    "no": "151",
-    "iconKey": "OctopusGirl",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_OctopusGirl_icon_normal.webp"
-  },
-  {
-    "no": "152",
-    "iconKey": "StuffedShark",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_StuffedShark_icon_normal.webp"
-  },
-  {
-    "no": "152B",
-    "iconKey": "StuffedShark_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_StuffedShark_Fire_icon_normal.webp"
-  },
-  {
-    "no": "153",
-    "iconKey": "GhostAnglerfish",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostAnglerfish_icon_normal.webp"
-  },
-  {
-    "no": "153B",
-    "iconKey": "GhostAnglerfish_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_GhostAnglerfish_Fire_icon_normal.webp"
-  },
-  {
-    "no": "154",
-    "iconKey": "IceNarwhal",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceNarwhal_icon_normal.webp"
-  },
-  {
-    "no": "154B",
-    "iconKey": "IceNarwhal_Fire",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_IceNarwhal_Fire_icon_normal.webp"
-  },
-  {
-    "no": "155",
-    "iconKey": "PoseidonOrca",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_PoseidonOrca_icon_normal.webp"
-  },
-  {
-    "no": "156",
-    "iconKey": "LegendDeer",
-    "icon": "https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_LegendDeer_icon_normal.webp"
-  }
-];
-
-const PALDB_JP_ICON_OVERRIDES = {
-  "ベノッポ": "MushroomDragon_Dark",
-  "キノッポ": "MushroomDragon",
-  "カバネドリ": "BirdDragon",
-  "グラクレス": "HerculesBeetle",
-  "クレメーオ": "CatMage",
-  "オーマサンダ": "ThunderDragonMan",
-  "アヌビス": "Anubis",
-  "ササゾー": "GrassPanda",
-  "ライゾー": "GrassPanda_Electric",
-  "フブキジカ": "IceDeer",
-  "シメナワ": "WindChimes",
-  "オバケナワ": "WindChimes_Ice",
-  "イシス": "Bastet",
-  "ツララジカ": "IceDeer",
-  "レヴィドラ": "Umihebi",
-  "アグニドラ": "Umihebi_Fire",
-  "スザク": "Suzaku",
-  "シヴァ": "Suzaku_Water",
-  "ホルス": "Horus",
-  "エレパンダ": "ElecPanda",
-  "ゼノグリフ": "BlackGriffon"
-};
-
+const DEFAULT_STATUSES = ["未着手", "対応中", "確認待ち", "保留", "完了"];
+const COMPLETED_STATUS = "完了";
+const TIMELINE_RANGES = { "14": 14, "month": 31 };
+const PRIORITY_ORDER = { "緊急": 0, "高": 1, "中": 2, "低": 3 };
+const DEFAULT_CATEGORIES = ["PC", "プリンタ", "ネットワーク", "電子カルテ", "Web/HP", "アカウント", "業者対応", "定期作業", "その他"];
+const DEFAULT_USERS = ["福冨", "森井"];
+const DEFAULT_COLORS = { "福冨": "#3c92df", "森井": "#4ebd69" };
 const ROOM_ID = getRoomId();
-const UNKNOWN_PAL_ICON = "assets/pal-unknown.png";
-const UNKNOWN_PAL_LABEL = "未発見";
-const DEFAULT_RECORDERS = ["福冨", "森井"];
-const DEFAULT_RECORDER_COLORS = {
-  "福冨": "#3c92df",
-  "森井": "#4ebd69"
-};
-const RECORDER_STORAGE_KEY = "palBoardRecorder";
-const RECORDER_LIST_STORAGE_PREFIX = "pal-breeding-recorders:";
-const RECORDER_COLOR_STORAGE_PREFIX = "pal-breeding-recorder-colors:";
-const WORLD_NAME_STORAGE_PREFIX = "pal-breeding-world-name:";
+
 const state = {
-  records: [],
-  selectedId: null,
   firebaseReady: false,
   db: null,
   dbApi: null,
-  dbRef: null,
-  dbMetaRef: null,
-  palSource: "内蔵リスト",
-  recorders: loadRecorderList(),
-  recorderColors: loadRecorderColors(),
-  currentRecorder: localStorage.getItem(RECORDER_STORAGE_KEY) || "",
-  worldName: localStorage.getItem(worldNameLocalKey()) || "",
-  palMap: new Map(),
-  palNames: [],
-  paldbIcons: [...PALDB_STATIC_ICONS],
-  passiveNames: [...EMBEDDED_PASSIVES],
-  pickers: {},
-  passivePickers: {},
-  eggPickers: {},
-  filterIconMap: {},
-  selectedElements: [],
-  selectedWorks: [],
-  currentView: "records",
+  roomRef: null,
+  tasksRef: null,
+  metaRef: null,
+  tasks: [],
+  users: loadUsers(),
+  userColors: loadUserColors(),
+  categories: loadCategories(),
+  statusesByUser: loadStatusesByUser(),
+  statuses: loadStatuses(),
+  timelineStart: localStorage.getItem(timelineStartKey()) || todayISO(),
+  timelineRange: localStorage.getItem(timelineRangeKey()) || "14",
+  currentUser: localStorage.getItem("systemTaskUser") || "",
+  selectedId: "",
+  layout: "board",
+  scope: "all",
+  roomName: localStorage.getItem(roomNameKey()) || "",
+  unsubscribed: false
 };
 
-const $ = (id) => document.getElementById(id);
 const elements = {
-  parentFilter: $("parentFilter"),
-  resultFilter: $("resultFilter"),
-  statusFilter: $("statusFilter"),
-  favoriteOnly: $("favoriteOnly"),
-  unverifiedOnly: $("unverifiedOnly"),
-  searchInput: $("searchInput"),
-  sortSelect: $("sortSelect"),
-  recordRows: $("recordRows"),
-  emptyState: $("emptyState"),
-  emptyTitle: $("emptyTitle"),
-  emptyText: $("emptyText"),
-  detailBody: $("detailBody"),
-  recordDialog: $("recordDialog"),
-  recordForm: $("recordForm"),
+  appShell: document.querySelector(".app-shell"),
+  mainContent: $("mainContent"),
+  detailPanel: document.querySelector(".detail-panel"),
+  currentUserDot: $("currentUserDot"),
+  currentUserLabel: $("currentUserLabel"),
+  currentUserSelect: $("currentUserSelect"),
+  startupUser: $("startupUser"),
   userDialog: $("userDialog"),
   userForm: $("userForm"),
-  startupRecorder: $("startupRecorder"),
-  currentRecorderSelect: $("currentRecorderSelect"),
-  currentRecorderLabel: $("currentRecorderLabel"),
-  currentRecorderDot: $("currentRecorderDot"),
   manageUsers: $("manageUsers"),
-  recorderManageDialog: $("recorderManageDialog"),
-  recorderManageForm: $("recorderManageForm"),
-  closeRecorderManage: $("closeRecorderManage"),
-  newRecorderName: $("newRecorderName"),
-  newRecorderColor: $("newRecorderColor"),
-  recorderList: $("recorderList"),
-  worldNameInput: $("worldNameInput"),
-  worldNameBadge: $("worldNameBadge"),
+  userManageDialog: $("userManageDialog"),
+  userManageForm: $("userManageForm"),
+  closeUserManage: $("closeUserManage"),
+  newUserName: $("newUserName"),
+  newUserColor: $("newUserColor"),
+  userList: $("userList"),
+  roomNameInput: $("roomNameInput"),
+  roomNameBadge: $("roomNameBadge"),
+  connectionPill: $("connectionPill"),
+  navItems: document.querySelectorAll(".nav-item"),
+  boardView: $("boardView"),
+  listView: $("listView"),
+  timelineView: $("timelineView"),
+  detailBody: $("detailBody"),
+  closeDetail: $("closeDetail"),
+  searchInput: $("searchInput"),
+  assigneeFilter: $("assigneeFilter"),
+  statusFilter: $("statusFilter"),
+  manageStatuses: $("manageStatuses"),
+  statusManageDialog: $("statusManageDialog"),
+  statusManageForm: $("statusManageForm"),
+  closeStatusManage: $("closeStatusManage"),
+  newStatusName: $("newStatusName"),
+  statusList: $("statusList"),
+  priorityFilter: $("priorityFilter"),
+  categoryFilter: $("categoryFilter"),
+  manageCategories: $("manageCategories"),
+  categoryManageDialog: $("categoryManageDialog"),
+  categoryManageForm: $("categoryManageForm"),
+  closeCategoryManage: $("closeCategoryManage"),
+  newCategoryName: $("newCategoryName"),
+  categoryList: $("categoryList"),
+  overdueOnly: $("overdueOnly"),
+  todayOnly: $("todayOnly"),
+  pinOnly: $("pinOnly"),
+  resetFilters: $("resetFilters"),
+  sortSelect: $("sortSelect"),
+  newTask: $("newTask"),
+  taskDialog: $("taskDialog"),
+  taskForm: $("taskForm"),
+  closeTaskDialog: $("closeTaskDialog"),
+  taskDialogTitle: $("taskDialogTitle"),
+  deleteTask: $("deleteTask"),
+  copyRoomLink: $("copyRoomLink"),
   toast: $("toast"),
-  dialogMessage: $("dialogMessage"),
-  palDataState: $("palDataState"),
+  openCount: $("openCount"),
+  overdueCount: $("overdueCount"),
+  todayCount: $("todayCount"),
+  myCount: $("myCount")
 };
 
 init();
 
-async function init() {
-  mergePalData(EMBEDDED_PALS, "内蔵リスト");
-  setupPalOptions();
-  syncRecorderUi();
-  syncWorldNameUi();
+function init() {
   setupEvents();
-  setupPalPickers();
-  setupEggPickers();
-  setupIconFilters();
-  await setupStorage();
-  render();
-  loadCachedPalData();
-  loadCachedPaldbData();
-  loadPalworldLabData();
-  loadPaldbData();
+  syncCurrentUserStatuses({ persist: false, silent: true });
+  syncUserUi();
+  syncRoomUi();
+  setupFirebase();
   showUserDialogIfNeeded();
-}
-
-function mergePalData(list, sourceLabel) {
-  if (!Array.isArray(list) || list.length === 0) return;
-  for (const raw of list) {
-    const name = normalizePalDisplayName(raw.name);
-    if (!name) continue;
-    const existing = state.palMap.get(name) || {};
-    state.palMap.set(name, {
-      ...existing,
-      ...raw,
-      name,
-      elements: Array.isArray(raw.elements) ? raw.elements : existing.elements || [],
-      work: Array.isArray(raw.work) ? raw.work : existing.work || [],
-      sortKey: raw.sortKey ?? existing.sortKey ?? makeSortKey(raw.no, name),
-      source: raw.source || sourceLabel,
-    });
-    if (raw.en) {
-      LEGACY_ENGLISH_TO_JP[normalizeKey(raw.en)] = name;
-    }
-  }
-  state.palNames = Array.from(state.palMap.values())
-    .sort((a, b) => String(a.sortKey).localeCompare(String(b.sortKey), "ja", { numeric: true }) || a.name.localeCompare(b.name, "ja"))
-    .map(p => p.name);
-  state.palSource = sourceLabel;
-  applyPaldbIconsToPalMap(false);
-  updatePalDataState();
-}
-
-function loadCachedPalData() {
-  try {
-    const cached = JSON.parse(localStorage.getItem(PAL_CACHE_KEY) || "null");
-    if (cached?.pals?.length >= 100) {
-      mergePalData(cached.pals, `Palworld Labキャッシュ ${cached.pals.length}種`);
-      setupPalOptions(true);
-      render();
-      refreshPickerPreviews();
-    }
-  } catch (error) {
-    console.warn("Pal cache read failed", error);
-  }
-}
-
-function setupPassiveOptions(keepValues = false) {
-  const oldValues = keepValues ? getPassiveInputs().map(input => input.value) : [];
-  state.passiveNames = uniqueStrings(state.passiveNames).sort((a, b) => a.localeCompare(b, "ja"));
-  const datalist = $("passiveOptions");
-  if (datalist) datalist.innerHTML = state.passiveNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
-  if (keepValues) getPassiveInputs().forEach((input, index) => { input.value = oldValues[index] || ""; });
-}
-
-function loadCachedPassiveData() {
-  try {
-    const cached = JSON.parse(localStorage.getItem(PASSIVE_CACHE_KEY) || "null");
-    if (cached?.passives?.length >= 50) {
-      state.passiveNames = uniqueStrings([...state.passiveNames, ...cached.passives]);
-      setupPassiveOptions(true);
-    }
-  } catch (error) {
-    console.warn("Passive cache read failed", error);
-  }
-}
-
-async function loadPassiveData() {
-  const endpoints = [PASSIVE_SOURCE_URL, PASSIVE_SOURCE_PROXY_URL];
-  let lastError = null;
-  for (const url of endpoints) {
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const html = await response.text();
-      const passives = parsePassivesHtml(html);
-      if (passives.length < 50) throw new Error(`取得数が少なすぎます: ${passives.length}`);
-      state.passiveNames = uniqueStrings([...state.passiveNames, ...passives]);
-      localStorage.setItem(PASSIVE_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), passives: state.passiveNames }));
-      setupPassiveOptions(true);
-      toast(`Palworld Labから${passives.length}種類のパッシブ候補を読み込みました`);
-      return;
-    } catch (error) {
-      lastError = error;
-      console.warn("Passive sync failed:", url, error);
-    }
-  }
-  console.warn("Passive sync gave up:", lastError);
-}
-
-function parsePassivesHtml(html) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const found = [];
-  for (const link of doc.querySelectorAll("a")) {
-    const text = link.textContent.replace(/\s+/g, " ").trim();
-    const name = text.split(" ")[0];
-    if (isLikelyPassiveName(name)) found.push(name);
-  }
-  const bodyText = doc.body?.textContent || "";
-  for (const name of EMBEDDED_PASSIVES) {
-    if (bodyText.includes(name)) found.push(name);
-  }
-  return uniqueStrings(found);
-}
-
-function isLikelyPassiveName(name) {
-  if (!name || name.length > 18) return false;
-  if (!/[ぁ-んァ-ン一-龠]/.test(name)) return false;
-  if (/(一覧|ツール|攻略|ポスト|URL|フィルター|すべて|次へ|前へ|テーマ|ダーク|ライト|自動|手術台|ボス|レイド|野生|特殊|攻撃|防御|属性|移動速度|作業速度|満腹度|その他)/.test(name)) return false;
-  return true;
-}
-
-function parseFilterIconsFromLabHtml(html) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const targets = new Set([...ELEMENTS, "夜行性", ...WORKS]);
-  const icons = {};
-  for (const img of doc.querySelectorAll("img[alt][src]")) {
-    const alt = img.getAttribute("alt")?.trim();
-    if (!targets.has(alt) || icons[alt]) continue;
-    icons[alt] = new URL(img.getAttribute("src"), PAL_SOURCE_URL).href;
-  }
-  return icons;
-}
-
-function applyFilterIcons(icons) {
-  if (!icons || !Object.keys(icons).length) return;
-  state.filterIconMap = { ...state.filterIconMap, ...icons };
-  document.querySelectorAll(".icon-filter-button").forEach(button => {
-    const value = button.dataset.value;
-    const icon = state.filterIconMap[value];
-    const img = button.querySelector("img");
-    if (icon && img) img.src = icon;
-  });
-}
-
-function uniqueStrings(list) {
-  return Array.from(new Set((list || []).map(value => String(value || "").trim()).filter(Boolean)));
-}
-
-async function loadPalworldLabData() {
-  updatePalDataState("Palworld Labから最新一覧を確認中…");
-  const endpoints = [PAL_SOURCE_URL, PAL_SOURCE_PROXY_URL];
-  let lastError = null;
-  for (const url of endpoints) {
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const html = await response.text();
-      applyFilterIcons(parseFilterIconsFromLabHtml(html));
-      const pals = parsePalworldLabHtml(html);
-      if (pals.length < 100) throw new Error(`取得数が少なすぎます: ${pals.length}`);
-      localStorage.setItem(PAL_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), pals }));
-      mergePalData(pals, `Palworld Lab同期済み ${pals.length}種`);
-      setupPalOptions(true);
-      render();
-      refreshPickerPreviews();
-      toast(`Palworld Labから${pals.length}種類のパル情報を読み込みました`);
-      applyPaldbIconsToPalMap(true);
-      loadPaldbData();
-      return;
-    } catch (error) {
-      lastError = error;
-      console.warn("Palworld Lab sync failed:", url, error);
-    }
-  }
-  updatePalDataState(`${state.palSource}で起動中 / 外部同期失敗`);
-  console.warn("Palworld Lab sync gave up:", lastError);
-}
-
-
-function loadCachedPaldbData() {
-  try {
-    const cached = JSON.parse(localStorage.getItem(PALDB_CACHE_KEY) || "null");
-    if (cached?.icons?.length) {
-      mergePaldbIconData(cached.icons, false);
-    }
-  } catch (error) {
-    console.warn("PalDB cache read failed", error);
-  }
-}
-
-async function loadPaldbData() {
-  const endpoints = [PALDB_SOURCE_URL, PALDB_SOURCE_PROXY_URL];
-  let lastError = null;
-  for (const url of endpoints) {
-    try {
-      const response = await fetch(url, { cache: "no-store" });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      const html = await response.text();
-      const icons = parsePaldbHtml(html);
-      if (icons.length < 100) throw new Error(`PalDBの取得数が少なすぎます: ${icons.length}`);
-      localStorage.setItem(PALDB_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), icons }));
-      mergePaldbIconData(icons, true);
-      console.info(`PalDBから${icons.length}件のパル画像情報を読み込みました`);
-      return;
-    } catch (error) {
-      lastError = error;
-      console.warn("PalDB sync failed:", url, error);
-    }
-  }
-  console.warn("PalDB sync gave up:", lastError);
-}
-
-function parsePaldbHtml(html) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const icons = [];
-  const seen = new Set();
-
-  for (const img of doc.querySelectorAll("img[alt][src]")) {
-    const alt = img.getAttribute("alt") || "";
-    const compactAlt = alt.replace(/[^A-Za-z0-9]/g, "");
-    if (!/^T.+iconnormal$/i.test(compactAlt)) continue;
-    if (/palwork|element/i.test(compactAlt)) continue;
-
-    const icon = normalizePaldbImageUrl(img.getAttribute("src"));
-    if (!icon) continue;
-
-    const block = findPaldbPalBlock(img, doc);
-    const text = block?.textContent || "";
-    const no = (text.match(/#\s*(\d+[A-Z]?)/i) || [])[1] || "";
-    if (!no) continue;
-
-    const displayName = findPaldbDisplayName(block);
-    const key = `${normalizePalNoKey(no)}:${icon}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-
-    icons.push({
-      no,
-      displayName,
-      icon,
-      iconKey: inferPaldbIconKey(icon),
-    });
-  }
-
-  return icons;
-}
-
-function normalizePaldbImageUrl(value) {
-  const raw = String(value || "").trim();
-  if (!raw) return "";
-  if (raw.startsWith("https://cdn.paldb.cc/")) return raw;
-  if (raw.startsWith("/image/")) return `https://cdn.paldb.cc${raw}`;
-  try {
-    return new URL(raw, PALDB_SOURCE_URL).href;
-  } catch {
-    return "";
-  }
-}
-
-function inferPaldbIconKey(url) {
-  const match = String(url || "").match(/\/T_([^/]+?)_icon_normal\.webp/i);
-  return match?.[1] || "";
-}
-
-function findPaldbPalBlock(img, doc) {
-  let node = img.parentElement;
-  while (node && node !== doc.body) {
-    const text = node.textContent || "";
-    if (/#\s*\d+[A-Z]?/.test(text) && text.length < 700) return node;
-    node = node.parentElement;
-  }
-  return img.closest("tr, li, article, div");
-}
-
-function findPaldbDisplayName(block) {
-  if (!block) return "";
-  const links = Array.from(block.querySelectorAll("a"))
-    .map(link => (link.textContent || "").trim())
-    .filter(Boolean)
-    .filter(text => !/^#?\d+[A-Z]?$/i.test(text))
-    .filter(text => !/Image:/i.test(text));
-  return links[0] || "";
-}
-
-function mergePaldbIconData(list, shouldRender = true) {
-  if (!Array.isArray(list) || !list.length) return;
-  const merged = new Map();
-  for (const item of [...PALDB_STATIC_ICONS, ...(state.paldbIcons || []), ...list]) {
-    const key = `${normalizePalNoKey(item.no)}:${item.iconKey || inferPaldbIconKey(item.icon) || item.icon || ""}`;
-    if (!key || key === ":") continue;
-    merged.set(key, item);
-  }
-  state.paldbIcons = Array.from(merged.values());
-  applyPaldbIconsToPalMap(shouldRender);
-}
-
-function normalizePalNoKey(no) {
-  const match = String(no || "").toUpperCase().match(/(\d+)([A-Z])?/);
-  if (!match) return "";
-  return `${Number(match[1])}${match[2] || ""}`;
-}
-
-function getPaldbStaticIconByNo(no) {
-  const noKey = normalizePalNoKey(no);
-  if (!noKey) return null;
-  return PALDB_STATIC_ICONS.find(item => normalizePalNoKey(item.no) === noKey) || null;
-}
-
-function paldbIconUrlFromKey(iconKey) {
-  const key = String(iconKey || "").trim();
-  return key ? `https://cdn.paldb.cc/image/Pal/Texture/PalIcon/Normal/T_${encodeURIComponent(key)}_icon_normal.webp` : "";
-}
-
-function applyPaldbIconsToPalMap(shouldRender = true) {
-  if (!state.paldbIcons?.length || !state.palMap?.size) return;
-
-  const byNo = new Map();
-  const byEn = new Map();
-  const byIconKey = new Map();
-
-  // Pal ID（No）は日本語版・海外版で共通なので、まずNoで紐づけます。
-  // 同じNoがある場合は、ユーザー提供のBreed静的マップを優先します。
-  for (const item of [...PALDB_STATIC_ICONS, ...state.paldbIcons]) {
-    const noKey = normalizePalNoKey(item.no);
-    const iconKey = item.iconKey || inferPaldbIconKey(item.icon);
-    if (noKey && !byNo.has(noKey)) byNo.set(noKey, item);
-    if (iconKey && !byIconKey.has(normalizeKey(iconKey))) byIconKey.set(normalizeKey(iconKey), item);
-    const enKey = normalizeKey(item.displayName || item.en);
-    if (enKey && !byEn.has(enKey)) byEn.set(enKey, item);
-  }
-
-  for (const [name, meta] of state.palMap.entries()) {
-    const noItem = byNo.get(normalizePalNoKey(meta.no));
-    const existingIconKey = meta.iconKey ? normalizeKey(meta.iconKey) : "";
-    const overrideKey = PALDB_JP_ICON_OVERRIDES[name] || PALDB_JP_ICON_OVERRIDES[normalizePalName(name)] || "";
-    const overrideItem = overrideKey ? byIconKey.get(normalizeKey(overrideKey)) : null;
-
-    const item =
-      noItem ||
-      overrideItem ||
-      (existingIconKey ? byIconKey.get(existingIconKey) : null) ||
-      byEn.get(normalizeKey(meta.en)) ||
-      byEn.get(normalizeKey(name));
-
-    if (item?.icon) {
-      meta.paldbIcon = item.icon;
-      if (item.iconKey) meta.iconKey = item.iconKey;
-      state.palMap.set(name, meta);
-    } else if (overrideKey) {
-      meta.paldbIcon = paldbIconUrlFromKey(overrideKey);
-      meta.iconKey = overrideKey;
-      state.palMap.set(name, meta);
-    }
-  }
-
-  if (shouldRender) {
-    render();
-    refreshPickerPreviews();
-  }
-}
-
-function parsePalworldLabHtml(html) {
-  const doc = new DOMParser().parseFromString(html, "text/html");
-  const map = new Map();
-  for (const img of doc.querySelectorAll("img[alt][src]")) {
-    const alt = img.getAttribute("alt")?.trim();
-    if (!isLikelyPalName(alt)) continue;
-    const rawSrc = img.getAttribute("src");
-    const icon = new URL(rawSrc, PAL_SOURCE_URL).href;
-    const no = inferNoFromSrc(icon) || inferNoFromNearText(img);
-    if (!map.has(alt)) {
-      map.set(alt, {
-        no,
-        name: alt,
-        icon,
-        sortKey: makeSortKey(no, alt),
-        source: "Palworld Lab",
-      });
-    }
-  }
-  return Array.from(map.values()).sort((a, b) => a.sortKey.localeCompare(b.sortKey, "ja", { numeric: true }));
-}
-
-function isLikelyPalName(name) {
-  if (!name || EXCLUDED_IMAGE_ALTS.has(name)) return false;
-  if (name.length > 24) return false;
-  if (/(属性|フィルター|ソート|検索|画像|アイコン|ボタン|Section|Logo|Twitter|X|OBS|Tier|URL|攻略|一覧|ツール|シミュレーター)/.test(name)) return false;
-  if (/^[0-9]+[A-Za-z]?$/.test(name)) return false;
-  if (!/[ぁ-んァ-ン一-龠]/.test(name)) return false;
-  return true;
-}
-
-function inferNoFromSrc(src) {
-  const match = src.match(/\/([0-9]{3,5}[A-Z]?|1000[0-9])\./);
-  if (!match) return "";
-  const raw = match[1];
-  if (raw.length >= 5) return `テラ${raw.slice(-2)}`;
-  return raw;
-}
-
-function inferNoFromNearText(img) {
-  const row = img.closest("tr, li, article, div");
-  const text = row?.textContent || "";
-  const match = text.match(/(\d{3}[A-Z]?|ﾃﾗ\d{2})/);
-  return match?.[1] || "";
-}
-
-function makeSortKey(no, name) {
-  const raw = String(no || "");
-  const tera = raw.match(/(?:テラ|ﾃﾗ)(\d+)/);
-  if (tera) return `9000-${tera[1].padStart(3, "0")}-${name}`;
-  const normal = raw.match(/(\d+)([A-Z])?/);
-  if (normal) return `${normal[1].padStart(4, "0")}${normal[2] || ""}-${name}`;
-  return `9999-${name}`;
-}
-
-function updatePalDataState(text = null) {
-  if (!elements.palDataState) return;
-  const label = text || state.palSource;
-  elements.palDataState.textContent = label;
+  render();
 }
 
 function getRoomId() {
-  const params = new URLSearchParams(location.hash.replace(/^#/, ""));
-  const fromHash = params.get("room");
-  if (fromHash) return sanitizeRoom(fromHash);
-  const existing = localStorage.getItem("palBoardRoomId");
-  if (existing) {
-    history.replaceState(null, "", `#room=${existing}`);
-    return existing;
-  }
-  const created = `room-${Math.random().toString(36).slice(2, 9)}`;
-  localStorage.setItem("palBoardRoomId", created);
-  history.replaceState(null, "", `#room=${created}`);
-  return created;
+  const params = new URLSearchParams(location.search);
+  const fromQuery = params.get("room");
+  if (fromQuery) return sanitizeRoomId(fromQuery);
+  const saved = localStorage.getItem("systemTaskRoomId");
+  if (saved) return sanitizeRoomId(saved);
+  const generated = `sys-${Math.random().toString(36).slice(2, 8)}-${Date.now().toString(36).slice(-4)}`;
+  localStorage.setItem("systemTaskRoomId", generated);
+  history.replaceState(null, "", `${location.pathname}?room=${encodeURIComponent(generated)}`);
+  return generated;
 }
 
-function sanitizeRoom(value) {
-  return String(value).replace(/[^a-zA-Z0-9_-]/g, "").slice(0, 60) || "default";
+function sanitizeRoomId(value) {
+  return String(value || "default").replace(/[.#$/\[\]]/g, "-").slice(0, 60);
 }
 
-function setupPalOptions(keepValues = false) {
-  const oldParent = keepValues ? elements.parentFilter.value : "";
-  const oldResult = keepValues ? elements.resultFilter.value : "";
-  const datalist = $("palOptions");
-  if (datalist) datalist.innerHTML = state.palNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join("");
-  if (keepValues) {
-    elements.parentFilter.value = oldParent;
-    elements.resultFilter.value = oldResult;
+function roomNameKey() {
+  return `system-task-room-name:${ROOM_ID}`;
+}
+function usersKey() {
+  return `system-task-users:${ROOM_ID}`;
+}
+function colorsKey() {
+  return `system-task-user-colors:${ROOM_ID}`;
+}
+function tasksKey() {
+  return `system-task-tasks:${ROOM_ID}`;
+}
+
+async function setupFirebase() {
+  const config = window.firebaseConfig || {};
+  if (!config.apiKey || !config.databaseURL) {
+    loadLocalTasks();
+    setConnection("ローカル保存", "local");
+    return;
   }
-  refreshPickerPreviews();
+  try {
+    const app = initializeApp(config);
+    const db = getDatabase(app);
+    state.firebaseReady = true;
+    state.db = db;
+    state.dbApi = { ref, onValue, set, update, push, remove, serverTimestamp };
+    state.roomRef = ref(db, `rooms/${ROOM_ID}`);
+    state.tasksRef = ref(db, `rooms/${ROOM_ID}/tasks`);
+    state.metaRef = ref(db, `rooms/${ROOM_ID}/meta`);
+
+    onValue(state.metaRef, (snapshot) => {
+      const meta = snapshot.val() || {};
+      if (Array.isArray(meta.users)) setUsers(meta.users, { persist: false, silent: true });
+      if (meta.userColors && typeof meta.userColors === "object") setUserColors(meta.userColors, { persist: false, silent: true });
+      if (Array.isArray(meta.categories)) setCategories(meta.categories, { persist: false, silent: true });
+      if (meta.statusesByUser && typeof meta.statusesByUser === "object") {
+        setStatusesByUser(meta.statusesByUser, { persist: false, silent: true });
+      } else if (Array.isArray(meta.statuses)) {
+        setStatuses(meta.statuses, { persist: false, silent: true });
+      }
+      if (typeof meta.roomName === "string") {
+        state.roomName = meta.roomName;
+        localStorage.setItem(roomNameKey(), state.roomName);
+        syncRoomUi();
+      } else if (state.roomName) {
+        saveRoomName();
+      }
+    });
+
+    onValue(state.tasksRef, (snapshot) => {
+      const value = snapshot.val() || {};
+      state.tasks = Object.entries(value).map(([id, task]) => normalizeTask({ id, ...task }));
+      localStorage.setItem(tasksKey(), JSON.stringify(state.tasks));
+      syncStatusOptions($("taskStatus"));
+      syncStatusOptions(elements.statusFilter, true);
+      setConnection("共同編集ON", "online");
+      render();
+    }, (error) => {
+      console.warn(error);
+      loadLocalTasks();
+      setConnection("Firebase接続エラー・ローカル保存", "local");
+    });
+  } catch (error) {
+    console.warn(error);
+    loadLocalTasks();
+    setConnection("Firebase未設定・ローカル保存", "local");
+  }
 }
 
 function setupEvents() {
-  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
-    .forEach(el => el?.addEventListener("input", render));
-
-  elements.currentRecorderSelect?.addEventListener("change", () => {
-    setCurrentRecorder(elements.currentRecorderSelect.value);
-  });
-
-  elements.userForm?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    setCurrentRecorder(elements.startupRecorder.value);
-    elements.userDialog.close();
-    toast(`${getCurrentRecorder()}で開始しました`);
-  });
-
-  elements.manageUsers?.addEventListener("click", () => {
-    renderRecorderManager();
-    elements.recorderManageDialog?.showModal();
-    elements.newRecorderName?.focus();
-  });
-  elements.closeRecorderManage?.addEventListener("click", () => elements.recorderManageDialog?.close());
-  elements.recorderManageForm?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    await addRecorderFromForm();
-  });
-
-  let worldNameTimer = null;
-  elements.worldNameInput?.addEventListener("input", () => {
-    state.worldName = elements.worldNameInput.value.trim();
-    syncWorldNameUi(false);
-    clearTimeout(worldNameTimer);
-    worldNameTimer = setTimeout(() => saveWorldName(), 450);
-  });
-
-  document.querySelectorAll(".nav-item[data-view]").forEach(button => {
+  elements.navItems.forEach(button => {
     button.addEventListener("click", () => {
-      state.currentView = button.dataset.view || "records";
-      syncNavItems();
+      if (button.dataset.layout) {
+        state.layout = button.dataset.layout;
+      }
+      if (button.dataset.filter) {
+        state.scope = state.scope === button.dataset.filter ? "all" : button.dataset.filter;
+      }
+      syncNavigationUi();
       render();
     });
   });
 
-  $("clearFilters").addEventListener("click", () => {
-    elements.parentFilter.value = "";
-    elements.resultFilter.value = "";
-    state.selectedElements = [];
-    state.selectedWorks = [];
-    syncIconFilterButtons();
-    elements.statusFilter.value = "";
-    if (elements.favoriteOnly) elements.favoriteOnly.checked = false;
-    elements.unverifiedOnly.checked = false;
+  elements.currentUserSelect.addEventListener("change", () => setCurrentUser(elements.currentUserSelect.value));
+  elements.userForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    setCurrentUser(elements.startupUser.value);
+    elements.userDialog.close();
+  });
+
+  elements.manageUsers.addEventListener("click", () => {
+    renderUserManager();
+    elements.userManageDialog.showModal();
+  });
+  elements.closeUserManage.addEventListener("click", () => elements.userManageDialog.close());
+  elements.userManageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await addUserFromForm();
+  });
+
+  let roomTimer = null;
+  elements.roomNameInput.addEventListener("input", () => {
+    state.roomName = elements.roomNameInput.value.trim();
+    syncRoomUi(false);
+    clearTimeout(roomTimer);
+    roomTimer = setTimeout(saveRoomName, 400);
+  });
+
+  [elements.searchInput, elements.assigneeFilter, elements.statusFilter, elements.priorityFilter, elements.categoryFilter, elements.overdueOnly, elements.todayOnly, elements.pinOnly, elements.sortSelect]
+    .forEach(el => el.addEventListener("input", render));
+
+  elements.resetFilters.addEventListener("click", () => {
     elements.searchInput.value = "";
-    state.currentView = "records";
-    syncNavItems();
-    refreshPickerPreviews();
+    elements.assigneeFilter.value = "";
+    elements.statusFilter.value = "";
+    elements.priorityFilter.value = "";
+    elements.categoryFilter.value = "";
+    elements.overdueOnly.checked = false;
+    elements.todayOnly.checked = false;
+    elements.pinOnly.checked = false;
     render();
   });
 
-  document.querySelectorAll("[data-clear-filter]").forEach(button => {
-    button.addEventListener("click", () => {
-      const target = $(button.dataset.clearFilter);
-      if (!target) return;
-      target.value = "";
-      updatePickerPreview(button.dataset.clearFilter);
-      target.dispatchEvent(new Event("input", { bubbles: true }));
-    });
+  elements.newTask.addEventListener("click", () => openTaskDialog());
+
+  elements.manageStatuses.addEventListener("click", () => {
+    renderStatusManager();
+    elements.statusManageDialog.showModal();
   });
-
-  $("addRecord").addEventListener("click", () => openDialog());
-  $("cancelDialog").addEventListener("click", () => elements.recordDialog.close());
-  $("closeDetail").addEventListener("click", () => { state.selectedId = null; render(); });
-  $("copyRoomLink")?.addEventListener("click", copyRoomLink);
-
-  elements.recordForm.addEventListener("submit", async (event) => {
+  elements.closeStatusManage.addEventListener("click", () => elements.statusManageDialog.close());
+  elements.statusManageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    await saveFromForm();
+    await addStatusFromForm();
   });
 
-  $("deleteRecord").addEventListener("click", async () => {
-    const id = $("recordId").value;
+  elements.manageCategories.addEventListener("click", () => {
+    renderCategoryManager();
+    elements.categoryManageDialog.showModal();
+  });
+  elements.closeCategoryManage.addEventListener("click", () => elements.categoryManageDialog.close());
+  elements.categoryManageForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await addCategoryFromForm();
+  });
+  elements.closeTaskDialog.addEventListener("click", () => elements.taskDialog.close());
+  elements.taskForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await saveTaskFromForm();
+  });
+  elements.deleteTask.addEventListener("click", async () => {
+    const id = $("taskId").value;
     if (!id) return;
-    if (!confirm("この配合記録を削除しますか？")) return;
-    await deleteRecord(id);
-    elements.recordDialog.close();
+    if (!confirm("このタスクを削除しますか？")) return;
+    await deleteTask(id);
+    elements.taskDialog.close();
   });
-}
+  elements.closeDetail.addEventListener("click", closeDetail);
 
-function setupIconFilters() {
-  document.querySelectorAll(".icon-filter-button").forEach(button => {
-    button.addEventListener("click", () => {
-      const type = button.dataset.filterType;
-      const value = button.dataset.value;
-      const key = type === "element" ? "selectedElements" : "selectedWorks";
-      const list = new Set(state[key]);
-      if (list.has(value)) list.delete(value); else list.add(value);
-      state[key] = Array.from(list);
-      syncIconFilterButtons();
-      render();
-    });
+  elements.mainContent.addEventListener("click", (event) => {
+    if (!state.selectedId) return;
+    const interactiveSelector = [
+      "[data-task-id]",
+      "button",
+      "input",
+      "select",
+      "textarea",
+      "label",
+      "a",
+      "dialog",
+      ".dialog",
+      ".timeline-actions"
+    ].join(",");
+    if (event.target.closest(interactiveSelector)) return;
+    closeDetail();
   });
-  syncIconFilterButtons();
-}
-
-function syncIconFilterButtons() {
-  document.querySelectorAll('.icon-filter-button').forEach(button => {
-    const type = button.dataset.filterType;
-    const value = button.dataset.value;
-    const active = type === 'element' ? state.selectedElements.includes(value) : state.selectedWorks.includes(value);
-    button.classList.toggle('is-active', active);
-    button.setAttribute('aria-pressed', String(active));
-  });
-}
-
-function syncNavItems() {
-  document.querySelectorAll(".nav-item[data-view]").forEach(button => {
-    const active = button.dataset.view === state.currentView;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-current", active ? "page" : "false");
-  });
-}
-
-function setupPalPickers() {
-  for (const id of ["parentA", "parentB", "resultPal", "parentFilter", "resultFilter"]) {
-    const input = $(id);
-    if (!input) continue;
-    const picker = input.closest(".pal-picker");
-    const preview = picker?.querySelector(".pal-picker-preview");
-    const list = picker?.querySelector(".pal-suggestions");
-    state.pickers[id] = { input, picker, preview, list };
-
-    input.addEventListener("input", () => {
-      updatePickerPreview(id);
-      renderPickerSuggestions(id);
-    });
-    input.addEventListener("focus", () => renderPickerSuggestions(id));
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") hidePickerSuggestions(id);
-    });
-  }
-
-  document.addEventListener("click", (event) => {
-    for (const id of Object.keys(state.pickers)) {
-      if (!state.pickers[id].picker.contains(event.target)) hidePickerSuggestions(id);
-    }
-  });
-}
-
-function setupPassivePickers() {
-  for (const id of ["passive1", "passive2", "passive3", "passive4"]) {
-    const input = $(id);
-    if (!input) continue;
-    const picker = input.closest(".passive-picker");
-    const list = picker?.querySelector(".passive-suggestions");
-    state.passivePickers[id] = { input, picker, list };
-    input.addEventListener("input", () => renderPassiveSuggestions(id));
-    input.addEventListener("focus", () => renderPassiveSuggestions(id));
-    input.addEventListener("keydown", (event) => { if (event.key === "Escape") hidePassiveSuggestions(id); });
-  }
-
-  document.addEventListener("click", (event) => {
-    for (const id of Object.keys(state.passivePickers)) {
-      if (!state.passivePickers[id].picker.contains(event.target)) hidePassiveSuggestions(id);
-    }
-  });
-}
-
-function renderPassiveSuggestions(id) {
-  const picker = state.passivePickers[id];
-  if (!picker?.list) return;
-  const query = normalizeSearch(picker.input.value);
-  const used = new Set(getPassiveInputs().filter(input => input.id !== id).map(input => input.value.trim()).filter(Boolean));
-  const candidates = state.passiveNames
-    .filter(name => !used.has(name))
-    .filter(name => !query || normalizeSearch(name).includes(query))
-    .slice(0, 80);
-  if (!candidates.length) {
-    picker.list.innerHTML = `<div class="passive-suggestion is-empty">候補にありません。このまま自由入力できます。</div>`;
-  } else {
-    picker.list.innerHTML = candidates.map(name => `<button type="button" class="passive-suggestion" data-name="${escapeHtml(name)}"><span class="passive-dot"></span><strong>${escapeHtml(name)}</strong></button>`).join("");
-  }
-  picker.list.querySelectorAll("button[data-name]").forEach(button => {
-    button.addEventListener("click", () => {
-      picker.input.value = button.dataset.name;
-      hidePassiveSuggestions(id);
-      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
-      picker.input.focus();
-    });
-  });
-  picker.list.hidden = false;
-}
-
-function hidePassiveSuggestions(id) {
-  const list = state.passivePickers[id]?.list;
-  if (list) list.hidden = true;
-}
-
-function getPassiveInputs() {
-  return ["passive1", "passive2", "passive3", "passive4"].map(id => $(id)).filter(Boolean);
-}
-
-function collectPassiveInputs() {
-  return uniqueStrings(getPassiveInputs().map(input => input.value)).slice(0, 4);
-}
-
-function updatePickerPreview(id) {
-  const picker = state.pickers[id];
-  if (!picker?.preview) return;
-  const name = normalizePalName(picker.input.value);
-  if (!name && id.endsWith("Filter")) {
-    picker.preview.innerHTML = `<span class="pal-icon small filter-any"><span class="pal-fallback">全</span></span>`;
-    return;
-  }
-  picker.preview.innerHTML = palIcon(name, "small", { reveal: isPalDiscovered(name) });
-}
-
-function refreshPickerPreviews() {
-  for (const id of Object.keys(state.pickers)) updatePickerPreview(id);
-  refreshEggPreviews();
-}
-
-function renderPickerSuggestions(id) {
-  const picker = state.pickers[id];
-  if (!picker?.list) return;
-  const raw = picker.input.value.trim();
-  // normalizeSearchでひらがな→カタカナ変換して比較します。
-  const query = normalizeSearch(raw);
-  const isFilter = id.endsWith("Filter");
-  const candidates = state.palNames
-    .filter(name => {
-      const meta = getPalMeta(name);
-      const target = normalizeSearch([name, meta?.displayName, meta?.no].filter(Boolean).join(" "));
-      return !query || target.includes(query);
-    });
-
-  const clearButton = isFilter
-    ? `<button type="button" class="pal-suggestion clear-choice" data-name="">${palIcon("", "small")}<span><strong>すべて</strong><small>絞り込みを解除</small></span></button>`
-    : "";
-
-  if (!candidates.length) {
-    picker.list.innerHTML = clearButton || `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
-  } else {
-    picker.list.innerHTML = clearButton + candidates.map(name => {
-      const meta = getPalMeta(name) || {};
-      const sub = [meta.no, meta.elements?.join("・")].filter(Boolean).join(" / ");
-      return `<button type="button" class="pal-suggestion" data-name="${escapeHtml(name)}">${palIcon(name, "small", { reveal: isPalDiscovered(name) })}<span><strong>${escapeHtml(name)}</strong><small>${escapeHtml(sub || meta.en || "")}</small></span></button>`;
-    }).join("");
-  }
-  picker.list.querySelectorAll("button[data-name]").forEach(button => {
-    button.addEventListener("click", () => {
-      picker.input.value = button.dataset.name;
-      updatePickerPreview(id);
-      hidePickerSuggestions(id);
-      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
-      picker.input.focus();
-    });
-  });
-  picker.list.hidden = false;
-}
-
-function hidePickerSuggestions(id) {
-  const list = state.pickers[id]?.list;
-  if (list) list.hidden = true;
-}
-
-
-function setupEggPickers() {
-  for (const id of ["eggType"]) {
-    const input = $(id);
-    if (!input) continue;
-    const picker = input.closest(".egg-picker");
-    const preview = picker?.querySelector(".egg-picker-preview");
-    const list = picker?.querySelector(".egg-suggestions");
-    state.eggPickers[id] = { input, picker, preview, list };
-
-    input.addEventListener("input", () => {
-      updateEggPreview(id);
-      renderEggSuggestions(id);
-    });
-    input.addEventListener("focus", () => renderEggSuggestions(id));
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") hideEggSuggestions(id);
-    });
-  }
-
-  document.addEventListener("click", (event) => {
-    for (const id of Object.keys(state.eggPickers)) {
-      if (!state.eggPickers[id].picker.contains(event.target)) hideEggSuggestions(id);
-    }
-  });
-}
-
-function updateEggPreview(id) {
-  const picker = state.eggPickers[id];
-  if (!picker?.preview) return;
-  picker.preview.innerHTML = eggIcon(picker.input.value, "small");
-}
-
-function refreshEggPreviews() {
-  for (const id of Object.keys(state.eggPickers)) updateEggPreview(id);
-}
-
-function renderEggSuggestions(id) {
-  const picker = state.eggPickers[id];
-  if (!picker?.list) return;
-  const query = normalizeSearch(picker.input.value);
-  const candidates = EGG_TYPES
-    .filter(egg => !query || eggSearchTarget(egg).includes(query))
-    .slice(0, 30);
-
-  const clearButton = `<button type="button" class="pal-suggestion egg-suggestion clear-choice" data-name=""><span class="egg-icon small empty"><span class="pal-fallback">—</span></span><span><strong>未設定</strong><small>タマゴを記録しない</small></span></button>`;
-
-  if (!candidates.length) {
-    picker.list.innerHTML = clearButton + `<div class="pal-suggestion is-empty">候補にありません。このまま自由入力もできます。</div>`;
-  } else {
-    picker.list.innerHTML = clearButton + candidates.map(egg => {
-      return `<button type="button" class="pal-suggestion egg-suggestion" data-name="${escapeHtml(egg.name)}">${eggIcon(egg.name, "small")}<span><strong>${escapeHtml(egg.name)}</strong><small>${escapeHtml(egg.size || "通常")} / 画像は種類ごとに共通</small></span></button>`;
-    }).join("");
-  }
-
-  picker.list.querySelectorAll("button[data-name]").forEach(button => {
-    button.addEventListener("click", () => {
-      picker.input.value = button.dataset.name;
-      updateEggPreview(id);
-      hideEggSuggestions(id);
-      picker.input.dispatchEvent(new Event("input", { bubbles: true }));
-      picker.input.focus();
-    });
-  });
-  picker.list.hidden = false;
-}
-
-function hideEggSuggestions(id) {
-  const list = state.eggPickers[id]?.list;
-  if (list) list.hidden = true;
-}
-
-async function copyRoomLink() {
-  const url = `${location.origin}${location.pathname}#room=${ROOM_ID}`;
-  try {
-    await navigator.clipboard.writeText(url);
+  elements.copyRoomLink?.addEventListener("click", async () => {
+    const url = `${location.origin}${location.pathname}?room=${encodeURIComponent(ROOM_ID)}`;
+    await navigator.clipboard?.writeText(url);
     toast("共有リンクをコピーしました");
-  } catch {
-    prompt("このURLを友人に共有してください", url);
-  }
+  });
 }
 
-async function setupStorage() {
-  const config = window.firebaseConfig;
-  if (config?.apiKey && config?.databaseURL) {
-    try {
-      const appMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
-      const dbMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js");
-      const app = appMod.initializeApp(config);
-      state.db = dbMod.getDatabase(app);
-      state.dbApi = dbMod;
-      state.dbRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/records`);
-      state.dbMetaRef = dbMod.ref(state.db, `rooms/${ROOM_ID}/meta`);
-      dbMod.onValue(state.dbMetaRef, (snapshot) => {
-        const meta = snapshot.val() || {};
-        if (Array.isArray(meta.recorders)) {
-          setRecorderList(meta.recorders, { persist: false, silent: true });
-        }
-        if (meta.recorderColors && typeof meta.recorderColors === "object") {
-          setRecorderColors(meta.recorderColors, { persist: false, silent: true });
-        }
-        if (typeof meta.worldName === "string") {
-          state.worldName = meta.worldName.trim();
-          localStorage.setItem(worldNameLocalKey(), state.worldName);
-          syncWorldNameUi();
-        } else if (state.worldName) {
-          saveWorldName();
-        }
-      }, (error) => console.warn("Firebase meta read failed:", error));
-      dbMod.onValue(state.dbRef, async (snapshot) => {
-        const value = snapshot.val() || {};
-        const entries = Object.entries(value);
-        const sampleIds = entries.filter(([id]) => id.startsWith(SAMPLE_PREFIX)).map(([id]) => id);
-        const realEntries = entries.filter(([id]) => !id.startsWith(SAMPLE_PREFIX));
-        state.records = realEntries.map(([id, record]) => normalizeRecord({ ...record, id })).filter(Boolean);
-        state.firebaseReady = true;
-        updateConnectionState("共同編集ON", true);
-        ensureSelected();
-        render();
-        if (sampleIds.length) {
-          await Promise.all(sampleIds.map(id => dbMod.remove(dbMod.ref(state.db, `rooms/${ROOM_ID}/records/${id}`))));
-          toast("以前のサンプル記録を削除しました");
-        }
-      }, (error) => {
-        console.warn("Firebase read failed:", error);
-        updateConnectionState("接続エラー", false);
-        toast("Firebaseの読み込み権限を確認してください。", true);
-      });
-      return;
-    } catch (error) {
-      console.warn("Firebase setup failed:", error);
-      updateConnectionState("ローカル保存", false);
-      toast("Firebase設定を確認してください。ローカル保存で起動します。", true);
-    }
-  }
-
-  const saved = localStorage.getItem(localKey());
-  const localRecords = saved ? JSON.parse(saved) : [];
-  state.records = localRecords.map(normalizeRecord).filter(record => record && !record.id.startsWith(SAMPLE_PREFIX));
-  if (localRecords.length !== state.records.length) persistLocal();
-  updateConnectionState("ローカル保存", false);
-  ensureSelected();
-}
-
-function updateConnectionState(text, online) {
-  const el = $("connectionState");
-  el.innerHTML = `<span class="live-dot" style="background:${online ? "#39ce64" : "#ffb02e"}; box-shadow:0 0 0 4px ${online ? "rgba(57,206,100,.18)" : "rgba(255,176,46,.2)"}"></span>${text}`;
-}
-
-function localKey() { return `pal-breeding-records:${ROOM_ID}`; }
-function persistLocal() { localStorage.setItem(localKey(), JSON.stringify(state.records)); }
-
-function normalizeRecord(record) {
-  if (!record) return null;
-  const resultPal = normalizePalName(record.resultPal);
+function normalizeTask(task) {
   return {
-    id: record.id || crypto.randomUUID(),
-    parentA: normalizePalName(record.parentA),
-    parentB: normalizePalName(record.parentB),
-    resultPal,
-    eggType: normalizeEggName(record.eggType),
-    passives: normalizePassives(record.passives),
-    status: resultPal ? "配合確認済み" : "確認中",
-    recorder: normalizeRecorder(record.recorder),
-    note: record.note || "",
-    favorites: normalizeFavorites(record.favorites, record.favorite, record.recorder),
-    favorite: Boolean(record.favorite),
-    updatedAt: Number(record.updatedAt || Date.now())
+    id: task.id,
+    title: task.title || "",
+    description: task.description || "",
+    status: normalizeStatus(task.status),
+    priority: ["緊急", "高", "中", "低"].includes(task.priority) ? task.priority : "中",
+    assignee: normalizeUser(task.assignee),
+    category: normalizeCategory(task.category || "その他"),
+    requester: task.requester || "",
+    tags: Array.isArray(task.tags) ? task.tags : splitTags(task.tags || ""),
+    checklist: Array.isArray(task.checklist) ? task.checklist : [],
+    comments: Array.isArray(task.comments) ? task.comments : [],
+    dueDate: task.dueDate || "",
+    dueTime: task.dueTime || "",
+    pinned: Boolean(task.pinned),
+    createdBy: normalizeUser(task.createdBy || task.assignee),
+    createdAt: Number(task.createdAt || Date.now()),
+    updatedBy: normalizeUser(task.updatedBy || task.createdBy || task.assignee),
+    updatedAt: Number(task.updatedAt || Date.now()),
+    completedAt: task.completedAt ? Number(task.completedAt) : 0
   };
 }
 
-function normalizePalDisplayName(name) {
-  return String(name || "").normalize("NFKC").replace(/\s+/g, " ").trim();
+
+function syncNavigationUi() {
+  elements.navItems.forEach(item => {
+    if (item.dataset.layout) item.classList.toggle("active", item.dataset.layout === state.layout);
+    if (item.dataset.filter) item.classList.toggle("active", item.dataset.filter === state.scope);
+  });
 }
 
-function hiraToKata(value) {
-  return String(value || "").replace(/[ぁ-ゖ]/g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+function render() {
+  syncUserUi();
+  syncRoomUi();
+  syncNavigationUi();
+  renderSummary();
+  const tasks = getFilteredTasks();
+  elements.boardView.hidden = state.layout !== "board";
+  elements.listView.hidden = state.layout !== "list";
+  elements.timelineView.hidden = state.layout !== "timeline";
+
+  if (state.layout === "list") {
+    elements.boardView.innerHTML = "";
+    elements.timelineView.innerHTML = "";
+    renderList(tasks);
+  } else if (state.layout === "timeline") {
+    elements.boardView.innerHTML = "";
+    elements.listView.innerHTML = "";
+    renderTimeline(tasks);
+  } else {
+    elements.listView.innerHTML = "";
+    elements.timelineView.innerHTML = "";
+    renderBoard(tasks);
+  }
+  renderDetail();
 }
 
-function normalizePalName(name) {
-  const raw = normalizePalDisplayName(name);
-  if (!raw) return "";
-  if (state.palMap.has(raw)) return raw;
-
-  const kana = hiraToKata(raw).normalize("NFKC");
-  if (state.palMap.has(kana)) return kana;
-
-  const key = normalizeKey(kana);
-  return LEGACY_ENGLISH_TO_JP[key] || kana;
+function renderSummary() {
+  const now = startOfToday();
+  const tasks = state.tasks;
+  const open = tasks.filter(t => !isCompletedStatus(t.status)).length;
+  const overdue = tasks.filter(t => !isCompletedStatus(t.status) && t.dueDate && toDate(t.dueDate) < now).length;
+  const today = tasks.filter(t => !isCompletedStatus(t.status) && t.dueDate && toDate(t.dueDate).getTime() === now.getTime()).length;
+  const mine = tasks.filter(t => !isCompletedStatus(t.status) && t.assignee === getCurrentUser()).length;
+  elements.openCount.textContent = `${open}件`;
+  elements.overdueCount.textContent = `${overdue}件`;
+  elements.todayCount.textContent = `${today}件`;
+  elements.myCount.textContent = `${mine}件`;
 }
 
-function normalizeKey(value) {
-  return hiraToKata(String(value || ""))
-    .normalize("NFKC")
-    .toLowerCase()
-    .replace(/[\s\u3000_\-ーｰ・'’\.]/g, "");
+function renderBoard(tasks) {
+  const statuses = getStatusList();
+  const visibleStatuses = state.scope === "done"
+    ? statuses.filter(isCompletedStatus)
+    : statuses.filter(status => !isCompletedStatus(status));
+
+  const columns = visibleStatuses.map(status => {
+    const list = tasks.filter(t => t.status === status);
+    return `<section class="board-column" data-drop-kind="status" data-drop-value="${escapeHtml(status)}" data-status="${escapeHtml(status)}">
+      <div class="column-head">
+        <span class="column-title">
+          <span class="column-drag-handle" draggable="true" data-drag-kind="status" data-drag-value="${escapeHtml(status)}" title="ドラッグして状態の順番を変更">☰</span>
+          <span>${escapeHtml(status)}</span>
+        </span>
+        <em>${list.length}</em>
+      </div>
+      <div class="task-list">${list.map(taskCard).join("") || emptyColumn(status)}</div>
+    </section>`;
+  }).join("");
+
+  const addColumn = state.scope === "done" ? "" : `<section class="board-column add-status-column">
+    <button type="button" data-add-status>＋ セクション追加</button>
+    <p>新しい状態を追加できます。</p>
+  </section>`;
+
+  elements.boardView.innerHTML = columns + addColumn;
+  elements.boardView.querySelectorAll("[data-task-id]").forEach(el => {
+    el.addEventListener("click", () => selectTask(el.dataset.taskId));
+    el.addEventListener("dblclick", (event) => {
+      event.stopPropagation();
+      openTaskEditorById(el.dataset.taskId);
+    });
+  });
+  elements.boardView.querySelector("[data-add-status]")?.addEventListener("click", () => {
+    renderStatusManager();
+    elements.statusManageDialog.showModal();
+    elements.newStatusName.focus();
+  });
+
+  bindReorder(elements.boardView, {
+    kind: "status",
+    handleSelector: "[data-drag-kind='status']",
+    dropSelector: "[data-drop-kind='status']",
+    onReorder: reorderStatuses
+  });
 }
 
 
-function normalizeEggName(value) {
-  const raw = normalizePalDisplayName(value);
-  if (!raw) return "";
-  const rawKey = normalizeSearch(raw);
-  const found = EGG_TYPES.find(egg =>
-    normalizeSearch(egg.name) === rawKey ||
-    egg.aliases?.some(alias => normalizeSearch(alias) === rawKey || normalizeSearch(`${alias}タマゴ`) === rawKey)
-  );
-  if (found) return found.name;
-  return hiraToKata(raw).normalize("NFKC");
+function renderTimeline(tasks) {
+  const start = parseISODate(state.timelineStart) || startOfToday();
+  const timelineDays = getTimelineDays();
+  const dates = Array.from({ length: timelineDays }, (_, index) => addDays(start, index));
+  const statuses = state.scope === "done"
+    ? getStatusList().filter(isCompletedStatus)
+    : getStatusList().filter(status => !isCompletedStatus(status));
+
+  const dateHeaders = dates.map(date => `<div class="timeline-date ${isTodayDate(date) ? "today" : ""}">
+    <strong>${date.getDate()}</strong>
+    <span>${["日","月","火","水","木","金","土"][date.getDay()]}</span>
+  </div>`).join("");
+
+  const rows = statuses.map(status => {
+    const cells = dates.map(date => {
+      const iso = toISODate(date);
+      const dayTasks = tasks.filter(task => task.status === status && task.dueDate === iso);
+      return `<div class="timeline-cell ${isTodayDate(date) ? "today" : ""}">
+        ${dayTasks.map(timelineTask).join("")}
+      </div>`;
+    }).join("");
+    return `<div class="timeline-row-label">${escapeHtml(status)}<em>${tasks.filter(task => task.status === status).length}</em></div>${cells}`;
+  }).join("");
+
+  const undated = tasks.filter(task => !task.dueDate);
+  const rangeLabel = `${formatMonthDay(dates[0])} - ${formatMonthDay(dates[dates.length - 1])}`;
+
+  elements.timelineView.innerHTML = `
+    <div class="timeline-toolbar">
+      <div>
+        <strong>タイムライン</strong>
+        <span>${escapeHtml(rangeLabel)}</span>
+      </div>
+      <div class="timeline-actions">
+        <select class="timeline-range-select" data-timeline-range aria-label="タイムライン表示範囲">
+          <option value="14" ${state.timelineRange === "14" ? "selected" : ""}>14日</option>
+          <option value="month" ${state.timelineRange === "month" ? "selected" : ""}>1か月</option>
+        </select>
+        <button type="button" data-timeline-prev>← 前へ</button>
+        <button type="button" data-timeline-today>今日</button>
+        <button type="button" data-timeline-next>次へ →</button>
+      </div>
+    </div>
+
+    <div class="timeline-scroller">
+      <div class="timeline-grid" style="--timeline-days:${timelineDays}">
+        <div class="timeline-corner">状態</div>
+        ${dateHeaders}
+        ${rows || `<div class="timeline-empty">表示対象の状態がありません。</div>`}
+      </div>
+    </div>
+
+    <section class="timeline-undated">
+      <div class="timeline-undated-head">
+        <strong>期限なし</strong>
+        <span>${undated.length}件</span>
+      </div>
+      <div class="timeline-undated-list">
+        ${undated.length ? undated.map(timelineTask).join("") : `<p>期限なしのタスクはありません。</p>`}
+      </div>
+    </section>
+  `;
+
+  elements.timelineView.querySelectorAll("[data-task-id]").forEach(el => {
+    el.addEventListener("click", () => selectTask(el.dataset.taskId));
+    el.addEventListener("dblclick", (event) => {
+      event.stopPropagation();
+      openTaskEditorById(el.dataset.taskId);
+    });
+  });
+  elements.timelineView.querySelector("[data-timeline-prev]")?.addEventListener("click", () => shiftTimeline(-getTimelineStepDays()));
+  elements.timelineView.querySelector("[data-timeline-today]")?.addEventListener("click", () => setTimelineStart(todayISO()));
+  elements.timelineView.querySelector("[data-timeline-next]")?.addEventListener("click", () => shiftTimeline(getTimelineStepDays()));
+  elements.timelineView.querySelector("[data-timeline-range]")?.addEventListener("change", (event) => setTimelineRange(event.target.value));
 }
 
-function getEggMeta(name) {
-  const normalized = normalizeEggName(name);
-  if (!normalized) return null;
-  return EGG_TYPES.find(egg => egg.name === normalized) || null;
+function timelineTask(task) {
+  return `<button type="button" class="timeline-task timeline-task-compact priority-line-${escapeHtml(task.priority)}" data-task-id="${escapeHtml(task.id)}" title="${escapeHtml(task.title)}">
+    <span class="timeline-task-line">
+      ${userAvatarOnly(task.assignee)}
+      ${priorityBadge(task.priority)}
+      <strong>${escapeHtml(task.title)}</strong>
+    </span>
+  </button>`;
 }
 
-function eggIcon(name, size = "normal") {
-  const meta = getEggMeta(name);
-  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
-  const eggClass = meta?.key ? ` egg-${meta.key}` : " egg-plain";
-  const label = meta?.name || normalizeEggName(name) || "タマゴ";
-  const url = meta?.icon || "assets/plain-egg.png";
-  return `<span class="egg-icon${sizeClass}${eggClass}" title="${escapeHtml(label)}"><img src="${escapeHtml(url)}" alt="${escapeHtml(label)}" loading="lazy"></span>`;
+function userAvatarOnly(name) {
+  const user = normalizeUser(name);
+  return `<span class="timeline-user-avatar" style="--user-color:${escapeHtml(userColor(user))}" title="${escapeHtml(user)}">${escapeHtml(user.slice(0,1))}</span>`;
 }
 
-function eggInline(name) {
-  const normalized = normalizeEggName(name);
-  if (!normalized) return `<span class="tag subtle">未設定</span>`;
-  return `<span class="egg-inline">${eggIcon(normalized)}<span>${escapeHtml(normalized)}</span></span>`;
+function getTimelineDays() {
+  return TIMELINE_RANGES[state.timelineRange] || TIMELINE_RANGES["14"];
 }
 
-function eggSearchTarget(egg) {
-  return normalizeSearch([egg.name, ...(egg.aliases || [])].join(" "));
+function getTimelineStepDays() {
+  return state.timelineRange === "month" ? 31 : 7;
 }
 
-function recorderListLocalKey() {
-  return `${RECORDER_LIST_STORAGE_PREFIX}${ROOM_ID}`;
+function setTimelineRange(value) {
+  state.timelineRange = TIMELINE_RANGES[value] ? value : "14";
+  localStorage.setItem(timelineRangeKey(), state.timelineRange);
+  render();
 }
 
-function recorderColorLocalKey() {
-  return `${RECORDER_COLOR_STORAGE_PREFIX}${ROOM_ID}`;
+function shiftTimeline(days) {
+  const base = parseISODate(state.timelineStart) || startOfToday();
+  setTimelineStart(toISODate(addDays(base, days)));
 }
 
-function sanitizeRecorderName(value) {
-  return String(value || "")
-    .normalize("NFKC")
-    .replace(/\s+/g, "")
-    .trim()
-    .slice(0, 12);
+function setTimelineStart(value) {
+  state.timelineStart = value;
+  localStorage.setItem(timelineStartKey(), state.timelineStart);
+  render();
 }
 
-function normalizeColor(value, fallback = "#9067e9") {
-  const raw = String(value || "").trim();
-  return /^#[0-9a-fA-F]{6}$/.test(raw) ? raw.toLowerCase() : fallback;
+
+function renderList(tasks) {
+  elements.listView.innerHTML = `<table class="task-table">
+    <thead><tr><th>件名</th><th>担当</th><th>状態</th><th>優先度</th><th>分類</th><th>期限</th><th>更新</th></tr></thead>
+    <tbody>${tasks.map(t => `<tr data-task-id="${escapeHtml(t.id)}">
+      <td><strong>${escapeHtml(t.title)}</strong><br><small>${escapeHtml(t.requester || "依頼元未入力")}</small></td>
+      <td>${userBadge(t.assignee)}</td>
+      <td>${statusBadge(t.status)}</td>
+      <td>${priorityBadge(t.priority)}</td>
+      <td>${escapeHtml(t.category)}</td>
+      <td>${dueLabel(t)}</td>
+      <td>${formatDateTime(t.updatedAt)}</td>
+    </tr>`).join("")}</tbody>
+  </table>`;
+  elements.listView.querySelectorAll("[data-task-id]").forEach(el => {
+    el.addEventListener("click", () => selectTask(el.dataset.taskId));
+    el.addEventListener("dblclick", (event) => {
+      event.stopPropagation();
+      openTaskEditorById(el.dataset.taskId);
+    });
+  });
 }
 
-function uniqueRecorderList(list) {
+function taskCard(task) {
+  const overdue = isOverdue(task);
+  const checklist = checklistProgress(task);
+  return `<article class="task-card ${task.pinned ? "pinned" : ""} ${overdue ? "overdue" : ""}" data-task-id="${escapeHtml(task.id)}">
+    <p class="task-title">${task.pinned ? `<span class="pin">★</span>` : ""}<span>${escapeHtml(task.title)}</span></p>
+    <div class="task-meta">${priorityBadge(task.priority)}${categoryBadge(task.category)}${overdue ? `<span class="badge priority-緊急">期限超過</span>` : ""}</div>
+    <div class="due-line"><span>${userBadge(task.assignee)}</span><span>${dueLabel(task)}</span></div>
+    ${task.checklist.length ? `<div class="progress" title="${checklist.done}/${checklist.total}"><span style="width:${checklist.percent}%"></span></div>` : ""}
+  </article>`;
+}
+
+function renderDetail() {
+  const task = state.tasks.find(t => t.id === state.selectedId);
+  if (!task) {
+    state.selectedId = "";
+    elements.appShell.classList.remove("detail-open");
+    elements.detailPanel.classList.remove("open");
+    elements.detailBody.className = "detail-body empty";
+    elements.detailBody.innerHTML = "";
+    return;
+  }
+
+  elements.appShell.classList.add("detail-open");
+  elements.detailPanel.classList.add("open");
+  elements.detailBody.className = "detail-body";
+  const progress = checklistProgress(task);
+  elements.detailBody.innerHTML = `
+    <h3 class="detail-title">${escapeHtml(task.title)}</h3>
+    <div class="task-meta">${statusBadge(task.status)}${priorityBadge(task.priority)}${categoryBadge(task.category)}${task.pinned ? `<span class="badge priority-中">固定</span>` : ""}</div>
+    <div class="detail-actions">
+      <button class="primary-button" data-action="edit">編集する</button>
+      ${!isCompletedStatus(task.status) ? `<button class="complete-button" data-action="done">✓ 完了にする</button>` : `<button class="ghost-button" data-action="reopen">未着手に戻す</button>`}
+    </div>
+
+    <section class="detail-section">
+      <div class="detail-grid">
+        <div class="field-card"><small>担当者</small>${userBadge(task.assignee)}</div>
+        <div class="field-card"><small>依頼元</small><strong>${escapeHtml(task.requester || "未入力")}</strong></div>
+        <div class="field-card"><small>期限</small><strong>${dueLabel(task)}</strong></div>
+        <div class="field-card"><small>作成日</small><strong>${formatDateTime(task.createdAt)}</strong></div>
+        <div class="field-card"><small>最終更新</small><strong>${formatDateTime(task.updatedAt)}</strong></div>
+        <div class="field-card"><small>更新者</small>${userBadge(task.updatedBy)}</div>
+      </div>
+    </section>
+
+    ${task.description ? `<section class="detail-section"><h4>内容・メモ</h4><div class="description">${escapeHtml(task.description)}</div></section>` : ""}
+
+    <section class="detail-section">
+      <h4>チェックリスト ${task.checklist.length ? `(${progress.done}/${progress.total})` : ""}</h4>
+      <div class="checklist">
+        ${task.checklist.length ? task.checklist.map((item, index) => `<label class="check-item ${item.done ? "done" : ""}">
+          <input type="checkbox" data-check-index="${index}" ${item.done ? "checked" : ""} />
+          <span>${escapeHtml(item.text)}</span>
+        </label>`).join("") : `<p class="description">チェック項目はありません。</p>`}
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <h4>コメント</h4>
+      <div class="comment-list">${task.comments.length ? task.comments.map(comment => `<div class="comment">
+        <div class="comment-head"><span>${userBadge(comment.author)}</span><span>${formatDateTime(comment.createdAt)}</span></div>
+        <div>${escapeHtml(comment.text)}</div>
+      </div>`).join("") : `<p class="description">コメントはまだありません。</p>`}</div>
+      <form class="comment-form" id="commentForm">
+        <textarea id="commentText" placeholder="対応状況や申し送りを入力"></textarea>
+        <button class="ghost-button" type="submit">コメント追加</button>
+      </form>
+    </section>
+  `;
+
+  elements.detailBody.querySelector('[data-action="edit"]')?.addEventListener("click", () => openTaskDialog(task));
+  elements.detailBody.querySelector('[data-action="done"]')?.addEventListener("click", () => changeStatus(task.id, COMPLETED_STATUS));
+  elements.detailBody.querySelector('[data-action="reopen"]')?.addEventListener("click", () => changeStatus(task.id, getDefaultOpenStatus()));
+  elements.detailBody.querySelectorAll("[data-check-index]").forEach(input => {
+    input.addEventListener("change", () => toggleChecklist(task.id, Number(input.dataset.checkIndex), input.checked));
+  });
+  $("commentForm")?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const text = $("commentText").value.trim();
+    if (!text) return;
+    await addComment(task.id, text);
+    $("commentText").value = "";
+  });
+}
+
+function getFilteredTasks() {
+  const q = normalizeText(elements.searchInput.value);
+  const now = startOfToday();
+  let tasks = state.tasks.filter(task => {
+    if (state.scope === "mine" && task.assignee !== getCurrentUser()) return false;
+    if (state.scope === "done" && !isCompletedStatus(task.status)) return false;
+    if (state.scope !== "done" && isCompletedStatus(task.status)) return false;
+    if (elements.assigneeFilter.value && task.assignee !== elements.assigneeFilter.value) return false;
+    if (elements.statusFilter.value && task.status !== elements.statusFilter.value) return false;
+    if (elements.priorityFilter.value && task.priority !== elements.priorityFilter.value) return false;
+    if (elements.categoryFilter.value && task.category !== elements.categoryFilter.value) return false;
+    if (elements.pinOnly.checked && !task.pinned) return false;
+    if (elements.overdueOnly.checked && !isOverdue(task)) return false;
+    if (elements.todayOnly.checked && (!task.dueDate || toDate(task.dueDate).getTime() > now.getTime())) return false;
+    if (q) {
+      const hay = normalizeText([task.title, task.description, task.requester, task.category, task.assignee, task.tags.join(" ")].join(" "));
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const sort = elements.sortSelect.value;
+  tasks.sort((a,b) => {
+    if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
+    if (sort === "updated") return b.updatedAt - a.updatedAt;
+    if (sort === "priority") return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority] || dueScore(a) - dueScore(b);
+    if (sort === "due") return dueScore(a) - dueScore(b);
+    return compareSmartTasks(a, b);
+  });
+  return tasks;
+}
+
+function openTaskDialog(task = null) {
+  elements.taskDialogTitle.textContent = task ? "タスクを編集" : "新しいタスク";
+  $("taskId").value = task?.id || "";
+  $("taskTitle").value = task?.title || "";
+  $("taskAssignee").value = task?.assignee || getCurrentUser();
+  syncStatusOptions($("taskStatus"));
+  $("taskStatus").value = task?.status || getDefaultOpenStatus();
+  $("taskPriority").value = task?.priority || "中";
+  syncCategoryOptions($("taskCategory"));
+  $("taskCategory").value = task?.category || (state.categories[0] || "PC");
+  $("taskDueDate").value = task?.dueDate || "";
+  $("taskDueTime").value = task?.dueTime || "";
+  $("taskRequester").value = task?.requester || "";
+  $("taskTags").value = task?.tags?.join(", ") || "";
+  $("taskDescription").value = task?.description || "";
+  $("taskChecklist").value = task?.checklist?.map(i => `${i.done ? "[x] " : ""}${i.text}`).join("\n") || "";
+  $("taskPinned").checked = Boolean(task?.pinned);
+  elements.deleteTask.hidden = !task;
+  elements.taskDialog.showModal();
+  $("taskTitle").focus();
+}
+
+async function saveTaskFromForm() {
+  const id = $("taskId").value || generateId();
+  const existing = state.tasks.find(t => t.id === id);
+  const status = $("taskStatus").value;
+  const now = Date.now();
+  const task = normalizeTask({
+    id,
+    title: $("taskTitle").value.trim(),
+    assignee: $("taskAssignee").value,
+    status,
+    priority: $("taskPriority").value,
+    category: $("taskCategory").value,
+    dueDate: $("taskDueDate").value,
+    dueTime: $("taskDueTime").value,
+    requester: $("taskRequester").value.trim(),
+    tags: splitTags($("taskTags").value),
+    description: $("taskDescription").value.trim(),
+    checklist: parseChecklist($("taskChecklist").value, existing?.checklist || []),
+    pinned: $("taskPinned").checked,
+    comments: existing?.comments || [],
+    createdBy: existing?.createdBy || getCurrentUser(),
+    createdAt: existing?.createdAt || now,
+    updatedBy: getCurrentUser(),
+    updatedAt: now,
+    completedAt: status === "完了" ? (existing?.completedAt || now) : 0
+  });
+  await persistTask(task);
+  state.selectedId = id;
+  elements.taskDialog.close();
+  toast("保存しました");
+}
+
+async function persistTask(task) {
+  if (state.firebaseReady && state.dbApi) {
+    await set(ref(state.db, `rooms/${ROOM_ID}/tasks/${task.id}`), task);
+  } else {
+    const index = state.tasks.findIndex(t => t.id === task.id);
+    if (index >= 0) state.tasks[index] = task;
+    else state.tasks.unshift(task);
+    localStorage.setItem(tasksKey(), JSON.stringify(state.tasks));
+    render();
+  }
+}
+
+async function deleteTask(id) {
+  if (state.firebaseReady && state.dbApi) {
+    await remove(ref(state.db, `rooms/${ROOM_ID}/tasks/${id}`));
+  } else {
+    state.tasks = state.tasks.filter(t => t.id !== id);
+    localStorage.setItem(tasksKey(), JSON.stringify(state.tasks));
+    render();
+  }
+  if (state.selectedId === id) state.selectedId = "";
+  toast("削除しました");
+}
+
+async function changeStatus(id, status) {
+  const task = state.tasks.find(t => t.id === id);
+  if (!task) return;
+  task.status = status;
+  task.updatedAt = Date.now();
+  task.updatedBy = getCurrentUser();
+  task.completedAt = status === "完了" ? Date.now() : 0;
+  await persistTask(task);
+}
+
+async function toggleChecklist(id, index, done) {
+  const task = state.tasks.find(t => t.id === id);
+  if (!task || !task.checklist[index]) return;
+  task.checklist[index].done = done;
+  task.updatedAt = Date.now();
+  task.updatedBy = getCurrentUser();
+  await persistTask(task);
+}
+
+async function addComment(id, text) {
+  const task = state.tasks.find(t => t.id === id);
+  if (!task) return;
+  task.comments = [...(task.comments || []), { id: generateId(), author: getCurrentUser(), text, createdAt: Date.now() }];
+  task.updatedAt = Date.now();
+  task.updatedBy = getCurrentUser();
+  await persistTask(task);
+}
+
+function loadLocalTasks() {
+  try {
+    state.tasks = JSON.parse(localStorage.getItem(tasksKey()) || "[]").map(normalizeTask);
+  } catch {
+    state.tasks = [];
+  }
+  render();
+}
+
+function syncUserUi() {
+  const current = getCurrentUser();
+  syncUserOptions(elements.currentUserSelect);
+  syncUserOptions(elements.startupUser);
+  syncUserOptions($("taskAssignee"));
+  syncUserOptions(elements.assigneeFilter, true);
+  syncCategoryOptions($("taskCategory"));
+  syncCategoryOptions(elements.categoryFilter, true);
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  elements.currentUserSelect.value = current;
+  elements.startupUser.value = current;
+  elements.currentUserLabel.textContent = current;
+  elements.currentUserDot.textContent = current.slice(0, 1);
+  elements.currentUserDot.style.setProperty("--user-color", userColor(current));
+}
+
+function syncUserOptions(select, includeAll = false) {
+  if (!select) return;
+  const currentValue = select.value;
+  select.innerHTML = `${includeAll ? '<option value="">すべて</option>' : ""}${state.users.map(u => `<option value="${escapeHtml(u)}">${escapeHtml(u)}</option>`).join("")}`;
+  if ([...select.options].some(opt => opt.value === currentValue)) select.value = currentValue;
+}
+
+function loadUsers() {
+  try {
+    const list = JSON.parse(localStorage.getItem(usersKey()) || "null");
+    if (Array.isArray(list)) return uniqueUsers(list);
+  } catch {}
+  return [...DEFAULT_USERS];
+}
+
+function loadUserColors() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(colorsKey()) || "{}");
+    return { ...DEFAULT_COLORS, ...saved };
+  } catch {
+    return { ...DEFAULT_COLORS };
+  }
+}
+
+function uniqueUsers(list) {
   const result = [];
-  for (const value of Array.isArray(list) ? list : []) {
-    const name = sanitizeRecorderName(value);
+  for (const item of Array.isArray(list) ? list : []) {
+    const name = sanitizeUser(item);
     if (name && !result.includes(name)) result.push(name);
   }
-  for (const name of DEFAULT_RECORDERS) {
-    if (!result.includes(name)) result.push(name);
-  }
-  return result.length ? result : [...DEFAULT_RECORDERS];
+  return result.length ? result : [...DEFAULT_USERS];
 }
 
-function defaultRecorderColor(name) {
-  const normalized = sanitizeRecorderName(name);
-  if (DEFAULT_RECORDER_COLORS[normalized]) return DEFAULT_RECORDER_COLORS[normalized];
-  const palette = ["#9067e9", "#ff9f43", "#ef5d68", "#21b6a8", "#8f7a4a", "#64748b"];
-  let sum = 0;
-  for (const ch of normalized) sum += ch.charCodeAt(0);
-  return palette[sum % palette.length];
+function sanitizeUser(value) {
+  return String(value || "").normalize("NFKC").replace(/\s+/g, "").slice(0, 12);
 }
-
-function loadRecorderList() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(recorderListLocalKey()) || "null");
-    if (Array.isArray(saved)) return uniqueRecorderList(saved);
-  } catch (error) {
-    console.warn("Recorder list read failed", error);
-  }
-  return [...DEFAULT_RECORDERS];
+function normalizeUser(value) {
+  const raw = sanitizeUser(value);
+  return state.users.find(u => normalizeText(u) === normalizeText(raw)) || raw || state.users[0] || DEFAULT_USERS[0];
 }
-
-function loadRecorderColors() {
-  const colors = {};
-  try {
-    const saved = JSON.parse(localStorage.getItem(recorderColorLocalKey()) || "null");
-    if (saved && typeof saved === "object" && !Array.isArray(saved)) {
-      for (const [name, color] of Object.entries(saved)) {
-        const normalized = sanitizeRecorderName(name);
-        if (normalized) colors[normalized] = normalizeColor(color, defaultRecorderColor(normalized));
-      }
-    }
-  } catch (error) {
-    console.warn("Recorder colors read failed", error);
-  }
-  for (const name of DEFAULT_RECORDERS) colors[name] = colors[name] || DEFAULT_RECORDER_COLORS[name];
-  return colors;
+function getCurrentUser() {
+  return normalizeUser(state.currentUser || localStorage.getItem("systemTaskUser") || state.users[0]);
 }
-
-function normalizeRecorder(value) {
-  const raw = sanitizeRecorderName(value);
-  const options = state?.recorders?.length ? state.recorders : DEFAULT_RECORDERS;
-  if (!raw) return options[0] || DEFAULT_RECORDERS[0];
-  const exact = options.find(name => normalizeKey(name) === normalizeKey(raw));
-  if (exact) return exact;
-
-  const loose = options.find(name =>
-    (raw.includes("森") && name.includes("森")) ||
-    (raw.includes("福") && name.includes("福"))
-  );
-  return loose || raw;
-}
-
-function recorderColor(name) {
-  const recorder = normalizeRecorder(name);
-  return normalizeColor(state.recorderColors?.[recorder], defaultRecorderColor(recorder));
-}
-
-function recorderBadgeStyle(name) {
-  const color = recorderColor(name);
-  return `--recorder-color:${escapeHtml(color)};`;
-}
-
-function getCurrentRecorder() {
-  const options = state.recorders?.length ? state.recorders : DEFAULT_RECORDERS;
-  const saved = sanitizeRecorderName(state.currentRecorder || localStorage.getItem(RECORDER_STORAGE_KEY) || "");
-  const exact = options.find(name => normalizeKey(name) === normalizeKey(saved));
-  return exact || options[0] || DEFAULT_RECORDERS[0];
-}
-
-function setCurrentRecorder(value, options = {}) {
-  state.currentRecorder = normalizeRecorder(value);
-  localStorage.setItem(RECORDER_STORAGE_KEY, state.currentRecorder);
-  syncRecorderUi();
+function setCurrentUser(value) {
+  state.currentUser = normalizeUser(value);
+  localStorage.setItem("systemTaskUser", state.currentUser);
+  syncCurrentUserStatuses({ persist: false, silent: true });
+  syncUserUi();
   render();
-  if (!options.silent) toast(`現在のユーザーを${state.currentRecorder}にしました`);
+}
+function userColor(name) {
+  const user = normalizeUser(name);
+  return state.userColors[user] || DEFAULT_COLORS[user] || "#7c5cff";
+}
+function userBadge(name) {
+  const user = normalizeUser(name);
+  return `<span class="user-badge" style="--user-color:${escapeHtml(userColor(user))}"><span class="tiny-avatar">${escapeHtml(user.slice(0,1))}</span>${escapeHtml(user)}</span>`;
 }
 
-function setRecorderList(list, options = {}) {
-  state.recorders = uniqueRecorderList(list);
-  for (const name of state.recorders) {
-    state.recorderColors[name] = normalizeColor(state.recorderColors[name], defaultRecorderColor(name));
-  }
-  localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
-  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
 
-  if (!state.recorders.includes(getCurrentRecorder())) {
-    state.currentRecorder = state.recorders[0] || DEFAULT_RECORDERS[0];
-    localStorage.setItem(RECORDER_STORAGE_KEY, state.currentRecorder);
-  }
-  syncRecorderUi();
-  renderRecorderManager();
-  if (options.persist !== false) saveRecorderSettings();
-  if (!options.silent) render();
-}
+function bindReorder(container, { kind, handleSelector, dropSelector, onReorder }) {
+  if (!container) return;
 
-function setRecorderColors(colors, options = {}) {
-  const next = { ...(state.recorderColors || {}) };
-  if (colors && typeof colors === "object" && !Array.isArray(colors)) {
-    for (const [name, color] of Object.entries(colors)) {
-      const recorder = sanitizeRecorderName(name);
-      if (recorder) next[recorder] = normalizeColor(color, defaultRecorderColor(recorder));
-    }
-  }
-  for (const name of state.recorders) {
-    next[name] = normalizeColor(next[name], defaultRecorderColor(name));
-  }
-  state.recorderColors = next;
-  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
-  syncRecorderUi();
-  renderRecorderManager();
-  if (options.persist !== false) saveRecorderSettings();
-  if (!options.silent) render();
-}
+  container.querySelectorAll(handleSelector).forEach(handle => {
+    handle.addEventListener("dragstart", event => {
+      const value = handle.dataset.dragValue;
+      if (!value || !event.dataTransfer) return;
 
-async function saveRecorderSettings() {
-  localStorage.setItem(recorderListLocalKey(), JSON.stringify(state.recorders));
-  localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
-  if (state.firebaseReady && state.dbApi && state.db && state.dbMetaRef) {
-    try {
-      await state.dbApi.update(state.dbMetaRef, {
-        recorders: state.recorders,
-        recorderColors: state.recorderColors,
-        recordersUpdatedAt: Date.now()
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", JSON.stringify({ kind, value }));
+      handle.closest(dropSelector)?.classList.add("is-dragging");
+    });
+
+    handle.addEventListener("dragend", () => {
+      container.querySelectorAll(".is-dragging, .is-drag-over").forEach(el => {
+        el.classList.remove("is-dragging", "is-drag-over");
       });
-    } catch (error) {
-      console.warn("Recorder settings save failed:", error);
-      toast("ユーザー設定の保存に失敗しました。", true);
-    }
+    });
+  });
+
+  container.querySelectorAll(dropSelector).forEach(dropTarget => {
+    dropTarget.addEventListener("dragover", event => {
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+      dropTarget.classList.add("is-drag-over");
+    });
+
+    dropTarget.addEventListener("dragleave", () => {
+      dropTarget.classList.remove("is-drag-over");
+    });
+
+    dropTarget.addEventListener("drop", async event => {
+      event.preventDefault();
+      dropTarget.classList.remove("is-drag-over");
+
+      const payload = getReorderPayload(event);
+      if (!payload || payload.kind !== kind) return;
+
+      const target = dropTarget.dataset.dropValue;
+      if (!target || payload.value === target) return;
+
+      await onReorder(payload.value, target);
+    });
+  });
+}
+
+function getReorderPayload(event) {
+  if (!event.dataTransfer) return null;
+  const raw = event.dataTransfer.getData("text/plain");
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.kind && parsed.value ? parsed : null;
+  } catch {
+    return null;
   }
 }
 
-const saveRecorderList = saveRecorderSettings;
+function reorderValues(list, source, target) {
+  const next = [...list];
+  const from = next.indexOf(source);
+  const to = next.indexOf(target);
+  if (from < 0 || to < 0 || from === to) return null;
 
-function syncRecorderOptions(selectElement) {
-  if (!selectElement) return;
-  const current = getCurrentRecorder();
-  selectElement.innerHTML = state.recorders
-    .map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
-    .join("");
-  if (state.recorders.includes(current)) selectElement.value = current;
+  const [item] = next.splice(from, 1);
+  next.splice(to, 0, item);
+  return next;
 }
 
-function syncRecorderUi() {
-  const current = getCurrentRecorder();
-  syncRecorderOptions(elements.currentRecorderSelect);
-  syncRecorderOptions(elements.startupRecorder);
-  if (elements.currentRecorderSelect) elements.currentRecorderSelect.value = current;
-  if (elements.startupRecorder) elements.startupRecorder.value = current;
-  if (elements.currentRecorderLabel) elements.currentRecorderLabel.textContent = current;
-  if (elements.currentRecorderDot) {
-    elements.currentRecorderDot.textContent = current.slice(0, 1);
-    elements.currentRecorderDot.style.setProperty("--recorder-color", recorderColor(current));
+async function reorderUsers(source, target) {
+  const next = reorderValues(state.users, source, target);
+  if (!next) return;
+
+  state.users = uniqueUsers(next);
+  await saveUserSettings(true);
+  syncUserUi();
+  renderUserManager();
+  render();
+  toast("ユーザーの順番を変更しました");
+}
+
+async function reorderStatuses(source, target) {
+  const next = reorderValues(getStatusList(), source, target);
+  if (!next) return;
+
+  state.statuses = uniqueStatuses(next);
+  await saveStatusSettings(true);
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  renderStatusManager();
+  render();
+  toast("状態の順番を変更しました");
+}
+
+async function reorderCategories(source, target) {
+  const next = reorderValues(state.categories, source, target);
+  if (!next) return;
+
+  state.categories = uniqueCategories(next);
+  await saveCategorySettings(true);
+  syncCategoryOptions($("taskCategory"));
+  syncCategoryOptions(elements.categoryFilter, true);
+  renderCategoryManager();
+  render();
+  toast("分類の順番を変更しました");
+}
+
+
+function renderUserManager() {
+  elements.userList.innerHTML = state.users.map(user => `<div class="user-list-item" data-drop-kind="user" data-drop-value="${escapeHtml(user)}">
+    <span class="drag-handle" draggable="true" data-drag-kind="user" data-drag-value="${escapeHtml(user)}" title="ドラッグしてユーザーの順番を変更">☰</span>
+    ${userBadge(user)}
+    <div class="user-list-actions">
+      <input class="user-color-input" type="color" value="${escapeHtml(userColor(user))}" data-user-color="${escapeHtml(user)}" />
+      <button class="mini-button" type="button" data-select-user="${escapeHtml(user)}">選択</button>
+      <button class="mini-button danger" type="button" data-delete-user="${escapeHtml(user)}" ${state.users.length <= 1 ? "disabled" : ""}>削除</button>
+    </div>
+  </div>`).join("");
+
+  elements.userList.querySelectorAll("[data-select-user]").forEach(button => button.addEventListener("click", () => setCurrentUser(button.dataset.selectUser)));
+  elements.userList.querySelectorAll("[data-delete-user]").forEach(button => button.addEventListener("click", () => deleteUser(button.dataset.deleteUser)));
+  elements.userList.querySelectorAll("[data-user-color]").forEach(input => {
+    input.addEventListener("input", () => {
+      state.userColors[input.dataset.userColor] = input.value;
+      saveUserSettings(false);
+      syncUserUi();
+      render();
+    });
+    input.addEventListener("change", () => saveUserSettings(true));
+  });
+
+  bindReorder(elements.userList, {
+    kind: "user",
+    handleSelector: "[data-drag-kind='user']",
+    dropSelector: "[data-drop-kind='user']",
+    onReorder: reorderUsers
+  });
+}
+
+
+async function addUserFromForm() {
+  const name = sanitizeUser(elements.newUserName.value);
+  if (!name) return toast("ユーザー名を入力してください", true);
+  if (state.users.some(u => normalizeText(u) === normalizeText(name))) return toast("同じユーザーが既にあります", true);
+  state.users.push(name);
+  state.userColors[name] = elements.newUserColor.value || "#7c5cff";
+  elements.newUserName.value = "";
+  setUsers(state.users);
+  await saveUserSettings(true);
+  renderUserManager();
+}
+
+async function deleteUser(name) {
+  if (state.users.length <= 1) return;
+  const target = sanitizeUser(name);
+  if (!confirm(`${target}を削除しますか？既存タスクの担当者名は残ります。`)) return;
+  const wasCurrent = sanitizeUser(state.currentUser || localStorage.getItem("systemTaskUser")) === target;
+  state.users = state.users.filter(u => u !== target);
+  delete state.userColors[target];
+  if (wasCurrent) {
+    state.currentUser = state.users[0] || "";
+    localStorage.setItem("systemTaskUser", state.currentUser);
+  }
+  await saveUserSettings(true);
+  syncUserUi();
+  renderUserManager();
+  render();
+}
+
+function setUsers(users, options = {}) {
+  state.users = uniqueUsers(users);
+  localStorage.setItem(usersKey(), JSON.stringify(state.users));
+  syncUserUi();
+  if (options.persist !== false) saveUserSettings(true);
+  if (!options.silent) render();
+}
+
+function setUserColors(colors, options = {}) {
+  state.userColors = { ...state.userColors, ...colors };
+  localStorage.setItem(colorsKey(), JSON.stringify(state.userColors));
+  syncUserUi();
+  if (options.persist !== false) saveUserSettings(true);
+  if (!options.silent) render();
+}
+
+async function saveUserSettings(remote = true) {
+  localStorage.setItem(usersKey(), JSON.stringify(state.users));
+  localStorage.setItem(colorsKey(), JSON.stringify(state.userColors));
+  if (remote && state.firebaseReady && state.dbApi) {
+    await update(state.metaRef, { users: state.users, userColors: state.userColors, usersUpdatedAt: Date.now() });
   }
 }
 
-function showUserDialogIfNeeded() {
-  if (localStorage.getItem(RECORDER_STORAGE_KEY)) return;
-  if (!elements.userDialog?.showModal) return;
-  syncRecorderUi();
-  elements.startupRecorder.value = getCurrentRecorder();
-  elements.userDialog.showModal();
-}
 
-function renderRecorderManager() {
-  if (!elements.recorderList) return;
-  const current = getCurrentRecorder();
-  elements.recorderList.innerHTML = state.recorders.map(name => {
-    const isCurrent = name === current;
-    const disableDelete = state.recorders.length <= 1;
-    const color = recorderColor(name);
-    return `<div class="recorder-list-item ${isCurrent ? "is-current" : ""}">
-      <span class="recorder-badge custom" style="${recorderBadgeStyle(name)}"><span class="recorder-avatar">${escapeHtml(name.slice(0, 1))}</span><span>${escapeHtml(name)}</span></span>
-      <div class="recorder-list-actions">
-        <label class="recorder-color-control" title="ユーザーカラー">
-          <input type="color" value="${escapeHtml(color)}" data-color-recorder="${escapeHtml(name)}" />
-        </label>
-        ${isCurrent ? `<span class="current-user-chip">選択中</span>` : `<button type="button" class="mini-action-button" data-select-recorder="${escapeHtml(name)}">選択</button>`}
-        <button type="button" class="mini-action-button danger" data-delete-recorder="${escapeHtml(name)}" ${disableDelete ? "disabled" : ""}>削除</button>
+
+function statusesKey(user = null) {
+  const safeUser = sanitizeStatusOwner(user || localStorage.getItem("systemTaskUser") || state?.currentUser || "");
+  return `system-task-statuses:${ROOM_ID}:${safeUser || "default"}`;
+}
+function statusesByUserKey() {
+  return `system-task-statuses-by-user:${ROOM_ID}`;
+}
+function timelineStartKey() {
+  return `system-task-timeline-start:${ROOM_ID}`;
+}
+function timelineRangeKey() {
+  return `system-task-timeline-range:${ROOM_ID}`;
+}
+function sanitizeStatusOwner(value) {
+  return String(value || "").normalize("NFKC").replace(/\s+/g, "").slice(0, 12);
+}
+function sanitizeStatus(value) {
+  return String(value || "").normalize("NFKC").trim().slice(0, 20);
+}
+function uniqueStatuses(list) {
+  const result = [];
+  for (const item of Array.isArray(list) ? list : []) {
+    const name = sanitizeStatus(item);
+    if (name && !result.includes(name)) result.push(name);
+  }
+  if (!result.length) result.push(...DEFAULT_STATUSES);
+  if (!result.includes(COMPLETED_STATUS)) result.push(COMPLETED_STATUS);
+  return result;
+}
+function loadStatusesByUser() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(statusesByUserKey()) || "{}");
+    if (!saved || typeof saved !== "object" || Array.isArray(saved)) return {};
+    return normalizeStatusesByUser(saved);
+  } catch {
+    return {};
+  }
+}
+function normalizeStatusesByUser(value) {
+  const result = {};
+  for (const [user, statuses] of Object.entries(value || {})) {
+    const safeUser = sanitizeStatusOwner(user);
+    if (safeUser && Array.isArray(statuses)) result[safeUser] = uniqueStatuses(statuses);
+  }
+  return result;
+}
+function loadStatuses() {
+  const current = sanitizeStatusOwner(localStorage.getItem("systemTaskUser") || "");
+  try {
+    const byUser = JSON.parse(localStorage.getItem(statusesByUserKey()) || "{}");
+    if (current && Array.isArray(byUser?.[current])) return uniqueStatuses(byUser[current]);
+  } catch {}
+
+  try {
+    const list = JSON.parse(localStorage.getItem(statusesKey(current)) || "null");
+    if (Array.isArray(list)) return uniqueStatuses(list);
+  } catch {}
+
+  try {
+    const legacy = JSON.parse(localStorage.getItem(`system-task-statuses:${ROOM_ID}`) || "null");
+    if (Array.isArray(legacy)) return uniqueStatuses(legacy);
+  } catch {}
+
+  return [...DEFAULT_STATUSES];
+}
+function getStatusOwner() {
+  return sanitizeStatusOwner(getCurrentUser());
+}
+function getStatusesForUser(user) {
+  const owner = sanitizeStatusOwner(user);
+  if (owner && Array.isArray(state.statusesByUser?.[owner])) return uniqueStatuses(state.statusesByUser[owner]);
+
+  try {
+    const list = JSON.parse(localStorage.getItem(statusesKey(owner)) || "null");
+    if (Array.isArray(list)) return uniqueStatuses(list);
+  } catch {}
+
+  return uniqueStatuses(state.statuses?.length ? state.statuses : DEFAULT_STATUSES);
+}
+function getTaskStatusesNotIn(list) {
+  const result = [];
+  for (const task of state.tasks || []) {
+    const name = sanitizeStatus(task.status);
+    if (name && !list.includes(name) && !result.includes(name)) result.push(name);
+  }
+  return result;
+}
+function getStatusList(options = {}) {
+  const base = uniqueStatuses(state.statuses?.length ? state.statuses : getStatusesForUser(getStatusOwner()));
+  if (options.includeTaskOnly === false) return base;
+
+  const taskOnly = getTaskStatusesNotIn(base);
+  if (!taskOnly.length) return base;
+
+  const withoutComplete = base.filter(status => !isCompletedStatus(status));
+  const complete = base.find(isCompletedStatus) || COMPLETED_STATUS;
+  return uniqueStatuses([...withoutComplete, ...taskOnly, complete]);
+}
+function syncCurrentUserStatuses(options = {}) {
+  const owner = getStatusOwner();
+  state.statuses = uniqueStatuses(getStatusesForUser(owner));
+  if (owner) {
+    state.statusesByUser[owner] = state.statuses;
+    localStorage.setItem(statusesKey(owner), JSON.stringify(state.statuses));
+    localStorage.setItem(statusesByUserKey(), JSON.stringify(state.statusesByUser));
+  }
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  if (options.persist) saveStatusSettings(true);
+  if (!options.silent) render();
+}
+function isCompletedStatus(status) {
+  return normalizeText(status) === normalizeText(COMPLETED_STATUS);
+}
+function getDefaultOpenStatus() {
+  return getStatusList({ includeTaskOnly: false }).find(status => !isCompletedStatus(status)) || "未着手";
+}
+function normalizeStatus(value) {
+  const raw = sanitizeStatus(value);
+  if (!raw) return getDefaultOpenStatus();
+  const exact = getStatusList().find(status => normalizeText(status) === normalizeText(raw));
+  return exact || raw;
+}
+function syncStatusOptions(select, includeAll = false) {
+  if (!select) return;
+  const currentValue = select.value;
+  const statuses = getStatusList();
+  select.innerHTML = `${includeAll ? '<option value="">すべて</option>' : ""}${statuses.map(status => `<option value="${escapeHtml(status)}">${escapeHtml(status)}</option>`).join("")}`;
+  if ([...select.options].some(opt => opt.value === currentValue)) select.value = currentValue;
+}
+function renderStatusManager() {
+  const statuses = getStatusList({ includeTaskOnly: false });
+  elements.statusList.innerHTML = statuses.map(status => {
+    const protectedStatus = isCompletedStatus(status);
+    return `<div class="status-list-item ${protectedStatus ? "is-protected" : ""}" data-drop-kind="status" data-drop-value="${escapeHtml(status)}">
+      <span class="drag-handle" draggable="true" data-drag-kind="status" data-drag-value="${escapeHtml(status)}" title="ドラッグして状態の順番を変更">☰</span>
+      <input class="status-name-input" value="${escapeHtml(status)}" maxlength="20" data-status-old="${escapeHtml(status)}" ${protectedStatus ? "readonly" : ""} />
+      <div class="status-list-actions">
+        ${protectedStatus ? `<span class="protected-chip">固定</span>` : `<button class="mini-button" type="button" data-save-status="${escapeHtml(status)}">保存</button>`}
+        <button class="mini-button danger" type="button" data-delete-status="${escapeHtml(status)}" ${protectedStatus || statuses.length <= 1 ? "disabled" : ""}>削除</button>
       </div>
     </div>`;
   }).join("");
 
-  elements.recorderList.querySelectorAll("[data-select-recorder]").forEach(button => {
-    button.addEventListener("click", () => setCurrentRecorder(button.dataset.selectRecorder));
-  });
-  elements.recorderList.querySelectorAll("[data-delete-recorder]").forEach(button => {
-    button.addEventListener("click", async () => deleteRecorder(button.dataset.deleteRecorder));
-  });
-  elements.recorderList.querySelectorAll("[data-color-recorder]").forEach(input => {
-    input.addEventListener("input", () => {
-      const recorder = normalizeRecorder(input.dataset.colorRecorder);
-      state.recorderColors[recorder] = normalizeColor(input.value, defaultRecorderColor(recorder));
-      localStorage.setItem(recorderColorLocalKey(), JSON.stringify(state.recorderColors));
-      syncRecorderUi();
-      render();
-    });
-    input.addEventListener("change", async () => {
-      const recorder = normalizeRecorder(input.dataset.colorRecorder);
-      state.recorderColors[recorder] = normalizeColor(input.value, defaultRecorderColor(recorder));
-      await saveRecorderSettings();
-      renderRecorderManager();
-      toast(`${recorder}のカラーを変更しました`);
+  elements.statusList.querySelectorAll("[data-save-status]").forEach(button => {
+    button.addEventListener("click", async () => {
+      const oldName = button.dataset.saveStatus;
+      const input = elements.statusList.querySelector(`[data-status-old="${cssEscape(oldName)}"]`);
+      await renameStatus(oldName, input?.value || "");
     });
   });
-}
-
-async function addRecorderFromForm() {
-  const name = sanitizeRecorderName(elements.newRecorderName?.value || "");
-  const color = normalizeColor(elements.newRecorderColor?.value || "", defaultRecorderColor(name));
-  if (!name) {
-    toast("追加するユーザー名を入力してください。", true);
-    return;
-  }
-  if (state.recorders.some(existing => normalizeKey(existing) === normalizeKey(name))) {
-    toast("同じユーザー名が既にあります。", true);
-    return;
-  }
-  state.recorders.push(name);
-  state.recorderColors[name] = color;
-  elements.newRecorderName.value = "";
-  if (elements.newRecorderColor) elements.newRecorderColor.value = defaultRecorderColor(name);
-  setRecorderList(state.recorders, { silent: true });
-  await saveRecorderSettings();
-  toast(`${name}を追加しました`);
-}
-
-async function deleteRecorder(name) {
-  const target = normalizeRecorder(name);
-  if (state.recorders.length <= 1) {
-    toast("ユーザーは最低1人必要です。", true);
-    return;
-  }
-  if (!confirm(`${target}をユーザー一覧から削除しますか？\\n既存の配合記録の記録者名は残ります。`)) return;
-  const nextList = state.recorders.filter(item => item !== target);
-  const wasCurrent = getCurrentRecorder() === target;
-  delete state.recorderColors[target];
-  setRecorderList(nextList, { silent: true });
-  if (wasCurrent) setCurrentRecorder(state.recorders[0], { silent: true });
-  await saveRecorderSettings();
-  toast(`${target}を削除しました`);
-}
-
-function worldNameLocalKey() {
-  return `${WORLD_NAME_STORAGE_PREFIX}${ROOM_ID}`;
-}
-
-function syncWorldNameUi(updateInput = true) {
-  const value = String(state.worldName || "").trim();
-  if (updateInput && elements.worldNameInput && document.activeElement !== elements.worldNameInput) {
-    elements.worldNameInput.value = value;
-  }
-  if (elements.worldNameBadge) {
-    elements.worldNameBadge.hidden = !value;
-    elements.worldNameBadge.innerHTML = value
-      ? `<span class="world-label">WORLD</span><span class="world-name">🌏 ${escapeHtml(value)}</span>`
-      : "";
-  }
-}
-
-async function saveWorldName() {
-  state.worldName = String(state.worldName || "").trim();
-  localStorage.setItem(worldNameLocalKey(), state.worldName);
-  syncWorldNameUi(false);
-  if (state.firebaseReady && state.dbApi && state.db && state.dbMetaRef) {
-    try {
-      await state.dbApi.update(state.dbMetaRef, { worldName: state.worldName, updatedAt: Date.now() });
-    } catch (error) {
-      console.warn("World name save failed:", error);
-    }
-  }
-}
-
-function normalizeFavorites(value, legacyFavorite = false, legacyRecorder = "") {
-  const favorites = {};
-  if (value && typeof value === "object" && !Array.isArray(value)) {
-    for (const [name, checked] of Object.entries(value)) {
-      if (checked) favorites[normalizeRecorder(name)] = true;
-    }
-  }
-  if (!Object.keys(favorites).length && legacyFavorite) {
-    favorites[normalizeRecorder(legacyRecorder || getCurrentRecorder())] = true;
-  }
-  return favorites;
-}
-
-function isRecordFavorite(record, recorder = getCurrentRecorder()) {
-  return Boolean(record?.favorites?.[normalizeRecorder(recorder)]);
-}
-
-function normalizeStatus(value) {
-  const raw = String(value || "").trim();
-  if (raw === "実機確認済み") return "配合確認済み";
-  if (raw === "育成候補") return "確認中";
-  if (raw === "配合確認済み") return "配合確認済み";
-  return "確認中";
-}
-
-function normalizeSearch(value) {
-  return hiraToKata(String(value || ""))
-    .normalize("NFKC")
-    .toLowerCase()
-    .replace(/[\s\u3000]/g, "");
-}
-
-function stripId(record) { const { id, ...rest } = record; return rest; }
-
-function breedingPairKey(parentA, parentB) {
-  const names = [parentA, parentB]
-    .map(name => normalizeKey(normalizePalName(name)))
-    .filter(Boolean)
-    .sort();
-  return names.length === 2 ? names.join("::") : "";
-}
-
-function findDuplicateBreedingPair(record) {
-  const key = breedingPairKey(record.parentA, record.parentB);
-  if (!key) return null;
-  return state.records.find(existing =>
-    existing.id !== record.id &&
-    breedingPairKey(existing.parentA, existing.parentB) === key
-  ) || null;
-}
-
-
-function palFilterMatches(palName, filterValue) {
-  const filter = normalizeSearch(filterValue);
-  if (!filter) return true;
-  const meta = getPalMeta(palName) || {};
-  const target = normalizeSearch([palName, meta.displayName, meta.no].filter(Boolean).join(" "));
-  return target.includes(filter);
-}
-
-function ensureSelected() {
-  if (!state.selectedId && state.records.length) state.selectedId = state.records[0].id;
-  if (state.selectedId && !state.records.some(r => r.id === state.selectedId)) state.selectedId = state.records[0]?.id || null;
-}
-
-function render() {
-  const filtered = getFilteredRecords();
-  renderKpis();
-  renderRows(filtered);
-  renderDetail();
-  refreshPickerPreviews();
-}
-
-function getFilteredRecords() {
-  const query = normalizeSearch(elements.searchInput.value);
-  const parent = elements.parentFilter.value;
-  const result = elements.resultFilter.value;
-  const selectedElements = state.selectedElements;
-  const selectedWorks = state.selectedWorks;
-  const status = elements.statusFilter.value;
-  let records = [...state.records];
-
-  records = records.filter(record => {
-    const meta = getPalMeta(record.resultPal) || {};
-    const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
-    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, record.eggType, ...englishNames, record.recorder, record.note, record.status].join(" "));
-    const recordElements = meta.elements || (meta.element ? [meta.element] : []);
-    const recordWorks = meta.work || [];
-    const parentHit = !parent || [record.parentA, record.parentB]
-      .some(name => palFilterMatches(name, parent));
-    const resultHit = !result || palFilterMatches(record.resultPal, result);
-    return (!query || searchTarget.includes(query)) &&
-      parentHit &&
-      resultHit &&
-      (!selectedElements.length || selectedElements.some(element => recordElements.includes(element))) &&
-      (!selectedWorks.length || selectedWorks.every(work => hasWorkTrait(meta, work))) &&
-      (!status || normalizeStatus(record.status) === status) &&
-      (state.currentView !== "favorites" || isRecordFavorite(record)) &&
-      (!elements.favoriteOnly || !elements.favoriteOnly.checked || isRecordFavorite(record)) &&
-      (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み");
+  elements.statusList.querySelectorAll("[data-delete-status]").forEach(button => {
+    button.addEventListener("click", async () => deleteStatus(button.dataset.deleteStatus));
   });
 
-  const sort = elements.sortSelect.value;
-  records.sort((a, b) => {
-    if (sort === "updatedAsc") return a.updatedAt - b.updatedAt;
-    if (sort === "resultAsc") return a.resultPal.localeCompare(b.resultPal, "ja");
-    if (sort === "statusAsc") return normalizeStatus(a.status).localeCompare(normalizeStatus(b.status), "ja");
-    return b.updatedAt - a.updatedAt;
+  bindReorder(elements.statusList, {
+    kind: "status",
+    handleSelector: "[data-drag-kind='status']",
+    dropSelector: "[data-drop-kind='status']",
+    onReorder: reorderStatuses
   });
-  return records;
 }
-
-function renderKpis() {
-  const total = state.records.length;
-  const verified = state.records.filter(r => normalizeStatus(r.status) === "配合確認済み").length;
-  const pending = state.records.filter(r => normalizeStatus(r.status) === "確認中").length;
-  const memos = state.records.filter(r => r.note.trim()).length;
-  $("totalCount").textContent = `${total}件`;
-  $("verifiedCount").textContent = `${verified}件`;
-  $("pendingCount").textContent = `${pending}件`;
-  $("memoCount").textContent = `${memos}件`;
-  $("verifiedRate").textContent = total ? `${Math.round((verified / total) * 100)}%` : "0%";
+async function addStatusFromForm() {
+  const name = sanitizeStatus(elements.newStatusName.value);
+  if (!name) return toast("状態名を入力してください", true);
+  if (getStatusList({ includeTaskOnly: false }).some(status => normalizeText(status) === normalizeText(name))) return toast("同じ状態が既にあります", true);
+  const completeIndex = state.statuses.findIndex(isCompletedStatus);
+  if (completeIndex >= 0) state.statuses.splice(completeIndex, 0, name);
+  else state.statuses.push(name);
+  elements.newStatusName.value = "";
+  await saveStatusSettings(true);
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  renderStatusManager();
+  render();
+  toast("状態を追加しました");
 }
-
-function renderRows(records) {
-  const isEmpty = records.length === 0;
-  elements.emptyState.hidden = !isEmpty;
-  if (isEmpty) {
-    if (state.records.length === 0) {
-      elements.emptyTitle.textContent = "まだ配合記録がありません";
-      elements.emptyText.textContent = "「新しい配合記録を追加」から記録を始めてください。";
-    } else if (state.currentView === "favorites") {
-      elements.emptyTitle.textContent = "お気に入り記録がありません";
-      elements.emptyText.textContent = "一覧の星を押すと、ここに表示されます。";
-    } else {
-      elements.emptyTitle.textContent = "条件に合う記録がありません";
-      elements.emptyText.textContent = "絞り込み条件を変更してください。";
-    }
+async function renameStatus(oldName, newValue) {
+  const next = sanitizeStatus(newValue);
+  if (!next) return toast("状態名を入力してください", true);
+  if (isCompletedStatus(oldName)) return toast("完了は名称変更できません", true);
+  if (next !== oldName && getStatusList({ includeTaskOnly: false }).some(status => normalizeText(status) === normalizeText(next))) return toast("同じ状態が既にあります", true);
+  state.statuses = getStatusList({ includeTaskOnly: false }).map(status => status === oldName ? next : status);
+  const changedTasks = state.tasks.filter(task => task.status === oldName);
+  for (const task of changedTasks) {
+    task.status = next;
+    task.updatedAt = Date.now();
+    task.updatedBy = getCurrentUser();
+    await persistTask(task);
   }
-
-  elements.recordRows.innerHTML = records.map(record => {
-    const selected = record.id === state.selectedId ? "selected" : "";
-    return `
-      <tr class="${selected}" data-id="${record.id}">
-        <td class="favorite-cell"><button class="star-button ${isRecordFavorite(record) ? "is-favorite" : ""}" data-action="favorite" title="${escapeHtml(getCurrentRecorder())}のお気に入り">★</button></td>
-        <td>${palRecordCard(record.parentA, { role: "parent" })}</td>
-        <td>${palRecordCard(record.parentB, { role: "parent" })}</td>
-        <td>${palRecordCard(record.resultPal, { role: "result", status: record.status })}</td>
-        <td>${eggInline(record.eggType)}</td>
-        <td>${statusBadge(record.status)}</td>
-        <td>${recorderBadge(record.recorder)}</td>
-        <td class="memo-cell" title="${escapeHtml(record.note)}">${escapeHtml(record.note || "—")}</td>
-        <td>${formatDate(record.updatedAt)}</td>
-      </tr>`;
-  }).join("");
-
-  elements.recordRows.querySelectorAll("tr").forEach(row => {
-    row.addEventListener("click", (event) => {
-      const id = row.dataset.id;
-      if (event.target.closest("[data-action='favorite']")) {
-        toggleFavorite(id);
-        return;
-      }
-      state.selectedId = id;
-      render();
+  await saveStatusSettings(true);
+  renderStatusManager();
+  render();
+  toast("状態を更新しました");
+}
+async function deleteStatus(name) {
+  if (isCompletedStatus(name)) return toast("完了は削除できません", true);
+  const statuses = getStatusList({ includeTaskOnly: false });
+  if (statuses.length <= 1) return;
+  const used = state.tasks.some(task => task.status === name);
+  const fallback = getDefaultOpenStatus() === name
+    ? (statuses.find(status => status !== name && !isCompletedStatus(status)) || COMPLETED_STATUS)
+    : getDefaultOpenStatus();
+  const message = used
+    ? `${name}を削除しますか？\nこの状態を使っているタスクは「${fallback}」に変更されます。`
+    : `${name}を削除しますか？`;
+  if (!confirm(message)) return;
+  state.statuses = statuses.filter(status => status !== name);
+  const changedTasks = state.tasks.filter(task => task.status === name);
+  for (const task of changedTasks) {
+    task.status = fallback;
+    task.updatedAt = Date.now();
+    task.updatedBy = getCurrentUser();
+    await persistTask(task);
+  }
+  await saveStatusSettings(true);
+  renderStatusManager();
+  render();
+  toast("状態を削除しました");
+}
+function setStatuses(statuses, options = {}) {
+  state.statuses = uniqueStatuses(statuses);
+  const owner = getStatusOwner();
+  if (owner) state.statusesByUser[owner] = state.statuses;
+  localStorage.setItem(statusesKey(owner), JSON.stringify(state.statuses));
+  localStorage.setItem(statusesByUserKey(), JSON.stringify(state.statusesByUser));
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  renderStatusManager();
+  if (options.persist !== false) saveStatusSettings(true);
+  if (!options.silent) render();
+}
+function setStatusesByUser(value, options = {}) {
+  state.statusesByUser = normalizeStatusesByUser(value);
+  syncCurrentUserStatuses({ persist: false, silent: true });
+  localStorage.setItem(statusesByUserKey(), JSON.stringify(state.statusesByUser));
+  if (options.persist !== false) saveStatusSettings(true);
+  if (!options.silent) render();
+}
+async function saveStatusSettings(remote = true) {
+  const owner = getStatusOwner();
+  state.statuses = uniqueStatuses(state.statuses);
+  if (owner) {
+    state.statusesByUser[owner] = state.statuses;
+    localStorage.setItem(statusesKey(owner), JSON.stringify(state.statuses));
+  }
+  localStorage.setItem(statusesByUserKey(), JSON.stringify(state.statusesByUser));
+  if (remote && state.firebaseReady && state.dbApi) {
+    await update(state.metaRef, {
+      statusesByUser: state.statusesByUser,
+      statuses: state.statuses,
+      statusesUpdatedAt: Date.now()
     });
-    row.addEventListener("dblclick", () => openDialog(row.dataset.id));
-  });
+  }
 }
 
-function renderDetail() {
-  const record = state.records.find(r => r.id === state.selectedId);
-  if (!record) {
-    elements.detailBody.innerHTML = `<div class="info-hint">一覧から配合記録を選択すると、親パル・結果パル・メモをここで確認できます。</div>`;
-    return;
+
+function categoriesKey() {
+  return `system-task-categories:${ROOM_ID}`;
+}
+function sanitizeCategory(value) {
+  return String(value || "").normalize("NFKC").trim().slice(0, 20);
+}
+function uniqueCategories(list) {
+  const result = [];
+  for (const item of Array.isArray(list) ? list : []) {
+    const name = sanitizeCategory(item);
+    if (name && !result.includes(name)) result.push(name);
   }
-  elements.detailBody.innerHTML = `
-    <div class="detail-toolbar">
-      <button class="secondary-button" data-detail-action="delete" type="button">削除</button>
-      <button class="primary-button" data-detail-action="edit" type="button">編集する</button>
+  return result.length ? result : [...DEFAULT_CATEGORIES];
+}
+function loadCategories() {
+  try {
+    const list = JSON.parse(localStorage.getItem(categoriesKey()) || "null");
+    if (Array.isArray(list)) return uniqueCategories(list);
+  } catch {}
+  return [...DEFAULT_CATEGORIES];
+}
+function normalizeCategory(value) {
+  const raw = sanitizeCategory(value);
+  if (!raw) return state.categories[0] || "その他";
+  const exact = state.categories.find(c => normalizeText(c) === normalizeText(raw));
+  return exact || raw;
+}
+function syncCategoryOptions(select, includeAll = false) {
+  if (!select) return;
+  const currentValue = select.value;
+  select.innerHTML = `${includeAll ? '<option value="">すべて</option>' : ""}${state.categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("")}`;
+  if ([...select.options].some(opt => opt.value === currentValue)) select.value = currentValue;
+}
+function renderCategoryManager() {
+  elements.categoryList.innerHTML = state.categories.map(category => `<div class="category-list-item" data-drop-kind="category" data-drop-value="${escapeHtml(category)}">
+    <span class="drag-handle" draggable="true" data-drag-kind="category" data-drag-value="${escapeHtml(category)}" title="ドラッグして分類の順番を変更">☰</span>
+    <input class="category-name-input" value="${escapeHtml(category)}" maxlength="20" data-category-old="${escapeHtml(category)}" />
+    <div class="category-list-actions">
+      <button class="mini-button" type="button" data-save-category="${escapeHtml(category)}">保存</button>
+      <button class="mini-button danger" type="button" data-delete-category="${escapeHtml(category)}" ${state.categories.length <= 1 ? "disabled" : ""}>削除</button>
     </div>
-    <div class="recipe-line">
-      ${recipePal("親A", record.parentA, { role: "parent" })}
-      <div class="recipe-symbol">＋</div>
-      ${recipePal("親B", record.parentB, { role: "parent" })}
-      <div class="recipe-symbol">→</div>
-      ${recipePal("結果", record.resultPal || "未確認", { role: "result", status: record.status })}
-    </div>
-    <div class="detail-section"><h3>タマゴの種類</h3>${eggInline(record.eggType)}</div>
-    <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
-    <div class="detail-section"><h3>記録情報</h3>
-      <p>${statusBadge(record.status)}</p>
-      <p><strong>記録者：</strong>${recorderBadge(record.recorder)}</p>
-      <p><strong>更新日時：</strong>${formatDate(record.updatedAt, true)}</p>
-    </div>`;
+  </div>`).join("");
 
-  elements.detailBody.querySelector("[data-detail-action='edit']")?.addEventListener("click", () => openDialog(record.id));
-  elements.detailBody.querySelector("[data-detail-action='delete']")?.addEventListener("click", async () => {
-    if (!confirm("この配合記録を削除しますか？")) return;
-    await deleteRecord(record.id);
+  elements.categoryList.querySelectorAll("[data-save-category]").forEach(button => {
+    button.addEventListener("click", async () => {
+      const oldName = button.dataset.saveCategory;
+      const input = elements.categoryList.querySelector(`[data-category-old="${cssEscape(oldName)}"]`);
+      await renameCategory(oldName, input?.value || "");
+    });
+  });
+  elements.categoryList.querySelectorAll("[data-delete-category]").forEach(button => {
+    button.addEventListener("click", async () => deleteCategory(button.dataset.deleteCategory));
+  });
+
+  bindReorder(elements.categoryList, {
+    kind: "category",
+    handleSelector: "[data-drag-kind='category']",
+    dropSelector: "[data-drop-kind='category']",
+    onReorder: reorderCategories
   });
 }
 
-function getPalMeta(name) {
-  return state.palMap.get(normalizePalName(name));
-}
 
-function hasWorkTrait(meta, work) {
-  if (!meta) return false;
-  if (work === "夜行性") {
-    const explicit = meta.nocturnal;
-    if (typeof explicit === "boolean") return explicit;
-    return (meta.elements || []).includes("闇属性");
+async function addCategoryFromForm() {
+  const name = sanitizeCategory(elements.newCategoryName.value);
+  if (!name) return toast("分類名を入力してください", true);
+  if (state.categories.some(c => normalizeText(c) === normalizeText(name))) return toast("同じ分類が既にあります", true);
+  state.categories.push(name);
+  elements.newCategoryName.value = "";
+  await saveCategorySettings(true);
+  syncCategoryOptions($("taskCategory"));
+  syncCategoryOptions(elements.categoryFilter, true);
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  renderCategoryManager();
+  render();
+}
+async function renameCategory(oldName, newValue) {
+  const next = sanitizeCategory(newValue);
+  if (!next) return toast("分類名を入力してください", true);
+  if (next !== oldName && state.categories.some(c => normalizeText(c) === normalizeText(next))) return toast("同じ分類が既にあります", true);
+  state.categories = state.categories.map(c => c === oldName ? next : c);
+  const changedTasks = state.tasks.filter(t => t.category === oldName);
+  for (const task of changedTasks) {
+    task.category = next;
+    task.updatedAt = Date.now();
+    task.updatedBy = getCurrentUser();
+    await persistTask(task);
   }
-  return (meta.work || []).includes(work);
+  await saveCategorySettings(true);
+  renderCategoryManager();
+  render();
+  toast("分類を更新しました");
 }
-
-function recorderBadge(name) {
-  const recorder = normalizeRecorder(name);
-  return `<span class="recorder-badge custom" style="${recorderBadgeStyle(recorder)}"><span class="recorder-avatar">${escapeHtml(recorder.slice(0, 1))}</span><span>${escapeHtml(recorder)}</span></span>`;
-}
-
-function pendingPalIcon(size = "normal") {
-  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
-  return `<span class="pal-icon${sizeClass} locked pending-pal-icon" title="未確認"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
-}
-
-function palInline(name) {
-  return `<span class="pal-inline">${palIcon(name)}<span>${escapeHtml(name || "未入力")}</span></span>`;
-}
-
-function resultPalInline(name, status = "確認中") {
-  return palRecordCard(name, { role: "result", status });
-}
-
-function palRecordCard(name, options = {}) {
-  const role = options.role || "parent";
-  const status = normalizeStatus(options.status || "");
-  const isResult = role === "result";
-  const isVerified = isResult && status === "配合確認済み";
-  const isPending = isResult && !name;
-  const className = [
-    "pal-record-card",
-    isResult ? "is-result" : "is-parent",
-    isVerified ? "is-verified" : "",
-    isPending ? "is-pending" : ""
-  ].filter(Boolean).join(" ");
-  const label = isPending ? "未確認" : (name || "未入力");
-  const icon = isPending ? pendingPalIcon("small") : palIcon(name, "small");
-  return `<span class="${className}">${icon}<span class="pal-record-name">${escapeHtml(label)}</span></span>`;
-}
-
-function recipePal(label, name, options = {}) {
-  const role = options.role || "parent";
-  const status = normalizeStatus(options.status || "");
-  const isResult = role === "result";
-  const isVerified = isResult && status === "配合確認済み";
-  const isPending = isResult && (!name || name === "未確認");
-  const className = [
-    "recipe-pal",
-    isResult ? "is-result" : "is-parent",
-    isVerified ? "is-verified" : "",
-    isPending ? "is-pending" : ""
-  ].filter(Boolean).join(" ");
-  const displayName = isPending ? "未確認" : (name || "未入力");
-  const icon = isPending ? pendingPalIcon("large") : palIcon(name, "large");
-  return `<div class="${className}"><small>${escapeHtml(label)}</small>${icon}<span>${escapeHtml(displayName)}</span></div>`;
-}
-
-function palIcon(name, size = "normal", options = {}) {
-  const normalized = normalizePalName(name);
-  const sizeClass = size === "large" ? " large" : size === "small" ? " small" : "";
-  if (!normalized) return `<span class="pal-icon${sizeClass} filter-any"><span class="pal-fallback">全</span></span>`;
-
-  const reveal = options.reveal ?? isPalDiscovered(normalized);
-  if (!reveal) {
-    return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)} / 画像は記録後に表示"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
+async function deleteCategory(name) {
+  if (state.categories.length <= 1) return;
+  const used = state.tasks.some(t => t.category === name);
+  const message = used
+    ? `${name}を削除しますか？\nこの分類を使っているタスクは「その他」に変更されます。`
+    : `${name}を削除しますか？`;
+  if (!confirm(message)) return;
+  state.categories = state.categories.filter(c => c !== name);
+  const fallback = state.categories.includes("その他") ? "その他" : state.categories[0];
+  const changedTasks = state.tasks.filter(t => t.category === name);
+  for (const task of changedTasks) {
+    task.category = fallback;
+    task.updatedAt = Date.now();
+    task.updatedBy = getCurrentUser();
+    await persistTask(task);
   }
-
-  const meta = getPalMeta(normalized);
-  if (!meta) {
-    return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(normalized)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
+  await saveCategorySettings(true);
+  renderCategoryManager();
+  render();
+  toast("分類を削除しました");
+}
+function setCategories(categories, options = {}) {
+  state.categories = uniqueCategories(categories);
+  localStorage.setItem(categoriesKey(), JSON.stringify(state.categories));
+  syncCategoryOptions($("taskCategory"));
+  syncCategoryOptions(elements.categoryFilter, true);
+  syncStatusOptions($("taskStatus"));
+  syncStatusOptions(elements.statusFilter, true);
+  renderCategoryManager();
+  if (options.persist !== false) saveCategorySettings(true);
+  if (!options.silent) render();
+}
+async function saveCategorySettings(remote = true) {
+  localStorage.setItem(categoriesKey(), JSON.stringify(state.categories));
+  if (remote && state.firebaseReady && state.dbApi) {
+    await update(state.metaRef, { categories: state.categories, categoriesUpdatedAt: Date.now() });
   }
-  const noItem = getPaldbStaticIconByNo(meta.no);
-  const noUrl = noItem?.icon || "";
-  const overrideKey = PALDB_JP_ICON_OVERRIDES[normalized] || "";
-  const overrideUrl = paldbIconUrlFromKey(overrideKey);
-  const paldbUrl = noUrl || overrideUrl || meta.paldbIcon || paldbIconUrlFromKey(meta.iconKey);
-  const labUrl = meta.icon || "";
-  const url = paldbUrl || labUrl;
-  const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
-  const title = [normalized, meta.displayName, meta.no].filter(Boolean).join(" / ");
-  if (!url) return `<span class="pal-icon${sizeClass} locked" title="${escapeHtml(title)}"><img src="${UNKNOWN_PAL_ICON}" alt="${UNKNOWN_PAL_LABEL}" loading="lazy"></span>`;
-  const fallbackAttr = fallbackUrl ? ` data-fallback="${escapeHtml(fallbackUrl)}"` : "";
-  return `<span class="pal-icon${sizeClass}" title="${escapeHtml(title)}"><img src="${escapeHtml(url)}"${fallbackAttr} alt="${escapeHtml(normalized)}" loading="lazy" onerror="if(this.dataset.fallback&&!this.dataset.usedFallback){this.dataset.usedFallback='1';this.src=this.dataset.fallback;}else{this.src='${UNKNOWN_PAL_ICON}';this.closest('.pal-icon').classList.add('locked');}"></span>`;
+}
+function cssEscape(value) {
+  if (window.CSS?.escape) return CSS.escape(value);
+  return String(value).replace(/["\\]/g, "\\$&");
 }
 
-function getDiscoveredPalSet() {
-  const set = new Set();
-  for (const record of state.records) {
-    [record.parentA, record.parentB, record.resultPal]
-      .map(normalizePalName)
-      .filter(Boolean)
-      .forEach(name => set.add(name));
-  }
-  return set;
+
+function syncRoomUi(updateInput = true) {
+  if (updateInput && document.activeElement !== elements.roomNameInput) elements.roomNameInput.value = state.roomName;
+  elements.roomNameBadge.hidden = !state.roomName;
+  elements.roomNameBadge.textContent = state.roomName ? `共有ルーム：${state.roomName}` : "";
+}
+async function saveRoomName() {
+  localStorage.setItem(roomNameKey(), state.roomName);
+  syncRoomUi(false);
+  if (state.firebaseReady && state.dbApi) await update(state.metaRef, { roomName: state.roomName, roomNameUpdatedAt: Date.now() });
 }
 
-function isPalDiscovered(name) {
-  const normalized = normalizePalName(name);
-  if (!normalized) return false;
-  return getDiscoveredPalSet().has(normalized);
+function showUserDialogIfNeeded() {
+  if (localStorage.getItem("systemTaskUser")) return;
+  elements.userDialog.showModal();
 }
 
-function renderTags(tags) {
-  if (!tags?.length) return `<span class="tag subtle">未設定</span>`;
-  return tags.map(tag => `<span class="tag ${tagType(tag)}">${escapeHtml(tag)}</span>`).join("");
-}
-
-function tagType(tag) {
-  if (["職人気質", "まじめ", "社畜", "ワーカーホリック", "発電", "運搬", "採掘", "伐採", "拠点", "作業"].some(key => tag.includes(key))) return "work";
-  if (["脳筋", "獰猛", "希少", "伝説", "走るのが得意", "神速", "すばしこい", "鬼神", "不真面目"].some(key => tag.includes(key))) return "battle";
-  return "";
-}
-
-function statusBadge(status) {
-  const normalized = normalizeStatus(status);
-  const className = normalized === "配合確認済み" ? "status-verified" : "status-pending";
-  if (normalized === "配合確認済み") {
-    return `<span class="status-badge ${className}">✓ ${escapeHtml(normalized)}</span>`;
-  }
-  return `<span class="status-badge ${className}">${escapeHtml(normalized)}</span>`;
-}
-
-function checkLine(checked, text) { return `<div class="check-item ${checked ? "is-checked" : ""}"><span class="check-box">${checked ? "✓" : ""}</span><span>${escapeHtml(text)}</span></div>`; }
-
-
-function showDialogMessage(message, options = {}) {
-  if (!elements.dialogMessage) return;
-  const detail = options.detail ? `<div class="dialog-message-detail">${escapeHtml(options.detail)}</div>` : "";
-  elements.dialogMessage.innerHTML = `<div class="dialog-message-title">${escapeHtml(message)}</div>${detail}`;
-  elements.dialogMessage.hidden = false;
-}
-
-function clearDialogMessage() {
-  if (!elements.dialogMessage) return;
-  elements.dialogMessage.textContent = "";
-  elements.dialogMessage.hidden = true;
-}
-
-function openDialog(id = null) {
-  const record = id ? state.records.find(r => r.id === id) : null;
-  $("dialogTitle").textContent = record ? "配合記録を編集" : "新しい配合記録";
-  $("recordId").value = record?.id || "";
-  $("parentA").value = record?.parentA || "";
-  $("parentB").value = record?.parentB || "";
-  $("resultPal").value = record?.resultPal || "";
-  $("eggType").value = record?.eggType || "";
-  clearDialogMessage();
-  $("note").value = record?.note || "";
-  $("deleteRecord").style.visibility = record ? "visible" : "hidden";
-  refreshPickerPreviews();
-  elements.recordDialog.showModal();
-}
-
-async function saveFromForm() {
-  clearDialogMessage();
-  const id = $("recordId").value || crypto.randomUUID();
-  const existing = state.records.find(r => r.id === id);
-  const record = normalizeRecord({
-    id,
-    parentA: $("parentA").value.trim(),
-    parentB: $("parentB").value.trim(),
-    resultPal: $("resultPal").value.trim(),
-    eggType: $("eggType").value.trim(),
-    recorder: getCurrentRecorder(),
-    status: $("resultPal").value.trim() ? "配合確認済み" : "確認中",
-    passives: [],
-    note: $("note").value.trim(),
-    favorites: existing?.favorites || {},
-    favorite: isRecordFavorite(existing),
-    updatedAt: Date.now()
-  });
-
-  if (!record.parentA || !record.parentB) {
-    toast("親A・親Bは必須です。", true);
-    return;
-  }
-  if (record.status === "配合確認済み" && !record.resultPal) {
-    toast("配合確認済みにする場合は、結果パルを入力してください。", true);
-    return;
-  }
-  const duplicate = findDuplicateBreedingPair(record);
-  if (duplicate) {
-    const duplicateResult = duplicate.resultPal ? ` → ${duplicate.resultPal}` : "";
-    const detail = `${duplicate.parentA} ＋ ${duplicate.parentB}${duplicateResult}`;
-    showDialogMessage("この組み合わせは既に登録済みです", { detail });
-    toast("同じ親の組み合わせは既に登録されています", true);
-    return;
-  }
-
-  const missing = [record.parentA, record.parentB, record.resultPal].filter(name => name && !getPalMeta(name));
-  if (missing.length) {
-    const ok = confirm(`候補リストにないパル名があります：${missing.join("、")}\nこのまま保存しますか？`);
-    if (!ok) return;
-  }
-
-  const index = state.records.findIndex(r => r.id === id);
-  if (index >= 0) state.records[index] = record;
-  else state.records.unshift(record);
+function selectTask(id) {
   state.selectedId = id;
-  await persistRecord(record);
-  elements.recordDialog.close();
-  toast("配合記録を保存しました");
-  render();
+  renderDetail();
 }
 
-async function persistRecord(record) {
-  if (state.firebaseReady && state.dbApi && state.db) {
-    await state.dbApi.set(state.dbApi.ref(state.db, `rooms/${ROOM_ID}/records/${record.id}`), stripId(record));
-  } else {
-    persistLocal();
-  }
+function closeDetail() {
+  state.selectedId = "";
+  elements.appShell.classList.remove("detail-open");
+  elements.detailPanel.classList.remove("open");
+  elements.detailBody.className = "detail-body empty";
+  elements.detailBody.innerHTML = "";
 }
 
-async function deleteRecord(id) {
-  state.records = state.records.filter(r => r.id !== id);
-  ensureSelected();
-  if (state.firebaseReady && state.dbApi && state.db) {
-    await state.dbApi.remove(state.dbApi.ref(state.db, `rooms/${ROOM_ID}/records/${id}`));
-  } else {
-    persistLocal();
-  }
-  toast("配合記録を削除しました");
-  render();
+function openTaskEditorById(id) {
+  const task = state.tasks.find(item => item.id === id);
+  if (!task) return;
+  state.selectedId = id;
+  renderDetail();
+  openTaskDialog(task);
 }
 
-async function toggleFavorite(id) {
-  const record = state.records.find(r => r.id === id);
-  if (!record) return;
-  const recorder = getCurrentRecorder();
-  record.favorites = { ...(record.favorites || {}) };
-  record.favorites[recorder] = !record.favorites[recorder];
-  if (!record.favorites[recorder]) delete record.favorites[recorder];
-  record.favorite = isRecordFavorite(record);
-  // お気に入りの登録・解除は配合記録の内容変更ではないため、updatedAtは更新しません。
-  await persistRecord(record);
-  render();
+function setConnection(text, type) {
+  elements.connectionPill.textContent = text;
+  elements.connectionPill.className = `connection-pill ${type || ""}`;
+}
+
+function emptyColumn(status) {
+  return `<div class="empty-state" style="padding:20px 6px"><p>${escapeHtml(status)}のタスクはありません。</p></div>`;
+}
+
+function priorityBadge(priority) {
+  return `<span class="badge priority-${escapeHtml(priority)}">${escapeHtml(priority)}</span>`;
+}
+function statusBadge(status) {
+  return `<span class="badge status-${escapeHtml(status)}">${escapeHtml(status)}</span>`;
+}
+function categoryBadge(category) {
+  return `<span class="badge status-未着手">${escapeHtml(category)}</span>`;
 }
 
 function splitTags(value) {
   if (Array.isArray(value)) return value.map(String).map(s => s.trim()).filter(Boolean);
-  return String(value || "").split(/[,、]/).map(s => s.trim()).filter(Boolean);
+  return String(value || "").split(/[,\n、]/).map(s => s.trim()).filter(Boolean);
+}
+function parseChecklist(value, existing = []) {
+  const existingByText = new Map(existing.map(item => [normalizeText(item.text), item]));
+  return String(value || "").split("\n").map(line => line.trim()).filter(Boolean).map(text => {
+    const done = /^\[x\]\s*/i.test(text);
+    const clean = text.replace(/^\[(x| )\]\s*/i, "").trim();
+    const old = existingByText.get(normalizeText(clean));
+    return { id: old?.id || generateId(), text: clean, done: done || Boolean(old?.done) };
+  });
+}
+function checklistProgress(task) {
+  const total = task.checklist.length;
+  const done = task.checklist.filter(i => i.done).length;
+  return { total, done, percent: total ? Math.round(done / total * 100) : 0 };
 }
 
-function normalizePassives(value) {
-  return uniqueStrings(Array.isArray(value) ? value : splitTags(value)).slice(0, 4);
+function dueLabel(task) {
+  if (!task.dueDate) return "期限なし";
+  const date = new Date(`${task.dueDate}T${task.dueTime || "23:59"}`);
+  const text = `${task.dueDate}${task.dueTime ? " " + task.dueTime : ""}`;
+  if (!isCompletedStatus(task.status) && isOverdue(task)) return `⚠ ${text}`;
+  return text;
+}
+function isOverdue(task) {
+  if (!task.dueDate || isCompletedStatus(task.status)) return false;
+  return toDate(task.dueDate) < startOfToday();
+}
+function dueScore(task) {
+  if (!task.dueDate) return 9999999999999;
+  return new Date(`${task.dueDate}T${task.dueTime || "23:59"}`).getTime();
+}
+function smartScore(task) {
+  const today = startOfToday();
+  const taskDueDate = task.dueDate ? toDate(task.dueDate) : null;
+
+  // おすすめ順：
+  // 1. 固定
+  // 2. 期限超過
+  // 3. 今日まで
+  // 4. 優先度
+  // 5. 期限が近い
+  // 6. 更新が新しい
+  // 7. 期限なし
+  const pinnedRank = task.pinned ? 0 : 1;
+  const dueRank = !taskDueDate
+    ? 3
+    : taskDueDate < today
+      ? 0
+      : taskDueDate.getTime() === today.getTime()
+        ? 1
+        : 2;
+  const priorityRank = PRIORITY_ORDER[task.priority] ?? 9;
+  const dueTimeRank = task.dueDate ? new Date(`${task.dueDate}T${task.dueTime || "23:59"}`).getTime() : 9999999999999;
+  const updatedRank = -(Number(task.updatedAt) || 0);
+
+  return [
+    pinnedRank,
+    dueRank,
+    priorityRank,
+    dueTimeRank,
+    updatedRank
+  ];
 }
 
-function formatDate(timestamp, detail = false) {
-  const date = new Date(Number(timestamp));
-  const opt = detail ? { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" } : { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" };
-  return new Intl.DateTimeFormat("ja-JP", opt).format(date);
+function compareSmartTasks(a, b) {
+  const left = smartScore(a);
+  const right = smartScore(b);
+
+  for (let i = 0; i < left.length; i += 1) {
+    if (left[i] !== right[i]) return left[i] - right[i];
+  }
+
+  return String(a.title || "").localeCompare(String(b.title || ""), "ja");
+}
+function toDate(value) {
+  return new Date(`${value}T00:00:00`);
+}
+function startOfToday() {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  return d;
 }
 
-function toast(message, warn = false) {
-  elements.toast.textContent = message;
-  elements.toast.style.background = warn ? "rgba(138, 89, 0, .94)" : "rgba(23, 48, 74, .94)";
-  elements.toast.classList.add("show");
-  clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => elements.toast.classList.remove("show"), 3200);
+function todayISO() {
+  return toISODate(startOfToday());
+}
+function parseISODate(value) {
+  const date = new Date(`${value}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+function toISODate(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+}
+function addDays(date, days) {
+  const next = new Date(date);
+  next.setDate(next.getDate() + days);
+  next.setHours(0,0,0,0);
+  return next;
+}
+function isTodayDate(date) {
+  return toISODate(date) === todayISO();
+}
+function formatMonthDay(date) {
+  return `${date.getMonth()+1}/${date.getDate()}`;
 }
 
+
+function formatDateTime(value) {
+  if (!value) return "-";
+  const d = new Date(value);
+  return `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+}
+function normalizeText(value) {
+  return String(value || "").normalize("NFKC").toLowerCase().replace(/\s+/g, "");
+}
 function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[ch]));
+  return String(value ?? "").replace(/[&<>"']/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[s]));
+}
+function generateId() {
+  if (state.firebaseReady && state.dbApi) return push(state.tasksRef).key;
+  return `task-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+}
+function toast(message, error = false) {
+  elements.toast.textContent = message;
+  elements.toast.style.background = error ? "#b91c2b" : "#132b40";
+  elements.toast.hidden = false;
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => elements.toast.hidden = true, 2600);
 }

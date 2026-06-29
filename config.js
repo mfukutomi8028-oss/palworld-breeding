@@ -1,14 +1,20 @@
 // Firebase設定
-// GitHub Pagesでリアルタイム共同編集するため、このファイルには設定値だけを書きます。
-// import / initializeApp / getAnalytics は入れないでください。初期化は app.js 側で行います。
+// Firebase Consoleで取得したコードをそのまま貼るのではなく、
+// このサイトでは window.firebaseConfig に設定値だけを入れます。
+// import / initializeApp / getAnalytics は app.js 側で処理するため不要です。
 
 window.firebaseConfig = {
-  apiKey: "AIzaSyDNyaOvTa9TdiY9-8q00MD0JcRpJY4LX08",
-  authDomain: "palworld-breeding-board.firebaseapp.com",
-  databaseURL: "https://palworld-breeding-board-default-rtdb.firebaseio.com",
-  projectId: "palworld-breeding-board",
-  storageBucket: "palworld-breeding-board.firebasestorage.app",
-  messagingSenderId: "657534681097",
-  appId: "1:657534681097:web:b031035357baa6df2a38d8",
-  measurementId: "G-3SKBN4JL7B"
+  apiKey: "AIzaSyAswXx5jJ5b1v1BdIjri1ELvj0q3YBMvLM",
+  authDomain: "task-kanri-2ad16.firebaseapp.com",
+
+  // Realtime Databaseを使うため必須です。
+  // Firebase Console > Realtime Database > データ に表示されるURLと違う場合は、
+  // この1行だけ実際のURLへ置き換えてください。
+  databaseURL: "https://task-kanri-2ad16-default-rtdb.firebaseio.com",
+
+  projectId: "task-kanri-2ad16",
+  storageBucket: "task-kanri-2ad16.firebasestorage.app",
+  messagingSenderId: "872313738387",
+  appId: "1:872313738387:web:5adcc567025b4945cd2966",
+  measurementId: "G-R0GQ65214Z"
 };
