@@ -1,14 +1,12 @@
 // Firebase設定例
-// 実際の値はFirebase Consoleで取得したものに置き換えてください。
-// このサイトでは import / initializeApp / getAnalytics は不要です。
+// FirebaseコンソールのWebアプリ設定から取得した値を貼り付けてください。
 
 window.firebaseConfig = {
-  apiKey: "xxxx",
-  authDomain: "xxxx.firebaseapp.com",
-  databaseURL: "https://xxxx-default-rtdb.firebaseio.com",
-  projectId: "xxxx",
-  storageBucket: "xxxx.firebasestorage.app",
-  messagingSenderId: "xxxx",
-  appId: "xxxx",
-  measurementId: "G-xxxxxxxxxx"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };

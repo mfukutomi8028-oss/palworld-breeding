@@ -2,307 +2,294 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>タスク共有</title>
-  <meta name="description" content="システム担当2名向けのリアルタイムタスク共有サイト" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=16" />
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=16" />
-  <link rel="stylesheet" href="style.css?v=16" />
-  <script src="config.js?v=1"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>パルワールド配合記録ボード</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-v9-32.png?v=9" />
+  <link rel="shortcut icon" type="image/png" href="assets/favicon-v9.png?v=9" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon-v9.png?v=9" />
+  <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
+  <link rel="stylesheet" href="style.css?v=40" />
+  <script src="config.js" defer></script>
+  <script type="module" src="app.js?v=40"></script>
 </head>
 <body>
   <div class="app-shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark"><img src="assets/brand.png?v=16" alt="" /></div>
+    <aside class="sidebar" aria-label="サイドメニュー">
+      <div class="brand-mini">
+        <div class="brand-mark" aria-hidden="true"><img src="assets/brand-pal-icon.png?v=15" alt="パルワールド" /></div>
         <div>
-          <p>SYSTEM TASK</p>
-          <h1>タスク共有</h1>
+          <p class="eyebrow">PAL BREEDING</p>
+          <strong>配合記録</strong>
         </div>
       </div>
 
-      <nav class="nav">
-        <div class="nav-group">
-          <p class="nav-group-title">表示</p>
-          <button class="nav-item active" data-layout="board" type="button"><span class="nav-icon"><img src="assets/nav-board.png?v=16" alt="" /></span>ボード</button>
-          <button class="nav-item" data-layout="list" type="button"><span class="nav-icon"><img src="assets/nav-list.png?v=16" alt="" /></span>一覧</button>
-          <button class="nav-item" data-layout="timeline" type="button"><span class="nav-icon"><img src="assets/nav-timeline.png?v=16" alt="" /></span>タイムライン</button>
-        </div>
-        <div class="nav-group">
-          <p class="nav-group-title">絞り込み</p>
-          <button class="nav-item nav-filter" data-filter="mine" type="button"><span class="nav-icon"><img src="assets/summary-mine.png?v=16" alt="" /></span>自分の担当</button>
-          <button class="nav-item nav-filter" data-filter="done" type="button"><span class="nav-icon"><img src="assets/nav-done.png?v=16" alt="" /></span>完了</button>
-        </div>
+      <nav class="main-nav" aria-label="メインメニュー">
+        <button class="nav-item active" data-view="records" type="button"><span class="nav-icon"><img src="assets/plain-egg.png" alt="" /></span>配合記録</button>
+        <button class="nav-item" data-view="favorites" type="button"><span>★</span>お気に入り</button>
       </nav>
 
-      <section class="side-card user-card">
-        <div class="user-head">
-          <span class="user-dot" id="currentUserDot">?</span>
+      <section class="user-panel" aria-label="ユーザー設定">
+        <div class="user-panel-head">
+          <span class="user-dot" id="currentRecorderDot">福</span>
           <div>
             <p>現在のユーザー</p>
-            <strong id="currentUserLabel">未選択</strong>
+            <strong id="currentRecorderLabel">未選択</strong>
           </div>
-          <button class="tiny-icon-button" id="manageUsers" type="button" title="ユーザー管理">＋</button>
+          <button class="user-manage-button" id="manageUsers" type="button" title="ユーザーを管理">＋</button>
         </div>
 
-        <label class="side-label" for="currentUserSelect">担当者</label>
-        <select id="currentUserSelect"></select>
-
-        <label class="side-label" for="roomNameInput">共有ルーム名</label>
-        <input id="roomNameInput" type="text" maxlength="30" placeholder="例：システム課" />
-      </section>
-
-      <section class="side-card filters">
-        <div class="filter-title">
-          <strong>絞り込み</strong>
-          <button id="resetFilters" class="tiny-icon-button" type="button" title="解除">↻</button>
-        </div>
-
-        <label class="side-label" for="assigneeFilter">担当者</label>
-        <select id="assigneeFilter"></select>
-
-        <div class="side-label-row">
-          <label class="side-label" for="statusFilter">状態</label>
-          <button id="manageStatuses" class="mini-link-button" type="button">編集</button>
-        </div>
-        <select id="statusFilter"></select>
-
-        <label class="side-label" for="priorityFilter">優先度</label>
-        <select id="priorityFilter">
-          <option value="">すべて</option>
-          <option>緊急</option>
-          <option>高</option>
-          <option>中</option>
-          <option>低</option>
+        <label class="sidebar-field-label" for="currentRecorderSelect">記録者</label>
+        <select id="currentRecorderSelect" class="recorder-select">
+          <option value="福冨">福冨</option>
+          <option value="森井">森井</option>
         </select>
 
-        <div class="side-label-row">
-          <label class="side-label" for="categoryFilter">分類</label>
-          <button id="manageCategories" class="mini-link-button" type="button">編集</button>
-        </div>
-        <select id="categoryFilter"></select>
-
-        <label class="check-row"><input id="overdueOnly" type="checkbox" />期限超過のみ</label>
-        <label class="check-row"><input id="todayOnly" type="checkbox" />今日までのみ</label>
-        <label class="check-row"><input id="pinOnly" type="checkbox" />固定のみ</label>
+        <label class="sidebar-field-label" for="worldNameInput">ワールド名</label>
+        <input id="worldNameInput" class="world-name-input" type="text" maxlength="32" placeholder="例：桜島ワールド" />
       </section>
 
-      <div class="connection-pill" id="connectionPill">ローカル保存</div>
-    </aside>
-
-    <main id="mainContent" class="main">
-      <header class="hero">
-        <div class="hero-title-area">
-          <p class="eyebrow">REALTIME TASK BOARD</p>
-          <h2>タスク共有</h2>
+      <section class="filter-panel" aria-label="絞り込み">
+        <div class="panel-title-row">
+          <h2>絞り込み</h2>
+          <button class="icon-button small" id="clearFilters" type="button" title="フィルターをクリア">↺</button>
         </div>
-        <div id="roomNameBadge" class="room-badge hero-room-badge" hidden></div>
-        <div class="hero-actions" hidden></div>
+
+        <label class="field-label" for="parentFilter">親パル</label>
+        <div class="pal-picker filter-pal-picker">
+          <span class="pal-picker-preview" aria-hidden="true"></span>
+          <input id="parentFilter" type="search" autocomplete="off" placeholder="すべて" aria-label="親パルで絞り込み" />
+          <button class="field-clear-button" type="button" data-clear-filter="parentFilter" title="親パルの絞り込みを解除">×</button>
+          <div class="pal-suggestions" hidden></div>
+        </div>
+
+        <label class="field-label" for="resultFilter">結果パル</label>
+        <div class="pal-picker filter-pal-picker">
+          <span class="pal-picker-preview" aria-hidden="true"></span>
+          <input id="resultFilter" type="search" autocomplete="off" placeholder="すべて" aria-label="結果パルで絞り込み" />
+          <button class="field-clear-button" type="button" data-clear-filter="resultFilter" title="結果パルの絞り込みを解除">×</button>
+          <div class="pal-suggestions" hidden></div>
+        </div>
+
+        <div class="filter-block">
+          <div class="field-label">属性（OR検索）</div>
+          <div class="icon-filter-group" id="elementFilterGroup" aria-label="属性で絞り込み">
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="無属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_00.webp" alt="" /><span>無属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="炎属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_01.webp" alt="" /><span>炎属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="水属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_02.webp" alt="" /><span>水属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="草属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_04.webp" alt="" /><span>草属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="雷属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_03.webp" alt="" /><span>雷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="氷属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_08.webp" alt="" /><span>氷属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="地属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_07.webp" alt="" /><span>地属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="闇属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_05.webp" alt="" /><span>闇属性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="element" data-value="竜属性"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_Icon_element_s_06.webp" alt="" /><span>竜属性</span></button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <div class="field-label">作業適性（AND検索）</div>
+          <div class="icon-filter-group work-filter-group" id="workFilterGroup" aria-label="作業適性で絞り込み">
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="夜行性"><img src="assets/filter-icons/work-nocturnal.svg" alt="" /><span>夜行性</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="火おこし"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_00.webp" alt="" /><span>火おこし</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="水やり"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_01.webp" alt="" /><span>水やり</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="種まき"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_02.webp" alt="" /><span>種まき</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="発電"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_03.webp" alt="" /><span>発電</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="手作業"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_04.webp" alt="" /><span>手作業</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採集"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_05.webp" alt="" /><span>採集</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="伐採"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_06.webp" alt="" /><span>伐採</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="採掘"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_07.webp" alt="" /><span>採掘</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="製薬"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_08.webp" alt="" /><span>製薬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="冷却"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_10.webp" alt="" /><span>冷却</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="運搬"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_11.webp" alt="" /><span>運搬</span></button>
+            <button class="icon-filter-button" type="button" data-filter-type="work" data-value="牧場"><img src="https://cdn.paldb.cc/image/Pal/Texture/UI/InGame/T_icon_palwork_12.webp" alt="" /><span>牧場</span></button>
+          </div>
+        </div>
+
+        <label class="field-label" for="statusFilter">確認状況</label>
+        <select id="statusFilter">
+          <option value="">すべて</option>
+          <option value="確認中">確認中</option>
+          <option value="配合確認済み">配合確認済み</option>
+        </select>
+
+      </section>
+</aside>
+
+    <main class="content">
+      <header class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">PALWORLD COLLAB BOARD</p>
+          <h1><span>パルワールド配合記録ボード</span></h1>
+          <div class="world-name-badge" id="worldNameBadge" hidden></div>
+          <p>リアルタイムで配合結果・確認状況を記録できます。</p>
+        </div>
+
+        <div class="collab-card minimal-collab" title="共有リンクはURLをそのまま友人へ送ってください。">
+          <div class="status-pill" id="connectionState"><span class="live-dot"></span>共同編集 準備中</div>
+          <span id="palDataState" hidden>内蔵リスト</span>
+        </div>
       </header>
 
-      <section class="summary-grid">
-        <article class="summary-card">
-          <span class="summary-icon icon-image blue"><img src="assets/summary-open.png?v=16" alt="" /></span>
-          <div><p>未完了</p><strong id="openCount">0件</strong></div>
-        </article>
-        <article class="summary-card">
-          <span class="summary-icon icon-image red"><img src="assets/summary-overdue.png?v=16" alt="" /></span>
-          <div><p>期限超過</p><strong id="overdueCount">0件</strong></div>
-        </article>
-        <article class="summary-card">
-          <span class="summary-icon icon-image amber"><img src="assets/summary-today.png?v=16" alt="" /></span>
-          <div><p>今日まで</p><strong id="todayCount">0件</strong></div>
-        </article>
-        <article class="summary-card">
-          <span class="summary-icon icon-image green"><img src="assets/summary-mine.png?v=16" alt="" /></span>
-          <div><p>自分の担当</p><strong id="myCount">0件</strong></div>
-        </article>
+      <section class="kpi-grid" aria-label="集計">
+        <article class="kpi-card"><div class="kpi-icon blue">▤</div><div><p>総記録数</p><strong id="totalCount">0件</strong><span>全ての配合記録</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon green">✓</div><div><p>配合確認済み</p><strong id="verifiedCount">0件</strong><span id="verifiedRate">0%</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon yellow">…</div><div><p>確認中</p><strong id="pendingCount">0件</strong><span>未確認の配合記録</span></div></article>
+        <article class="kpi-card"><div class="kpi-icon purple">💬</div><div><p>共有メモ</p><strong id="memoCount">0件</strong><span>メモありの記録</span></div></article>
       </section>
 
-      <section class="toolbar">
-        <button id="newTask" class="primary-button toolbar-new-task" type="button">＋ 新しいタスク</button>
-        <div class="search-box">
-          <span>⌕</span>
-          <input id="searchInput" type="search" placeholder="件名・内容・依頼元・タグで検索" />
-        </div>
-        <select id="sortSelect">
-          <option value="smart">おすすめ順</option>
-          <option value="due">期限が近い順</option>
-          <option value="updated">更新日時（新しい順）</option>
-          <option value="priority">優先度順</option>
-        </select>
-      </section>
+      <section class="board-layout">
+        <section class="board-card" aria-label="配合記録一覧">
+          <div class="toolbar">
+            <button class="primary-button" id="addRecord" type="button">＋ 新しい配合記録を追加</button>
+            <div class="search-box">
+              <span>⌕</span>
+              <input id="searchInput" type="search" placeholder="パル名・メモで検索" />
+            </div>
+            <label class="toggle-chip"><input id="unverifiedOnly" type="checkbox" /><span>確認中のみ</span></label>
+            <select id="sortSelect" class="sort-select">
+              <option value="updatedDesc">更新日時（新しい順）</option>
+              <option value="updatedAsc">更新日時（古い順）</option>
+              <option value="resultAsc">結果パル（昇順）</option>
+              <option value="statusAsc">確認状況</option>
+            </select>
+          </div>
 
-      <section id="boardView" class="board-view"></section>
-      <section id="listView" class="list-view" hidden></section>
-      <section id="timelineView" class="timeline-view" hidden></section>
+          <div class="table-wrap">
+            <table class="records-table">
+              <thead>
+                <tr>
+                  <th class="favorite-cell">★</th>
+                  <th>親A</th>
+                  <th>親B</th>
+                  <th>結果パル</th>
+                  <th>タマゴ</th>
+                  <th>確認状況</th>
+                  <th>記録者</th>
+                  <th>メモ</th>
+                  <th>更新日時</th>
+                </tr>
+              </thead>
+              <tbody id="recordRows"></tbody>
+            </table>
+            <div id="emptyState" class="empty-state" hidden>
+              <div class="empty-egg">🥚</div>
+              <h3 id="emptyTitle">まだ配合記録がありません</h3>
+              <p id="emptyText">「新しい配合記録を追加」から記録を始めてください。</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="detail-card" aria-label="配合記録の詳細">
+          <div class="detail-head">
+            <h2>配合記録の詳細</h2>
+            <button class="icon-button small" id="closeDetail" type="button" title="選択解除">×</button>
+          </div>
+          <div id="detailBody" class="detail-body"></div>
+        </aside>
+      </section>
     </main>
-
-    <aside class="detail-panel">
-      <div class="detail-head">
-        <strong>タスク詳細</strong>
-        <button id="closeDetail" class="icon-button" type="button">×</button>
-      </div>
-      <div id="detailBody" class="detail-body empty">
-        <div class="empty-state">
-          <div class="empty-icon">✓</div>
-          <p>タスクを選択すると詳細が表示されます。</p>
-        </div>
-      </div>
-    </aside>
   </div>
 
-  <dialog id="userDialog" class="dialog small-dialog">
+
+  <dialog id="userDialog" class="user-dialog">
     <form id="userForm" method="dialog">
-      <p class="eyebrow">USER SELECT</p>
-      <h2>ユーザーを選択</h2>
-      <p class="dialog-lead">このブラウザで使うユーザーを選択してください。あとから左メニューでも変更できます。</p>
-      <label>ユーザー
-        <select id="startupUser"></select>
+      <div class="dialog-head">
+        <div>
+          <p class="eyebrow">PLAYER SELECT</p>
+          <h2>記録者を選択</h2>
+        </div>
+      </div>
+      <p class="user-dialog-lead">このブラウザで使用するユーザーを選択してください。あとから左メニューでも変更できます。</p>
+      <label>記録者
+        <select id="startupRecorder" required>
+          <option value="福冨">福冨</option>
+          <option value="森井">森井</option>
+        </select>
       </label>
-      <div class="dialog-actions">
+      <div class="dialog-actions single">
         <button class="primary-button" type="submit">このユーザーで始める</button>
       </div>
     </form>
   </dialog>
 
-  <dialog id="userManageDialog" class="dialog small-dialog">
-    <form id="userManageForm" method="dialog">
+
+  <dialog id="recorderManageDialog" class="user-dialog recorder-manage-dialog">
+    <form id="recorderManageForm" method="dialog">
       <div class="dialog-head">
         <div>
           <p class="eyebrow">USER MANAGE</p>
           <h2>ユーザー管理</h2>
         </div>
-        <button id="closeUserManage" class="icon-button" type="button">×</button>
+        <button class="icon-button" id="closeRecorderManage" value="cancel" type="button">×</button>
+      </div>
+      <p class="user-dialog-lead">ここで追加したユーザーは、左メニューの記録者プルダウンに表示されます。</p>
+
+      <div class="recorder-add-row">
+        <input id="newRecorderName" type="text" maxlength="12" placeholder="例：田中" autocomplete="off" />
+        <input id="newRecorderColor" class="recorder-color-input" type="color" value="#9067e9" title="ユーザーカラー" />
+        <button class="primary-button" id="addRecorderUser" type="submit">追加</button>
       </div>
 
-      <div class="user-add-row">
-        <input id="newUserName" type="text" maxlength="12" placeholder="例：田中" />
-        <input id="newUserColor" type="color" value="#7c5cff" title="ユーザーカラー" />
-        <button class="primary-button" type="submit">追加</button>
-      </div>
-
-      <div id="userList" class="user-list"></div>
+      <div id="recorderList" class="recorder-list" aria-label="登録済みユーザー"></div>
     </form>
   </dialog>
 
-
-
-  <dialog id="statusManageDialog" class="dialog small-dialog">
-    <form id="statusManageForm" method="dialog">
+  <dialog id="recordDialog" class="record-dialog">
+    <form id="recordForm" method="dialog">
       <div class="dialog-head">
         <div>
-          <p class="eyebrow">STATUS MANAGE</p>
-          <h2>状態管理</h2>
+          <p class="eyebrow">BREEDING RECORD</p>
+          <h2 id="dialogTitle">新しい配合記録</h2>
         </div>
-        <button id="closeStatusManage" class="icon-button" type="button">×</button>
+        <button class="icon-button" id="cancelDialog" value="cancel" type="button">×</button>
       </div>
 
-      <p class="dialog-lead">現在選択中のユーザー用の状態セクションを追加・名称変更・削除できます。左のハンドルをドラッグすると順番を変更できます。完了は完了ボタンで使用するため削除できません。</p>
-
-      <div class="status-add-row">
-        <input id="newStatusName" type="text" maxlength="20" placeholder="例：復旧済み" />
-        <button class="primary-button" type="submit">追加</button>
-      </div>
-
-      <div id="statusList" class="status-list"></div>
-    </form>
-  </dialog>
-
-  <dialog id="categoryManageDialog" class="dialog small-dialog">
-    <form id="categoryManageForm" method="dialog">
-      <div class="dialog-head">
-        <div>
-          <p class="eyebrow">CATEGORY MANAGE</p>
-          <h2>分類管理</h2>
-        </div>
-        <button id="closeCategoryManage" class="icon-button" type="button">×</button>
-      </div>
-
-      <p class="dialog-lead">分類を追加・名称変更・削除できます。左のハンドルをドラッグすると順番を変更できます。既存タスクの分類名は、名称変更時のみ一緒に更新します。</p>
-
-      <div class="category-add-row">
-        <input id="newCategoryName" type="text" maxlength="20" placeholder="例：サーバー" />
-        <button class="primary-button" type="submit">追加</button>
-      </div>
-
-      <div id="categoryList" class="category-list"></div>
-    </form>
-  </dialog>
-
-  <dialog id="taskDialog" class="dialog task-dialog">
-    <form id="taskForm" method="dialog">
-      <div class="dialog-head">
-        <div>
-          <p class="eyebrow">TASK</p>
-          <h2 id="taskDialogTitle">新しいタスク</h2>
-        </div>
-        <button id="closeTaskDialog" class="icon-button" type="button">×</button>
-      </div>
-
-      <input id="taskId" type="hidden" />
-
+      <input type="hidden" id="recordId" />
       <div class="form-grid">
-        <label class="wide">件名 <span class="required">必須</span>
-          <input id="taskTitle" required maxlength="80" placeholder="例：3階ナースステーションPCの印刷不具合" />
+        <label class="pal-picker-field">親A
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="parentA" name="parentA" required autocomplete="off" placeholder="例：キャプペン" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
-
-        <label>担当者
-          <select id="taskAssignee"></select>
+        <label class="pal-picker-field">親B
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="parentB" name="parentB" required autocomplete="off" placeholder="例：ツジギリ" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
-
-        <label>状態
-          <select id="taskStatus"></select>
+        <label class="pal-picker-field">結果パル
+          <div class="pal-picker">
+            <span class="pal-picker-preview" aria-hidden="true"></span>
+            <input id="resultPal" name="resultPal" autocomplete="off" placeholder="確認中なら未入力可" />
+            <div class="pal-suggestions" hidden></div>
+          </div>
         </label>
-
-        <label>優先度
-          <select id="taskPriority">
-            <option>中</option>
-            <option>緊急</option>
-            <option>高</option>
-            <option>低</option>
-          </select>
-        </label>
-
-        <label>分類
-          <select id="taskCategory"></select>
-        </label>
-
-        <label>期限日
-          <input id="taskDueDate" type="date" />
-        </label>
-
-        <label>期限時刻
-          <input id="taskDueTime" type="time" />
-        </label>
-
-        <label>依頼元
-          <input id="taskRequester" maxlength="40" placeholder="例：医事課 / 4階病棟 / 法人本部" />
-        </label>
-
-        <label>タグ
-          <input id="taskTags" maxlength="80" placeholder="例：至急, 現地確認, 業者待ち" />
-        </label>
-
-        <label class="wide">内容・メモ
-          <textarea id="taskDescription" rows="5" placeholder="現象、確認したこと、次にやることなど"></textarea>
-        </label>
-
-        <label class="wide">チェックリスト
-          <textarea id="taskChecklist" rows="4" placeholder="1行につき1項目&#10;例：現地確認&#10;例：再起動確認&#10;例：業者へ連絡"></textarea>
+        <label class="egg-picker-field">タマゴの種類
+          <div class="pal-picker egg-picker">
+            <span class="pal-picker-preview egg-picker-preview" aria-hidden="true"></span>
+            <input id="eggType" name="eggType" autocomplete="off" placeholder="例：平凡なタマゴ" />
+            <div class="pal-suggestions egg-suggestions" hidden></div>
+          </div>
         </label>
       </div>
+
+      <label>メモ
+        <textarea id="note" name="note" rows="4" placeholder="用途、確認した結果、補足など"></textarea>
+      </label>
+
+      <div id="dialogMessage" class="dialog-message" hidden></div>
 
       <div class="dialog-actions">
-        <label class="pin-check"><input id="taskPinned" type="checkbox" /> 固定表示</label>
-        <button class="ghost-button" id="deleteTask" type="button">削除</button>
-        <button class="primary-button" type="submit">保存する</button>
+        <button class="secondary-button" id="deleteRecord" type="button">削除</button>
+        <button class="primary-button" id="saveRecord" type="submit">保存する</button>
       </div>
     </form>
   </dialog>
 
-  <div id="toast" class="toast" hidden></div>
-
-  <script type="module" src="app.js?v=16"></script>
+  <datalist id="palOptions"></datalist>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
