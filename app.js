@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v43";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v45";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v43";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v45";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1809,6 +1809,7 @@ const state = {
   pickers: {},
   passivePickers: {},
   eggPickers: {},
+  eggQuickSize: "通常",
   filterIconMap: {},
   selectedElements: [],
   selectedWorks: [],
@@ -2153,7 +2154,11 @@ function mergePaldbIconData(list, shouldRender = true) {
 }
 
 function normalizePalNoKey(no) {
-  const match = String(no || "").toUpperCase().match(/(\d+)([A-Z])?/);
+  const value = String(no || "").trim().toUpperCase();
+  // 通常のパルNoだけをPalDB画像Noと照合します。
+  // 例: 083 -> 83, 104B -> 104B
+  // ただし「テラ01」のような特殊IDは No.01 と誤判定しないよう除外します。
+  const match = value.match(/^0*(\d+)([A-Z])?$/);
   if (!match) return "";
   return `${Number(match[1])}${match[2] || ""}`;
 }
@@ -2588,6 +2593,7 @@ function setupEggPickers() {
     input.addEventListener("input", () => {
       updateEggPreview(id);
       renderEggSuggestions(id);
+      renderEggQuickSelect();
     });
     input.addEventListener("focus", () => renderEggSuggestions(id));
     input.addEventListener("keydown", (event) => {
@@ -2595,11 +2601,107 @@ function setupEggPickers() {
     });
   }
 
+  const quick = $("eggQuickSelect");
+  quick?.addEventListener("click", (event) => {
+    const sizeButton = event.target.closest("[data-egg-size]");
+    if (sizeButton && quick.contains(sizeButton)) {
+      setEggQuickSize(sizeButton.dataset.eggSize);
+      return;
+    }
+
+    const eggButton = event.target.closest("[data-egg-key]");
+    if (eggButton && quick.contains(eggButton)) {
+      selectQuickEgg(eggButton.dataset.eggKey);
+    }
+  });
+
+  renderEggQuickSelect();
+
   document.addEventListener("click", (event) => {
     for (const id of Object.keys(state.eggPickers)) {
       if (!state.eggPickers[id].picker.contains(event.target)) hideEggSuggestions(id);
     }
   });
+}
+
+function getEggBaseTypes() {
+  return EGG_TYPES.filter(egg => egg.size === "通常");
+}
+
+function getEggByKeyAndSize(key, size = state.eggQuickSize) {
+  return EGG_TYPES.find(egg => egg.key === key && egg.size === size) ||
+    EGG_TYPES.find(egg => egg.key === key && egg.size === "通常") ||
+    null;
+}
+
+function eggBaseLabel(name) {
+  return String(name || "").replace(/タマゴ$/, "");
+}
+
+function setEggQuickSize(size = "通常") {
+  const allowed = ["通常", "デカ", "キョダイ"];
+  state.eggQuickSize = allowed.includes(size) ? size : "通常";
+
+  const input = $("eggType");
+  const current = getEggMeta(input?.value || "");
+  if (input && current?.key) {
+    const next = getEggByKeyAndSize(current.key, state.eggQuickSize);
+    if (next) {
+      input.value = next.name;
+      updateEggPreview("eggType");
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  }
+
+  renderEggQuickSelect();
+}
+
+function selectQuickEgg(key) {
+  const input = $("eggType");
+  if (!input) return;
+
+  if (!key) {
+    input.value = "";
+  } else {
+    const egg = getEggByKeyAndSize(key, state.eggQuickSize);
+    if (!egg) return;
+    input.value = egg.name;
+  }
+
+  updateEggPreview("eggType");
+  hideEggSuggestions("eggType");
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+function renderEggQuickSelect() {
+  const quick = $("eggQuickSelect");
+  const input = $("eggType");
+  if (!quick || !input) return;
+
+  const current = getEggMeta(input.value);
+  if (current?.size) state.eggQuickSize = current.size;
+
+  const sizes = ["通常", "デカ", "キョダイ"];
+  const activeKey = current?.key || "";
+
+  quick.innerHTML = `
+    <div class="egg-quick-head">
+      <span>すばやく選択</span>
+      <button type="button" class="egg-quick-clear" data-egg-key="">未設定にする</button>
+    </div>
+    <div class="egg-size-tabs" role="group" aria-label="タマゴの大きさ">
+      ${sizes.map(size => `<button type="button" class="egg-size-tab ${state.eggQuickSize === size ? "is-active" : ""}" data-egg-size="${escapeHtml(size)}">${escapeHtml(size)}</button>`).join("")}
+    </div>
+    <div class="egg-type-quick-grid">
+      ${getEggBaseTypes().map(egg => {
+        const selected = activeKey === egg.key;
+        const selectedEgg = getEggByKeyAndSize(egg.key, state.eggQuickSize) || egg;
+        return `<button type="button" class="egg-type-quick ${selected ? "is-active" : ""}" data-egg-key="${escapeHtml(egg.key)}" title="${escapeHtml(selectedEgg.name)}">
+          ${eggIcon(selectedEgg.name, "small")}
+          <span>${escapeHtml(eggBaseLabel(egg.name))}</span>
+        </button>`;
+      }).join("")}
+    </div>`;
 }
 
 function updateEggPreview(id) {
@@ -3483,6 +3585,8 @@ function openDialog(id = null) {
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
   refreshPickerPreviews();
+  refreshEggPreviews();
+  renderEggQuickSelect();
   elements.recordDialog.showModal();
 }
 
