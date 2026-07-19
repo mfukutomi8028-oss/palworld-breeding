@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v45";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v46";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v45";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v46";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -2041,6 +2041,8 @@ function loadCachedPaldbData() {
     const cached = JSON.parse(localStorage.getItem(PALDB_CACHE_KEY) || "null");
     if (cached?.icons?.length) {
       mergePaldbIconData(cached.icons, false);
+      setupPalOptions(true);
+      refreshPickerPreviews();
     }
   } catch (error) {
     console.warn("PalDB cache read failed", error);
@@ -2058,8 +2060,11 @@ async function loadPaldbData() {
       const icons = parsePaldbHtml(html);
       if (icons.length < 100) throw new Error(`PalDBの取得数が少なすぎます: ${icons.length}`);
       localStorage.setItem(PALDB_CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), icons }));
-      mergePaldbIconData(icons, true);
-      console.info(`PalDBから${icons.length}件のパル画像情報を読み込みました`);
+      mergePaldbIconData(icons, false);
+      setupPalOptions(true);
+      render();
+      refreshPickerPreviews();
+      console.info(`PalDBから${icons.length}件のパル情報を読み込みました`);
       return;
     } catch (error) {
       lastError = error;
@@ -2069,9 +2074,36 @@ async function loadPaldbData() {
   console.warn("PalDB sync gave up:", lastError);
 }
 
+const PALDB_ELEMENT_BY_CODE = {
+  "00": "無属性",
+  "01": "炎属性",
+  "02": "水属性",
+  "03": "雷属性",
+  "04": "草属性",
+  "05": "闇属性",
+  "06": "竜属性",
+  "07": "地属性",
+  "08": "氷属性"
+};
+
+const PALDB_WORK_BY_CODE = {
+  "00": "火おこし",
+  "01": "水やり",
+  "02": "種まき",
+  "03": "発電",
+  "04": "手作業",
+  "05": "採集",
+  "06": "伐採",
+  "07": "採掘",
+  "08": "製薬",
+  "10": "冷却",
+  "11": "運搬",
+  "12": "牧場"
+};
+
 function parsePaldbHtml(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
-  const icons = [];
+  const pals = [];
   const seen = new Set();
 
   for (const img of doc.querySelectorAll("img[alt][src]")) {
@@ -2089,20 +2121,33 @@ function parsePaldbHtml(html) {
     if (!no) continue;
 
     const displayName = findPaldbDisplayName(block);
-    const key = `${normalizePalNoKey(no)}:${icon}`;
-    if (seen.has(key)) continue;
+    if (!isLikelyPalName(displayName)) continue;
+
+    const noKey = normalizePalNoKey(no);
+    const key = `${noKey}:${normalizeKey(displayName)}:${icon}`;
+    if (!noKey || seen.has(key)) continue;
     seen.add(key);
 
-    icons.push({
+    const iconKey = inferPaldbIconKey(icon);
+    const elements = extractPaldbElements(block);
+    const work = extractPaldbWorks(block);
+
+    pals.push({
       no,
+      name: displayName,
       displayName,
       icon,
-      iconKey: inferPaldbIconKey(icon),
+      iconKey,
+      elements,
+      work,
+      sortKey: makeSortKey(no, displayName),
+      source: "PalDB同期"
     });
   }
 
-  return icons;
+  return pals;
 }
+
 
 function normalizePaldbImageUrl(value) {
   const raw = String(value || "").trim();
@@ -2119,6 +2164,30 @@ function normalizePaldbImageUrl(value) {
 function inferPaldbIconKey(url) {
   const match = String(url || "").match(/\/T_([^/]+?)_icon_normal\.webp/i);
   return match?.[1] || "";
+}
+
+function extractPaldbElements(block) {
+  if (!block) return [];
+  const found = new Set();
+  for (const img of block.querySelectorAll("img[alt][src]")) {
+    const text = `${img.getAttribute("alt") || ""} ${img.getAttribute("src") || ""}`;
+    const match = text.match(/TIconelements(\d{2})/i);
+    const element = match ? PALDB_ELEMENT_BY_CODE[match[1]] : "";
+    if (element) found.add(element);
+  }
+  return Array.from(found);
+}
+
+function extractPaldbWorks(block) {
+  if (!block) return [];
+  const found = new Set();
+  for (const img of block.querySelectorAll("img[alt][src]")) {
+    const text = `${img.getAttribute("alt") || ""} ${img.getAttribute("src") || ""}`;
+    const match = text.match(/Ticonpalwork(\d{2})/i);
+    const work = match ? PALDB_WORK_BY_CODE[match[1]] : "";
+    if (work) found.add(work);
+  }
+  return Array.from(found);
 }
 
 function findPaldbPalBlock(img, doc) {
@@ -2143,13 +2212,31 @@ function findPaldbDisplayName(block) {
 
 function mergePaldbIconData(list, shouldRender = true) {
   if (!Array.isArray(list) || !list.length) return;
+  const validList = list.filter(item => normalizePalNoKey(item.no) && (item.icon || item.iconKey));
   const merged = new Map();
-  for (const item of [...PALDB_STATIC_ICONS, ...(state.paldbIcons || []), ...list]) {
+  for (const item of [...PALDB_STATIC_ICONS, ...(state.paldbIcons || []), ...validList]) {
     const key = `${normalizePalNoKey(item.no)}:${item.iconKey || inferPaldbIconKey(item.icon) || item.icon || ""}`;
     if (!key || key === ":") continue;
     merged.set(key, item);
   }
   state.paldbIcons = Array.from(merged.values());
+
+  const palEntries = validList
+    .filter(item => isLikelyPalName(item.name || item.displayName))
+    .map(item => ({
+      no: item.no,
+      name: item.name || item.displayName,
+      displayName: item.displayName || item.name,
+      icon: item.icon,
+      paldbIcon: item.icon,
+      iconKey: item.iconKey || inferPaldbIconKey(item.icon),
+      elements: Array.isArray(item.elements) ? item.elements : [],
+      work: Array.isArray(item.work) ? item.work : [],
+      sortKey: item.sortKey ?? makeSortKey(item.no, item.name || item.displayName),
+      source: item.source || "PalDB同期"
+    }));
+
+  if (palEntries.length) mergePalData(palEntries, `PalDB同期済み ${palEntries.length}種`);
   applyPaldbIconsToPalMap(shouldRender);
 }
 

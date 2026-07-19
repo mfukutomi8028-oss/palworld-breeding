@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=45") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=46") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=45") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=46") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
