@@ -1,2 +1,3 @@
 Trigger validated Palworld 1.0 v49 update.
 Retry after workflow push fix.
+Run patch diagnostics.
