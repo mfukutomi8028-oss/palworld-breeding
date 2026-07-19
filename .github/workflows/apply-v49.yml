@@ -6,11 +6,10 @@ on:
 
 permissions:
   contents: write
-  issues: write
   pull-requests: write
 
 jobs:
-  diagnose-update:
+  apply-update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch
@@ -19,26 +18,18 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Diagnose validated v49 patch
+      - name: Apply validated v49 patch
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          set +e
+          set -euo pipefail
           cat .github/v49-patch/part-* > /tmp/palworld-v49.patch.b64
           base64 --decode /tmp/palworld-v49.patch.b64 > /tmp/palworld-v49.patch
-          {
-            echo '```text'
-            echo "base64_sha=$(sha256sum /tmp/palworld-v49.patch.b64 | cut -d' ' -f1)"
-            echo "patch_sha=$(sha256sum /tmp/palworld-v49.patch | cut -d' ' -f1)"
-            echo "expected_patch_sha=ed8a938d3a429e0c5b5a44f618f7558f19c17605330f776fb422b5ecdc9f55c7"
-            echo "app_blob=$(git hash-object app.js)"
-            echo "index_blob=$(git hash-object index.html)"
-            echo "style_blob=$(git hash-object style.css)"
-            echo "readme_blob=$(git hash-object README.md)"
-            echo "--- patch dry run ---"
-            patch --dry-run -p1 --forward < /tmp/palworld-v49.patch 2>&1
-            echo "patch_exit=$?"
-            echo '```'
-          } > /tmp/v49-diagnostic.md
-          gh issue comment 1 --repo "${{ github.repository }}" --body-file /tmp/v49-diagnostic.md
+          test "$(sha256sum /tmp/palworld-v49.patch | cut -d' ' -f1)" = "ed8a938d3a429e0c5b5a44f618f7558f19c17605330f776fb422b5ecdc9f55c7"
+          patch -p1 --forward < /tmp/palworld-v49.patch
+          rm -rf .github/v49-patch
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js index.html style.css README.md .github/v49-patch
+          git commit -m "Update Palworld roster for 1.0 (v49)"
+          git push origin main
