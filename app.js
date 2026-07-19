@@ -1,9 +1,22 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v46";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v49";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v46";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v49";
+const CURRENT_PAL_LOCALIZATION_URLS = [
+  "https://raw.githubusercontent.com/zaigie/palworld-server-tool/f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json",
+  "https://cdn.jsdelivr.net/gh/zaigie/palworld-server-tool@f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json"
+];
+const CURRENT_PAL_ICON_MANIFEST_URLS = [
+  "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/palworld-icon-manifest.json",
+  "https://cdn.jsdelivr.net/gh/bowenchen-1/palworld-guide@bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/palworld-icon-manifest.json"
+];
+const CURRENT_PALDB_DATA_URLS = [
+  "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json",
+  "https://cdn.jsdelivr.net/gh/bowenchen-1/palworld-guide@bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json"
+];
+const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v49";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -633,7 +646,7 @@ const EMBEDDED_PALS = [
   { no: "070", name: "フラリーナ", en: "Petallia", elements: ["草属性"], work: ["種まき", "手作業", "採集", "製薬", "運搬"], iconKey: "LilyQueen" },
   { no: "071", name: "カバネドリ", en: "Vanwyrm", elements: ["炎属性", "闇属性"], work: ["火おこし", "運搬"], iconKey: "BirdDragon" },
   { no: "072", name: "ビーナイト", en: "Beegarde", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬", "運搬", "牧場"], iconKey: "SoldierBee" },
-  { no: "073", name: "クインビーナ", en: "Elizabee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], iconKey: "QueenBee" },
+  { no: "68", name: "クインビーナ", en: "Elizabee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], iconKey: "QueenBee" },
     { no: "075", name: "ツジギリ", en: "Bushi", elements: ["炎属性"], work: ["火おこし", "手作業", "採集", "伐採", "運搬"], iconKey: "Ronin" },
   { no: "076", name: "フォレーナ", en: "Wixen", elements: ["炎属性"], work: ["火おこし", "手作業", "運搬"], iconKey: "FoxMage" },
   { no: "077", name: "クレメーオ", en: "Katress", elements: ["闇属性"], work: ["手作業", "製薬", "運搬"], iconKey: "CatMage" },
@@ -658,6 +671,91 @@ const EMBEDDED_PALS = [
   { no: "110B", name: "グレイシャドウ", en: "Frostallion Noct", elements: ["闇属性"], work: ["採集"], iconKey: "BlackFurDragon" },
   { no: "111", name: "ジェッドラン", en: "Jetragon", elements: ["竜属性"], work: ["採集"], iconKey: "JetDragon" },
   { no: "テラ01", name: "クトゥルフのめだま", en: "Eye of Cthulhu", elements: ["闇属性"], work: ["運搬"], icon: "https://palworld-lab.com/_astro/10001.BJliejgN_1xzcGC.webp" }
+];
+
+
+const CURRENT_CRITICAL_PALS = [
+  { no: "68", name: "クインビーナ", en: "Elizabee", elements: ["草属性"], work: ["種まき", "手作業", "採集", "伐採", "製薬"], iconKey: "QueenBee", icon: paldbIconUrlFromKey("QueenBee"), source: "Palworld 1.0重要補正" },
+  { no: "96", name: "ライバード", en: "Beakon", elements: ["雷属性"], work: ["発電", "採集", "運搬"], iconKey: "ThunderBird", icon: paldbIconUrlFromKey("ThunderBird"), source: "Palworld 1.0重要補正" }
+];
+
+const V1_RELEASE_FALLBACK_PALS = [
+  { name: "フユマル", en: "Smokie Cryst", iconKey: "BlackPuppy_Ice", icon: paldbIconUrlFromKey("BlackPuppy_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "シャオロン", en: "Shaolong", iconKey: "BlueSkyDragon", icon: paldbIconUrlFromKey("BlueSkyDragon"), source: "Palworld 1.0内蔵" },
+  { name: "バトラビー", en: "Lapiron", iconKey: "BrownRabbit", icon: paldbIconUrlFromKey("BrownRabbit"), source: "Palworld 1.0内蔵" },
+  { name: "ハグミー", en: "Needoll", iconKey: "CactusDoll", icon: paldbIconUrlFromKey("CactusDoll"), source: "Palworld 1.0内蔵" },
+  { name: "ハグユー", en: "Needoll Noct", iconKey: "CactusDoll_Dark", icon: paldbIconUrlFromKey("CactusDoll_Dark"), source: "Palworld 1.0内蔵" },
+  { name: "リオリネ", en: "Amione", iconKey: "ClioneTwins", icon: paldbIconUrlFromKey("ClioneTwins"), source: "Palworld 1.0内蔵" },
+  { name: "ポワワ", en: "Clovee", iconKey: "CloverFairy", icon: paldbIconUrlFromKey("CloverFairy"), source: "Palworld 1.0内蔵" },
+  { name: "ラピエール", en: "Dupin", iconKey: "ClownRabbit", icon: paldbIconUrlFromKey("ClownRabbit"), source: "Palworld 1.0内蔵" },
+  { name: "オモシガメ", en: "Tetroise", iconKey: "CubeTurtle", icon: paldbIconUrlFromKey("CubeTurtle"), source: "Palworld 1.0内蔵" },
+  { name: "オシロガメ", en: "Tetroise Primo", iconKey: "CubeTurtle_Neutral", icon: paldbIconUrlFromKey("CubeTurtle_Neutral"), source: "Palworld 1.0内蔵" },
+  { name: "ポポフィア", en: "Souffline", iconKey: "DandelionGirl", icon: paldbIconUrlFromKey("DandelionGirl"), source: "Palworld 1.0内蔵" },
+  { name: "マジョルナ", en: "Majex", iconKey: "DarkFlameFox", icon: paldbIconUrlFromKey("DarkFlameFox"), source: "Palworld 1.0内蔵" },
+  { name: "シェルガドラ", en: "Aegidron", iconKey: "DomeArmorDragon", icon: paldbIconUrlFromKey("DomeArmorDragon"), source: "Palworld 1.0内蔵" },
+  { name: "ノンビリリ", en: "Slowatt", iconKey: "ElecLizard", icon: paldbIconUrlFromKey("ElecLizard"), source: "Palworld 1.0内蔵" },
+  { name: "パチマル", en: "Puffolt", iconKey: "ElecPomeranian", icon: paldbIconUrlFromKey("ElecPomeranian"), source: "Palworld 1.0内蔵" },
+  { name: "デンツム", en: "Snock", iconKey: "ElecSnail", icon: paldbIconUrlFromKey("ElecSnail"), source: "Palworld 1.0内蔵" },
+  { name: "ドンツム", en: "Snock Lux", iconKey: "ElecSnail_Ground", icon: paldbIconUrlFromKey("ElecSnail_Ground"), source: "Palworld 1.0内蔵" },
+  { name: "チェリーナ", en: "Petallia Ignis", iconKey: "FlowerDoll_Fire", icon: paldbIconUrlFromKey("FlowerDoll_Fire"), source: "Palworld 1.0内蔵" },
+  { name: "ノクサージュ", en: "Dandilord", iconKey: "FlowerPrince", icon: paldbIconUrlFromKey("FlowerPrince"), source: "Palworld 1.0内蔵" },
+  { name: "モコチッチ", en: "Muffly", iconKey: "FluffyBird", icon: paldbIconUrlFromKey("FluffyBird"), source: "Palworld 1.0内蔵" },
+  { name: "センコ", en: "Flaracle", iconKey: "FoxExorcist", icon: paldbIconUrlFromKey("FoxExorcist"), source: "Palworld 1.0内蔵" },
+  { name: "ニャンシー", en: "Wispaw", iconKey: "GhostBlackCat", icon: paldbIconUrlFromKey("GhostBlackCat"), source: "Palworld 1.0内蔵" },
+  { name: "レイバーン", en: "Eidrolon", iconKey: "GhostDragon", icon: paldbIconUrlFromKey("GhostDragon"), source: "Palworld 1.0内蔵" },
+  { name: "ヘルバーン", en: "Eidrolon Ignis", iconKey: "GhostDragon_Fire", icon: paldbIconUrlFromKey("GhostDragon_Fire"), source: "Palworld 1.0内蔵" },
+  { name: "グラスメアリ", en: "Nitemary Botan", iconKey: "GhostRabbit_Grass", icon: paldbIconUrlFromKey("GhostRabbit_Grass"), source: "Palworld 1.0内蔵" },
+  { name: "ウゴクゾー", en: "Dualith", iconKey: "GrassGolem", icon: paldbIconUrlFromKey("GrassGolem"), source: "Palworld 1.0内蔵" },
+  { name: "ノロウゾー", en: "Dualith Noct", iconKey: "GrassGolem_Dark", icon: paldbIconUrlFromKey("GrassGolem_Dark"), source: "Palworld 1.0内蔵" },
+  { name: "モリタロス", en: "Elgrove", iconKey: "GrassMinotaur", icon: paldbIconUrlFromKey("GrassMinotaur"), source: "Palworld 1.0内蔵" },
+  { name: "ユキタロス", en: "Elgrove Cryst", iconKey: "GrassMinotaur_Ice", icon: paldbIconUrlFromKey("GrassMinotaur_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "フードール", en: "Hoodle", iconKey: "HoodGhost", icon: paldbIconUrlFromKey("HoodGhost"), source: "Palworld 1.0内蔵" },
+  { name: "チョコザラシ", en: "Polapup Terra", iconKey: "IceSeal_Ground", icon: paldbIconUrlFromKey("IceSeal_Ground"), source: "Palworld 1.0内蔵" },
+  { name: "ゴウカブキ", en: "Renjishi", iconKey: "KabukiMan", icon: paldbIconUrlFromKey("KabukiMan"), source: "Palworld 1.0内蔵" },
+  { name: "オーマンボ", en: "Solmora", iconKey: "KingSunfish", icon: paldbIconUrlFromKey("KingSunfish"), source: "Palworld 1.0内蔵" },
+  { name: "トノサマンボ", en: "Solmora Lux", iconKey: "KingSunfish_Thunder", icon: paldbIconUrlFromKey("KingSunfish_Thunder"), source: "Palworld 1.0内蔵" },
+  { name: "グランジーラ", en: "Panthalus", iconKey: "KingWhale", icon: paldbIconUrlFromKey("KingWhale"), source: "Palworld 1.0内蔵" },
+  { name: "レイコーン", en: "Univolt Cryst", iconKey: "Kirin_Ice", icon: paldbIconUrlFromKey("Kirin_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "ユキツネ", en: "Foxparks Cryst", iconKey: "Kitsunebi_Ice", icon: paldbIconUrlFromKey("Kitsunebi_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "ヴィランタン", en: "Loomen", iconKey: "LanternButler", icon: paldbIconUrlFromKey("LanternButler"), source: "Palworld 1.0内蔵" },
+  { name: "モモンパ", en: "Herbil", iconKey: "LeafMomonga", icon: paldbIconUrlFromKey("LeafMomonga"), source: "Palworld 1.0内蔵" },
+  { name: "ニャルル", en: "Valentail", iconKey: "LongCat", icon: paldbIconUrlFromKey("LongCat"), source: "Palworld 1.0内蔵" },
+  { name: "ハナミズチ", en: "Ophydia", iconKey: "LotusDragon", icon: paldbIconUrlFromKey("LotusDragon"), source: "Palworld 1.0内蔵" },
+  { name: "カレッパ", en: "Tanzee Ignis", iconKey: "Monkey_Fire", icon: paldbIconUrlFromKey("Monkey_Fire"), source: "Palworld 1.0内蔵" },
+  { name: "モノクローナ", en: "Solenne", iconKey: "MonochromeQueen", icon: paldbIconUrlFromKey("MonochromeQueen"), source: "Palworld 1.0内蔵" },
+  { name: "ホシノコ", en: "Wistella", iconKey: "MoonChild", icon: paldbIconUrlFromKey("MoonChild"), source: "Palworld 1.0内蔵" },
+  { name: "モスローン", en: "Silvance", iconKey: "Mothman", icon: paldbIconUrlFromKey("Mothman"), source: "Palworld 1.0内蔵" },
+  { name: "ヨミーラ", en: "Gildra", iconKey: "MummyPal", icon: paldbIconUrlFromKey("MummyPal"), source: "Palworld 1.0内蔵" },
+  { name: "マシュリー", en: "Mycora", iconKey: "MushroomLady", icon: paldbIconUrlFromKey("MushroomLady"), source: "Palworld 1.0内蔵" },
+  { name: "ライトロット", en: "Starryon Primo", iconKey: "NightBlueHorse_Neutral", icon: paldbIconUrlFromKey("NightBlueHorse_Neutral"), source: "Palworld 1.0内蔵" },
+  { name: "ユメンダコ", en: "Gloopie Primo", iconKey: "OctopusGirl_Neutral", icon: paldbIconUrlFromKey("OctopusGirl_Neutral"), source: "Palworld 1.0内蔵" },
+  { name: "ウラミィ", en: "Bakemi", iconKey: "OniGhostGirl", icon: paldbIconUrlFromKey("OniGhostGirl"), source: "Palworld 1.0内蔵" },
+  { name: "リーファン", en: "Leafan", iconKey: "PandaGirl", icon: paldbIconUrlFromKey("PandaGirl"), source: "Palworld 1.0内蔵" },
+  { name: "ヨモギウサ", en: "Ribbuny Botan", iconKey: "PinkRabbit_Grass", icon: paldbIconUrlFromKey("PinkRabbit_Grass"), source: "Palworld 1.0内蔵" },
+  { name: "モモンチュラ", en: "Tarantriss", iconKey: "PurpleSpider", icon: paldbIconUrlFromKey("PurpleSpider"), source: "Palworld 1.0内蔵" },
+  { name: "フラペック", en: "Tropicaw", iconKey: "RedFlowerBird", icon: paldbIconUrlFromKey("RedFlowerBird"), source: "Palworld 1.0内蔵" },
+  { name: "ジオルドン", en: "Pierdon", iconKey: "RockBeast", icon: paldbIconUrlFromKey("RockBeast"), source: "Palworld 1.0内蔵" },
+  { name: "フロスドン", en: "Pierdon Cryst", iconKey: "RockBeast_Ice", icon: paldbIconUrlFromKey("RockBeast_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "ポチムネ", en: "Pupperai", iconKey: "SamuraiDog", icon: paldbIconUrlFromKey("SamuraiDog"), source: "Palworld 1.0内蔵" },
+  { name: "ブッサンダー", en: "Prixter Lux", iconKey: "ScorpionMan_Electric", icon: paldbIconUrlFromKey("ScorpionMan_Electric"), source: "Palworld 1.0内蔵" },
+  { name: "セクメト", en: "Sekhmet", iconKey: "Sekhmet", icon: paldbIconUrlFromKey("Sekhmet"), source: "Palworld 1.0内蔵" },
+  { name: "ネモフィ", en: "Lapure", iconKey: "SleeveRabbit", icon: paldbIconUrlFromKey("SleeveRabbit"), source: "Palworld 1.0内蔵" },
+  { name: "ユキボウ", en: "Snugloo", iconKey: "SmallYeti", icon: paldbIconUrlFromKey("SmallYeti"), source: "Palworld 1.0内蔵" },
+  { name: "メドゥーナ", en: "Venusa", iconKey: "SnakeGirl", icon: paldbIconUrlFromKey("SnakeGirl"), source: "Palworld 1.0内蔵" },
+  { name: "ドスコイヌ", en: "Bulldosu", iconKey: "SumoDog", icon: paldbIconUrlFromKey("SumoDog"), source: "Palworld 1.0内蔵" },
+  { name: "メリコロネ", en: "Woolipop Terra", iconKey: "SweetsSheep_Ground", icon: paldbIconUrlFromKey("SweetsSheep_Ground"), source: "Palworld 1.0内蔵" },
+  { name: "オオタチウオ", en: "Skutlass", iconKey: "SwordCutlassfish", icon: paldbIconUrlFromKey("SwordCutlassfish"), source: "Palworld 1.0内蔵" },
+  { name: "ヒノタチウオ", en: "Skutlass Ignis", iconKey: "SwordCutlassfish_Fire", icon: paldbIconUrlFromKey("SwordCutlassfish_Fire"), source: "Palworld 1.0内蔵" },
+  { name: "アルセーヴ", en: "Roujay", iconKey: "ThiefBird", icon: paldbIconUrlFromKey("ThiefBird"), source: "Palworld 1.0内蔵" },
+  { name: "チルバード", en: "Beakon Cryst", iconKey: "ThunderBird_Ice", icon: paldbIconUrlFromKey("ThunderBird_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "フリーズマ", en: "Rayhound Cryst", iconKey: "ThunderDog_Ice", icon: paldbIconUrlFromKey("ThunderDog_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "ダイナモフ", en: "Dynamoff", iconKey: "ThunderFluffyBird", icon: paldbIconUrlFromKey("ThunderFluffyBird"), source: "Palworld 1.0内蔵" },
+  { name: "カプリリス", en: "Carnibora", iconKey: "VenusFlytrap", icon: paldbIconUrlFromKey("VenusFlytrap"), source: "Palworld 1.0内蔵" },
+  { name: "マグマンダー", en: "Moldron", iconKey: "VolcanoDragon", icon: paldbIconUrlFromKey("VolcanoDragon"), source: "Palworld 1.0内蔵" },
+  { name: "ブリザンダー", en: "Moldron Cryst", iconKey: "VolcanoDragon_Ice", icon: paldbIconUrlFromKey("VolcanoDragon_Ice"), source: "Palworld 1.0内蔵" },
+  { name: "コスモディア", en: "Celesdir Noct", iconKey: "WhiteDeer_Dark", icon: paldbIconUrlFromKey("WhiteDeer_Dark"), source: "Palworld 1.0内蔵" },
+  { name: "ソワレーヌ", en: "Sibelyx Primo", iconKey: "WhiteMoth_Neutral", icon: paldbIconUrlFromKey("WhiteMoth_Neutral"), source: "Palworld 1.0内蔵" },
+  { name: "マグナイト", en: "Knocklem Ignis", iconKey: "WingGolem_Fire", icon: paldbIconUrlFromKey("WingGolem_Fire"), source: "Palworld 1.0内蔵" }
 ];
 
 const LEGACY_ENGLISH_TO_JP = {
@@ -1772,7 +1870,9 @@ const PALDB_JP_ICON_OVERRIDES = {
   "シヴァ": "Suzaku_Water",
   "ホルス": "Horus",
   "エレパンダ": "ElecPanda",
-  "ゼノグリフ": "BlackGriffon"
+  "ゼノグリフ": "BlackGriffon",
+  "クインビーナ": "QueenBee",
+  "ライバード": "ThunderBird"
 };
 
 const PALDB_OVERRIDE_PRIORITY_NAMES = new Set();
@@ -1856,6 +1956,10 @@ init();
 
 async function init() {
   mergePalData(EMBEDDED_PALS, "内蔵リスト");
+  mergePalData(CURRENT_CRITICAL_PALS, "Palworld 1.0重要補正");
+  mergePalData(V1_RELEASE_FALLBACK_PALS, "Palworld 1.0内蔵");
+  verifyBuiltInReleaseData();
+  loadCachedCurrentRoster();
   setupPalOptions();
   syncRecorderUi();
   syncWorldNameUi();
@@ -1865,10 +1969,10 @@ async function init() {
   setupIconFilters();
   await setupStorage();
   render();
-  loadCachedPalData();
-  loadCachedPaldbData();
-  loadPalworldLabData();
-  loadPaldbData();
+
+  // 1.0では図鑑番号が全面的に再編されたため、旧Palworld Lab/旧PalDB HTMLキャッシュは
+  // 読み込まず、バージョン固定された構造化データだけを同期します。
+  void loadCurrentRosterData();
   showUserDialogIfNeeded();
 }
 
@@ -2033,6 +2137,219 @@ async function loadPalworldLabData() {
   }
   updatePalDataState(`${state.palSource}で起動中 / 外部同期失敗`);
   console.warn("Palworld Lab sync gave up:", lastError);
+}
+
+
+
+function verifyBuiltInReleaseData() {
+  const names = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
+  const required = ["ポチムネ", "シャオロン", "モリタロス", "ゼロヴァース", "マグナイト"];
+  if (V1_RELEASE_FALLBACK_PALS.length < 72 || required.some(name => !names.has(name))) {
+    throw new Error("Palworld 1.0の内蔵追加パルデータが不足しています");
+  }
+  const queen = CURRENT_CRITICAL_PALS.find(pal => pal.name === "クインビーナ");
+  const beakon = CURRENT_CRITICAL_PALS.find(pal => pal.name === "ライバード");
+  if (queen?.iconKey !== "QueenBee" || beakon?.iconKey !== "ThunderBird") {
+    throw new Error("重要パルの画像紐づけが不正です");
+  }
+}
+
+function loadCachedCurrentRoster() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(CURRENT_ROSTER_CACHE_KEY) || "null");
+    if (cached?.pals?.length >= 250) {
+      verifyCriticalCurrentMappings(cached.pals);
+      mergePalData(cached.pals, `Palworld 1.0スナップショット ${cached.pals.length}種`);
+    }
+  } catch (error) {
+    localStorage.removeItem(CURRENT_ROSTER_CACHE_KEY);
+    console.warn("Current roster cache read failed", error);
+  }
+}
+
+function cleanCurrentPalName(value) {
+  const name = String(value || "").trim();
+  if (!name || name === "-" || /(?:\(BOSS\)|\(襲撃\)|\(狂暴化した\))/.test(name)) return "";
+  return name;
+}
+
+function currentIconKeyFromAsset(value) {
+  return (String(value || "").match(/^T_(.+)_icon_normal$/i) || [])[1] || "";
+}
+
+const CURRENT_ELEMENT_MAP = {
+  "无": "無属性",
+  "無": "無属性",
+  "火": "炎属性",
+  "水": "水属性",
+  "雷": "雷属性",
+  "草": "草属性",
+  "暗": "闇属性",
+  "龙": "竜属性",
+  "龍": "竜属性",
+  "地": "地属性",
+  "冰": "氷属性",
+  "氷": "氷属性"
+};
+
+const CURRENT_WORK_MAP = {
+  "生火": "火おこし",
+  "浇水": "水やり",
+  "澆水": "水やり",
+  "播种": "種まき",
+  "播種": "種まき",
+  "发电": "発電",
+  "發電": "発電",
+  "手工": "手作業",
+  "采集": "採集",
+  "採集": "採集",
+  "伐木": "伐採",
+  "采矿": "採掘",
+  "採礦": "採掘",
+  "制药": "製薬",
+  "製藥": "製薬",
+  "冷却": "冷却",
+  "搬运": "運搬",
+  "搬運": "運搬",
+  "牧场": "牧場",
+  "牧場": "牧場"
+};
+
+function parseCurrentElements(value) {
+  return uniqueStrings(
+    String(value || "")
+      .split(/[\/／,，;；]/)
+      .map(part => CURRENT_ELEMENT_MAP[part.trim()] || "")
+  );
+}
+
+function parseCurrentWork(value) {
+  const result = [];
+  for (const part of String(value || "").split(/[；;]/)) {
+    const label = part.replace(/\s*Lv\.\s*\d+.*/i, "").trim();
+    const mapped = CURRENT_WORK_MAP[label];
+    if (mapped && !result.includes(mapped)) result.push(mapped);
+  }
+  return result;
+}
+
+function buildLocalizationMaps(localization) {
+  const ja = localization?.ja || {};
+  const en = localization?.en || {};
+  const japaneseByEnglish = new Map();
+
+  for (const [internalId, englishName] of Object.entries(en)) {
+    if (/^(?:BOSS_|RAID_|GYM_|PREDATOR_|SUMMON_|POLICE_|Quest_|NPC_)/i.test(internalId)) continue;
+    const japaneseName = cleanCurrentPalName(ja[internalId]);
+    if (!japaneseName) continue;
+    const englishKey = normalizeKey(String(englishName || "").replace(/\(BOSS\)|\(Raid\)/gi, ""));
+    if (englishKey && !japaneseByEnglish.has(englishKey)) japaneseByEnglish.set(englishKey, japaneseName);
+  }
+
+  return { ja, japaneseByEnglish };
+}
+
+function buildCurrentRoster(localization, manifest, paldbData) {
+  const { ja, japaneseByEnglish } = buildLocalizationMaps(localization);
+  const iconByEnglish = new Map();
+
+  for (const row of manifest?.partnerSkills || []) {
+    const iconKey = currentIconKeyFromAsset(row.displayIconAsset);
+    if (!iconKey) continue;
+    iconByEnglish.set(normalizeKey(row.pal), {
+      iconKey,
+      number: String(row.palNumber || "").trim()
+    });
+  }
+
+  const pals = [];
+  const seenNames = new Set();
+
+  for (const row of paldbData?.records || []) {
+    const englishName = String(row.name || "").trim();
+    const iconInfo = iconByEnglish.get(normalizeKey(englishName)) || {};
+    const iconKey = iconInfo.iconKey || "";
+    const japaneseName =
+      cleanCurrentPalName(ja[iconKey]) ||
+      japaneseByEnglish.get(normalizeKey(englishName)) ||
+      "";
+
+    if (!japaneseName || seenNames.has(japaneseName)) continue;
+    seenNames.add(japaneseName);
+
+    pals.push({
+      no: String(row.number || iconInfo.number || "").trim(),
+      name: japaneseName,
+      en: englishName,
+      elements: parseCurrentElements(row.elements),
+      work: parseCurrentWork(row.work),
+      iconKey,
+      icon: iconKey ? paldbIconUrlFromKey(iconKey) : "",
+      sortKey: makeSortKey(row.number || iconInfo.number, japaneseName),
+      source: "Palworld 1.0現行図鑑"
+    });
+  }
+
+  return pals;
+}
+
+function verifyCriticalCurrentMappings(pals) {
+  const byName = new Map(pals.map(pal => [pal.name, pal]));
+  const queen = byName.get("クインビーナ");
+  const beakon = byName.get("ライバード");
+  if (!queen || queen.iconKey !== "QueenBee") {
+    throw new Error(`クインビーナの画像紐づけが不正です: ${queen?.iconKey || "未取得"}`);
+  }
+  if (!beakon || beakon.iconKey !== "ThunderBird") {
+    throw new Error(`ライバードの画像紐づけが不正です: ${beakon?.iconKey || "未取得"}`);
+  }
+}
+
+async function fetchFirstCurrentJson(urls, label) {
+  let lastError = null;
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+      console.warn(`${label}の取得に失敗しました:`, url, error);
+    }
+  }
+  throw lastError || new Error(`${label}を取得できませんでした`);
+}
+
+async function loadCurrentRosterData() {
+  try {
+    const [localization, manifest, paldbData] = await Promise.all([
+      fetchFirstCurrentJson(CURRENT_PAL_LOCALIZATION_URLS, "日本語名データ"),
+      fetchFirstCurrentJson(CURRENT_PAL_ICON_MANIFEST_URLS, "画像対応表"),
+      fetchFirstCurrentJson(CURRENT_PALDB_DATA_URLS, "PalDB 1.0図鑑データ")
+    ]);
+    const pals = buildCurrentRoster(localization, manifest, paldbData);
+    if (pals.length < 250) throw new Error(`現行図鑑の取得数が少なすぎます: ${pals.length}`);
+    verifyCriticalCurrentMappings(pals);
+
+    const newPalNames = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
+    const matchedNewPals = pals.filter(pal => newPalNames.has(pal.name));
+    if (matchedNewPals.length < 65) {
+      throw new Error(`1.0追加パルの照合数が少なすぎます: ${matchedNewPals.length}`);
+    }
+
+    localStorage.setItem(CURRENT_ROSTER_CACHE_KEY, JSON.stringify({
+      fetchedAt: Date.now(),
+      version: paldbData.version || "1.0.0",
+      pals
+    }));
+    mergePalData(pals, `Palworld 1.0現行図鑑 ${pals.length}種`);
+    setupPalOptions(true);
+    render();
+    refreshPickerPreviews();
+    console.info(`Palworld 1.0現行図鑑から${pals.length}種類（追加パル照合${matchedNewPals.length}種）を読み込みました`);
+  } catch (error) {
+    console.warn("Current roster sync failed; using built-in 1.0 fallback", error);
+  }
 }
 
 
@@ -2268,8 +2585,8 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
   const byEn = new Map();
   const byIconKey = new Map();
 
-  // Pal ID（No）は日本語版・海外版で共通なので、まずNoで紐づけます。
-  // 同じNoがある場合は、ユーザー提供のBreed静的マップを優先します。
+  // 1.0では図鑑Noが再編されたため、Noは最後のフォールバックにだけ使います。
+  // iconKey（ゲーム内部ID）と日本語/英語名の一致を優先します。
   for (const item of [...PALDB_STATIC_ICONS, ...state.paldbIcons]) {
     const noKey = normalizePalNoKey(item.no);
     const iconKey = item.iconKey || inferPaldbIconKey(item.icon);
@@ -2285,14 +2602,16 @@ function applyPaldbIconsToPalMap(shouldRender = true) {
     const overrideKey = PALDB_JP_ICON_OVERRIDES[name] || PALDB_JP_ICON_OVERRIDES[normalizePalName(name)] || "";
     const overrideItem = overrideKey ? byIconKey.get(normalizeKey(overrideKey)) : null;
 
-    const preferOverride = PALDB_OVERRIDE_PRIORITY_NAMES.has(name) || PALDB_OVERRIDE_PRIORITY_NAMES.has(normalizePalName(name));
-    const item =
-      (preferOverride ? overrideItem : null) ||
-      noItem ||
-      overrideItem ||
-      (existingIconKey ? byIconKey.get(existingIconKey) : null) ||
+    const iconKeyItem = existingIconKey ? byIconKey.get(existingIconKey) : null;
+    const nameItem =
       byEn.get(normalizeKey(meta.en)) ||
       byEn.get(normalizeKey(name));
+    // 1.0で図鑑番号が大幅に変わったため、旧Noより明示的なiconKey・名称を優先します。
+    const item =
+      overrideItem ||
+      iconKeyItem ||
+      nameItem ||
+      noItem;
 
     if (item?.icon) {
       meta.paldbIcon = item.icon;
@@ -3594,10 +3913,9 @@ function palIcon(name, size = "normal", options = {}) {
   const noUrl = noItem?.icon || "";
   const overrideKey = PALDB_JP_ICON_OVERRIDES[normalized] || "";
   const overrideUrl = paldbIconUrlFromKey(overrideKey);
-  const preferOverride = PALDB_OVERRIDE_PRIORITY_NAMES.has(normalized) || PALDB_OVERRIDE_PRIORITY_NAMES.has(normalizePalName(normalized));
-  const paldbUrl = preferOverride
-    ? (overrideUrl || meta.paldbIcon || noUrl || paldbIconUrlFromKey(meta.iconKey))
-    : (noUrl || overrideUrl || meta.paldbIcon || paldbIconUrlFromKey(meta.iconKey));
+  const iconKeyUrl = paldbIconUrlFromKey(meta.iconKey);
+  // 旧図鑑Noは1.0で変動しているため、明示的なiconKeyを最優先します。
+  const paldbUrl = overrideUrl || iconKeyUrl || meta.paldbIcon || noUrl;
   const labUrl = meta.icon || "";
   const url = paldbUrl || labUrl;
   const fallbackUrl = paldbUrl && labUrl && paldbUrl !== labUrl ? labUrl : UNKNOWN_PAL_ICON;
