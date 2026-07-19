@@ -4,12 +4,16 @@ on:
   push:
     paths:
       - .github/workflows/apply-v49.yml
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   apply-update:
+    if: github.event_name == 'push' || github.event.issue.title == 'apply-v49-update'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
