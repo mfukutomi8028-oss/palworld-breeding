@@ -1,12 +1,12 @@
 name: Apply Palworld v50 startup recovery
 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  push:
+    paths:
+      - .github/workflows/apply-v50.yml
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   apply-fix:
@@ -27,11 +27,10 @@ jobs:
 
           app = Path('app.js')
           text = app.read_text(encoding='utf-8')
-          text = text.replace(
-              'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v49";',
-              'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v50";',
-              1,
-          )
+          old_key = 'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v49";'
+          new_key = 'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v50";'
+          if old_key in text:
+              text = text.replace(old_key, new_key, 1)
 
           old = '''function verifyBuiltInReleaseData() {
             const names = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
@@ -74,9 +73,10 @@ jobs:
             return true;
           }
           '''
-          if old not in text:
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif 'const required = ["ポチムネ", "シャオロン", "モリタロス", "マグナイト"];' not in text:
               raise SystemExit('verifyBuiltInReleaseData target was not found')
-          text = text.replace(old, new, 1)
           app.write_text(text, encoding='utf-8')
 
           index = Path('index.html')
@@ -121,8 +121,9 @@ jobs:
           PY
 
           rm -f .github/workflows/apply-v50.yml
+          rm -f trigger-v50.txt trigger-v50-branch.txt trigger-v50-branch-2.txt noop.txt TEMP_REMOVE_ME.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.js index.html style.css README.md .github/workflows/apply-v50.yml
+          git add -A
           git commit -m "Fix startup failure and restore records (v50)"
           git push origin main
