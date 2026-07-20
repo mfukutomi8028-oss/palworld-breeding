@@ -12,3 +12,31 @@ window.firebaseConfig = {
   appId: "1:657534681097:web:b031035357baa6df2a38d8",
   measurementId: "G-3SKBN4JL7B"
 };
+
+window.palSiteVersion = "52";
+
+(() => {
+  const loadEnhancements = () => {
+    if (!document.querySelector('link[data-pal-enhancements]')) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "enhancements.css?v=52";
+      link.dataset.palEnhancements = "52";
+      document.head.appendChild(link);
+    }
+
+    if (!document.querySelector('script[data-pal-enhancements]')) {
+      const script = document.createElement("script");
+      script.src = "enhancements.js?v=52";
+      script.dataset.palEnhancements = "52";
+      script.async = false;
+      document.body.appendChild(script);
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadEnhancements, { once: true });
+  } else {
+    loadEnhancements();
+  }
+})();
