@@ -1,0 +1,149 @@
+/* Palworld breeding board refinements (v55) */
+.release-pal-badge {
+  display: none !important;
+}
+
+.workflow-page-v55[hidden],
+.kpi-grid[hidden],
+.board-layout[hidden] {
+  display: none !important;
+}
+
+.v55-nav-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-weight: 900;
+}
+
+.v55-custom-view .filter-panel {
+  display: none;
+}
+
+.workflow-page-v55 {
+  margin-bottom: 18px;
+}
+
+#workflowNaviPage > .breeding-toolkit,
+#workflowReviewPage > .breeding-toolkit {
+  margin-top: 0;
+}
+
+.v55-navi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.v55-navi-grid > .reverse-card {
+  grid-column: 1 / -1;
+}
+
+#workflowReviewBoard [data-review-filter="1.0再確認候補"],
+#workflowReviewBoard option[value="1.0再確認候補"],
+#workflowReviewBoard .workflow-version-line,
+#workflowReviewBoard [data-verify-record],
+#detailBody .workflow-version-panel,
+#detailBody [data-workflow-detail],
+#detailBody [data-enh-detail-copy],
+#detailBody [data-enh-detail-reverse] {
+  display: none !important;
+}
+
+.detail-toolbar {
+  display: flex;
+  gap: 10px;
+}
+
+.detail-toolbar [data-detail-action="edit"] {
+  order: 1;
+  flex: 1 1 auto;
+}
+
+.detail-toolbar [data-detail-action="delete"] {
+  order: 2;
+  flex: 0 0 auto;
+}
+
+.v55-detail-actions {
+  display: grid;
+  gap: 12px;
+  margin: 2px 0 14px;
+}
+
+.v55-detail-actions section {
+  padding: 13px;
+  border: 1px solid rgba(24, 62, 95, .10);
+  border-radius: 14px;
+  background: rgba(238, 247, 255, .72);
+}
+
+.v55-detail-actions section.is-sub {
+  background: rgba(255, 255, 255, .88);
+}
+
+.v55-detail-actions h3 {
+  margin: 0 0 9px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.v55-detail-button-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.v55-detail-button-grid button {
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid rgba(60, 146, 223, .17);
+  border-radius: 11px;
+  color: #286c99;
+  background: rgba(60, 146, 223, .10);
+  line-height: 1.45;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.v55-detail-button-grid:not(.is-sub) button:first-child {
+  color: #176b4b;
+  border-color: rgba(54, 169, 111, .20);
+  background: rgba(54, 169, 111, .11);
+}
+
+#workflowReviewBoard .workflow-review-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#workflowReviewBoard .workflow-review-item-head {
+  align-items: flex-start;
+}
+
+#workflowReviewBoard .workflow-review-actions {
+  margin-top: 12px;
+}
+
+@media (max-width: 1180px) {
+  .v55-navi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .v55-navi-grid > .reverse-card {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .v55-detail-button-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #workflowReviewBoard .workflow-review-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .detail-toolbar {
+    flex-wrap: nowrap;
+  }
+}
