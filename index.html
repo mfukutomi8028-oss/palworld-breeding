@@ -8,9 +8,9 @@
   <link rel="shortcut icon" type="image/png" href="assets/favicon-v9.png?v=9" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon-v9.png?v=9" />
   <meta name="description" content="リアルタイムで配合結果を記録・共有するパルワールド配合記録ボード" />
-  <link rel="stylesheet" href="style.css?v=50" />
+  <link rel="stylesheet" href="style.css?v=51" />
   <script src="config.js" defer></script>
-  <script type="module" src="app.js?v=50"></script>
+  <script type="module" src="app.js?v=51"></script>
 </head>
 <body>
   <div class="app-shell">
@@ -134,7 +134,7 @@
         <article class="kpi-card"><div class="kpi-icon blue">▤</div><div><p>総記録数</p><strong id="totalCount">0件</strong><span>全ての配合記録</span></div></article>
         <article class="kpi-card"><div class="kpi-icon green">✓</div><div><p>配合確認済み</p><strong id="verifiedCount">0件</strong><span id="verifiedRate">0%</span></div></article>
         <article class="kpi-card"><div class="kpi-icon yellow">…</div><div><p>確認中</p><strong id="pendingCount">0件</strong><span>未確認の配合記録</span></div></article>
-        <article class="kpi-card"><div class="kpi-icon purple">💬</div><div><p>共有メモ</p><strong id="memoCount">0件</strong><span>メモありの記録</span></div></article>
+        <article class="kpi-card discovery-kpi"><div class="kpi-icon purple">◇</div><div><p>発見パル</p><strong id="discoveredCount">0種</strong><span id="newPalDiscoveredCount">1.0新パル 0種</span></div></article>
       </section>
 
       <section class="board-layout">
@@ -146,6 +146,7 @@
               <input id="searchInput" type="search" placeholder="パル名・メモで検索" />
             </div>
             <label class="toggle-chip"><input id="unverifiedOnly" type="checkbox" /><span>確認中のみ</span></label>
+            <label class="toggle-chip new-pal-toggle"><input id="newPalOnly" type="checkbox" /><span>1.0新パルを含む</span></label>
             <select id="sortSelect" class="sort-select">
               <option value="updatedDesc">更新日時（新しい順）</option>
               <option value="updatedAsc">更新日時（古い順）</option>
@@ -275,6 +276,11 @@
           </div>
         </label>
         <div class="egg-quick-select" id="eggQuickSelect" aria-label="タマゴをすばやく選択"></div>
+        <label class="mutation-toggle">
+          <input id="mutationEgg" name="mutationEgg" type="checkbox" />
+          <span class="mutation-toggle-icon">✦</span>
+          <span><strong>突然変異タマゴ</strong><small>1.0で追加された特別な変異結果として記録</small></span>
+        </label>
       </div>
 
       <label>メモ

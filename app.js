@@ -1,9 +1,9 @@
 const PAL_SOURCE_URL = "https://palworld-lab.com/pals/";
 const PAL_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PAL_SOURCE_URL)}`;
-const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v49";
+const PAL_CACHE_KEY = "pal-breeding-board:palworld-lab-pals:v51";
 const PALDB_SOURCE_URL = "https://paldb.cc/ja/Pals";
 const PALDB_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PALDB_SOURCE_URL)}`;
-const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v49";
+const PALDB_CACHE_KEY = "pal-breeding-board:paldb-icons:v51";
 const CURRENT_PAL_LOCALIZATION_URLS = [
   "https://raw.githubusercontent.com/zaigie/palworld-server-tool/f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json",
   "https://cdn.jsdelivr.net/gh/zaigie/palworld-server-tool@f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json"
@@ -16,7 +16,7 @@ const CURRENT_PALDB_DATA_URLS = [
   "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json",
   "https://cdn.jsdelivr.net/gh/bowenchen-1/palworld-guide@bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json"
 ];
-const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v50";
+const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v51";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -757,6 +757,8 @@ const V1_RELEASE_FALLBACK_PALS = [
   { name: "ソワレーヌ", en: "Sibelyx Primo", iconKey: "WhiteMoth_Neutral", icon: paldbIconUrlFromKey("WhiteMoth_Neutral"), source: "Palworld 1.0内蔵" },
   { name: "マグナイト", en: "Knocklem Ignis", iconKey: "WingGolem_Fire", icon: paldbIconUrlFromKey("WingGolem_Fire"), source: "Palworld 1.0内蔵" }
 ];
+
+const V1_RELEASE_PAL_NAMES = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => normalizePalDisplayName(pal.name)));
 
 const LEGACY_ENGLISH_TO_JP = {
   lamball: "モコロン", cattiva: "ツッパニャン", chikipi: "タマコッコ", lifmunk: "クルリス", foxparks: "キツネビ",
@@ -1923,6 +1925,7 @@ const elements = {
   statusFilter: $("statusFilter"),
   favoriteOnly: $("favoriteOnly"),
   unverifiedOnly: $("unverifiedOnly"),
+  newPalOnly: $("newPalOnly"),
   searchInput: $("searchInput"),
   sortSelect: $("sortSelect"),
   recordRows: $("recordRows"),
@@ -2723,7 +2726,7 @@ function setupPalOptions(keepValues = false) {
 }
 
 function setupEvents() {
-  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.unverifiedOnly, elements.searchInput, elements.sortSelect]
+  [elements.parentFilter, elements.resultFilter, elements.statusFilter, elements.unverifiedOnly, elements.newPalOnly, elements.searchInput, elements.sortSelect]
     .forEach(el => el?.addEventListener("input", render));
 
   elements.currentRecorderSelect?.addEventListener("change", () => {
@@ -2773,6 +2776,7 @@ function setupEvents() {
     elements.statusFilter.value = "";
     if (elements.favoriteOnly) elements.favoriteOnly.checked = false;
     elements.unverifiedOnly.checked = false;
+    if (elements.newPalOnly) elements.newPalOnly.checked = false;
     elements.searchInput.value = "";
     state.currentView = "records";
     syncNavItems();
@@ -3244,6 +3248,7 @@ function normalizeRecord(record) {
     parentB: normalizePalName(record.parentB),
     resultPal,
     eggType: normalizeEggName(record.eggType),
+    mutation: Boolean(record.mutation ?? record.isMutation ?? record.mutated),
     passives: normalizePassives(record.passives),
     status: resultPal ? "配合確認済み" : "確認中",
     recorder: normalizeRecorder(record.recorder),
@@ -3711,7 +3716,7 @@ function getFilteredRecords() {
   records = records.filter(record => {
     const meta = getPalMeta(record.resultPal) || {};
     const englishNames = [record.parentA, record.parentB, record.resultPal].map(name => getPalMeta(name)?.en || "");
-    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, record.eggType, ...englishNames, record.recorder, record.note, record.status].join(" "));
+    const searchTarget = normalizeSearch([record.parentA, record.parentB, record.resultPal, record.eggType, record.mutation ? "突然変異" : "", ...englishNames, record.recorder, record.note, record.status].join(" "));
     const recordElements = meta.elements || (meta.element ? [meta.element] : []);
     const recordWorks = meta.work || [];
     const parentHit = !parent || [record.parentA, record.parentB]
@@ -3725,7 +3730,8 @@ function getFilteredRecords() {
       (!status || normalizeStatus(record.status) === status) &&
       (state.currentView !== "favorites" || isRecordFavorite(record)) &&
       (!elements.favoriteOnly || !elements.favoriteOnly.checked || isRecordFavorite(record)) &&
-      (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み");
+      (!elements.unverifiedOnly.checked || normalizeStatus(record.status) !== "配合確認済み") &&
+      (!elements.newPalOnly?.checked || recordContainsV1Pal(record));
   });
 
   const sort = elements.sortSelect.value;
@@ -3742,11 +3748,13 @@ function renderKpis() {
   const total = state.records.length;
   const verified = state.records.filter(r => normalizeStatus(r.status) === "配合確認済み").length;
   const pending = state.records.filter(r => normalizeStatus(r.status) === "確認中").length;
-  const memos = state.records.filter(r => r.note.trim()).length;
+  const discovered = getDiscoveredPalSet();
+  const discoveredNew = Array.from(discovered).filter(isV1ReleasePal).length;
   $("totalCount").textContent = `${total}件`;
   $("verifiedCount").textContent = `${verified}件`;
   $("pendingCount").textContent = `${pending}件`;
-  $("memoCount").textContent = `${memos}件`;
+  $("discoveredCount").textContent = `${discovered.size}種`;
+  $("newPalDiscoveredCount").textContent = `1.0新パル ${discoveredNew}種`;
   $("verifiedRate").textContent = total ? `${Math.round((verified / total) * 100)}%` : "0%";
 }
 
@@ -3774,7 +3782,7 @@ function renderRows(records) {
         <td>${palRecordCard(record.parentA, { role: "parent" })}</td>
         <td>${palRecordCard(record.parentB, { role: "parent" })}</td>
         <td>${palRecordCard(record.resultPal, { role: "result", status: record.status })}</td>
-        <td>${eggInline(record.eggType)}</td>
+        <td>${eggRecordDisplay(record, true)}</td>
         <td>${statusBadge(record.status)}</td>
         <td>${recorderBadge(record.recorder)}</td>
         <td class="memo-cell" title="${escapeHtml(record.note)}">${escapeHtml(record.note || "—")}</td>
@@ -3814,7 +3822,8 @@ function renderDetail() {
       <div class="recipe-symbol">→</div>
       ${recipePal("結果", record.resultPal || "未確認", { role: "result", status: record.status })}
     </div>
-    <div class="detail-section"><h3>タマゴの種類</h3>${eggInline(record.eggType)}</div>
+    <div class="detail-section"><h3>タマゴの種類</h3>${eggRecordDisplay(record)}</div>
+    ${record.resultPal ? `<div class="detail-section route-section"><h3>配合ルートをたどる</h3><div class="route-actions"><button type="button" data-related-filter="parent" data-pal="${escapeHtml(record.resultPal)}">このパルを親にした記録</button><button type="button" data-related-filter="result" data-pal="${escapeHtml(record.resultPal)}">同じ結果の記録</button></div></div>` : ""}
     <div class="detail-section"><h3>メモ</h3><div class="note-box ${record.note ? "" : "is-empty"}">${escapeHtml(record.note || "メモはまだありません。編集ボタンから入力できます。")}</div></div>
     <div class="detail-section"><h3>記録情報</h3>
       <p>${statusBadge(record.status)}</p>
@@ -3823,10 +3832,33 @@ function renderDetail() {
     </div>`;
 
   elements.detailBody.querySelector("[data-detail-action='edit']")?.addEventListener("click", () => openDialog(record.id));
+  elements.detailBody.querySelectorAll("[data-related-filter]").forEach(button => {
+    button.addEventListener("click", () => applyRelatedPalFilter(button.dataset.relatedFilter, button.dataset.pal));
+  });
   elements.detailBody.querySelector("[data-detail-action='delete']")?.addEventListener("click", async () => {
     if (!confirm("この配合記録を削除しますか？")) return;
     await deleteRecord(record.id);
   });
+}
+
+function applyRelatedPalFilter(type, palName) {
+  const name = normalizePalName(palName);
+  if (!name) return;
+  state.currentView = "records";
+  syncNavItems();
+  if (type === "parent") {
+    elements.parentFilter.value = name;
+    elements.resultFilter.value = "";
+    updatePickerPreview("parentFilter");
+    updatePickerPreview("resultFilter");
+  } else {
+    elements.resultFilter.value = name;
+    elements.parentFilter.value = "";
+    updatePickerPreview("resultFilter");
+    updatePickerPreview("parentFilter");
+  }
+  render();
+  document.querySelector(".board-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function getPalMeta(name) {
@@ -3875,7 +3907,7 @@ function palRecordCard(name, options = {}) {
   ].filter(Boolean).join(" ");
   const label = isPending ? "未確認" : (name || "未入力");
   const icon = isPending ? pendingPalIcon("small") : palIcon(name, "small");
-  return `<span class="${className}">${icon}<span class="pal-record-name">${escapeHtml(label)}</span></span>`;
+  return `<span class="${className}">${releasePalBadge(name)}${icon}<span class="pal-record-name">${escapeHtml(label)}</span></span>`;
 }
 
 function recipePal(label, name, options = {}) {
@@ -3892,7 +3924,7 @@ function recipePal(label, name, options = {}) {
   ].filter(Boolean).join(" ");
   const displayName = isPending ? "未確認" : (name || "未入力");
   const icon = isPending ? pendingPalIcon("large") : palIcon(name, "large");
-  return `<div class="${className}"><small>${escapeHtml(label)}</small>${icon}<span>${escapeHtml(displayName)}</span></div>`;
+  return `<div class="${className}">${releasePalBadge(name)}<small>${escapeHtml(label)}</small>${icon}<span>${escapeHtml(displayName)}</span></div>`;
 }
 
 function palIcon(name, size = "normal", options = {}) {
@@ -3942,6 +3974,29 @@ function isPalDiscovered(name) {
   return getDiscoveredPalSet().has(normalized);
 }
 
+
+function isV1ReleasePal(name) {
+  const normalized = normalizePalName(name);
+  return Boolean(normalized && V1_RELEASE_PAL_NAMES.has(normalized));
+}
+
+function recordContainsV1Pal(record) {
+  return [record?.parentA, record?.parentB, record?.resultPal].some(isV1ReleasePal);
+}
+
+function releasePalBadge(name) {
+  return isV1ReleasePal(name) ? `<span class="release-pal-badge" title="Palworld 1.0追加パル">1.0</span>` : "";
+}
+
+function mutationBadge(compact = false) {
+  return `<span class="mutation-badge ${compact ? "compact" : ""}" title="突然変異タマゴ">✦ 突然変異</span>`;
+}
+
+function eggRecordDisplay(record, compact = false) {
+  const egg = eggInline(record?.eggType);
+  return `<span class="egg-record-display">${egg}${record?.mutation ? mutationBadge(compact) : ""}</span>`;
+}
+
 function renderTags(tags) {
   if (!tags?.length) return `<span class="tag subtle">未設定</span>`;
   return tags.map(tag => `<span class="tag ${tagType(tag)}">${escapeHtml(tag)}</span>`).join("");
@@ -3986,6 +4041,7 @@ function openDialog(id = null) {
   $("parentB").value = record?.parentB || "";
   $("resultPal").value = record?.resultPal || "";
   $("eggType").value = record?.eggType || "";
+  $("mutationEgg").checked = Boolean(record?.mutation);
   clearDialogMessage();
   $("note").value = record?.note || "";
   $("deleteRecord").style.visibility = record ? "visible" : "hidden";
@@ -4005,6 +4061,7 @@ async function saveFromForm() {
     parentB: $("parentB").value.trim(),
     resultPal: $("resultPal").value.trim(),
     eggType: $("eggType").value.trim(),
+    mutation: $("mutationEgg").checked,
     recorder: getCurrentRecorder(),
     status: $("resultPal").value.trim() ? "配合確認済み" : "確認中",
     passives: [],

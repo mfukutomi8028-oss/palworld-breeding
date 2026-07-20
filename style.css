@@ -141,7 +141,7 @@ select, input, textarea {
   background: linear-gradient(145deg, rgba(9, 53, 92, .95), rgba(74, 181, 225, .70));
   box-shadow: var(--shadow);
 }
-.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=50") center/cover no-repeat; transform: scale(1.02); }
+.hero-bg { position:absolute; inset:0; background: linear-gradient(90deg, rgba(8,41,69,.68), rgba(10,63,90,.28)), url("assets/hero-banner.png?v=51") center/cover no-repeat; transform: scale(1.02); }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background:
@@ -433,7 +433,7 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 .hero-bg {
   background:
     linear-gradient(90deg, rgba(6,35,60,.82), rgba(6,47,75,.42) 48%, rgba(62,140,103,.36)),
-    url("assets/hero-banner.png?v=50") center center / cover no-repeat !important;
+    url("assets/hero-banner.png?v=51") center center / cover no-repeat !important;
   opacity: 1;
   transform: none;
 }
@@ -2050,5 +2050,148 @@ tbody tr:hover, tbody tr.selected { background: #f5fbff; }
 @media (max-width: 720px) {
   .egg-type-quick-grid {
     grid-template-columns: repeat(3, minmax(70px, 1fr));
+  }
+}
+
+
+/* v51: Palworld 1.0向け利便性アップデート */
+.discovery-kpi .kpi-icon {
+  background: linear-gradient(145deg, #8667ef, #b46ef3);
+}
+
+.new-pal-toggle {
+  border-color: rgba(129, 92, 230, .18);
+}
+.new-pal-toggle:has(input:checked) {
+  color: #6338b7;
+  background: #f1eaff;
+  border-color: rgba(129, 92, 230, .32);
+}
+
+.pal-record-card,
+.recipe-pal {
+  position: relative;
+}
+.release-pal-badge {
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  z-index: 2;
+  min-width: 25px;
+  padding: 3px 5px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(145deg, #805de8, #b466ee);
+  box-shadow: 0 4px 10px rgba(105, 68, 191, .22);
+  font-size: 8.5px;
+  font-weight: 1000;
+  line-height: 1;
+  letter-spacing: .02em;
+}
+.recipe-pal .release-pal-badge {
+  top: 6px;
+  right: 7px;
+}
+
+.mutation-toggle {
+  grid-column: 1 / -1;
+  display: flex !important;
+  align-items: center;
+  gap: 11px;
+  margin-top: -2px;
+  padding: 12px 14px;
+  border: 1px solid rgba(139, 87, 203, .20);
+  border-radius: 17px;
+  color: #4d356b;
+  background: linear-gradient(145deg, rgba(252,248,255,.96), rgba(238,229,255,.82));
+  cursor: pointer;
+}
+.mutation-toggle input {
+  width: 19px;
+  height: 19px;
+  margin: 0;
+  accent-color: #8b57cb;
+}
+.mutation-toggle-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, #6e9ff2, #aa62e7 52%, #ef78b6);
+  box-shadow: 0 7px 16px rgba(123, 83, 190, .20);
+}
+.mutation-toggle > span:last-child {
+  display: grid;
+  gap: 2px;
+}
+.mutation-toggle small {
+  color: #846f98;
+  font-size: 11px;
+  font-weight: 700;
+}
+.mutation-toggle:has(input:checked) {
+  border-color: rgba(139, 87, 203, .48);
+  box-shadow: 0 0 0 3px rgba(139, 87, 203, .10);
+}
+
+.egg-record-display {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.mutation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 9px;
+  border: 1px solid rgba(139, 87, 203, .24);
+  border-radius: 999px;
+  color: #673d98;
+  background: linear-gradient(145deg, #f8f1ff, #eadfff);
+  font-size: 11px;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+.mutation-badge.compact {
+  padding: 4px 7px;
+  font-size: 9.5px;
+}
+
+.route-section {
+  background: linear-gradient(145deg, #f7fbff, #edf6ff);
+  border-radius: 16px;
+  padding: 13px !important;
+}
+.route-actions {
+  display: grid;
+  gap: 8px;
+}
+.route-actions button {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid rgba(60, 146, 223, .18);
+  border-radius: 13px;
+  color: #285d85;
+  background: rgba(255,255,255,.82);
+  font-size: 11px;
+  font-weight: 1000;
+  text-align: left;
+}
+.route-actions button:hover {
+  color: #17486d;
+  background: #fff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1100px) {
+  .toolbar {
+    grid-template-columns: auto minmax(220px, 1fr) auto auto !important;
+  }
+  .sort-select {
+    grid-column: 2 / -1;
+    justify-self: end;
   }
 }
