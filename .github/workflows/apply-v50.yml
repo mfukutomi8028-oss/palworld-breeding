@@ -1,0 +1,128 @@
+name: Apply Palworld v50 startup recovery
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  apply-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Fix startup validation and restore board functions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          app = Path('app.js')
+          text = app.read_text(encoding='utf-8')
+          text = text.replace(
+              'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v49";',
+              'const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v50";',
+              1,
+          )
+
+          old = '''function verifyBuiltInReleaseData() {
+            const names = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
+            const required = ["ポチムネ", "シャオロン", "モリタロス", "ゼロヴァース", "マグナイト"];
+            if (V1_RELEASE_FALLBACK_PALS.length < 72 || required.some(name => !names.has(name))) {
+              throw new Error("Palworld 1.0の内蔵追加パルデータが不足しています");
+            }
+            const queen = CURRENT_CRITICAL_PALS.find(pal => pal.name === "クインビーナ");
+            const beakon = CURRENT_CRITICAL_PALS.find(pal => pal.name === "ライバード");
+            if (queen?.iconKey !== "QueenBee" || beakon?.iconKey !== "ThunderBird") {
+              throw new Error("重要パルの画像紐づけが不正です");
+            }
+          }
+          '''
+          new = '''function verifyBuiltInReleaseData() {
+            // パル情報の検証エラーで初期化全体を停止させないでください。
+            // 停止するとFirebaseの既存記録が0件に見え、追加操作もできなくなります。
+            const warnings = [];
+            const names = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
+            const required = ["ポチムネ", "シャオロン", "モリタロス", "マグナイト"];
+            const missingRequired = required.filter(name => !names.has(name));
+
+            if (V1_RELEASE_FALLBACK_PALS.length < 72) {
+              warnings.push(`追加パルの内蔵件数が不足しています: ${V1_RELEASE_FALLBACK_PALS.length}件`);
+            }
+            if (missingRequired.length) {
+              warnings.push(`必須パルが不足しています: ${missingRequired.join("、")}`);
+            }
+
+            const queen = CURRENT_CRITICAL_PALS.find(pal => pal.name === "クインビーナ");
+            const beakon = CURRENT_CRITICAL_PALS.find(pal => pal.name === "ライバード");
+            if (queen?.iconKey !== "QueenBee" || beakon?.iconKey !== "ThunderBird") {
+              warnings.push("重要パルの画像紐づけが不正です");
+            }
+
+            if (warnings.length) {
+              console.warn("Palworld 1.0内蔵データ検証警告:", warnings.join(" / "));
+              return false;
+            }
+            return true;
+          }
+          '''
+          if old not in text:
+              raise SystemExit('verifyBuiltInReleaseData target was not found')
+          text = text.replace(old, new, 1)
+          app.write_text(text, encoding='utf-8')
+
+          index = Path('index.html')
+          html = index.read_text(encoding='utf-8')
+          html = html.replace('style.css?v=49', 'style.css?v=50')
+          html = html.replace('app.js?v=49', 'app.js?v=50')
+          index.write_text(html, encoding='utf-8')
+
+          style = Path('style.css')
+          css = style.read_text(encoding='utf-8').replace('hero-banner.png?v=49', 'hero-banner.png?v=50')
+          style.write_text(css, encoding='utf-8')
+
+          readme = Path('README.md')
+          body = readme.read_text(encoding='utf-8')
+          if '## v50 修正内容' not in body:
+              body = body.rstrip() + '''
+
+## v50 修正内容（初期化停止の修正）
+
+- 内蔵追加パルの検証対象に、内蔵一覧に存在しない名称が含まれていたため、起動時に例外が発生していました。
+- その例外によりFirebaseの読み込みとイベント登録まで到達せず、既存記録が0件に見え、追加ボタンも動作しない状態になっていました。
+- 検証処理を警告へ変更し、パル情報の一部に問題があっても記録・登録機能は必ず起動するようにしました。
+- クインビーナは QueenBee、ライバードは ThunderBird の画像内部IDを固定したまま維持します。
+- app.js?v=50 / style.css?v=50 へ更新しました。
+'''
+              readme.write_text(body + '\n', encoding='utf-8')
+          PY
+
+          node --check app.js
+          python - <<'PY'
+          from pathlib import Path
+          text = Path('app.js').read_text(encoding='utf-8')
+          start = text.index('const V1_RELEASE_FALLBACK_PALS = [')
+          end = text.index('\n];', start)
+          fallback = text[start:end]
+          assert fallback.count('{ name:') >= 72
+          verify = text[text.index('function verifyBuiltInReleaseData()'):text.index('function loadCachedCurrentRoster()')]
+          assert 'ゼロヴァース' not in verify
+          assert 'throw new Error' not in verify
+          assert 'return true' in verify
+          assert 'app.js?v=50' in Path('index.html').read_text(encoding='utf-8')
+          PY
+
+          rm -f .github/workflows/apply-v50.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js index.html style.css README.md .github/workflows/apply-v50.yml
+          git commit -m "Fix startup failure and restore records (v50)"
+          git push origin main
