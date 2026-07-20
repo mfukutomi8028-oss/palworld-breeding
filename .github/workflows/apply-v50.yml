@@ -1,12 +1,15 @@
 name: Apply Palworld v50 startup recovery
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
     paths:
       - .github/workflows/apply-v50.yml
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   apply-fix:
