@@ -2,24 +2,24 @@
   "use strict";
 
   function loadScript(src, marker) {
-    if (document.querySelector(`script[data-${marker}]`)) return;
+    if (document.querySelector(`script[data-refinement-loader="${marker}"]`)) return;
     const script = document.createElement("script");
     script.src = src;
     script.async = false;
-    script.dataset[marker] = "true";
+    script.dataset.refinementLoader = marker;
     document.head.appendChild(script);
   }
 
   function loadStyle(href, marker) {
-    if (document.querySelector(`link[data-${marker}]`)) return;
+    if (document.querySelector(`link[data-refinement-loader="${marker}"]`)) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
-    link.dataset[marker] = "true";
+    link.dataset.refinementLoader = marker;
     document.head.appendChild(link);
   }
 
-  loadStyle("refinement-v56.css?v=56", "refinementV56Style");
-  loadScript("refinement-v55-core.js?v=56", "refinementV55Core");
-  loadScript("refinement-v56.js?v=56", "refinementV56Script");
+  loadStyle("refinement-v56.css?v=56", "v56-style");
+  loadScript("refinement-v55-core.js?v=56", "v55-core");
+  loadScript("refinement-v56.js?v=56", "v56-script");
 })();
