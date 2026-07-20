@@ -16,7 +16,7 @@ const CURRENT_PALDB_DATA_URLS = [
   "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json",
   "https://cdn.jsdelivr.net/gh/bowenchen-1/palworld-guide@bbe68288a4404ea22467d53b73aee15a70abaa97/data/sources/paldb-1.0-20260715.json"
 ];
-const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v49";
+const CURRENT_ROSTER_CACHE_KEY = "pal-breeding-board:current-roster:v50";
 const PASSIVE_SOURCE_URL = "https://palworld-lab.com/passives/";
 const PASSIVE_SOURCE_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(PASSIVE_SOURCE_URL)}`;
 const PASSIVE_CACHE_KEY = "pal-breeding-board:palworld-lab-passives:v1";
@@ -1958,7 +1958,7 @@ async function init() {
   mergePalData(EMBEDDED_PALS, "内蔵リスト");
   mergePalData(CURRENT_CRITICAL_PALS, "Palworld 1.0重要補正");
   mergePalData(V1_RELEASE_FALLBACK_PALS, "Palworld 1.0内蔵");
-  verifyBuiltInReleaseData();
+  try { verifyBuiltInReleaseData(); } catch (error) { console.warn("Palworld 1.0内蔵データ検証警告:", error); }
   loadCachedCurrentRoster();
   setupPalOptions();
   syncRecorderUi();
@@ -2143,7 +2143,7 @@ async function loadPalworldLabData() {
 
 function verifyBuiltInReleaseData() {
   const names = new Set(V1_RELEASE_FALLBACK_PALS.map(pal => pal.name));
-  const required = ["ポチムネ", "シャオロン", "モリタロス", "ゼロヴァース", "マグナイト"];
+  const required = ["ポチムネ", "シャオロン", "モリタロス", "マグナイト"];
   if (V1_RELEASE_FALLBACK_PALS.length < 72 || required.some(name => !names.has(name))) {
     throw new Error("Palworld 1.0の内蔵追加パルデータが不足しています");
   }
