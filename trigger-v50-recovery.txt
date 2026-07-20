@@ -1,1 +1,2 @@
 Trigger Palworld v50 startup recovery workflow.
+retry=1
