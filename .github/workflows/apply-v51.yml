@@ -1,6 +1,9 @@
 name: Apply Palworld v51 convenience update
 
 on:
+  push:
+    paths:
+      - .github/workflows/apply-v51.yml
   issues:
     types: [opened]
 
@@ -9,7 +12,7 @@ permissions:
 
 jobs:
   apply-update:
-    if: github.event.issue.title == 'trigger-v51-convenience-update'
+    if: github.event_name == 'push' || github.event.issue.title == 'trigger-v51-convenience-update'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
