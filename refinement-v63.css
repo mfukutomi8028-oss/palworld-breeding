@@ -1,0 +1,25 @@
+/* Generic egg icon replacement (v63) */
+.empty-egg {
+  display: grid;
+  place-items: center;
+  min-height: 78px;
+  line-height: 1;
+}
+
+.v63-plain-egg {
+  display: inline-block;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.v63-empty-state-egg {
+  width: 62px;
+  height: 62px;
+  filter: drop-shadow(0 8px 12px rgba(86, 55, 25, .18));
+}
+
+.v63-inline-egg {
+  width: 22px;
+  height: 22px;
+  margin: 0 2px;
+}
