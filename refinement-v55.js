@@ -21,7 +21,7 @@
 
   loadStyle("refinement-v56.css?v=56", "v56-style");
   loadStyle("refinement-v58.css?v=58", "v58-style");
-  loadStyle("refinement-v60.css?v=60", "v60-style");
+  loadStyle("refinement-v60.css?v=61", "v60-style-v61");
   loadScript("refinement-v55-core.js?v=56", "v55-core");
   loadScript("refinement-v56.js?v=56", "v56-script");
   loadScript("refinement-v58.js?v=58", "v58-script");
