@@ -27,4 +27,5 @@
   loadScript("refinement-v58.js?v=58", "v58-script");
   loadScript("refinement-v59.js?v=59", "v59-script");
   loadScript("refinement-v60.js?v=60", "v60-script");
+  loadScript("refinement-v62.js?v=62", "v62-script");
 })();
