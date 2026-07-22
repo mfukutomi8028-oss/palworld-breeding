@@ -1,10 +1,12 @@
-/* Mutation egg input and recorder management refinements (v60) */
+/* Mutation egg input and recorder management refinements (v61 cache revision) */
 #detailBody.v60-detail-preparing {
-  opacity: 0;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: none !important;
 }
 
 #detailBody {
-  transition: opacity .06s ease;
+  transition: none !important;
 }
 
 .v60-mutation-egg img {
