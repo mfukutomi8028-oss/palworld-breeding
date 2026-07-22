@@ -1,0 +1,41 @@
+/* Mutation egg input and recorder management refinements (v60) */
+#detailBody.v60-detail-preparing {
+  opacity: 0;
+}
+
+#detailBody {
+  transition: opacity .06s ease;
+}
+
+.v60-mutation-egg img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.egg-picker-field.v60-mutation-locked .egg-picker,
+.egg-picker.v60-mutation-locked {
+  opacity: .72;
+}
+
+.egg-picker.v60-mutation-locked input {
+  cursor: not-allowed;
+  color: #7252a4;
+  background: #f3edfb;
+}
+
+.egg-picker.v60-mutation-locked .egg-picker-preview {
+  display: grid;
+  place-items: center;
+}
+
+.egg-picker.v60-mutation-locked .egg-picker-preview img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.recorder-list-item.v60-recorder-deleted,
+.recorder-list-item[hidden] {
+  display: none !important;
+}
