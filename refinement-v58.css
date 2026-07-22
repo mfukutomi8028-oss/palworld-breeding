@@ -1,0 +1,119 @@
+/* Palworld breeding board refinements (v58) */
+#breedingToolkit .reverse-card,
+#breedingToolkit .progress-card,
+#workflowParentCard {
+  display: none !important;
+}
+
+#breedingToolkit .v58-relation-only,
+#breedingToolkit .breeding-toolkit-grid {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+#workflowRelationCard {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+#workflowRelationCard .tool-number {
+  display: none !important;
+}
+
+#workflowRelationResults {
+  margin-top: 16px;
+}
+
+#workflowRelationResults .v56-relation-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+#workflowRelationResults .v56-relation-columns > section {
+  padding: 16px;
+  border: 1px solid rgba(24, 62, 95, .11);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .92);
+}
+
+#workflowRelationResults .v56-relation-columns > section:nth-child(1) {
+  border-top: 4px solid #3b9c76;
+}
+
+#workflowRelationResults .v56-relation-columns > section:nth-child(2) {
+  border-top: 4px solid #378bc8;
+}
+
+#workflowRelationResults .v56-relation-columns > section:nth-child(3) {
+  grid-column: 1 / -1;
+  border-top: 4px solid #8b68c7;
+}
+
+#workflowRelationResults .v56-relation-columns > section h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+#workflowRelationResults .v56-relation-recipe,
+#workflowRelationResults .v56-route-card {
+  padding: 14px;
+  border-radius: 15px;
+  background: #f9fcfe;
+}
+
+#workflowRelationResults .v56-pal-image {
+  width: 42px;
+  height: 42px;
+  flex-basis: 42px;
+}
+
+#workflowRelationResults .v56-recipe-visual.is-compact .v56-pal-image {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+}
+
+.v58-mutation-egg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(128, 83, 194, .19);
+  border-radius: 999px;
+  color: #64409b;
+  background: rgba(139, 91, 205, .13);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.v58-mutation-egg.is-compact {
+  padding: 4px 7px;
+  font-size: 11px;
+}
+
+.v58-mutation-egg img {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  object-fit: contain;
+}
+
+.v58-mutation-egg.is-compact img {
+  width: 23px;
+  height: 23px;
+  flex-basis: 23px;
+}
+
+.v58-mutation-cell {
+  min-width: 150px;
+}
+
+@media (max-width: 1180px) {
+  #workflowRelationResults .v56-relation-columns {
+    grid-template-columns: 1fr;
+  }
+
+  #workflowRelationResults .v56-relation-columns > section:nth-child(3) {
+    grid-column: auto;
+  }
+}
