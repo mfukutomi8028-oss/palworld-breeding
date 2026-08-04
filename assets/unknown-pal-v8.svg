@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="画像未確認">
+  <circle cx="64" cy="64" r="56" fill="#14333d" stroke="#50d3a5" stroke-width="5"/>
+  <circle cx="64" cy="49" r="21" fill="#708e97"/>
+  <rect x="36" y="64" width="56" height="44" rx="20" fill="#708e97"/>
+  <text x="64" y="81" text-anchor="middle" font-family="system-ui, sans-serif" font-size="42" font-weight="700" fill="#eef8f6">?</text>
+</svg>
