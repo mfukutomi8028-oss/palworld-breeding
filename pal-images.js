@@ -8,6 +8,7 @@
   const ICON_REPOSITORY_BASE = `https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${ICON_MANIFEST_COMMIT}/public/icons/palworld/`;
   const ICON_CDN_BASE = "https://assets.palworldguide.net/icons/palworld/";
   const ICON_MANIFEST_CACHE_KEY = "pal-breeding-note:icon-manifest:102";
+  const PAL_IMAGE_PLACEHOLDER = "assets/unknown-pal-v8.svg";
 
   function canonicalManifestPath(value) {
     return String(value || "")
@@ -49,7 +50,7 @@
     const sources = imageSources(row);
     return {
       ...pal,
-      icon: sources[0] || UNKNOWN_PAL_ICON,
+      icon: sources[0] || PAL_IMAGE_PLACEHOLDER,
       iconFallbacks: sources.slice(1),
       iconManifestName: row?.pal || "",
       iconAssetName: row?.displayIconAsset || "",
@@ -75,12 +76,13 @@
     image.onerror = null;
     image.removeAttribute("data-pal-key");
     image.removeAttribute("data-pal-fallbacks");
-    image.src = UNKNOWN_PAL_ICON;
+    image.src = PAL_IMAGE_PLACEHOLDER;
     if (typeof renderReview === "function") renderReview();
   };
 
   window.palImageAttrs = function canonicalPalImageAttrs(pal, className = "") {
-    const src = pal?.icon || UNKNOWN_PAL_ICON;
+    const configured = pal?.icon || PAL_IMAGE_PLACEHOLDER;
+    const src = configured === UNKNOWN_PAL_ICON ? PAL_IMAGE_PLACEHOLDER : configured;
     const id = pal?.id || "";
     const fallbacks = Array.isArray(pal?.iconFallbacks) ? pal.iconFallbacks : [];
     return [
@@ -93,6 +95,15 @@
       `data-pal-fallbacks="${escapeHtml(JSON.stringify(fallbacks))}"`,
       `onerror="window.handlePalImageError(this)"`,
     ].join(" ");
+  };
+
+  window.palChip = function canonicalPalChip(value, options = {}) {
+    const pal = getPal(value);
+    const name = pal?.name || String(value || "");
+    if (!name) {
+      return `<span class="pal-chip pal-chip--pending"><img src="${PAL_IMAGE_PLACEHOLDER}" alt="結果未確認" class="pal-chip__image"><span class="pal-chip__text"><strong>未確認</strong><small>結果未入力</small></span></span>`;
+    }
+    return `<span class="pal-chip${options.result ? " pal-chip--result" : ""}"><img ${palImageAttrs(pal, "pal-chip__image")}><span class="pal-chip__text"><strong>${escapeHtml(name)}</strong><small>${pal ? `No.${escapeHtml(pal.no)}` : "候補リスト外"}</small></span></span>`;
   };
 
   window.loadPalData = async function loadCanonicalPalData() {
