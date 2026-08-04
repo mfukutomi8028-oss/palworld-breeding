@@ -13,8 +13,9 @@ const icons = Array.isArray(manifest.partnerSkills) ? manifest.partnerSkills : [
 const paths = new Set((tree.tree || []).map(entry => entry.path));
 
 const normalizeNumber = value => {
-  if (value === null || value === undefined || String(value).trim() === "") return "";
+  if (value === null || value === undefined) return "";
   const raw = String(value).trim().toUpperCase();
+  if (!raw || ["NULL", "NONE", "N/A", "NA", "-"].includes(raw)) return "";
   const match = raw.match(/^(\d+)([A-Z]*)$/);
   return match ? `${match[1].padStart(3, "0")}${match[2]}` : raw;
 };
@@ -39,6 +40,7 @@ for (const row of icons) {
 const missingRows = [];
 const nameMismatches = [];
 const missingFiles = [];
+const resolvedRows = new Set();
 for (const record of records) {
   const key = normalizeNumber(record.number);
   const nameKey = normalizeName(record.name);
@@ -47,6 +49,7 @@ for (const record of records) {
     missingRows.push(`${key || "no-number"}:${record.name}`);
     continue;
   }
+  resolvedRows.add(row);
   if (normalizeName(record.name) !== normalizeName(row.pal)) {
     nameMismatches.push(`${key || "no-number"}:${record.name} != ${row.pal}`);
   }
@@ -59,6 +62,7 @@ if (icons.length !== 300) throw new Error(`Expected 300 manifest rows, got ${ico
 if (missingRows.length) throw new Error(`Missing manifest rows: ${missingRows.join(", ")}`);
 if (nameMismatches.length) throw new Error(`Pal/image name mismatches: ${nameMismatches.join(", ")}`);
 if (missingFiles.length) throw new Error(`Missing icon files: ${missingFiles.join(", ")}`);
+if (resolvedRows.size !== records.length) throw new Error(`Image rows are not one-to-one: ${resolvedRows.size}/${records.length}`);
 
 for (const number of ["007", "041", "058", "085", "097", "108", "129", "132", "135", "137", "186"]) {
   const row = byNumber.get(number);
@@ -68,5 +72,5 @@ for (const number of ["007", "041", "058", "085", "097", "108", "129", "132", "1
 }
 
 console.log(`Validated ${records.length} Pal records against ${icons.length} canonical image mappings.`);
-console.log(`Number mappings: ${byNumber.size}; name mappings: ${byName.size}.`);
+console.log(`Number mappings: ${byNumber.size}; name mappings: ${byName.size}; one-to-one rows: ${resolvedRows.size}.`);
 console.log("All mapped image files exist in the fixed source tree.");
