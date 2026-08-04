@@ -15,9 +15,11 @@ jobs:
           node --check ui-shell.js
           node --check app-core.js
           node --check app-records.js
+          node --check pal-images.js
           node --check app-explore.js
           node --check app-review.js
           node --check app-actions.js
+          node --check scripts/validate-pal-images.mjs
       - name: Validate entrypoint references
         run: |
           python - <<'PY'
@@ -27,9 +29,12 @@ jobs:
           refs = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))(?:\?[^\"]*)?"', html)
           missing = [ref for ref in refs if not Path(ref).exists()]
           assert not missing, f'Missing entrypoint files: {missing}'
+          assert 'pal-images.js' in refs, 'Canonical Pal image layer is not loaded'
           legacy = ['enhancements.js','workflow-v54.js','refinement-v55.js','refinement-v56.js','refinement-v58.js','refinement-v59.js','refinement-v60.js','refinement-v62.js','refinement-v63.js']
           bad = [name for name in legacy if name in html]
           assert not bad, f'Legacy files still referenced: {bad}'
+          assert Path('assets/unknown-pal-v8.svg').exists(), 'Unknown Pal placeholder is missing'
+          assert not Path('assets/unknown-pal-v8.png').exists(), 'Invalid legacy placeholder still exists'
           print('Entrypoint references:', refs)
           PY
       - name: Validate HTML IDs and CSS braces
@@ -67,3 +72,10 @@ jobs:
           if (directional.length !== 2) throw new Error(`Expected 2 gender-directional rows, got ${directional.length}`);
           console.log(`Validated ${pals.length} forms, ${unique.length} unique rows, ${directional.length} directional rows`);
           NODE
+      - name: Validate all Pal image mappings and source files
+        run: |
+          COMMIT="bbe68288a4404ea22467d53b73aee15a70abaa97"
+          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${COMMIT}/data/sources/paldb-1.0-20260715.json" -o /tmp/paldb.json
+          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${COMMIT}/data/sources/palworld-icon-manifest.json" -o /tmp/icon-manifest.json
+          curl -fsSL "https://api.github.com/repos/bowenchen-1/palworld-guide/git/trees/${COMMIT}?recursive=1" -o /tmp/source-tree.json
+          node scripts/validate-pal-images.mjs /tmp/paldb.json /tmp/icon-manifest.json /tmp/source-tree.json
