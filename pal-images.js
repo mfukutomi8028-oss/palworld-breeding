@@ -10,6 +10,14 @@
   const ICON_MANIFEST_CACHE_KEY = "pal-breeding-note:icon-manifest:102";
   const PAL_IMAGE_PLACEHOLDER = "assets/unknown-pal-v8.svg";
 
+  function normalizeManifestNumber(value) {
+    if (value === null || value === undefined) return "";
+    const raw = String(value).trim().toUpperCase();
+    if (!raw || ["NULL", "NONE", "N/A", "NA", "-"].includes(raw)) return "";
+    const match = raw.match(/^(\d+)([A-Z]*)$/);
+    return match ? `${match[1].padStart(3, "0")}${match[2]}` : raw;
+  }
+
   function canonicalManifestPath(value) {
     return String(value || "")
       .replace(/^\/+/, "")
@@ -37,7 +45,7 @@
     const byNumber = new Map();
     const byName = new Map();
     for (const row of rows) {
-      const number = normalizePalNumber(row.palNumber);
+      const number = normalizeManifestNumber(row.palNumber);
       const name = normalizeText(row.pal);
       if (number && !byNumber.has(number)) byNumber.set(number, row);
       if (name && !byName.has(name)) byName.set(name, row);
@@ -46,7 +54,8 @@
   }
 
   function applyCanonicalIcon(pal, maps) {
-    const row = maps.byNumber.get(normalizePalNumber(pal.id)) || maps.byName.get(normalizeText(pal.enName));
+    const number = normalizeManifestNumber(pal.no);
+    const row = (number && maps.byNumber.get(number)) || maps.byName.get(normalizeText(pal.enName));
     const sources = imageSources(row);
     return {
       ...pal,
@@ -129,19 +138,21 @@
 
       for (const [code, enginePal] of Object.entries(engineData.pals)) {
         const item = { code, ...enginePal };
-        if (enginePal.deck) engineByDeck.set(normalizePalNumber(enginePal.deck), item);
+        const deck = normalizeManifestNumber(enginePal.deck);
+        if (deck) engineByDeck.set(deck, item);
         if (enginePal.name) engineByName.set(normalizeText(enginePal.name), item);
       }
 
       const records = Array.isArray(palResult.data?.records) ? palResult.data.records : [];
       state.pals = records.map((record, order) => {
         const enName = String(record.name || "").trim();
-        const id = normalizePalNumber(record.number) || `pal-${order}`;
-        const enginePal = engineByDeck.get(id) || engineByName.get(normalizeText(enName));
+        const number = normalizeManifestNumber(record.number);
+        const id = number || `special-${order}`;
+        const enginePal = (number && engineByDeck.get(number)) || engineByName.get(normalizeText(enName));
         const name = JP_NAME_OVERRIDES[enName] || translations.get(enName) || enName;
         return applyCanonicalIcon({
           id,
-          no: id,
+          no: number || "—",
           order,
           name,
           enName,
@@ -157,15 +168,15 @@
         }, maps);
       }).filter(pal => pal.name && Number.isFinite(pal.power));
 
-      const knownDecks = new Set(state.pals.map(pal => pal.id));
+      const knownDecks = new Set(state.pals.map(pal => pal.no).filter(no => no && no !== "—"));
       for (const [code, enginePal] of Object.entries(engineData.pals)) {
-        const id = normalizePalNumber(enginePal.deck);
-        if (!id || knownDecks.has(id)) continue;
+        const number = normalizeManifestNumber(enginePal.deck);
+        if (!number || knownDecks.has(number)) continue;
         const enName = String(enginePal.name || code);
         const name = JP_NAME_OVERRIDES[enName] || translations.get(enName) || enName;
         state.pals.push(applyCanonicalIcon({
-          id,
-          no: id,
+          id: number,
+          no: number,
           order: state.pals.length,
           name,
           enName,
@@ -179,7 +190,12 @@
           rankResult: Boolean(enginePal.rankResult),
           selfOnly: !enginePal.rankResult,
         }, maps));
-        knownDecks.add(id);
+        knownDecks.add(number);
+      }
+
+      const uniqueIds = new Set(state.pals.map(pal => pal.id));
+      if (uniqueIds.size !== state.pals.length) {
+        throw new Error(`Duplicate Pal IDs detected: ${uniqueIds.size}/${state.pals.length}`);
       }
 
       state.iconManifestRows = maps.rows.length;
