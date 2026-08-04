@@ -1,0 +1,48 @@
+name: Validate static application
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JavaScript syntax
+        run: |
+          node --check ui-shell.js
+          node --check app-core.js
+          node --check app-records.js
+          node --check app-explore.js
+          node --check app-review.js
+          node --check app-actions.js
+      - name: Validate entrypoint references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          refs = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))(?:\?[^\"]*)?"', html)
+          missing = [ref for ref in refs if not Path(ref).exists()]
+          assert not missing, f'Missing entrypoint files: {missing}'
+          legacy = ['enhancements.js','workflow-v54.js','refinement-v55.js','refinement-v56.js','refinement-v58.js','refinement-v59.js','refinement-v60.js','refinement-v62.js','refinement-v63.js']
+          bad = [name for name in legacy if name in html]
+          assert not bad, f'Legacy files still referenced: {bad}'
+          print('Entrypoint references:', refs)
+          PY
+      - name: Validate HTML IDs and CSS braces
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          shell = Path('ui-shell.js').read_text(encoding='utf-8')
+          ids = re.findall(r'\bid="([^"]+)"', shell)
+          dup = sorted({item for item in ids if ids.count(item) > 1})
+          assert not dup, f'Duplicate IDs: {dup}'
+          for path in ['style-foundation.css','style-components.css','style-responsive.css']:
+              text = Path(path).read_text(encoding='utf-8')
+              assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
+          print(f'Validated {len(ids)} unique IDs')
+          PY
