@@ -13,7 +13,8 @@ const icons = Array.isArray(manifest.partnerSkills) ? manifest.partnerSkills : [
 const paths = new Set((tree.tree || []).map(entry => entry.path));
 
 const normalizeNumber = value => {
-  const raw = String(value || "").trim().toUpperCase();
+  if (value === null || value === undefined || String(value).trim() === "") return "";
+  const raw = String(value).trim().toUpperCase();
   const match = raw.match(/^(\d+)([A-Z]*)$/);
   return match ? `${match[1].padStart(3, "0")}${match[2]}` : raw;
 };
@@ -21,10 +22,18 @@ const normalizeName = value => String(value || "").normalize("NFKC").toLowerCase
 const canonicalPath = value => `public/icons/palworld/${String(value || "").replace(/^partner_skills\//, "partner-skills/")}`;
 
 const byNumber = new Map();
+const byName = new Map();
 for (const row of icons) {
   const key = normalizeNumber(row.palNumber);
-  if (byNumber.has(key)) throw new Error(`Duplicate manifest Pal number: ${key}`);
-  byNumber.set(key, row);
+  const nameKey = normalizeName(row.pal);
+  if (key) {
+    if (byNumber.has(key)) throw new Error(`Duplicate manifest Pal number: ${key}`);
+    byNumber.set(key, row);
+  }
+  if (nameKey) {
+    if (byName.has(nameKey)) throw new Error(`Duplicate manifest Pal name: ${row.pal}`);
+    byName.set(nameKey, row);
+  }
 }
 
 const missingRows = [];
@@ -32,13 +41,14 @@ const nameMismatches = [];
 const missingFiles = [];
 for (const record of records) {
   const key = normalizeNumber(record.number);
-  const row = byNumber.get(key);
+  const nameKey = normalizeName(record.name);
+  const row = (key && byNumber.get(key)) || byName.get(nameKey);
   if (!row) {
-    missingRows.push(`${key}:${record.name}`);
+    missingRows.push(`${key || "no-number"}:${record.name}`);
     continue;
   }
   if (normalizeName(record.name) !== normalizeName(row.pal)) {
-    nameMismatches.push(`${key}:${record.name} != ${row.pal}`);
+    nameMismatches.push(`${key || "no-number"}:${record.name} != ${row.pal}`);
   }
   const path = canonicalPath(row.displayIconFile);
   if (!paths.has(path)) missingFiles.push(path);
@@ -58,4 +68,5 @@ for (const number of ["007", "041", "058", "085", "097", "108", "129", "132", "1
 }
 
 console.log(`Validated ${records.length} Pal records against ${icons.length} canonical image mappings.`);
+console.log(`Number mappings: ${byNumber.size}; name mappings: ${byName.size}.`);
 console.log("All mapped image files exist in the fixed source tree.");
