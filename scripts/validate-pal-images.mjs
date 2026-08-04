@@ -57,12 +57,17 @@ for (const record of records) {
   if (!paths.has(path)) missingFiles.push(path);
 }
 
-if (records.length !== 300) throw new Error(`Expected 300 PalDB rows, got ${records.length}`);
+const unusedRows = icons.filter(row => !resolvedRows.has(row));
+
+if (records.length !== 299) throw new Error(`Expected 299 PalDB rows, got ${records.length}`);
 if (icons.length !== 300) throw new Error(`Expected 300 manifest rows, got ${icons.length}`);
 if (missingRows.length) throw new Error(`Missing manifest rows: ${missingRows.join(", ")}`);
 if (nameMismatches.length) throw new Error(`Pal/image name mismatches: ${nameMismatches.join(", ")}`);
 if (missingFiles.length) throw new Error(`Missing icon files: ${missingFiles.join(", ")}`);
 if (resolvedRows.size !== records.length) throw new Error(`Image rows are not one-to-one: ${resolvedRows.size}/${records.length}`);
+if (unusedRows.length !== 1 || unusedRows[0].pal !== "Gumoss (Special)") {
+  throw new Error(`Unexpected unused manifest rows: ${unusedRows.map(row => row.pal).join(", ")}`);
+}
 
 for (const number of ["007", "041", "058", "085", "097", "108", "129", "132", "135", "137", "186"]) {
   const row = byNumber.get(number);
@@ -71,6 +76,7 @@ for (const number of ["007", "041", "058", "085", "097", "108", "129", "132", "1
   if (!paths.has(path)) throw new Error(`Required screenshot review image missing: ${number} ${path}`);
 }
 
-console.log(`Validated ${records.length} Pal records against ${icons.length} canonical image mappings.`);
+console.log(`Validated ${records.length} Pal records against ${icons.length} canonical image manifest rows.`);
 console.log(`Number mappings: ${byNumber.size}; name mappings: ${byName.size}; one-to-one rows: ${resolvedRows.size}.`);
+console.log("The only unused manifest row is Gumoss (Special), which intentionally reuses Gumoss artwork.");
 console.log("All mapped image files exist in the fixed source tree.");
