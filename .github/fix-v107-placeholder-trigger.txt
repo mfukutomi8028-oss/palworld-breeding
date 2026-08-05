@@ -1,0 +1,1 @@
+Trigger the v107 unknown Pal placeholder correction.
