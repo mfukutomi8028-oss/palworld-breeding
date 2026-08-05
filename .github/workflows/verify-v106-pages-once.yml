@@ -1,0 +1,48 @@
+name: Verify v106 published Pages once
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  verify:
+    if: contains(github.event.head_commit.message, '[verify-v106-pages]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Wait for v106 publication
+        run: |
+          URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
+          for attempt in $(seq 1 40); do
+            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=106'; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "v106 was not published within the expected time"
+          exit 1
+      - name: Test published Pages
+        env:
+          APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
+        run: node scripts/smoke-browser.mjs
+      - name: Record result
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ job.status }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ "$RESULT" = "success" ]; then
+            gh pr comment 14 --body "✅ GitHub Pages v106 verification succeeded for ${GITHUB_SHA}. Forward/reverse hint tabs, target plus one-parent reverse search, multiple independent candidates, fixed seven-position character reveals, discovery locking, guide mode, image resilience, favorite spacing, and mobile layout passed in Chromium. Run: ${RUN_URL}"
+          else
+            gh pr comment 14 --body "❌ GitHub Pages v106 verification failed for ${GITHUB_SHA}. Review the workflow before reporting completion. Run: ${RUN_URL}"
+          fi
