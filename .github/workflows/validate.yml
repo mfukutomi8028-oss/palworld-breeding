@@ -25,6 +25,7 @@ jobs:
           node --check app-actions.js
           node --check scripts/validate-v103-data.mjs
           node --check scripts/smoke-browser.mjs
+          node --check scripts/smoke-browser-http-aware.mjs
           node --check scripts/smoke-v107.mjs
 
       - name: Validate entrypoint and local assets
@@ -107,7 +108,7 @@ jobs:
         env:
           APP_URL: http://127.0.0.1:4173/
         run: |
-          node scripts/smoke-browser.mjs
+          node scripts/smoke-browser-http-aware.mjs
           node scripts/smoke-v107.mjs
 
   public-pages-smoke:
@@ -135,5 +136,5 @@ jobs:
         env:
           APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
         run: |
-          node scripts/smoke-browser.mjs
+          node scripts/smoke-browser-http-aware.mjs
           node scripts/smoke-v107.mjs
