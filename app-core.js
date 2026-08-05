@@ -15,7 +15,7 @@ const CACHE_KEYS = {
 };
 const DEFAULT_USERS = ["福冨", "森井"];
 const DEFAULT_COLORS = ["#50d3a5", "#63b9ef", "#f5c85b", "#a78bfa", "#ff9d68", "#ff7384"];
-const UNKNOWN_PAL_ICON = "assets/unknown-pal-v8.png";
+const UNKNOWN_PAL_ICON = "assets/unknown-pal-v8.svg";
 const PLAIN_EGG_ICON = "assets/plain-egg.png";
 const MUTATION_EGG_ICON = "assets/mutation-egg-v59.svg";
 const ELEMENTS = ["無属性", "炎属性", "水属性", "草属性", "雷属性", "氷属性", "地属性", "闇属性", "竜属性"];
