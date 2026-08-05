@@ -1,0 +1,165 @@
+name: Apply v107 changes to feature branch
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: contains(github.event.head_commit.message, '[apply-v107-branch]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-discovery-picker-egg-paldex-v107
+          fetch-depth: 0
+
+      - name: Apply source changes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              file = Path(path)
+              text = file.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected exactly one match, found {count}: {old[:120]!r}')
+              file.write_text(text.replace(old, new), encoding='utf-8')
+
+          old_shell = '''function renderPickerShell(target){const shell=$(`[data-picker-shell="${target}"]`);if(!shell)return;const button=$('[data-open-picker]',shell),pal=getPal(state.pickerValues[target]);button.innerHTML=pal?palChip(pal.name):`<span class="pal-select-button__placeholder">${target==='recordResult'?'未確認のままでも保存可能':'パルを選択'}</span>`;}'''
+          new_shell = '''function recordPickerPalChip(pal,target){
+            const hideImage=Boolean(pal)&&String(target).startsWith('record')&&!state.guideUnlocked&&!discoveredPalIdSet().has(pal.id);
+            if(!hideImage)return palChip(pal?.name);
+            return `<span class="pal-chip pal-chip--undiscovered"><img src="${UNKNOWN_PAL_ICON}" alt="未発見パル" class="pal-chip__image"><span class="pal-chip__text"><strong>${escapeHtml(pal.name)}</strong><small>No.${escapeHtml(pal.no)}</small></span></span>`;
+          }
+          function renderPickerShell(target){const shell=$(`[data-picker-shell="${target}"]`);if(!shell)return;const button=$('[data-open-picker]',shell),pal=getPal(state.pickerValues[target]);button.innerHTML=pal?recordPickerPalChip(pal,target):`<span class="pal-select-button__placeholder">${target==='recordResult'?'未確認のままでも保存可能':'パルを選択'}</span>`;}'''
+          replace_once('app-actions.js', old_shell, new_shell)
+
+          old_picker = '''function renderPickerGrid(){const q=normalizeText(byId('palPickerSearch').value),pals=pickerPalsForTarget(state.pickerTarget).filter(p=>!q||normalizeText(`${p.name} ${p.enName} ${p.no}`).includes(q));byId('palPickerGrid').innerHTML=pals.map(p=>`<button class="picker-pal" type="button" data-picker-pal="${p.id}"><img ${palImageAttrs(p)}><strong>${escapeHtml(p.name)}</strong><small>No.${escapeHtml(p.no)}</small></button>`).join('')||'<div class="empty-state" style="grid-column:1/-1;min-height:220px"><div><h3>選択できるパルがいません</h3><p>配合記録へパルを登録すると、発見済みパルとして選択できるようになります。</p></div></div>';$$('[data-picker-pal]').forEach(b=>b.addEventListener('click',()=>{state.pickerValues[state.pickerTarget]=b.dataset.pickerPal;byId('palPickerDialog').close();renderPickerShell(state.pickerTarget);onPickerChange(state.pickerTarget);}));attachImageFallbacks(byId('palPickerGrid'));}'''
+          new_picker = '''function renderPickerGrid(){
+            const q=normalizeText(byId('palPickerSearch').value),pals=pickerPalsForTarget(state.pickerTarget).filter(p=>!q||normalizeText(`${p.name} ${p.enName} ${p.no}`).includes(q));
+            const hideUndiscoveredImages=String(state.pickerTarget).startsWith('record')&&!state.guideUnlocked;
+            const discoveredIds=hideUndiscoveredImages?discoveredPalIdSet():null;
+            byId('palPickerGrid').innerHTML=pals.map(p=>{
+              const undiscovered=hideUndiscoveredImages&&!discoveredIds.has(p.id);
+              const image=undiscovered?`<img src="${UNKNOWN_PAL_ICON}" alt="未発見パル" loading="lazy" class="picker-pal__image--undiscovered">`:`<img ${palImageAttrs(p)}>`;
+              return `<button class="picker-pal${undiscovered?' is-undiscovered':''}" type="button" data-picker-pal="${p.id}">${image}<strong>${escapeHtml(p.name)}</strong><small>No.${escapeHtml(p.no)}</small></button>`;
+            }).join('')||'<div class="empty-state" style="grid-column:1/-1;min-height:220px"><div><h3>選択できるパルがいません</h3><p>配合記録へパルを登録すると、発見済みパルとして選択できるようになります。</p></div></div>';
+            $$('[data-picker-pal]').forEach(b=>b.addEventListener('click',()=>{state.pickerValues[state.pickerTarget]=b.dataset.pickerPal;byId('palPickerDialog').close();renderPickerShell(state.pickerTarget);onPickerChange(state.pickerTarget);}));attachImageFallbacks(byId('palPickerGrid'));
+          }'''
+          replace_once('app-actions.js', old_picker, new_picker)
+
+          old_egg_picker = '''function openEggPicker(){if(byId('recordMutation').checked)return;byId('eggPickerGrid').innerHTML=`<button class="egg-option" type="button" data-egg-value=""><img src="${PLAIN_EGG_ICON}" alt=""><span><strong>未設定</strong><small>あとから入力</small></span></button>${EGG_TYPES.map(e=>`<button class="egg-option" type="button" data-egg-value="${escapeHtml(e.name)}"><img src="${e.icon}" alt="${escapeHtml(e.name)}"><span><strong>${escapeHtml(e.name)}</strong><small>${e.size}</small></span></button>`).join('')}`;$$('[data-egg-value]').forEach(b=>b.addEventListener('click',()=>{syncEggSelection(b.dataset.eggValue);byId('eggPickerDialog').close();}));byId('eggPickerDialog').showModal();}'''
+          new_egg_picker = '''function openEggPicker(){if(byId('recordMutation').checked)return;byId('eggPickerGrid').innerHTML=`<button class="egg-option egg-option--unset" type="button" data-egg-value=""><span><strong>未設定</strong><small>タマゴ画像を表示しない</small></span></button>${EGG_TYPES.map(e=>`<button class="egg-option" type="button" data-egg-value="${escapeHtml(e.name)}"><img src="${e.icon}" alt="${escapeHtml(e.name)}"><span><strong>${escapeHtml(e.name)}</strong><small>${e.size}</small></span></button>`).join('')}`;$$('[data-egg-value]').forEach(b=>b.addEventListener('click',()=>{syncEggSelection(b.dataset.eggValue);byId('eggPickerDialog').close();}));byId('eggPickerDialog').showModal();}'''
+          replace_once('app-actions.js', old_egg_picker, new_egg_picker)
+
+          replace_once('app-actions.js', "byId('paldexSearch').addEventListener('input',()=>{state.paldexLimit=60;renderPaldex();});", "byId('paldexSearch').addEventListener('input',renderPaldex);")
+          replace_once('app-actions.js', "byId('paldexElement').addEventListener('change',()=>{state.paldexLimit=60;renderPaldex();});", "byId('paldexElement').addEventListener('change',renderPaldex);")
+          replace_once('app-actions.js', "byId('paldexWork').addEventListener('change',()=>{state.paldexLimit=60;renderPaldex();});", "byId('paldexWork').addEventListener('change',renderPaldex);")
+          replace_once('app-actions.js', "byId('paldexLoadMore').addEventListener('click',()=>{state.paldexLimit+=60;renderPaldex();});", "byId('paldexLoadMore').addEventListener('click',renderPaldex);")
+
+          old_egg_chip = '''function eggChip(record){if(record?.mutation)return `<span class="egg-chip egg-chip--mutation"><img src="${MUTATION_EGG_ICON}" alt="突然変異タマゴ"><span>突然変異タマゴ</span></span>`;const meta=eggMeta(record?.eggType);if(!meta)return `<span class="egg-chip"><img src="${PLAIN_EGG_ICON}" alt="タマゴ未設定"><span>未設定</span></span>`;return `<span class="egg-chip"><img src="${escapeHtml(meta.icon)}" alt="${escapeHtml(meta.name)}"><span>${escapeHtml(meta.name)}</span></span>`;}'''
+          new_egg_chip = '''function eggChip(record){if(record?.mutation)return `<span class="egg-chip egg-chip--mutation"><img src="${MUTATION_EGG_ICON}" alt="突然変異タマゴ"><span>突然変異タマゴ</span></span>`;const meta=eggMeta(record?.eggType);if(!meta)return `<span class="egg-chip egg-chip--unset"><span>未設定</span></span>`;return `<span class="egg-chip"><img src="${escapeHtml(meta.icon)}" alt="${escapeHtml(meta.name)}"><span>${escapeHtml(meta.name)}</span></span>`;}'''
+          replace_once('app-records.js', old_egg_chip, new_egg_chip)
+
+          replace_once('app-explore.js', '  const visible=pals.slice(0,state.paldexLimit);', '  const visible=pals;')
+          replace_once('app-explore.js', '  byId("paldexLoadMore").hidden=!visible.length||visible.length>=pals.length;byId("paldexLoadMore").textContent=`さらに表示（残り${Math.max(0,pals.length-visible.length)}体）`;', '  byId("paldexLoadMore").hidden=true;')
+
+          styles = Path('style-discovery-v105.css')
+          style_text = styles.read_text(encoding='utf-8')
+          addition = '''\n.picker-pal.is-undiscovered img,.pal-chip--undiscovered img{filter:none;opacity:.9}.picker-pal.is-undiscovered:hover img{opacity:1}.egg-chip--unset{min-width:auto;padding:0;color:var(--muted);border-color:transparent;background:transparent}.egg-option--unset{grid-template-columns:1fr}.egg-option--unset>span{grid-column:1/-1}#paldexLoadMore{display:none!important}\n'''
+          if addition.strip() not in style_text:
+              styles.write_text(style_text + addition, encoding='utf-8')
+
+          index=Path('index.html')
+          text=index.read_text(encoding='utf-8')
+          if '?v=106' not in text: raise SystemExit('index.html: v106 references not found')
+          index.write_text(text.replace('?v=106','?v=107'),encoding='utf-8')
+          replace_once('config.js','window.palSiteVersion = "106";','window.palSiteVersion = "107";')
+
+          validate=Path('.github/workflows/validate.yml')
+          text=validate.read_text(encoding='utf-8')
+          text=text.replace("assert '?v=106' in html, 'v106 cache busting is missing'", "assert '?v=107' in html, 'v107 cache busting is missing'")
+          text=text.replace('Wait for GitHub Pages v106 deployment','Wait for GitHub Pages v107 deployment')
+          text=text.replace("grep -q 'app-discovery.js?v=106'", "grep -q 'app-discovery.js?v=107'")
+          text=text.replace('GitHub Pages did not publish v106 within the expected time.','GitHub Pages did not publish v107 within the expected time.')
+          validate.write_text(text,encoding='utf-8')
+
+          smoke=Path('scripts/smoke-browser.mjs')
+          text=smoke.read_text(encoding='utf-8').replace('ci-v106-','ci-v107-')
+          original='''  await page.evaluate(() => { document.querySelector("#palPickerDialog")?.close(); document.querySelector("#recordDialog")?.close(); });
+
+  const seeded = await page.evaluate(() => {'''
+          replacement='''  const initialPickerAudit = await page.locator("#palPickerGrid [data-picker-pal]").evaluateAll(buttons => ({
+    total: buttons.length,
+    hidden: buttons.filter(button => button.querySelector("img")?.getAttribute("src")?.includes("unknown-pal-v8.svg")).length,
+    named: buttons.every(button => Boolean(button.querySelector("strong")?.textContent?.trim())),
+  }));
+  if (initialPickerAudit.total !== 299 || initialPickerAudit.hidden !== 299 || !initialPickerAudit.named) throw new Error(`Undiscovered record picker images are exposed: ${JSON.stringify(initialPickerAudit)}`);
+  await page.evaluate(() => { document.querySelector("#palPickerDialog")?.close(); document.querySelector("#recordDialog")?.close(); });
+
+  const unsetEggAudit = await page.evaluate(() => {
+    const host=document.createElement("div");
+    host.innerHTML=eggChip({mutation:false,eggType:""});
+    return {text:host.textContent.trim(),images:host.querySelectorAll("img").length};
+  });
+  if (unsetEggAudit.text !== "未設定" || unsetEggAudit.images !== 0) throw new Error(`Unset egg still renders an image: ${JSON.stringify(unsetEggAudit)}`);
+
+  const seeded = await page.evaluate(() => {'''
+          if text.count(original)!=1: raise SystemExit('smoke initial picker marker not found')
+          text=text.replace(original,replacement)
+
+          marker='''  // Discovery mode Paldex shows only Pals that occur in room records.'''
+          insertion='''  // In discovery mode, record pickers keep names but hide images for unrecorded Pals.
+  await page.click("#addRecord");
+  await page.click('#recordDialog [data-open-picker="recordParentA"]');
+  await page.waitForSelector("#palPickerDialog[open] [data-picker-pal]");
+  const discoveryPickerAudit = await page.locator("#palPickerGrid [data-picker-pal]").evaluateAll((buttons, knownIds) => {
+    const rows=buttons.map(button=>({id:button.dataset.pickerPal,src:button.querySelector("img")?.getAttribute("src")||"",name:button.querySelector("strong")?.textContent?.trim()||""}));
+    return {total:rows.length,knownReal:rows.filter(row=>knownIds.includes(row.id)).every(row=>row.src.includes("/assets/pals/")),unknownHidden:rows.filter(row=>!knownIds.includes(row.id)).every(row=>row.src.includes("unknown-pal-v8.svg")),namesPresent:rows.every(row=>Boolean(row.name))};
+  }, [seeded.aId,seeded.bId,seeded.cId]);
+  if (discoveryPickerAudit.total !== 299 || !discoveryPickerAudit.knownReal || !discoveryPickerAudit.unknownHidden || !discoveryPickerAudit.namesPresent) throw new Error(`Discovery picker visibility is incorrect: ${JSON.stringify(discoveryPickerAudit)}`);
+  const hiddenCandidate=page.locator("#palPickerGrid .picker-pal.is-undiscovered").first();
+  await hiddenCandidate.click();
+  if (!(await page.locator('#recordDialog [data-picker-shell="recordParentA"] img').getAttribute('src')).includes('unknown-pal-v8.svg')) throw new Error('Selected undiscovered record Pal exposed its image before saving');
+  await page.evaluate(() => { document.querySelector("#recordDialog")?.close(); });
+
+  // Discovery mode Paldex shows only Pals that occur in room records.'''
+          if text.count(marker)!=1: raise SystemExit('smoke discovery marker not found')
+          text=text.replace(marker,insertion)
+
+          marker2='''  if (!(await page.locator("#paldexCount").textContent()).includes("299体")) throw new Error("Unlocked Paldex does not report all 299 Pals");'''
+          replacement2=marker2+'''\n  if (await page.locator("#paldexGrid [data-pal-detail]").count() !== 299) throw new Error("Unlocked Paldex did not render all 299 Pals at once");\n  if (!(await page.locator("#paldexLoadMore").isHidden())) throw new Error("The obsolete Paldex load-more button is still visible");'''
+          if text.count(marker2)!=1: raise SystemExit('smoke Paldex marker not found')
+          text=text.replace(marker2,replacement2)
+          text=text.replace('Browser smoke tests passed for forward and reverse hints, fixed position reveals, discovery locking, guide mode, favorite spacing, image outage, and mobile layout.', 'Browser smoke tests passed for hidden undiscovered picker images, text-only unset eggs, full Paldex rendering, hints, discovery locking, guide mode, image outage, and mobile layout.')
+          smoke.write_text(text,encoding='utf-8')
+
+          architecture=Path('ARCHITECTURE.md')
+          text=architecture.read_text(encoding='utf-8').replace('# パル配合ノート v106 アーキテクチャ','# パル配合ノート v107 アーキテクチャ',1)
+          if '## 発見記録モードの表示保護' not in text:
+              text += '''\n## 発見記録モードの表示保護\n\n- 配合記録の入力候補ではパル名を維持し、未発見パルの画像だけを未発見アイコンへ置換\n- 選択後も保存するまでは未発見パルの実画像を表示しない\n- 全パル解放モードでは入力候補も実画像を表示\n- タマゴ未設定は平凡なタマゴ画像を使わず、文字だけで表示\n- パル図鑑は対象パルを一度に全件描画し、「さらに表示」を使用しない\n'''
+          architecture.write_text(text,encoding='utf-8')
+          PY
+
+      - name: Validate changed source
+        run: |
+          node --check app-actions.js
+          node --check app-records.js
+          node --check app-explore.js
+          node --check scripts/smoke-browser.mjs
+          grep -q '?v=107' index.html
+          grep -q 'palSiteVersion = "107"' config.js
+          ! grep -q 'pals.slice(0,state.paldexLimit)' app-explore.js
+
+      - name: Commit changes to feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app-actions.js app-records.js app-explore.js style-discovery-v105.css index.html config.js .github/workflows/validate.yml scripts/smoke-browser.mjs ARCHITECTURE.md
+          git commit -m "[apply-v107] Protect undiscovered images and simplify Paldex"
+          git push origin HEAD:fix-discovery-picker-egg-paldex-v107
