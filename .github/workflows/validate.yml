@@ -20,6 +20,7 @@ jobs:
           node --check app-review.js
           node --check app-actions.js
           node --check scripts/validate-pal-images.mjs
+          node --check scripts/diagnose-v102-loader.mjs
       - name: Validate entrypoint references
         run: |
           python - <<'PY'
@@ -51,9 +52,18 @@ jobs:
               assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
           print(f'Validated {len(ids)} unique IDs')
           PY
+      - name: Download fixed Palworld data
+        run: |
+          PAL_COMMIT="bbe68288a4404ea22467d53b73aee15a70abaa97"
+          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${PAL_COMMIT}/data/sources/paldb-1.0-20260715.json" -o /tmp/paldb.json
+          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${PAL_COMMIT}/data/sources/palworld-icon-manifest.json" -o /tmp/icon-manifest.json
+          curl -fsSL "https://api.github.com/repos/bowenchen-1/palworld-guide/git/trees/${PAL_COMMIT}?recursive=1" -o /tmp/source-tree.json
+          curl -fsSL "https://raw.githubusercontent.com/zaigie/palworld-server-tool/f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json" -o /tmp/localization.json
+          curl -fsSL "https://raw.githubusercontent.com/palcalc-tools/palworld-1.0-calculator/979258dfb579f1c5d068d41be0f5dd7297b401a8/index.html" -o /tmp/palcalc.html
+      - name: Reproduce v102 loader
+        run: node scripts/diagnose-v102-loader.mjs /tmp/paldb.json /tmp/localization.json /tmp/palcalc.html /tmp/icon-manifest.json
       - name: Validate fixed Palworld 1.0 breeding engine
         run: |
-          curl -fsSL "https://raw.githubusercontent.com/palcalc-tools/palworld-1.0-calculator/979258dfb579f1c5d068d41be0f5dd7297b401a8/index.html" -o /tmp/palcalc.html
           node <<'NODE'
           const fs = require('fs');
           const text = fs.readFileSync('/tmp/palcalc.html', 'utf8');
@@ -73,9 +83,4 @@ jobs:
           console.log(`Validated ${pals.length} forms, ${unique.length} unique rows, ${directional.length} directional rows`);
           NODE
       - name: Validate all Pal image mappings and source files
-        run: |
-          COMMIT="bbe68288a4404ea22467d53b73aee15a70abaa97"
-          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${COMMIT}/data/sources/paldb-1.0-20260715.json" -o /tmp/paldb.json
-          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${COMMIT}/data/sources/palworld-icon-manifest.json" -o /tmp/icon-manifest.json
-          curl -fsSL "https://api.github.com/repos/bowenchen-1/palworld-guide/git/trees/${COMMIT}?recursive=1" -o /tmp/source-tree.json
-          node scripts/validate-pal-images.mjs /tmp/paldb.json /tmp/icon-manifest.json /tmp/source-tree.json
+        run: node scripts/validate-pal-images.mjs /tmp/paldb.json /tmp/icon-manifest.json /tmp/source-tree.json
