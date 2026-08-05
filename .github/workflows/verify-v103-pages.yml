@@ -15,10 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install browser runtime
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
+
       - name: Wait for v103 GitHub Pages
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
@@ -31,12 +33,21 @@ jobs:
           done
           echo "v103 was not published within the expected time."
           exit 1
+
       - name: Test published GitHub Pages
         env:
           APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
         run: node scripts/smoke-browser.mjs
+
       - name: Record verification result
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
+          RESULT: ${{ job.status }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          gh pr comment 11 --body "✅ GitHub Pages v103 public verification succeeded for commit ${GITHUB_SHA}. Chromium confirmed 299 Pals / 299 unique IDs / 299 local images, image-manifest outage resilience, correct separated error status, and mobile layout without horizontal overflow."
+          if [ "$RESULT" = "success" ]; then
+            gh pr comment 11 --body "✅ GitHub Pages v103 public verification succeeded for commit ${GITHUB_SHA}. Chromium confirmed 299 Pals / 299 unique IDs / 299 local images, image-manifest outage resilience, correct separated error status, and mobile layout without horizontal overflow. Run: ${RUN_URL}"
+          else
+            gh pr comment 11 --body "❌ GitHub Pages v103 public verification failed for commit ${GITHUB_SHA}. Review the workflow log before reporting completion. Run: ${RUN_URL}"
+          fi
