@@ -42,7 +42,7 @@
       const label = sequential ? `${slot + 1}文字目` : position.label;
       const character = unavailable ? "×" : hintCharacterAt(value, position.key);
 
-      return `<button class="hint-position${visible ? " is-revealed" : ""}${unavailable ? " is-unavailable" : ""}" type="button" ${attribute} ${visible ? "disabled" : ""}><span>${label}</span><strong>${visible ? escapeHtml(character) : "?"}</strong></button>`;
+      return `<button class="hint-position${isRevealed ? " is-revealed" : ""}${unavailable ? " is-unavailable" : ""}" type="button" ${attribute} ${visible ? "disabled" : ""}><span>${label}</span><strong>${visible ? escapeHtml(character) : "?"}</strong></button>`;
     }).join("");
 
     const guidance = sequential
