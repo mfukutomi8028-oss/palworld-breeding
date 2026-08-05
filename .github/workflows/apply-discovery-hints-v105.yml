@@ -1,3 +1,4 @@
+# Triggered after workflow registration
 name: Apply discovery and hints v105
 
 on:
