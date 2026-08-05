@@ -62,9 +62,9 @@ function renderPaldex(){
   const pals=filteredPals(),available=availablePalsForPaldex();
   if(state.selectedPalId&&!available.some(p=>p.id===state.selectedPalId))state.selectedPalId="";
   byId("paldexCount").textContent=state.guideUnlocked?`${pals.length}体`:`発見 ${pals.length} / ${state.pals.length}体`;
-  const visible=pals.slice(0,state.paldexLimit);
+  const visible=pals;
   byId("paldexGrid").innerHTML=visible.length?visible.map(p=>`<button class="pal-card-button${state.selectedPalId===p.id?" is-selected":""}" type="button" data-pal-detail="${p.id}"><span class="pal-card-button__no">No.${escapeHtml(p.no)}</span><img ${palImageAttrs(p)}><strong>${escapeHtml(p.name)}</strong><div class="element-list">${p.elements.map(e=>`<span class="element-tag">${e}</span>`).join("")}</div></button>`).join(""):`<div class="empty-state paldex-empty"><img src="${PLAIN_EGG_ICON}" alt=""><div><h3>まだ発見したパルがいません</h3><p>配合記録へ親または結果パルを登録すると、図鑑に追加されます。</p></div></div>`;
-  byId("paldexLoadMore").hidden=!visible.length||visible.length>=pals.length;byId("paldexLoadMore").textContent=`さらに表示（残り${Math.max(0,pals.length-visible.length)}体）`;
+  byId("paldexLoadMore").hidden=true;
   $$('[data-pal-detail]',byId("paldexGrid")).forEach(button=>button.addEventListener("click",()=>{state.selectedPalId=button.dataset.palDetail;renderPaldex();renderPalDetail();if(matchMedia("(max-width:680px)").matches)openPalModal();}));attachImageFallbacks(byId("paldexGrid"));renderPalDetail();
 }
 
