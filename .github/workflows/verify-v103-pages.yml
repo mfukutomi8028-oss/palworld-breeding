@@ -1,0 +1,42 @@
+name: Verify v103 published Pages once
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  verify:
+    if: contains(github.event.head_commit.message, '[verify-v103-pages]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Wait for v103 GitHub Pages
+        run: |
+          URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
+          for attempt in $(seq 1 40); do
+            if curl -fsS "$URL" | grep -q 'app-data.js?v=103'; then
+              echo "v103 is published."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "v103 was not published within the expected time."
+          exit 1
+      - name: Test published GitHub Pages
+        env:
+          APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
+        run: node scripts/smoke-browser.mjs
+      - name: Record verification result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr comment 11 --body "✅ GitHub Pages v103 public verification succeeded for commit ${GITHUB_SHA}. Chromium confirmed 299 Pals / 299 unique IDs / 299 local images, image-manifest outage resilience, correct separated error status, and mobile layout without horizontal overflow."
