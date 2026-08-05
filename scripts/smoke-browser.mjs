@@ -47,6 +47,7 @@ async function openApp(context, suffix) {
   if (runtime.uniqueIds !== 299) throw new Error(`Expected 299 unique IDs, got ${runtime.uniqueIds}`);
   if (runtime.dataState === "error") throw new Error(`Core data failed: ${runtime.dataBadge}`);
   if (!["ready", "cache"].includes(runtime.imageDataState)) throw new Error(`Image data not ready: ${runtime.imageDataState}`);
+  if (runtime.dataBadge === "配合データ取得失敗") throw new Error("Normal load incorrectly shows a core data failure");
   if (runtime.verifiedImages !== 299) throw new Error(`Expected 299 verified images, got ${runtime.verifiedImages}`);
   if (new Set(runtime.unnumberedIds).size !== 11) throw new Error(`Expected 11 unique unnumbered IDs, got ${runtime.unnumberedIds.length}`);
 
@@ -72,6 +73,7 @@ async function openApp(context, suffix) {
   if (runtime.palCount !== 299 || runtime.uniqueIds !== 299) throw new Error(`Image outage damaged core Pal data: ${JSON.stringify(runtime)}`);
   if (runtime.dataState === "error") throw new Error("Image outage was incorrectly treated as a core data failure");
   if (runtime.imageDataState !== "error") throw new Error(`Expected imageDataState=error, got ${runtime.imageDataState}`);
+  if (runtime.dataBadge !== "画像データ一部取得失敗") throw new Error(`Image outage status is incorrect: ${runtime.dataBadge}`);
   await page.click('[data-view="paldex"]');
   await page.waitForSelector(".pal-card-button");
   const labels = await page.locator(".pal-card-button__no").allTextContents();
