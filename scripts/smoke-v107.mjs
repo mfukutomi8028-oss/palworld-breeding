@@ -88,7 +88,7 @@ async function openApp(context, suffix) {
     }));
     return {
       total: rows.length,
-      knownReal: rows.filter(row => knownIds.includes(row.id)).every(row => row.src.includes("/assets/pals/")),
+      knownReal: rows.filter(row => knownIds.includes(row.id)).every(row => row.src.includes("assets/pals/")),
       unknownHidden: rows.filter(row => !knownIds.includes(row.id)).every(row => row.src.includes("unknown-pal-v8.svg")),
       namesPresent: rows.every(row => Boolean(row.name)),
     };
