@@ -10,34 +10,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check JavaScript syntax
         run: |
           node --check ui-shell.js
           node --check app-core.js
           node --check app-records.js
-          node --check pal-images.js
           node --check app-explore.js
           node --check app-review.js
+          node --check app-data.js
           node --check app-actions.js
-          node --check scripts/validate-pal-images.mjs
-          node --check scripts/diagnose-v102-loader.mjs
-      - name: Validate entrypoint references
+          node --check scripts/validate-v103-data.mjs
+          node --check scripts/smoke-browser.mjs
+
+      - name: Validate entrypoint and local assets
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
+
           html = Path('index.html').read_text(encoding='utf-8')
           refs = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))(?:\?[^\"]*)?"', html)
           missing = [ref for ref in refs if not Path(ref).exists()]
           assert not missing, f'Missing entrypoint files: {missing}'
-          assert 'pal-images.js' in refs, 'Canonical Pal image layer is not loaded'
-          legacy = ['enhancements.js','workflow-v54.js','refinement-v55.js','refinement-v56.js','refinement-v58.js','refinement-v59.js','refinement-v60.js','refinement-v62.js','refinement-v63.js']
+          assert 'app-data.js' in refs, 'Local-first data runtime is not loaded'
+          assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
+          assert '?v=103' in html, 'v103 cache busting is missing'
+
+          required = [
+              'data/pals-v1.json',
+              'data/pal-localization-ja-v1.json',
+              'data/breeding-v1.json',
+              'data/pal-images-v1.json',
+              'data/SOURCES.md',
+              'assets/unknown-pal-v8.svg',
+          ]
+          missing_required = [path for path in required if not Path(path).exists()]
+          assert not missing_required, f'Missing local data/assets: {missing_required}'
+          assert not Path('assets/unknown-pal-v8.png').exists(), 'Invalid legacy placeholder still exists'
+
+          legacy = [
+              'enhancements.js','workflow-v54.js','refinement-v55.js','refinement-v56.js',
+              'refinement-v58.js','refinement-v59.js','refinement-v60.js','refinement-v62.js',
+              'refinement-v63.js','pal-images.js'
+          ]
           bad = [name for name in legacy if name in html]
           assert not bad, f'Legacy files still referenced: {bad}'
-          assert Path('assets/unknown-pal-v8.svg').exists(), 'Unknown Pal placeholder is missing'
-          assert not Path('assets/unknown-pal-v8.png').exists(), 'Invalid legacy placeholder still exists'
           print('Entrypoint references:', refs)
           PY
+
       - name: Validate HTML IDs and CSS braces
         run: |
           python - <<'PY'
@@ -52,35 +73,55 @@ jobs:
               assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
           print(f'Validated {len(ids)} unique IDs')
           PY
-      - name: Download fixed Palworld data
+
+      - name: Validate local Palworld data and images
+        run: node scripts/validate-v103-data.mjs
+
+      - name: Install browser test runtime
         run: |
-          PAL_COMMIT="bbe68288a4404ea22467d53b73aee15a70abaa97"
-          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${PAL_COMMIT}/data/sources/paldb-1.0-20260715.json" -o /tmp/paldb.json
-          curl -fsSL "https://raw.githubusercontent.com/bowenchen-1/palworld-guide/${PAL_COMMIT}/data/sources/palworld-icon-manifest.json" -o /tmp/icon-manifest.json
-          curl -fsSL "https://api.github.com/repos/bowenchen-1/palworld-guide/git/trees/${PAL_COMMIT}?recursive=1" -o /tmp/source-tree.json
-          curl -fsSL "https://raw.githubusercontent.com/zaigie/palworld-server-tool/f45a48ef25ce08a5311a27e55b17062ba0bb4362/web/src/assets/pal.json" -o /tmp/localization.json
-          curl -fsSL "https://raw.githubusercontent.com/palcalc-tools/palworld-1.0-calculator/979258dfb579f1c5d068d41be0f5dd7297b401a8/index.html" -o /tmp/palcalc.html
-      - name: Reproduce v102 loader
-        run: node scripts/diagnose-v102-loader.mjs /tmp/paldb.json /tmp/localization.json /tmp/palcalc.html /tmp/icon-manifest.json
-      - name: Validate fixed Palworld 1.0 breeding engine
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start GitHub Pages-compatible local server
         run: |
-          node <<'NODE'
-          const fs = require('fs');
-          const text = fs.readFileSync('/tmp/palcalc.html', 'utf8');
-          const marker = 'const DATA = ';
-          const start = text.indexOf(marker);
-          if (start < 0) throw new Error('DATA marker not found');
-          const jsonStart = start + marker.length;
-          const jsonEnd = text.indexOf(';\nconst ', jsonStart);
-          if (jsonEnd < 0) throw new Error('DATA end marker not found');
-          const data = JSON.parse(text.slice(jsonStart, jsonEnd));
-          const pals = Object.keys(data.pals || {});
-          const unique = Array.isArray(data.unique) ? data.unique : [];
-          const directional = unique.filter(([a,b]) => new Set([a,b]).has('CatMage') && new Set([a,b]).has('FoxMage'));
-          if (pals.length !== 299) throw new Error(`Expected 299 forms, got ${pals.length}`);
-          if (unique.length !== 164) throw new Error(`Expected 164 unique rows, got ${unique.length}`);
-          if (directional.length !== 2) throw new Error(`Expected 2 gender-directional rows, got ${directional.length}`);
-          console.log(`Validated ${pals.length} forms, ${unique.length} unique rows, ${directional.length} directional rows`);
-          NODE
-      - name: Validate all Pal image mappings and source files
-        run: node scripts/validate-pal-images.mjs /tmp/paldb.json /tmp/icon-manifest.json /tmp/source-tree.json
+          python3 -m http.server 4173 > /tmp/pal-site.log 2>&1 &
+          echo $! > /tmp/pal-site.pid
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/pal-site.log
+          exit 1
+
+      - name: Browser smoke tests
+        env:
+          APP_URL: http://127.0.0.1:4173/
+        run: node scripts/smoke-browser.mjs
+
+  public-pages-smoke:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Wait for GitHub Pages v103 deployment
+        run: |
+          URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
+          for attempt in $(seq 1 30); do
+            if curl -fsS "$URL" | grep -q 'app-data.js?v=103'; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "GitHub Pages did not publish v103 within the expected time."
+          exit 1
+      - name: Test published GitHub Pages
+        env:
+          APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
+        run: node scripts/smoke-browser.mjs
