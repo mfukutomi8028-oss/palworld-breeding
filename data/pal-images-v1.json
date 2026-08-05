@@ -1,0 +1,2871 @@
+{
+  "name": "Palworld in-game UI icon pack",
+  "generatedAt": "2026-07-15",
+  "format": "PNG with transparent backgrounds",
+  "source": {
+    "gameAssetNames": true,
+    "mirror": "https://github.com/mlg404/palworld-paldex-api",
+    "gameFileReference": "https://palworld.wiki.gg/wiki/Game_Files/Guide"
+  },
+  "note": "The mapping covers all 300 rows. partnerSkillKey is the current game-data key; displayIconFile is a transparent PNG Paldeck icon for the corresponding Pal. Gumoss (Special) intentionally reuses the Gumoss display icon because it is an appearance-only special variant.",
+  "elements": [
+    {
+      "id": "neutral",
+      "nameZh": "无",
+      "file": "elements/T_Icon_element_s_00.png",
+      "originalAsset": "T_Icon_element_s_00.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/neutral.png"
+    },
+    {
+      "id": "fire",
+      "nameZh": "火",
+      "file": "elements/T_Icon_element_s_01.png",
+      "originalAsset": "T_Icon_element_s_01.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/fire.png"
+    },
+    {
+      "id": "water",
+      "nameZh": "水",
+      "file": "elements/T_Icon_element_s_02.png",
+      "originalAsset": "T_Icon_element_s_02.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/water.png"
+    },
+    {
+      "id": "electric",
+      "nameZh": "雷",
+      "file": "elements/T_Icon_element_s_03.png",
+      "originalAsset": "T_Icon_element_s_03.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/electric.png"
+    },
+    {
+      "id": "grass",
+      "nameZh": "草",
+      "file": "elements/T_Icon_element_s_04.png",
+      "originalAsset": "T_Icon_element_s_04.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/grass.png"
+    },
+    {
+      "id": "dark",
+      "nameZh": "暗",
+      "file": "elements/T_Icon_element_s_05.png",
+      "originalAsset": "T_Icon_element_s_05.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/dark.png"
+    },
+    {
+      "id": "dragon",
+      "nameZh": "龙",
+      "file": "elements/T_Icon_element_s_06.png",
+      "originalAsset": "T_Icon_element_s_06.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/dragon.png"
+    },
+    {
+      "id": "ground",
+      "nameZh": "地",
+      "file": "elements/T_Icon_element_s_07.png",
+      "originalAsset": "T_Icon_element_s_07.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/ground.png"
+    },
+    {
+      "id": "ice",
+      "nameZh": "冰",
+      "file": "elements/T_Icon_element_s_08.png",
+      "originalAsset": "T_Icon_element_s_08.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/elements/ice.png"
+    }
+  ],
+  "works": [
+    {
+      "id": "kindling",
+      "nameZh": "生火",
+      "file": "work_suitability/T_icon_palwork_00.png",
+      "originalAsset": "T_icon_palwork_00.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/kindling.png"
+    },
+    {
+      "id": "watering",
+      "nameZh": "浇水",
+      "file": "work_suitability/T_icon_palwork_01.png",
+      "originalAsset": "T_icon_palwork_01.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/watering.png"
+    },
+    {
+      "id": "planting",
+      "nameZh": "播种",
+      "file": "work_suitability/T_icon_palwork_02.png",
+      "originalAsset": "T_icon_palwork_02.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/planting.png"
+    },
+    {
+      "id": "generating_electricity",
+      "nameZh": "发电",
+      "file": "work_suitability/T_icon_palwork_03.png",
+      "originalAsset": "T_icon_palwork_03.png",
+      "source": "https://palworld.gg/images/icons/T_icon_palwork_03.png"
+    },
+    {
+      "id": "handiwork",
+      "nameZh": "手工",
+      "file": "work_suitability/T_icon_palwork_04.png",
+      "originalAsset": "T_icon_palwork_04.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/handiwork.png"
+    },
+    {
+      "id": "gathering",
+      "nameZh": "采集",
+      "file": "work_suitability/T_icon_palwork_05.png",
+      "originalAsset": "T_icon_palwork_05.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/gathering.png"
+    },
+    {
+      "id": "lumbering",
+      "nameZh": "伐木",
+      "file": "work_suitability/T_icon_palwork_06.png",
+      "originalAsset": "T_icon_palwork_06.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/lumbering.png"
+    },
+    {
+      "id": "mining",
+      "nameZh": "采矿",
+      "file": "work_suitability/T_icon_palwork_07.png",
+      "originalAsset": "T_icon_palwork_07.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/mining.png"
+    },
+    {
+      "id": "medicine_production",
+      "nameZh": "制药",
+      "file": "work_suitability/T_icon_palwork_08.png",
+      "originalAsset": "T_icon_palwork_08.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/medicine_production.png"
+    },
+    {
+      "id": "oil_extracting",
+      "nameZh": "采油",
+      "file": "work_suitability/T_icon_palwork_09.png",
+      "originalAsset": "T_icon_palwork_09.png",
+      "source": "https://palworld.gg/images/icons/T_icon_palwork_09.png"
+    },
+    {
+      "id": "cooling",
+      "nameZh": "冷却",
+      "file": "work_suitability/T_icon_palwork_10.png",
+      "originalAsset": "T_icon_palwork_10.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/cooling.png"
+    },
+    {
+      "id": "transporting",
+      "nameZh": "搬运",
+      "file": "work_suitability/T_icon_palwork_11.png",
+      "originalAsset": "T_icon_palwork_11.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/transporting.png"
+    },
+    {
+      "id": "farming",
+      "nameZh": "牧场",
+      "file": "work_suitability/T_icon_palwork_12.png",
+      "originalAsset": "T_icon_palwork_12.png",
+      "source": "https://raw.githubusercontent.com/mlg404/palworld-paldex-api/main/public/images/works/farming.png"
+    }
+  ],
+  "partnerSkills": [
+    {
+      "pal": "Lamball",
+      "palNumber": "1",
+      "partnerSkill": "Fluffy Shield",
+      "partnerSkillKey": "005",
+      "displayIconFile": "partner_skills/001_Lamball_partner.png",
+      "displayIconAsset": "T_SheepBall_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cattiva",
+      "palNumber": "2",
+      "partnerSkill": "Cat Helper",
+      "partnerSkillKey": "WeightDown",
+      "displayIconFile": "partner_skills/002_Cattiva_partner.png",
+      "displayIconAsset": "T_PinkCat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Chikipi",
+      "palNumber": "3",
+      "partnerSkill": "Egg Layer",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/003_Chikipi_partner.png",
+      "displayIconAsset": "T_ChickenPal_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lifmunk",
+      "palNumber": "4",
+      "partnerSkill": "Lifmunk Recoil",
+      "partnerSkillKey": "003",
+      "displayIconFile": "partner_skills/004_Lifmunk_partner.png",
+      "displayIconAsset": "T_Carbunclo_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Fuack",
+      "palNumber": "5",
+      "partnerSkill": "Surfing Slam",
+      "partnerSkillKey": "AttackCharge",
+      "displayIconFile": "partner_skills/005_Fuack_partner.png",
+      "displayIconAsset": "T_BluePlatypus_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Fuack Ignis",
+      "palNumber": "5B",
+      "partnerSkill": "Fire Tackle",
+      "partnerSkillKey": "AttackCharge",
+      "displayIconFile": "partner_skills/006_Fuack_Ignis_partner.png",
+      "displayIconAsset": "T_BluePlatypus_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Vixy",
+      "palNumber": "6",
+      "partnerSkill": "Dig Here!",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/007_Vixy_partner.png",
+      "displayIconAsset": "T_CuteFox_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Celaray",
+      "palNumber": "7",
+      "partnerSkill": "Zephyr Glider",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/008_Celaray_partner.png",
+      "displayIconAsset": "T_FlyingManta_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Celaray Lux",
+      "palNumber": "7B",
+      "partnerSkill": "Jolt Glider",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/009_Celaray_Lux_partner.png",
+      "displayIconAsset": "T_FlyingManta_Thunder_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cremis",
+      "palNumber": "8",
+      "partnerSkill": "Fluffy Wool",
+      "partnerSkillKey": "PalDefence_Normal",
+      "displayIconFile": "partner_skills/010_Cremis_partner.png",
+      "displayIconAsset": "T_WoolFox_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Croajiro",
+      "palNumber": "9",
+      "partnerSkill": "Leap Stance",
+      "partnerSkillKey": "FrogJump",
+      "displayIconFile": "partner_skills/011_Croajiro_partner.png",
+      "displayIconAsset": "T_KendoFrog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Croajiro Noct",
+      "palNumber": "9B",
+      "partnerSkill": "Shadow Stance",
+      "partnerSkillKey": "FrogJump",
+      "displayIconFile": "partner_skills/012_Croajiro_Noct_partner.png",
+      "displayIconAsset": "T_KendoFrog_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Herbil",
+      "palNumber": "10",
+      "partnerSkill": "Herbil Pulse",
+      "partnerSkillKey": "HPRecovery",
+      "displayIconFile": "partner_skills/013_Herbil_partner.png",
+      "displayIconAsset": "T_LeafMomonga_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Teafant",
+      "palNumber": "11",
+      "partnerSkill": "Soothing Shower",
+      "partnerSkillKey": "004",
+      "displayIconFile": "partner_skills/014_Teafant_partner.png",
+      "displayIconAsset": "T_Ganesha_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gumoss",
+      "palNumber": "12",
+      "partnerSkill": "Logging Assistance",
+      "partnerSkillKey": "Deforest",
+      "displayIconFile": "partner_skills/015_Gumoss_partner.png",
+      "displayIconAsset": "T_PlantSlime_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gumoss (Special)",
+      "palNumber": "12S",
+      "partnerSkill": "Logging Assistance",
+      "partnerSkillKey": "Deforest",
+      "displayIconFile": "partner_skills/015_Gumoss_partner.png",
+      "displayIconAsset": "T_PlantSlime_icon_normal",
+      "source": "https://palworld.wiki.gg/wiki/Gumoss"
+    },
+    {
+      "pal": "Pupperai",
+      "palNumber": "13",
+      "partnerSkill": "Best Boy",
+      "partnerSkillKey": "AttackSpeed_Combat",
+      "displayIconFile": "partner_skills/016_Pupperai_partner.png",
+      "displayIconAsset": "T_SamuraiDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Clovee",
+      "palNumber": "14",
+      "partnerSkill": "Happy Clover",
+      "partnerSkillKey": "WorkRank_Collection",
+      "displayIconFile": "partner_skills/017_Clovee_partner.png",
+      "displayIconAsset": "T_CloverFairy_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jolthog",
+      "palNumber": "15",
+      "partnerSkill": "Jolt Bomb",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/018_Jolthog_partner.png",
+      "displayIconAsset": "T_Hedgehog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jolthog Cryst",
+      "palNumber": "15B",
+      "partnerSkill": "Cold Bomb",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/019_Jolthog_Cryst_partner.png",
+      "displayIconAsset": "T_Hedgehog_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Depresso",
+      "palNumber": "16",
+      "partnerSkill": "Caffeine Inoculation",
+      "partnerSkillKey": "006",
+      "displayIconFile": "partner_skills/020_Depresso_partner.png",
+      "displayIconAsset": "T_NegativeKoala_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pengullet",
+      "palNumber": "17",
+      "partnerSkill": "Pengullet Launcher",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/021_Pengullet_partner.png",
+      "displayIconAsset": "T_Penguin_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pengullet Lux",
+      "palNumber": "17B",
+      "partnerSkill": "Pengullet Lux Launcher",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/022_Pengullet_Lux_partner.png",
+      "displayIconAsset": "T_Penguin_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Penking",
+      "palNumber": "18",
+      "partnerSkill": "Brave Sailor",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/023_Penking_partner.png",
+      "displayIconAsset": "T_CaptainPenguin_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Penking Lux",
+      "palNumber": "18B",
+      "partnerSkill": "Unyielding Storm Commander",
+      "partnerSkillKey": "WeakPointDamageUp",
+      "displayIconFile": "partner_skills/024_Penking_Lux_partner.png",
+      "displayIconAsset": "T_CaptainPenguin_Black_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Hoocrates",
+      "palNumber": "19",
+      "partnerSkill": "Dark Knowledge",
+      "partnerSkillKey": "PalDefence_Dark",
+      "displayIconFile": "partner_skills/025_Hoocrates_partner.png",
+      "displayIconAsset": "T_WizardOwl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Melpaca",
+      "palNumber": "20",
+      "partnerSkill": "Pacapaca Wool",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/026_Melpaca_partner.png",
+      "displayIconAsset": "T_Alpaca_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kingpaca",
+      "palNumber": "21",
+      "partnerSkill": "King of Muscles",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/027_Kingpaca_partner.png",
+      "displayIconAsset": "T_KingAlpaca_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kingpaca Cryst",
+      "palNumber": "21B",
+      "partnerSkill": "Coldhearted King",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/028_Kingpaca_Cryst_partner.png",
+      "displayIconAsset": "T_KingAlpaca_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Daedream",
+      "palNumber": "22",
+      "partnerSkill": "Dream Chaser",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/029_Daedream_partner.png",
+      "displayIconAsset": "T_DreamDemon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tanzee",
+      "palNumber": "23",
+      "partnerSkill": "Cheery Rifle",
+      "partnerSkillKey": "003",
+      "displayIconFile": "partner_skills/030_Tanzee_partner.png",
+      "displayIconAsset": "T_Monkey_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tanzee Ignis",
+      "palNumber": "23B",
+      "partnerSkill": "Chipper Chimp Gunfire",
+      "partnerSkillKey": "003",
+      "displayIconFile": "partner_skills/031_Tanzee_Ignis_partner.png",
+      "displayIconAsset": "T_Monkey_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Nox",
+      "palNumber": "24",
+      "partnerSkill": "Kuudere",
+      "partnerSkillKey": "007",
+      "displayIconFile": "partner_skills/032_Nox_partner.png",
+      "displayIconAsset": "T_NightFox_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Flambelle",
+      "palNumber": "25",
+      "partnerSkill": "Magma Tears",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/033_Flambelle_partner.png",
+      "displayIconAsset": "T_LavaGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Rooby",
+      "palNumber": "26",
+      "partnerSkill": "Tiny Spark",
+      "partnerSkillKey": "PalDefence_Fire",
+      "displayIconFile": "partner_skills/034_Rooby_partner.png",
+      "displayIconAsset": "T_FlameBambi_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mau",
+      "palNumber": "27",
+      "partnerSkill": "Gold Digger",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/035_Mau_partner.png",
+      "displayIconAsset": "T_Bastet_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mau Cryst",
+      "palNumber": "27B",
+      "partnerSkill": "Icy Whispers",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/036_Mau_Cryst_partner.png",
+      "displayIconAsset": "T_Bastet_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Rushoar",
+      "palNumber": "28",
+      "partnerSkill": "Hard Head",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/037_Rushoar_partner.png",
+      "displayIconAsset": "T_Boar_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Foxparks",
+      "palNumber": "29",
+      "partnerSkill": "Huggy Fire",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/038_Foxparks_partner.png",
+      "displayIconAsset": "T_Kitsunebi_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Foxparks Cryst",
+      "palNumber": "29B",
+      "partnerSkill": "Huggy Frost",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/039_Foxparks_Cryst_partner.png",
+      "displayIconAsset": "T_Kitsunebi_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Killamari",
+      "palNumber": "30",
+      "partnerSkill": "Fried Squid",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/040_Killamari_partner.png",
+      "displayIconAsset": "T_NegativeOctopus_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Killamari Primo",
+      "palNumber": "30B",
+      "partnerSkill": "Fried Killamari",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/041_Killamari_Primo_partner.png",
+      "displayIconAsset": "T_NegativeOctopus_Neutral_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Fuddler",
+      "palNumber": "31",
+      "partnerSkill": "Mining Assistance",
+      "partnerSkillKey": "Mining",
+      "displayIconFile": "partner_skills/042_Fuddler_partner.png",
+      "displayIconAsset": "T_CuteMole_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Eikthyrdeer",
+      "palNumber": "32",
+      "partnerSkill": "Guardian of the Forest",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/043_Eikthyrdeer_partner.png",
+      "displayIconAsset": "T_Deer_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Eikthyrdeer Terra",
+      "palNumber": "32B",
+      "partnerSkill": "Guardian of the Golden Forest",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/044_Eikthyrdeer_Terra_partner.png",
+      "displayIconAsset": "T_Deer_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Direhowl",
+      "palNumber": "33",
+      "partnerSkill": "Direhowl Rider",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/045_Direhowl_partner.png",
+      "displayIconAsset": "T_Garm_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Caprity",
+      "palNumber": "34",
+      "partnerSkill": "Berry Picker",
+      "partnerSkillKey": "PartyFeeding",
+      "displayIconFile": "partner_skills/046_Caprity_partner.png",
+      "displayIconAsset": "T_BerryGoat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Caprity Noct",
+      "palNumber": "34B",
+      "partnerSkill": "Venom Picker",
+      "partnerSkillKey": "PartyFeeding",
+      "displayIconFile": "partner_skills/047_Caprity_Noct_partner.png",
+      "displayIconAsset": "T_BerryGoat_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Swee",
+      "palNumber": "35",
+      "partnerSkill": "Fluffy",
+      "partnerSkillKey": "TribeMember",
+      "displayIconFile": "partner_skills/048_Swee_partner.png",
+      "displayIconAsset": "T_MopBaby_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sweepa",
+      "palNumber": "36",
+      "partnerSkill": "King of Fluff",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/049_Sweepa_partner.png",
+      "displayIconAsset": "T_MopKing_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Turtacle",
+      "palNumber": "37",
+      "partnerSkill": "Spikey Carrier",
+      "partnerSkillKey": "WeightDown",
+      "displayIconFile": "partner_skills/050_Turtacle_partner.png",
+      "displayIconAsset": "T_TentacleTurtle_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Turtacle Terra",
+      "palNumber": "37B",
+      "partnerSkill": "Shiny Hauler",
+      "partnerSkillKey": "WeightDown",
+      "displayIconFile": "partner_skills/051_Turtacle_Terra_partner.png",
+      "displayIconAsset": "T_TentacleTurtle_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Hangyu",
+      "palNumber": "38",
+      "partnerSkill": "Flying Trapeze",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/052_Hangyu_partner.png",
+      "displayIconAsset": "T_WindChimes_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Hangyu Cryst",
+      "palNumber": "38B",
+      "partnerSkill": "Winter Trapeze",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/053_Hangyu_Cryst_partner.png",
+      "displayIconAsset": "T_WindChimes_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Woolipop",
+      "palNumber": "39",
+      "partnerSkill": "Candy Pop",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/054_Woolipop_partner.png",
+      "displayIconAsset": "T_SweetsSheep_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Woolipop Terra",
+      "palNumber": "39B",
+      "partnerSkill": "Bitter Pop",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/055_Woolipop_Terra_partner.png",
+      "displayIconAsset": "T_SweetsSheep_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mozzarina",
+      "palNumber": "40",
+      "partnerSkill": "Milk Maker",
+      "partnerSkillKey": "015",
+      "displayIconFile": "partner_skills/056_Mozzarina_partner.png",
+      "displayIconAsset": "T_CowPal_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Azurobe",
+      "palNumber": "41",
+      "partnerSkill": "Waterwing Dance",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/057_Azurobe_partner.png",
+      "displayIconAsset": "T_BlueDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Azurobe Cryst",
+      "palNumber": "41B",
+      "partnerSkill": "Icewing Dance",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/058_Azurobe_Cryst_partner.png",
+      "displayIconAsset": "T_BlueDragon_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sparkit",
+      "palNumber": "42",
+      "partnerSkill": "Static Electricity",
+      "partnerSkillKey": "PalDefence_Electricity",
+      "displayIconFile": "partner_skills/059_Sparkit_partner.png",
+      "displayIconAsset": "T_ElecCat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kelpsea",
+      "palNumber": "43",
+      "partnerSkill": "Aqua Spout",
+      "partnerSkillKey": "PalDefence_Water",
+      "displayIconFile": "partner_skills/060_Kelpsea_partner.png",
+      "displayIconAsset": "T_Kelpie_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kelpsea Ignis",
+      "palNumber": "43B",
+      "partnerSkill": "Lava Spout",
+      "partnerSkillKey": "PalDefence_Fire",
+      "displayIconFile": "partner_skills/061_Kelpsea_Ignis_partner.png",
+      "displayIconAsset": "T_Kelpie_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ribbuny",
+      "palNumber": "44",
+      "partnerSkill": "Happy-Go-Lucky Bunny",
+      "partnerSkillKey": "PalDefence_Normal",
+      "displayIconFile": "partner_skills/062_Ribbuny_partner.png",
+      "displayIconAsset": "T_PinkRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ribbuny Botan",
+      "palNumber": "44B",
+      "partnerSkill": "Ground 'n' Pound",
+      "partnerSkillKey": "PalDefence_Grass",
+      "displayIconFile": "partner_skills/063_Ribbuny_Botan_partner.png",
+      "displayIconAsset": "T_PinkRabbit_Grass_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jelliette",
+      "palNumber": "45",
+      "partnerSkill": "Jelliette Drop",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/064_Jelliette_partner.png",
+      "displayIconAsset": "T_JellyfishFairy_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jellroy",
+      "palNumber": "46",
+      "partnerSkill": "Jellroy Drop",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/065_Jellroy_partner.png",
+      "displayIconAsset": "T_JellyfishGhost_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Amione",
+      "palNumber": "47",
+      "partnerSkill": "Magical Twin Powers",
+      "partnerSkillKey": "WorkRank_Watering",
+      "displayIconFile": "partner_skills/066_Amione_partner.png",
+      "displayIconAsset": "T_ClioneTwins_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gloopie",
+      "palNumber": "48",
+      "partnerSkill": "Sticky Princess",
+      "partnerSkillKey": "020",
+      "displayIconFile": "partner_skills/067_Gloopie_partner.png",
+      "displayIconAsset": "T_OctopusGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gloopie Primo",
+      "palNumber": "48B",
+      "partnerSkill": "Cephalo-Princess",
+      "partnerSkillKey": "PalDefence_Water",
+      "displayIconFile": "partner_skills/068_Gloopie_Primo_partner.png",
+      "displayIconAsset": "T_OctopusGirl_Neutral_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Galeclaw",
+      "palNumber": "49",
+      "partnerSkill": "Galeclaw Glider",
+      "partnerSkillKey": "008",
+      "displayIconFile": "partner_skills/069_Galeclaw_partner.png",
+      "displayIconAsset": "T_Eagle_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wispaw",
+      "palNumber": "50",
+      "partnerSkill": "Death-Cheating Feline",
+      "partnerSkillKey": "CaptureMaster",
+      "displayIconFile": "partner_skills/070_Wispaw_partner.png",
+      "displayIconAsset": "T_GhostBlackCat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Nitewing",
+      "palNumber": "51",
+      "partnerSkill": "Travel Companion",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/071_Nitewing_partner.png",
+      "displayIconAsset": "T_HawkBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tombat",
+      "palNumber": "52",
+      "partnerSkill": "Ultrasonic Sensor",
+      "partnerSkillKey": "007",
+      "displayIconFile": "partner_skills/072_Tombat_partner.png",
+      "displayIconAsset": "T_CatBat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tocotoco",
+      "palNumber": "53",
+      "partnerSkill": "Eggbomb Launcher",
+      "partnerSkillKey": "002",
+      "displayIconFile": "partner_skills/073_Tocotoco_partner.png",
+      "displayIconAsset": "T_ColorfulBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Univolt",
+      "palNumber": "54",
+      "partnerSkill": "Swift Deity",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/074_Univolt_partner.png",
+      "displayIconAsset": "T_Kirin_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Univolt Cryst",
+      "palNumber": "54B",
+      "partnerSkill": "Frigid Deity",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/075_Univolt_Cryst_partner.png",
+      "displayIconAsset": "T_Kirin_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gobfin",
+      "palNumber": "55",
+      "partnerSkill": "Angry Shark",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/076_Gobfin_partner.png",
+      "displayIconAsset": "T_SharkKid_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gobfin Ignis",
+      "palNumber": "55B",
+      "partnerSkill": "Angry Shark",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/077_Gobfin_Ignis_partner.png",
+      "displayIconAsset": "T_SharkKid_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Loupmoon",
+      "palNumber": "56",
+      "partnerSkill": "Dark Gleam Strike",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/078_Loupmoon_partner.png",
+      "displayIconAsset": "T_Werewolf_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Loupmoon Cryst",
+      "palNumber": "56B",
+      "partnerSkill": "Frozen Gleam Strike",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/079_Loupmoon_Cryst_partner.png",
+      "displayIconAsset": "T_Werewolf_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cawgnito",
+      "palNumber": "57",
+      "partnerSkill": "Eerie Nightstreaker",
+      "partnerSkillKey": "NightVision",
+      "displayIconFile": "partner_skills/080_Cawgnito_partner.png",
+      "displayIconAsset": "T_DarkCrow_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Arsox",
+      "palNumber": "58",
+      "partnerSkill": "Warm Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/081_Arsox_partner.png",
+      "displayIconAsset": "T_FlameBuffalo_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Muffly",
+      "palNumber": "59",
+      "partnerSkill": "Fluffy Flutterer",
+      "partnerSkillKey": "CaptureMaster",
+      "displayIconFile": "partner_skills/082_Muffly_partner.png",
+      "displayIconAsset": "T_FluffyBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bristla",
+      "palNumber": "60",
+      "partnerSkill": "Princess Gaze",
+      "partnerSkillKey": "PalDefence_Grass",
+      "displayIconFile": "partner_skills/083_Bristla_partner.png",
+      "displayIconAsset": "T_LittleBriarRose_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cinnamoth",
+      "palNumber": "61",
+      "partnerSkill": "Mysterious Scales",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/084_Cinnamoth_partner.png",
+      "displayIconAsset": "T_CuteButterfly_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Puffolt",
+      "palNumber": "62",
+      "partnerSkill": "Crackle Booster",
+      "partnerSkillKey": "WorkRank_GenerateElectricity",
+      "displayIconFile": "partner_skills/085_Puffolt_partner.png",
+      "displayIconAsset": "T_ElecPomeranian_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Elphidran",
+      "palNumber": "63",
+      "partnerSkill": "Amicable Holy Dragon",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/086_Elphidran_partner.png",
+      "displayIconAsset": "T_FairyDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Elphidran Aqua",
+      "palNumber": "63B",
+      "partnerSkill": "Amicable Water Dragon",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/087_Elphidran_Aqua_partner.png",
+      "displayIconAsset": "T_FairyDragon_Water_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Vanwyrm",
+      "palNumber": "64",
+      "partnerSkill": "Aerial Marauder",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/088_Vanwyrm_partner.png",
+      "displayIconAsset": "T_BirdDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Vanwyrm Cryst",
+      "palNumber": "64B",
+      "partnerSkill": "Aerial Marauder",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/089_Vanwyrm_Cryst_partner.png",
+      "displayIconAsset": "T_BirdDragon_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Felbat",
+      "palNumber": "65",
+      "partnerSkill": "Life Steal",
+      "partnerSkillKey": "LifeSteel",
+      "displayIconFile": "partner_skills/090_Felbat_partner.png",
+      "displayIconAsset": "T_CatVampire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Vaelet",
+      "palNumber": "66",
+      "partnerSkill": "Purification of Gaia",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/091_Vaelet_partner.png",
+      "displayIconAsset": "T_VioletFairy_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Beegarde",
+      "palNumber": "67",
+      "partnerSkill": "Worker Bee",
+      "partnerSkillKey": "TribeMember",
+      "displayIconFile": "partner_skills/092_Beegarde_partner.png",
+      "displayIconAsset": "T_SoldierBee_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Elizabee",
+      "palNumber": "68",
+      "partnerSkill": "Queen Bee Command",
+      "partnerSkillKey": "TribeLeader",
+      "displayIconFile": "partner_skills/093_Elizabee_partner.png",
+      "displayIconAsset": "T_QueenBee_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lovander",
+      "palNumber": "69",
+      "partnerSkill": "Heart Drain",
+      "partnerSkillKey": "LifeSteel",
+      "displayIconFile": "partner_skills/094_Lovander_partner.png",
+      "displayIconAsset": "T_PinkLizard_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Grintale",
+      "palNumber": "70",
+      "partnerSkill": "Glaring Cat's Eye",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/095_Grintale_partner.png",
+      "displayIconAsset": "T_NaughtyCat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tarantriss",
+      "palNumber": "71",
+      "partnerSkill": "Tarantriss’ Web",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/096_Tarantriss_partner.png",
+      "displayIconAsset": "T_PurpleSpider_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Polapup",
+      "palNumber": "72",
+      "partnerSkill": "Rider of the Snowy Mountain",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/097_Polapup_partner.png",
+      "displayIconAsset": "T_IceSeal_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Polapup Terra",
+      "palNumber": "72B",
+      "partnerSkill": "Snowy Mountain Slider",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/098_Polapup_Terra_partner.png",
+      "displayIconAsset": "T_IceSeal_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Leezpunk",
+      "palNumber": "73",
+      "partnerSkill": "Too Cool to be Seen",
+      "partnerSkillKey": "Stealth",
+      "displayIconFile": "partner_skills/099_Leezpunk_partner.png",
+      "displayIconAsset": "T_LizardMan_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Leezpunk Ignis",
+      "palNumber": "73B",
+      "partnerSkill": "Too Cool to be Seen",
+      "partnerSkillKey": "Stealth",
+      "displayIconFile": "partner_skills/100_Leezpunk_Ignis_partner.png",
+      "displayIconAsset": "T_LizardMan_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gorirat",
+      "palNumber": "74",
+      "partnerSkill": "Full-Power Gorilla Mode",
+      "partnerSkillKey": "006",
+      "displayIconFile": "partner_skills/101_Gorirat_partner.png",
+      "displayIconAsset": "T_Gorilla_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gorirat Terra",
+      "palNumber": "74B",
+      "partnerSkill": "Full-Power Gorilla Pound",
+      "partnerSkillKey": "ClimbingSpeed",
+      "displayIconFile": "partner_skills/102_Gorirat_Terra_partner.png",
+      "displayIconAsset": "T_Gorilla_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Surfent",
+      "palNumber": "75",
+      "partnerSkill": "Swift Swimmer",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/103_Surfent_partner.png",
+      "displayIconAsset": "T_Serpent_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Surfent Terra",
+      "palNumber": "75B",
+      "partnerSkill": "Sand Swimmer",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/104_Surfent_Terra_partner.png",
+      "displayIconAsset": "T_Serpent_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Robinquill",
+      "palNumber": "76",
+      "partnerSkill": "Grounded Archer",
+      "partnerSkillKey": "WeaponMaster_Bow",
+      "displayIconFile": "partner_skills/105_Robinquill_partner.png",
+      "displayIconAsset": "T_RobinHood_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Robinquill Terra",
+      "palNumber": "76B",
+      "partnerSkill": "Master Archer",
+      "partnerSkillKey": "WeaponMaster_Bow",
+      "displayIconFile": "partner_skills/106_Robinquill_Terra_partner.png",
+      "displayIconAsset": "T_RobinHood_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Flopie",
+      "palNumber": "77",
+      "partnerSkill": "Helper Bunny",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/107_Flopie_partner.png",
+      "displayIconAsset": "T_FlowerRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wixen",
+      "palNumber": "78",
+      "partnerSkill": "Lord Fox",
+      "partnerSkillKey": "012_01",
+      "displayIconFile": "partner_skills/108_Wixen_partner.png",
+      "displayIconAsset": "T_FoxMage_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wixen Noct",
+      "palNumber": "78B",
+      "partnerSkill": "Black Fox Lord",
+      "partnerSkillKey": "012_05",
+      "displayIconFile": "partner_skills/109_Wixen_Noct_partner.png",
+      "displayIconAsset": "T_FoxMage_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Katress",
+      "palNumber": "79",
+      "partnerSkill": "Mystical Black Magic",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/110_Katress_partner.png",
+      "displayIconAsset": "T_CatMage_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Katress Ignis",
+      "palNumber": "79B",
+      "partnerSkill": "Blazing Black Magic",
+      "partnerSkillKey": "WorkRank_EmitFlame",
+      "displayIconFile": "partner_skills/111_Katress_Ignis_partner.png",
+      "displayIconAsset": "T_CatMage_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Helzephyr",
+      "palNumber": "80",
+      "partnerSkill": "Wings of Death",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/112_Helzephyr_partner.png",
+      "displayIconAsset": "T_HadesBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Helzephyr Lux",
+      "palNumber": "80B",
+      "partnerSkill": "Wings of Thunder",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/113_Helzephyr_Lux_partner.png",
+      "displayIconAsset": "T_HadesBird_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Elgrove",
+      "palNumber": "81",
+      "partnerSkill": "Mother Nature's Menace",
+      "partnerSkillKey": "012_04",
+      "displayIconFile": "partner_skills/114_Elgrove_partner.png",
+      "displayIconAsset": "T_GrassMinotaur_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Elgrove Cryst",
+      "palNumber": "81B",
+      "partnerSkill": "Father Winter's Threat",
+      "partnerSkillKey": "DamageUp_Water",
+      "displayIconFile": "partner_skills/115_Elgrove_Cryst_partner.png",
+      "displayIconAsset": "T_GrassMinotaur_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lunaris",
+      "palNumber": "82",
+      "partnerSkill": "Antigravity",
+      "partnerSkillKey": "SphereHoming",
+      "displayIconFile": "partner_skills/116_Lunaris_partner.png",
+      "displayIconAsset": "T_Mutant_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Fenglope",
+      "palNumber": "83",
+      "partnerSkill": "Wind and Clouds",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/117_Fenglope_partner.png",
+      "displayIconAsset": "T_FengyunDeeper_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Fenglope Lux",
+      "palNumber": "83B",
+      "partnerSkill": "Stormcloud",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/118_Fenglope_Lux_partner.png",
+      "displayIconAsset": "T_FengyunDeeper_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dinossom",
+      "palNumber": "84",
+      "partnerSkill": "Fragrant Dragon",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/119_Dinossom_partner.png",
+      "displayIconAsset": "T_FlowerDinosaur_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dinossom Lux",
+      "palNumber": "84B",
+      "partnerSkill": "Thunder Dragon",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/120_Dinossom_Lux_partner.png",
+      "displayIconAsset": "T_FlowerDinosaur_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bushi",
+      "palNumber": "85",
+      "partnerSkill": "Brandish Blade",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/121_Bushi_partner.png",
+      "displayIconAsset": "T_Ronin_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bushi Noct",
+      "palNumber": "85B",
+      "partnerSkill": "Void Blade",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/122_Bushi_Noct_partner.png",
+      "displayIconAsset": "T_Ronin_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Munchill",
+      "palNumber": "86",
+      "partnerSkill": "Icy Maw",
+      "partnerSkillKey": "FoodFreezing",
+      "displayIconFile": "partner_skills/123_Munchill_partner.png",
+      "displayIconAsset": "T_IceCrocodile_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mammorest",
+      "palNumber": "87",
+      "partnerSkill": "Gaia Crusher",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/124_Mammorest_partner.png",
+      "displayIconAsset": "T_GrassMammoth_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mammorest Cryst",
+      "palNumber": "87B",
+      "partnerSkill": "Ice Crusher",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/125_Mammorest_Cryst_partner.png",
+      "displayIconAsset": "T_GrassMammoth_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Finsider",
+      "palNumber": "88",
+      "partnerSkill": "Water Gun",
+      "partnerSkillKey": "012_02",
+      "displayIconFile": "partner_skills/126_Finsider_partner.png",
+      "displayIconAsset": "T_StuffedShark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Finsider Ignis",
+      "palNumber": "88B",
+      "partnerSkill": "Ember Chamber",
+      "partnerSkillKey": "WeightDown",
+      "displayIconFile": "partner_skills/127_Finsider_Ignis_partner.png",
+      "displayIconAsset": "T_StuffedShark_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Petallia",
+      "palNumber": "89",
+      "partnerSkill": "Blessing of the Flower Spirit",
+      "partnerSkillKey": "004",
+      "displayIconFile": "partner_skills/128_Petallia_partner.png",
+      "displayIconAsset": "T_FlowerDoll_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Petallia Ignis",
+      "palNumber": "89B",
+      "partnerSkill": "Passion of the Flower Spirit",
+      "partnerSkillKey": "004",
+      "displayIconFile": "partner_skills/129_Petallia_Ignis_partner.png",
+      "displayIconAsset": "T_FlowerDoll_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Leafan",
+      "palNumber": "90",
+      "partnerSkill": "Selfless Discipline",
+      "partnerSkillKey": "TribeLeader",
+      "displayIconFile": "partner_skills/130_Leafan_partner.png",
+      "displayIconAsset": "T_PandaGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Incineram",
+      "palNumber": "91",
+      "partnerSkill": "Flameclaw Hunter",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/131_Incineram_partner.png",
+      "displayIconAsset": "T_Baphomet_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Incineram Noct",
+      "palNumber": "91B",
+      "partnerSkill": "Darkclaw Hunter",
+      "partnerSkillKey": "AttackCombat",
+      "displayIconFile": "partner_skills/132_Incineram_Noct_partner.png",
+      "displayIconAsset": "T_Baphomet_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dazzi",
+      "palNumber": "92",
+      "partnerSkill": "Lady of Lightning",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/133_Dazzi_partner.png",
+      "displayIconAsset": "T_RaijinDaughter_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dazzi Noct",
+      "palNumber": "92B",
+      "partnerSkill": "Lady of Dark Lightning",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/134_Dazzi_Noct_partner.png",
+      "displayIconAsset": "T_RaijinDaughter_Water_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pyrin",
+      "palNumber": "93",
+      "partnerSkill": "Red Hare",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/135_Pyrin_partner.png",
+      "displayIconAsset": "T_FireKirin_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pyrin Noct",
+      "palNumber": "93B",
+      "partnerSkill": "Black Hare",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/136_Pyrin_Noct_partner.png",
+      "displayIconAsset": "T_FireKirin_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Relaxaurus",
+      "palNumber": "94",
+      "partnerSkill": "Hungry Missile",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/137_Relaxaurus_partner.png",
+      "displayIconAsset": "T_LazyDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Relaxaurus Lux",
+      "palNumber": "94B",
+      "partnerSkill": "Missile Party",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/138_Relaxaurus_Lux_partner.png",
+      "displayIconAsset": "T_LazyDragon_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Foxcicle",
+      "palNumber": "95",
+      "partnerSkill": "Aurora Guide",
+      "partnerSkillKey": "PalDefence_Ice",
+      "displayIconFile": "partner_skills/139_Foxcicle_partner.png",
+      "displayIconAsset": "T_IceFox_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Beakon",
+      "palNumber": "96",
+      "partnerSkill": "Thunderous",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/140_Beakon_partner.png",
+      "displayIconAsset": "T_ThunderBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Beakon Cryst",
+      "palNumber": "96B",
+      "partnerSkill": "Coldsnap",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/141_Beakon_Cryst_partner.png",
+      "displayIconAsset": "T_ThunderBird_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ghangler",
+      "palNumber": "97",
+      "partnerSkill": "Master of Darkness",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/142_Ghangler_partner.png",
+      "displayIconAsset": "T_GhostAnglerfish_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ghangler Ignis",
+      "palNumber": "97B",
+      "partnerSkill": "Abyssal Celebrity Chef",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/143_Ghangler_Ignis_partner.png",
+      "displayIconAsset": "T_GhostAnglerfish_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Rayhound",
+      "palNumber": "98",
+      "partnerSkill": "Lightning Shepherd",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/144_Rayhound_partner.png",
+      "displayIconAsset": "T_ThunderDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Rayhound Cryst",
+      "palNumber": "98B",
+      "partnerSkill": "Snow Shepherd",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/145_Rayhound_Cryst_partner.png",
+      "displayIconAsset": "T_ThunderDog_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Menasting",
+      "palNumber": "99",
+      "partnerSkill": "Steel Scorpion",
+      "partnerSkillKey": "005",
+      "displayIconFile": "partner_skills/146_Menasting_partner.png",
+      "displayIconAsset": "T_DarkScorpion_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Menasting Terra",
+      "palNumber": "99B",
+      "partnerSkill": "Golden Scorpion",
+      "partnerSkillKey": "005",
+      "displayIconFile": "partner_skills/147_Menasting_Terra_partner.png",
+      "displayIconAsset": "T_DarkScorpion_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Needoll",
+      "palNumber": "100",
+      "partnerSkill": "Hug Me Please",
+      "partnerSkillKey": "DamageUp_Grass",
+      "displayIconFile": "partner_skills/148_Needoll_partner.png",
+      "displayIconAsset": "T_CactusDoll_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Needoll Noct",
+      "palNumber": "100B",
+      "partnerSkill": "Hug You So Much",
+      "partnerSkillKey": "AddStatusEffect_IvyCling",
+      "displayIconFile": "partner_skills/149_Needoll_Noct_partner.png",
+      "displayIconAsset": "T_CactusDoll_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Reindrix",
+      "palNumber": "101",
+      "partnerSkill": "Cool Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/150_Reindrix_partner.png",
+      "displayIconAsset": "T_IceDeer_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mossanda",
+      "palNumber": "102",
+      "partnerSkill": "Grenadier Panda",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/151_Mossanda_partner.png",
+      "displayIconAsset": "T_GrassPanda_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mossanda Lux",
+      "palNumber": "102B",
+      "partnerSkill": "Grenadier Panda",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/152_Mossanda_Lux_partner.png",
+      "displayIconAsset": "T_GrassPanda_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Chillet",
+      "palNumber": "103",
+      "partnerSkill": "Wriggling Weasel",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/153_Chillet_partner.png",
+      "displayIconAsset": "T_WeaselDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Chillet Ignis",
+      "palNumber": "103B",
+      "partnerSkill": "Sparkling Weasel",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/154_Chillet_Ignis_partner.png",
+      "displayIconAsset": "T_WeaselDragon_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ragnahawk",
+      "palNumber": "104",
+      "partnerSkill": "Flame Wing",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/155_Ragnahawk_partner.png",
+      "displayIconAsset": "T_RedArmorBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Moldron",
+      "palNumber": "105",
+      "partnerSkill": "Magma Overload",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/156_Moldron_partner.png",
+      "displayIconAsset": "T_VolcanoDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Moldron Cryst",
+      "palNumber": "105B",
+      "partnerSkill": "Ice Overload",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/157_Moldron_Cryst_partner.png",
+      "displayIconAsset": "T_VolcanoDragon_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Palumba",
+      "palNumber": "106",
+      "partnerSkill": "Samba Step",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/158_Palumba_partner.png",
+      "displayIconAsset": "T_TropicalOstrich_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Digtoise",
+      "palNumber": "107",
+      "partnerSkill": "Drill Crusher",
+      "partnerSkillKey": "DrillMining",
+      "displayIconFile": "partner_skills/159_Digtoise_partner.png",
+      "displayIconAsset": "T_DrillGame_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Broncherry",
+      "palNumber": "108",
+      "partnerSkill": "Love's First Blossom",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/160_Broncherry_partner.png",
+      "displayIconAsset": "T_SakuraSaurus_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Broncherry Aqua",
+      "palNumber": "108B",
+      "partnerSkill": "Purity's Full Bloom",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/161_Broncherry_Aqua_partner.png",
+      "displayIconAsset": "T_SakuraSaurus_Water_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dumud",
+      "palNumber": "109",
+      "partnerSkill": "Soil Improver",
+      "partnerSkillKey": "PalDefence_Ground",
+      "displayIconFile": "partner_skills/162_Dumud_partner.png",
+      "displayIconAsset": "T_LazyCatfish_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dumud Gild",
+      "palNumber": "109B",
+      "partnerSkill": "Golden Harvest",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/163_Dumud_Gild_partner.png",
+      "displayIconAsset": "T_LazyCatfish_Gold_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Braloha",
+      "palNumber": "110",
+      "partnerSkill": "Balmy Weather",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/164_Braloha_partner.png",
+      "displayIconAsset": "T_Plesiosaur_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kitsun",
+      "palNumber": "111",
+      "partnerSkill": "Wolf of the Sun",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/165_Kitsun_partner.png",
+      "displayIconAsset": "T_AmaterasuWolf_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kitsun Noct",
+      "palNumber": "111B",
+      "partnerSkill": "Gloomhowl",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/166_Kitsun_Noct_partner.png",
+      "displayIconAsset": "T_AmaterasuWolf_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Blazehowl",
+      "palNumber": "112",
+      "partnerSkill": "Hellflame Lion",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/167_Blazehowl_partner.png",
+      "displayIconAsset": "T_Manticore_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Blazehowl Noct",
+      "palNumber": "112B",
+      "partnerSkill": "Darkflame Lion",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/168_Blazehowl_Noct_partner.png",
+      "displayIconAsset": "T_Manticore_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Warsect",
+      "palNumber": "113",
+      "partnerSkill": "Cast-Iron Shell",
+      "partnerSkillKey": "UnharmedCombat",
+      "displayIconFile": "partner_skills/169_Warsect_partner.png",
+      "displayIconAsset": "T_HerculesBeetle_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Warsect Terra",
+      "palNumber": "113B",
+      "partnerSkill": "Fullmetal Shell",
+      "partnerSkillKey": "UnharmedCombat",
+      "displayIconFile": "partner_skills/170_Warsect_Terra_partner.png",
+      "displayIconAsset": "T_HerculesBeetle_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Frostplume",
+      "palNumber": "114",
+      "partnerSkill": "Peacock Pounce",
+      "partnerSkillKey": "ReloadSpeed_FullAuto",
+      "displayIconFile": "partner_skills/171_Frostplume_partner.png",
+      "displayIconAsset": "T_SnowPeafowl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Majex",
+      "palNumber": "115",
+      "partnerSkill": "Phantasmal Arcana",
+      "partnerSkillKey": "Explosion_Burn",
+      "displayIconFile": "partner_skills/172_Majex_partner.png",
+      "displayIconAsset": "T_DarkFlameFox_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sibelyx",
+      "palNumber": "116",
+      "partnerSkill": "Silk Shroud",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/173_Sibelyx_partner.png",
+      "displayIconAsset": "T_WhiteMoth_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sibelyx Primo",
+      "palNumber": "116B",
+      "partnerSkill": "Gilded Shroud",
+      "partnerSkillKey": "PalDefence_Normal",
+      "displayIconFile": "partner_skills/174_Sibelyx_Primo_partner.png",
+      "displayIconAsset": "T_WhiteMoth_Neutral_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Maraith",
+      "palNumber": "117",
+      "partnerSkill": "Messenger of Death",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/175_Maraith_partner.png",
+      "displayIconAsset": "T_GhostBeast_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Shroomer",
+      "palNumber": "118",
+      "partnerSkill": "Rampant Spores",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/176_Shroomer_partner.png",
+      "displayIconAsset": "T_MushroomDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Shroomer Noct",
+      "palNumber": "118B",
+      "partnerSkill": "Roiling Spores",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/177_Shroomer_Noct_partner.png",
+      "displayIconAsset": "T_MushroomDragon_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Icelyn",
+      "palNumber": "119",
+      "partnerSkill": "Witch's Icy Veil",
+      "partnerSkillKey": "012_08",
+      "displayIconFile": "partner_skills/178_Icelyn_partner.png",
+      "displayIconAsset": "T_IceWitch_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gildra",
+      "palNumber": "120",
+      "partnerSkill": "Resurrection",
+      "partnerSkillKey": "Revive",
+      "displayIconFile": "partner_skills/179_Gildra_partner.png",
+      "displayIconAsset": "T_MummyPal_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jormuntide",
+      "palNumber": "121",
+      "partnerSkill": "Stormbringer Sea Dragon",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/180_Jormuntide_partner.png",
+      "displayIconAsset": "T_Umihebi_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jormuntide Ignis",
+      "palNumber": "121B",
+      "partnerSkill": "Stormbringer Lava Dragon",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/181_Jormuntide_Ignis_partner.png",
+      "displayIconAsset": "T_Umihebi_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Suzaku",
+      "palNumber": "122",
+      "partnerSkill": "Wings of Flame",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/182_Suzaku_partner.png",
+      "displayIconAsset": "T_Suzaku_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Suzaku Aqua",
+      "palNumber": "122B",
+      "partnerSkill": "Wings of Water",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/183_Suzaku_Aqua_partner.png",
+      "displayIconAsset": "T_Suzaku_Water_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dazemu",
+      "palNumber": "123",
+      "partnerSkill": "Sand Sprint",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/184_Dazemu_partner.png",
+      "displayIconAsset": "T_FeatherOstrich_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Quivern",
+      "palNumber": "124",
+      "partnerSkill": "Sky Dragon Affection",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/185_Quivern_partner.png",
+      "displayIconAsset": "T_SkyDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Quivern Botan",
+      "palNumber": "124B",
+      "partnerSkill": "Grass Dragon Affection",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/186_Quivern_Botan_partner.png",
+      "displayIconAsset": "T_SkyDragon_Grass_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lullu",
+      "palNumber": "125",
+      "partnerSkill": "Floral Boost",
+      "partnerSkillKey": "Harvest",
+      "displayIconFile": "partner_skills/187_Lullu_partner.png",
+      "displayIconAsset": "T_LeafPrincess_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Kikit",
+      "palNumber": "126",
+      "partnerSkill": "Sandball Soccer",
+      "partnerSkillKey": "PalDefence_Ground",
+      "displayIconFile": "partner_skills/188_Kikit_partner.png",
+      "displayIconAsset": "T_SmallArmadillo_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Yakumo",
+      "palNumber": "127",
+      "partnerSkill": "Birds of a Feather",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/189_Yakumo_partner.png",
+      "displayIconAsset": "T_GuardianDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Skutlass",
+      "palNumber": "128",
+      "partnerSkill": "Fish Fillet",
+      "partnerSkillKey": "SwordCutlassfish",
+      "displayIconFile": "partner_skills/190_Skutlass_partner.png",
+      "displayIconAsset": "T_SwordCutlassfish_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Skutlass Ignis",
+      "palNumber": "128B",
+      "partnerSkill": "Seared Fish Fillet",
+      "partnerSkillKey": "SwordCutlassfish",
+      "displayIconFile": "partner_skills/191_Skutlass_Ignis_partner.png",
+      "displayIconAsset": "T_SwordCutlassfish_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Reptyro",
+      "palNumber": "129",
+      "partnerSkill": "Ore-Loving Beast",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/192_Reptyro_partner.png",
+      "displayIconAsset": "T_VolcanicMonster_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Reptyro Cryst",
+      "palNumber": "129B",
+      "partnerSkill": "Ice-Loving Beast",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/193_Reptyro_Cryst_partner.png",
+      "displayIconAsset": "T_VolcanicMonster_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Starryon",
+      "palNumber": "130",
+      "partnerSkill": "Night Dancer",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/194_Starryon_partner.png",
+      "displayIconAsset": "T_NightBlueHorse_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Starryon Primo",
+      "palNumber": "130B",
+      "partnerSkill": "Light Dancer",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/195_Starryon_Primo_partner.png",
+      "displayIconAsset": "T_NightBlueHorse_Neutral_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pierdon",
+      "palNumber": "131",
+      "partnerSkill": "Power Stone",
+      "partnerSkillKey": "DamageUp_Ground",
+      "displayIconFile": "partner_skills/196_Pierdon_partner.png",
+      "displayIconAsset": "T_RockBeast_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Pierdon Cryst",
+      "palNumber": "131B",
+      "partnerSkill": "Power Crystal",
+      "partnerSkillKey": "PalDefence_Dragon",
+      "displayIconFile": "partner_skills/197_Pierdon_Cryst_partner.png",
+      "displayIconAsset": "T_RockBeast_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cryolinx",
+      "palNumber": "132",
+      "partnerSkill": "Dragon Hunter",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/198_Cryolinx_partner.png",
+      "displayIconAsset": "T_WhiteTiger_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cryolinx Terra",
+      "palNumber": "132B",
+      "partnerSkill": "Explosive Strength",
+      "partnerSkillKey": "WeakPointDamageUp",
+      "displayIconFile": "partner_skills/199_Cryolinx_Terra_partner.png",
+      "displayIconAsset": "T_WhiteTiger_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Snugloo",
+      "palNumber": "133",
+      "partnerSkill": "Invisible Eye",
+      "partnerSkillKey": "Sneak",
+      "displayIconFile": "partner_skills/200_Snugloo_partner.png",
+      "displayIconAsset": "T_SmallYeti_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wumpo",
+      "palNumber": "134",
+      "partnerSkill": "Guardian of the Snowy Mountain",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/201_Wumpo_partner.png",
+      "displayIconAsset": "T_Yeti_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wumpo Botan",
+      "palNumber": "134B",
+      "partnerSkill": "Guardian of the South",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/202_Wumpo_Botan_partner.png",
+      "displayIconAsset": "T_Yeti_Grass_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sootseer",
+      "palNumber": "135",
+      "partnerSkill": "Grave Robber",
+      "partnerSkillKey": "PalDefence_Normal",
+      "displayIconFile": "partner_skills/203_Sootseer_partner.png",
+      "displayIconAsset": "T_CandleGhost_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Carnibora",
+      "palNumber": "136",
+      "partnerSkill": "Entangling Tongue",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/204_Carnibora_partner.png",
+      "displayIconAsset": "T_VenusFlytrap_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Blazamut",
+      "palNumber": "137",
+      "partnerSkill": "Magma Kaiser",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/205_Blazamut_partner.png",
+      "displayIconAsset": "T_KingBahamut_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Blazamut Ryu",
+      "palNumber": "137B",
+      "partnerSkill": "Dragon Kaiser",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/206_Blazamut_Ryu_partner.png",
+      "displayIconAsset": "T_KingBahamut_Dragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dualith",
+      "palNumber": "138",
+      "partnerSkill": "Forest Laser",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/207_Dualith_partner.png",
+      "displayIconAsset": "T_GrassGolem_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dualith Noct",
+      "palNumber": "138B",
+      "partnerSkill": "Corruption Laser",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/208_Dualith_Noct_partner.png",
+      "displayIconAsset": "T_GrassGolem_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Anubis",
+      "palNumber": "139",
+      "partnerSkill": "Guardian of the Desert",
+      "partnerSkillKey": "012_07",
+      "displayIconFile": "partner_skills/209_Anubis_partner.png",
+      "displayIconAsset": "T_Anubis_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Sekhmet",
+      "palNumber": "140",
+      "partnerSkill": "Desert Empress",
+      "partnerSkillKey": "016",
+      "displayIconFile": "partner_skills/210_Sekhmet_partner.png",
+      "displayIconAsset": "T_Sekhmet_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Prixter",
+      "palNumber": "141",
+      "partnerSkill": "Phantom Venom",
+      "partnerSkillKey": "DamageUp_Poison",
+      "displayIconFile": "partner_skills/211_Prixter_partner.png",
+      "displayIconAsset": "T_ScorpionMan_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Prixter Lux",
+      "palNumber": "141B",
+      "partnerSkill": "Scorpion Longwave",
+      "partnerSkillKey": "012_03",
+      "displayIconFile": "partner_skills/212_Prixter_Lux_partner.png",
+      "displayIconAsset": "T_ScorpionMan_Electric_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tetroise ",
+      "palNumber": "142",
+      "partnerSkill": "Masonry Archelon",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/213_Tetroise_partner.png",
+      "displayIconAsset": "T_CubeTurtle_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tetroise Primo",
+      "palNumber": "142B",
+      "partnerSkill": "Stone-Chaser Archelon",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/214_Tetroise_Primo_partner.png",
+      "displayIconAsset": "T_CubeTurtle_Neutral_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Nyafia",
+      "palNumber": "143",
+      "partnerSkill": "Shot-Nyan Mode",
+      "partnerSkillKey": "003",
+      "displayIconFile": "partner_skills/215_Nyafia_partner.png",
+      "displayIconAsset": "T_BadCatgirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mimog",
+      "palNumber": "144",
+      "partnerSkill": "Master of Unlocking",
+      "partnerSkillKey": "Picking",
+      "displayIconFile": "partner_skills/216_Mimog_partner.png",
+      "displayIconAsset": "T_MimicDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Xenovader",
+      "palNumber": "145",
+      "partnerSkill": "Unknown Invader",
+      "partnerSkillKey": "ReloadSpeed_FullAuto",
+      "displayIconFile": "partner_skills/217_Xenovader_partner.png",
+      "displayIconAsset": "T_DarkAlien_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Xenogard",
+      "palNumber": "146",
+      "partnerSkill": "Unknown Intruder",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/218_Xenogard_partner.png",
+      "displayIconAsset": "T_WhiteAlienDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Prunelia",
+      "palNumber": "147",
+      "partnerSkill": "Prayer for Abundant Harvest",
+      "partnerSkillKey": "Harvest",
+      "displayIconFile": "partner_skills/219_Prunelia_partner.png",
+      "displayIconAsset": "T_BlueberryFairy_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Nitemary",
+      "palNumber": "148",
+      "partnerSkill": "Soul Collector",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/220_Nitemary_partner.png",
+      "displayIconAsset": "T_GhostRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Nitemary Botan",
+      "palNumber": "148B",
+      "partnerSkill": "Soul Binder",
+      "partnerSkillKey": "PalDefence_Grass",
+      "displayIconFile": "partner_skills/221_Nitemary_Botan_partner.png",
+      "displayIconAsset": "T_GhostRabbit_Grass_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Smokie",
+      "palNumber": "149",
+      "partnerSkill": "Dig, Smokie! Dig!",
+      "partnerSkillKey": "007",
+      "displayIconFile": "partner_skills/222_Smokie_partner.png",
+      "displayIconAsset": "T_BlackPuppy_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Smokie Cryst",
+      "palNumber": "149B",
+      "partnerSkill": "Cryo Instincts",
+      "partnerSkillKey": "WorkRank_Cool",
+      "displayIconFile": "partner_skills/223_Smokie_Cryst_partner.png",
+      "displayIconAsset": "T_BlackPuppy_Ice_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Omascul",
+      "palNumber": "150",
+      "partnerSkill": "Masquerade Dance",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/224_Omascul_partner.png",
+      "displayIconAsset": "T_MysteryMask_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Whalaska",
+      "palNumber": "151",
+      "partnerSkill": "Chilled Whale Cruiser",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/225_Whalaska_partner.png",
+      "displayIconAsset": "T_IceNarwhal_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Whalaska Ignis",
+      "palNumber": "151B",
+      "partnerSkill": "Cozy Whale Cruiser",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/226_Whalaska_Ignis_partner.png",
+      "displayIconAsset": "T_IceNarwhal_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Verdash",
+      "palNumber": "152",
+      "partnerSkill": "Grassland Gymnast",
+      "partnerSkillKey": "AirDash",
+      "displayIconFile": "partner_skills/227_Verdash_partner.png",
+      "displayIconAsset": "T_GrassRabbitMan_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Splatterina",
+      "palNumber": "153",
+      "partnerSkill": "Blade of Uncontrolled Passion",
+      "partnerSkillKey": "Dismantling",
+      "displayIconFile": "partner_skills/228_Splatterina_partner.png",
+      "displayIconAsset": "T_GrimGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Gildane",
+      "palNumber": "154",
+      "partnerSkill": "Sandstorm's Blessing",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/229_Gildane_partner.png",
+      "displayIconAsset": "T_GoldenHorse_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dogen",
+      "palNumber": "155",
+      "partnerSkill": "Homeward Prayer",
+      "partnerSkillKey": "Homeward",
+      "displayIconFile": "partner_skills/230_Dogen_partner.png",
+      "displayIconAsset": "T_SifuDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bulldosu",
+      "palNumber": "156",
+      "partnerSkill": "Yokozuna's Presence",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/231_Bulldosu_partner.png",
+      "displayIconAsset": "T_SumoDog_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Celesdir",
+      "palNumber": "157",
+      "partnerSkill": "Blessing of Purification",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/232_Celesdir_partner.png",
+      "displayIconAsset": "T_WhiteDeer_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Celesdir Noct",
+      "palNumber": "157B",
+      "partnerSkill": "Blessing of Chaos",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/233_Celesdir_Noct_partner.png",
+      "displayIconAsset": "T_WhiteDeer_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Astegon",
+      "palNumber": "158",
+      "partnerSkill": "Black Ankylosaur",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/234_Astegon_partner.png",
+      "displayIconAsset": "T_BlackMetalDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Knocklem",
+      "palNumber": "159",
+      "partnerSkill": "Steel Guardian Mode",
+      "partnerSkillKey": "006",
+      "displayIconFile": "partner_skills/235_Knocklem_partner.png",
+      "displayIconAsset": "T_WingGolem_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Knocklem Ignis",
+      "palNumber": "159B",
+      "partnerSkill": "Iron Guardian Mode",
+      "partnerSkillKey": "006",
+      "displayIconFile": "partner_skills/236_Knocklem_Ignis_partner.png",
+      "displayIconAsset": "T_WingGolem_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Silvegis",
+      "palNumber": "160",
+      "partnerSkill": "Aegis Shield",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/237_Silvegis_partner.png",
+      "displayIconAsset": "T_WhiteShieldDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Azurmane",
+      "palNumber": "161",
+      "partnerSkill": "Plasma Dash",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/238_Azurmane_partner.png",
+      "displayIconAsset": "T_BlueThunderHorse_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Valentail",
+      "palNumber": "162",
+      "partnerSkill": "Big Stretch",
+      "partnerSkillKey": "LowGravity",
+      "displayIconFile": "partner_skills/239_Valentail_partner.png",
+      "displayIconAsset": "T_LongCat_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Snock",
+      "palNumber": "163",
+      "partnerSkill": "Charging Shell",
+      "partnerSkillKey": "AddStatusEffect_Electrical",
+      "displayIconFile": "partner_skills/240_Snock_partner.png",
+      "displayIconAsset": "T_ElecSnail_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Snock Lux",
+      "palNumber": "163B",
+      "partnerSkill": "Grounding Shell",
+      "partnerSkillKey": "PalDefence_Water",
+      "displayIconFile": "partner_skills/241_Snock_Lux_partner.png",
+      "displayIconAsset": "T_ElecSnail_Ground_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Souffline",
+      "palNumber": "164",
+      "partnerSkill": "Fuzzy Fairy",
+      "partnerSkillKey": "CaptureMaster",
+      "displayIconFile": "partner_skills/242_Souffline_partner.png",
+      "displayIconAsset": "T_DandelionGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lapiron",
+      "palNumber": "165",
+      "partnerSkill": "Friend of Earth",
+      "partnerSkillKey": "ResistExplosion",
+      "displayIconFile": "partner_skills/243_Lapiron_partner.png",
+      "displayIconAsset": "T_BrownRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Hoodle",
+      "palNumber": "166",
+      "partnerSkill": "Void-Dweller",
+      "partnerSkillKey": "SurpriseAttack",
+      "displayIconFile": "partner_skills/244_Hoodle_partner.png",
+      "displayIconAsset": "T_HoodGhost_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Slowatt",
+      "palNumber": "167",
+      "partnerSkill": "Chillswitch",
+      "partnerSkillKey": "DamageUp_Electric",
+      "displayIconFile": "partner_skills/245_Slowatt_partner.png",
+      "displayIconAsset": "T_ElecLizard_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bakemi",
+      "palNumber": "168",
+      "partnerSkill": "Grinning Death",
+      "partnerSkillKey": "DamageUp_Poison",
+      "displayIconFile": "partner_skills/246_Bakemi_partner.png",
+      "displayIconAsset": "T_OniGhostGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Solmora",
+      "palNumber": "169",
+      "partnerSkill": "Charming Fish",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/247_Solmora_partner.png",
+      "displayIconAsset": "T_KingSunfish_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Solmora Lux",
+      "palNumber": "169B",
+      "partnerSkill": "Shocking Fish",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/248_Solmora_Lux_partner.png",
+      "displayIconAsset": "T_KingSunfish_Thunder_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lapure",
+      "palNumber": "170",
+      "partnerSkill": "Long-Sleeved Hurray",
+      "partnerSkillKey": "StaminaEndurance",
+      "displayIconFile": "partner_skills/249_Lapure_partner.png",
+      "displayIconAsset": "T_SleeveRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Eidrolon",
+      "palNumber": "171",
+      "partnerSkill": "Liberated Pterosaur",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/250_Eidrolon_partner.png",
+      "displayIconAsset": "T_GhostDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Eidrolon Ignis",
+      "palNumber": "171B",
+      "partnerSkill": "Resentful Pterosaur",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/251_Eidrolon_Ignis_partner.png",
+      "displayIconAsset": "T_GhostDragon_Fire_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dynamoff",
+      "palNumber": "172",
+      "partnerSkill": "Electro-Massage Incubation",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/252_Dynamoff_partner.png",
+      "displayIconAsset": "T_ThunderFluffyBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Tropicaw",
+      "palNumber": "173",
+      "partnerSkill": "Flower Dance",
+      "partnerSkillKey": "PlayerAvoid",
+      "displayIconFile": "partner_skills/253_Tropicaw_partner.png",
+      "displayIconAsset": "T_RedFlowerBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Flaracle",
+      "palNumber": "174",
+      "partnerSkill": "Burning Future",
+      "partnerSkillKey": "Explosion_Burn",
+      "displayIconFile": "partner_skills/254_Flaracle_partner.png",
+      "displayIconAsset": "T_FoxExorcist_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Ophydia",
+      "palNumber": "175",
+      "partnerSkill": "Glorious Mist",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/255_Ophydia_partner.png",
+      "displayIconAsset": "T_LotusDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dupin",
+      "palNumber": "176",
+      "partnerSkill": "Trick-Loving Fluffle",
+      "partnerSkillKey": "Explosion_LowHP",
+      "displayIconFile": "partner_skills/256_Dupin_partner.png",
+      "displayIconAsset": "T_ClownRabbit_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Roujay",
+      "palNumber": "177",
+      "partnerSkill": "Dark-Nester",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/257_Roujay_partner.png",
+      "displayIconAsset": "T_ThiefBird_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Venusa",
+      "palNumber": "178",
+      "partnerSkill": "Snake's Sagacity",
+      "partnerSkillKey": "AddStatusEffect_Darkness",
+      "displayIconFile": "partner_skills/258_Venusa_partner.png",
+      "displayIconAsset": "T_SnakeGirl_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Mycora",
+      "palNumber": "179",
+      "partnerSkill": "Charming Spore",
+      "partnerSkillKey": "WorkRank_ProductMedicine",
+      "displayIconFile": "partner_skills/259_Mycora_partner.png",
+      "displayIconAsset": "T_MushroomLady_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Loomen",
+      "palNumber": "180",
+      "partnerSkill": "Lantern Enchantment",
+      "partnerSkillKey": "ExplosionArrow",
+      "displayIconFile": "partner_skills/260_Loomen_partner.png",
+      "displayIconAsset": "T_LanternButler_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Wistella",
+      "palNumber": "181",
+      "partnerSkill": "Hidden Dark Energy",
+      "partnerSkillKey": "PalDefence_Dark",
+      "displayIconFile": "partner_skills/261_Wistella_partner.png",
+      "displayIconAsset": "T_MoonChild_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Solenne",
+      "palNumber": "182",
+      "partnerSkill": "Untainted Maiden",
+      "partnerSkillKey": "AllDifferentElement",
+      "displayIconFile": "partner_skills/262_Solenne_partner.png",
+      "displayIconAsset": "T_MonochromeQueen_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Renjishi",
+      "palNumber": "183",
+      "partnerSkill": "Stage Combat",
+      "partnerSkillKey": "AddStatusEffect_Burn",
+      "displayIconFile": "partner_skills/263_Renjishi_partner.png",
+      "displayIconAsset": "T_KabukiMan_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Aegidron",
+      "palNumber": "184",
+      "partnerSkill": "Indestructible Fortress",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/264_Aegidron_partner.png",
+      "displayIconAsset": "T_DomeArmorDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Grizzbolt",
+      "palNumber": "185",
+      "partnerSkill": "Yellow Tank",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/265_Grizzbolt_partner.png",
+      "displayIconAsset": "T_ElecPanda_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lyleen",
+      "palNumber": "186",
+      "partnerSkill": "Harvest Goddess",
+      "partnerSkillKey": "004",
+      "displayIconFile": "partner_skills/266_Lyleen_partner.png",
+      "displayIconAsset": "T_LilyQueen_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Lyleen Noct",
+      "palNumber": "186B",
+      "partnerSkill": "Goddess of the Tranquil Light",
+      "partnerSkillKey": "004",
+      "displayIconFile": "partner_skills/267_Lyleen_Noct_partner.png",
+      "displayIconAsset": "T_LilyQueen_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Orserk",
+      "palNumber": "187",
+      "partnerSkill": "Ferocious Thunder Dragon",
+      "partnerSkillKey": "ThunderDragonMan",
+      "displayIconFile": "partner_skills/268_Orserk_partner.png",
+      "displayIconAsset": "T_ThunderDragonMan_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Faleris",
+      "palNumber": "188",
+      "partnerSkill": "Scorching Predator",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/269_Faleris_partner.png",
+      "displayIconAsset": "T_Horus_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Faleris Aqua",
+      "palNumber": "188B",
+      "partnerSkill": "Tidal Predator",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/270_Faleris_Aqua_partner.png",
+      "displayIconAsset": "T_Horus_Water_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Shadowbeak",
+      "palNumber": "189",
+      "partnerSkill": "Modified DNA",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/271_Shadowbeak_partner.png",
+      "displayIconAsset": "T_BlackGriffon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Selyne",
+      "palNumber": "190",
+      "partnerSkill": "Celestial Darkness",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/272_Selyne_partner.png",
+      "displayIconAsset": "T_MoonQueen_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bastigor",
+      "palNumber": "191",
+      "partnerSkill": "Blizzard Crash",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/273_Bastigor_partner.png",
+      "displayIconAsset": "T_SnowTigerBeastman_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Shaolong",
+      "palNumber": "192",
+      "partnerSkill": "Azure Sovereign",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/274_Shaolong_partner.png",
+      "displayIconAsset": "T_BlueSkyDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Silvance",
+      "palNumber": "193",
+      "partnerSkill": "Spore Stalwart",
+      "partnerSkillKey": "DamageUp_Grass",
+      "displayIconFile": "partner_skills/275_Silvance_partner.png",
+      "displayIconAsset": "T_Mothman_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Dandilord",
+      "palNumber": "194",
+      "partnerSkill": "Mist Stalwart",
+      "partnerSkillKey": "AddStatusEffect_Poison",
+      "displayIconFile": "partner_skills/276_Dandilord_partner.png",
+      "displayIconAsset": "T_FlowerPrince_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bellanoir",
+      "palNumber": "195",
+      "partnerSkill": "Nightmare Iris",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/277_Bellanoir_partner.png",
+      "displayIconAsset": "T_NightLady_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Bellanoir Libero",
+      "palNumber": "195B",
+      "partnerSkill": "Nightmare Stare",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/278_Bellanoir_Libero_partner.png",
+      "displayIconAsset": "T_NightLady_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Xenolord",
+      "palNumber": "196",
+      "partnerSkill": "Meteor Wings",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/279_Xenolord_partner.png",
+      "displayIconAsset": "T_DarkMechaDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Hartalis",
+      "palNumber": "197",
+      "partnerSkill": "Sacred Barrier",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/280_Hartalis_partner.png",
+      "displayIconAsset": "T_LegendDeer_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Paladius",
+      "palNumber": "198",
+      "partnerSkill": "Holy Knight of the Firmament",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/281_Paladius_partner.png",
+      "displayIconAsset": "T_SaintCentaur_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Necromus",
+      "palNumber": "199",
+      "partnerSkill": "Dark Knight of the Abyss",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/282_Necromus_partner.png",
+      "displayIconAsset": "T_BlackCentaur_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Frostallion",
+      "palNumber": "200",
+      "partnerSkill": "Icy Steed",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/283_Frostallion_partner.png",
+      "displayIconAsset": "T_IceHorse_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Frostallion Noct",
+      "palNumber": "200B",
+      "partnerSkill": "Black Steed",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/284_Frostallion_Noct_partner.png",
+      "displayIconAsset": "T_IceHorse_Dark_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Neptilius",
+      "palNumber": "201",
+      "partnerSkill": "Sentinel of the Great Sea",
+      "partnerSkillKey": "019",
+      "displayIconFile": "partner_skills/285_Neptilius_partner.png",
+      "displayIconAsset": "T_PoseidonOrca_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Jetragon",
+      "palNumber": "202",
+      "partnerSkill": "Aerial Missile",
+      "partnerSkillKey": "018",
+      "displayIconFile": "partner_skills/286_Jetragon_partner.png",
+      "displayIconAsset": "T_JetDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Panthalus",
+      "palNumber": "203",
+      "partnerSkill": "Resonant Guardian",
+      "partnerSkillKey": "KingWhale",
+      "displayIconFile": "partner_skills/287_Panthalus_partner.png",
+      "displayIconAsset": "T_KingWhale_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Astralym",
+      "palNumber": "204",
+      "partnerSkill": "-",
+      "partnerSkillKey": "000",
+      "displayIconFile": "partner_skills/288_Astralym_partner.png",
+      "displayIconAsset": "T_WorldTreeDragon_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Green Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/289_Green_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Blue Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/290_Blue_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_Blue_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Red Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/291_Red_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_Red_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Purple Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/292_Purple_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_Purple_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Illuminant Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/293_Illuminant_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_Pink_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Rainbow Slime",
+      "palNumber": "null",
+      "partnerSkill": "Slime Body",
+      "partnerSkillKey": "017",
+      "displayIconFile": "partner_skills/294_Rainbow_Slime_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster001_Rainbow_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Enchanted Sword",
+      "palNumber": "null",
+      "partnerSkill": "Enchant",
+      "partnerSkillKey": "014",
+      "displayIconFile": "partner_skills/295_Enchanted_Sword_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster002_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Cave Bat",
+      "palNumber": "null",
+      "partnerSkill": "Bat Backup",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/296_Cave_Bat_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster003_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Illuminant Bat",
+      "palNumber": "null",
+      "partnerSkill": "Bat Backup",
+      "partnerSkillKey": "011",
+      "displayIconFile": "partner_skills/297_Illuminant_Bat_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaMonster003_Purple_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Eye of Cthulhu",
+      "palNumber": "null",
+      "partnerSkill": "Mad Eye Lunge",
+      "partnerSkillKey": "001",
+      "displayIconFile": "partner_skills/298_Eye_of_Cthulhu_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaBoss001_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    },
+    {
+      "pal": "Demon Eye",
+      "palNumber": "null",
+      "partnerSkill": "Demonic Sight",
+      "partnerSkillKey": "PalDefence_Dark",
+      "displayIconFile": "partner_skills/299_Demon_Eye_partner.png",
+      "displayIconAsset": "Yakushima/T_YakushimaBoss001_Small_icon_normal",
+      "source": "https://lootlab.app/palworld/dex/"
+    }
+  ]
+}
