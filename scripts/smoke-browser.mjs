@@ -23,7 +23,7 @@ async function inspectRuntime(page) {
 async function openApp(context, suffix) {
   const page = await context.newPage();
   const errors = [];
-  const room = `ci-v105-${suffix}-${Date.now()}`;
+  const room = `ci-v106-${suffix}-${Date.now()}`;
   await page.addInitScript(roomId => {
     localStorage.setItem(`pal-breeding-current-user:${roomId}`, "福冨");
     localStorage.setItem("palBoardRecorder", "福冨");
@@ -120,25 +120,80 @@ async function auditLazyPalImages(page, requestedCount = 30) {
   if (!lockedResultText.includes("未発見")) throw new Error("Undiscovered breeding result is not hidden");
   if (seeded.unknownChild && lockedResultText.includes(seeded.unknownChild)) throw new Error("Undiscovered child name leaked in discovery mode");
 
-  // Hint page reveals clues progressively and does not show the answer initially.
+  // Forward hint page uses fixed position choices instead of revealing name length.
   await page.evaluate(({aId,cId}) => {
     const runtimeState=window.eval("state");
+    runtimeState.hintMode="forward";
     runtimeState.pickerValues.hintParentA=aId;
     runtimeState.pickerValues.hintParentB=cId;
     resetHintProgress();
     switchView("hints");
   }, seeded);
-  if (await page.locator("#hintBoard .hint-step").count() < 5) throw new Error("Progressive hint steps are missing");
+  if (await page.locator('[data-hint-mode="forward"].is-active').count() !== 1) throw new Error("Forward hint tab is not active");
+  if (await page.locator('#hintBoard [data-forward-position^="english|"]').count() !== 7) throw new Error("English hint does not have seven fixed positions");
+  if (await page.locator('#hintBoard [data-forward-position^="japanese|"]').count() !== 7) throw new Error("Japanese hint does not have seven fixed positions");
   if (await page.locator("#hintBoard .hint-answer").count()) throw new Error("Hint answer is visible before being requested");
   await page.click('[data-hint-action="elements"]');
   await page.click('[data-hint-action="number"]');
-  await page.click('[data-hint-action="number"]');
-  await page.click('[data-hint-action="english"]');
-  await page.click('[data-hint-action="japanese"]');
+  await page.click('[data-forward-position="english|last"]');
+  await page.click('[data-forward-position="japanese|middle"]');
   await page.click('[data-hint-action="silhouette"]');
   if (await page.locator("#hintBoard .hint-result-image--silhouette").count() !== 1) throw new Error("Silhouette hint did not render");
+  if (await page.locator("#hintBoard .hint-position.is-revealed").count() !== 2) throw new Error("Selected character positions were not revealed independently");
   await page.click('[data-hint-action="answer"]');
   if (await page.locator("#hintBoard .hint-answer").count() !== 1) throw new Error("Explicit answer reveal did not work");
+
+  // Find a target + known parent combination with multiple possible other parents.
+  const reverseSeed = await page.evaluate(() => {
+    const runtimeState=window.eval("state");
+    let selected=null;
+    for(const [targetId,combos] of runtimeState.reverseMatrix.entries()){
+      const candidatesByKnown=new Map();
+      for(const combo of combos){
+        for(const [knownId,candidateId] of [[combo.a,combo.b],[combo.b,combo.a]]){
+          if(!candidatesByKnown.has(knownId))candidatesByKnown.set(knownId,new Set());
+          candidatesByKnown.get(knownId).add(candidateId);
+        }
+      }
+      for(const [knownId,candidates] of candidatesByKnown.entries()){
+        if(candidates.size>=2){selected={targetId,knownId,candidateIds:Array.from(candidates)};break;}
+      }
+      if(selected)break;
+    }
+    if(!selected)throw new Error("No reverse hint combination with multiple candidates was found");
+    const target=getPal(selected.targetId),known=getPal(selected.knownId),marker=runtimeState.pals.find(pal=>pal.id!==target.id&&pal.id!==known.id);
+    runtimeState.records.push(normalizeRecord({
+      id:"ci-reverse-discovery-marker",
+      parentA:known.name,
+      parentB:marker.name,
+      resultPal:target.name,
+      eggType:"",
+      mutation:false,
+      recorder:runtimeState.currentUser,
+      note:"reverse hint discovery marker",
+      favorites:{},
+      updatedAt:Date.now()-1,
+    },"ci-reverse-discovery-marker"));
+    runtimeState.hintMode="reverse";
+    runtimeState.pickerValues.hintReverseTarget=target.id;
+    runtimeState.pickerValues.hintReverseParentA=known.id;
+    resetHintProgress();
+    switchView("hints");
+    return {targetId:target.id,knownId:known.id};
+  });
+  if (!reverseSeed.targetId || !reverseSeed.knownId) throw new Error("Reverse hint seed is invalid");
+  if (await page.locator('[data-hint-mode="reverse"].is-active').count() !== 1) throw new Error("Reverse hint tab is not active");
+  const reverseCards=page.locator("#hintBoard .reverse-hint-card:not(.reverse-hint-card--discovered)");
+  if (await reverseCards.count() < 2) throw new Error("Reverse hints did not render multiple independent candidates");
+  const firstReverse=reverseCards.nth(0),secondReverse=reverseCards.nth(1);
+  if (await firstReverse.locator('[data-reverse-position*="|english|"]').count() !== 7) throw new Error("Reverse English hint does not keep a fixed seven-position layout");
+  if (await firstReverse.locator('[data-reverse-position*="|japanese|"]').count() !== 7) throw new Error("Reverse Japanese hint does not keep a fixed seven-position layout");
+  await firstReverse.locator('[data-reverse-position$="|english|first"]').click();
+  await firstReverse.locator('[data-reverse-position$="|japanese|last"]').click();
+  if (await firstReverse.locator(".hint-position.is-revealed").count() !== 2) throw new Error("First reverse candidate did not retain its selected positions");
+  if (await secondReverse.locator(".hint-position.is-revealed").count() !== 0) throw new Error("Revealing one reverse candidate affected another candidate");
+  await firstReverse.locator('[data-reverse-action$="|answer"]').click();
+  if (await page.locator("#hintBoard .reverse-hint-card .hint-answer").count() !== 1) throw new Error("Reverse candidate answer reveal did not stay candidate-specific");
 
   // Favorite panel needs deliberate outer and row spacing.
   await page.click('[data-view="favorites"]');
@@ -179,11 +234,13 @@ async function auditLazyPalImages(page, requestedCount = 30) {
   await context.close();
 }
 
-// Mobile layout includes the new hint page without horizontal overflow.
+// Mobile layout includes both hint tabs without horizontal overflow.
 {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true });
   const { page, errors } = await openApp(context, "mobile");
   await page.evaluate(() => switchView("hints"));
+  if (await page.locator("[data-hint-mode]").count() !== 2) throw new Error("Mobile hint mode tabs are missing");
+  await page.click('[data-hint-mode="reverse"]');
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   if (overflow > 2) throw new Error(`Mobile horizontal overflow: ${overflow}px`);
   if (errors.length) throw new Error(`Mobile browser errors: ${errors.join(" | ")}`);
@@ -191,4 +248,4 @@ async function auditLazyPalImages(page, requestedCount = 30) {
 }
 
 await browser.close();
-console.log("Browser smoke tests passed for discovery locking, progressive hints, hidden guide mode, favorite spacing, image outage, and mobile layout.");
+console.log("Browser smoke tests passed for forward and reverse hints, fixed position reveals, discovery locking, guide mode, favorite spacing, image outage, and mobile layout.");
