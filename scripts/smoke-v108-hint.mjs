@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-// Covers short-name sequential hints, × padding, existing reveal counts, and long-name sampling.
+// Covers short-name sequential hints, × padding, existing reveal counts, long-name sampling, and reverse-hint compatibility.
 const baseUrl = process.env.APP_URL || "http://127.0.0.1:4173/";
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
