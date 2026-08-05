@@ -18,6 +18,7 @@ jobs:
           node --check app-records.js
           node --check app-explore.js
           node --check app-review.js
+          node --check app-status.js
           node --check app-data.js
           node --check app-actions.js
           node --check scripts/validate-v103-data.mjs
@@ -34,6 +35,7 @@ jobs:
           missing = [ref for ref in refs if not Path(ref).exists()]
           assert not missing, f'Missing entrypoint files: {missing}'
           assert 'app-data.js' in refs, 'Local-first data runtime is not loaded'
+          assert 'app-status.js' in refs, 'Separated status reporting is not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
           assert '?v=103' in html, 'v103 cache busting is missing'
 
