@@ -1,0 +1,46 @@
+name: Add v107 HTTP diagnostics
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: contains(github.event.head_commit.message, '[diagnose-v107-404]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-discovery-picker-egg-paldex-v107
+          fetch-depth: 0
+      - name: Add failed response URLs to browser diagnostics
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('scripts/smoke-browser.mjs')
+          text=path.read_text(encoding='utf-8')
+          old='''  page.on("pageerror", error => errors.push(`pageerror: ${error.message}`));
+  page.on("console", message => {
+    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+  });'''
+          new='''  page.on("pageerror", error => errors.push(`pageerror: ${error.message}`));
+  page.on("response", response => {
+    if (response.status() >= 400) errors.push(`http ${response.status()}: ${response.url()}`);
+  });
+  page.on("console", message => {
+    if (message.type() === "error") errors.push(`console: ${message.text()}`);
+  });'''
+          if old not in text:
+              raise SystemExit('diagnostic insertion point not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Commit diagnostic change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/smoke-browser.mjs
+          git commit -m "Add URL details to browser HTTP failures"
+          git push origin HEAD:fix-discovery-picker-egg-paldex-v107
