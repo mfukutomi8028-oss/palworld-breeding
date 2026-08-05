@@ -1,1 +1,1 @@
-Trigger the one-time v108 short-name hint correction.
+Trigger the one-time v108 short-name hint correction after workflow registration.
