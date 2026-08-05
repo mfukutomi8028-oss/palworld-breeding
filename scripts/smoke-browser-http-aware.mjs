@@ -24,6 +24,14 @@ if (!source.includes(original)) {
   throw new Error("Could not install HTTP-aware browser diagnostics.");
 }
 source = source.replace(original, replacement);
+
+const fixedLastPositionClick = `  await firstReverse.locator('[data-reverse-position$="|japanese|last"]').click();`;
+const availablePositionClick = `  await firstReverse.locator('[data-reverse-position*="|japanese|"]:not([disabled])').first().click();`;
+if (!source.includes(fixedLastPositionClick)) {
+  throw new Error("Could not install short-name-aware reverse hint test.");
+}
+source = source.replace(fixedLastPositionClick, availablePositionClick);
+
 writeFileSync(runtimePath, source, "utf8");
 
 try {
