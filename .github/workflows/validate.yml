@@ -37,7 +37,7 @@ jobs:
           assert 'app-data.js' in refs, 'Local-first data runtime is not loaded'
           assert 'app-status.js' in refs, 'Separated status reporting is not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=103' in html, 'v103 cache busting is missing'
+          assert '?v=104' in html, 'v104 cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -112,16 +112,16 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v103 deployment
+      - name: Wait for GitHub Pages v104 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 30); do
-            if curl -fsS "$URL" | grep -q 'app-data.js?v=103'; then
+            if curl -fsS "$URL" | grep -q 'app-data.js?v=104'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v103 within the expected time."
+          echo "GitHub Pages did not publish v104 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:

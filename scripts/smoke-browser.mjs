@@ -22,7 +22,7 @@ async function inspectRuntime(page) {
 async function openApp(context, suffix) {
   const page = await context.newPage();
   const errors = [];
-  const room = `ci-v103-${suffix}-${Date.now()}`;
+  const room = `ci-v104-${suffix}-${Date.now()}`;
   await page.addInitScript(roomId => {
     localStorage.setItem(`pal-breeding-current-user:${roomId}`, "福冨");
     localStorage.setItem("palBoardRecorder", "福冨");
@@ -83,6 +83,26 @@ async function auditLazyPalImages(page, requestedCount = 30) {
   if (runtime.verifiedImages !== 299) throw new Error(`Expected 299 verified images, got ${runtime.verifiedImages}`);
   if (new Set(runtime.unnumberedIds).size !== 11) throw new Error(`Expected 11 unique unnumbered IDs, got ${runtime.unnumberedIds.length}`);
 
+  // Parent picker must expose every Pal, including entries after No.121.
+  await page.click("#addRecord");
+  await page.click('#recordDialog [data-open-picker="recordParentA"]');
+  await page.waitForSelector("#palPickerDialog[open] [data-picker-pal]");
+  const pickerButtons = page.locator("#palPickerGrid [data-picker-pal]");
+  const pickerCount = await pickerButtons.count();
+  if (pickerCount !== runtime.palCount) throw new Error(`Parent picker rendered ${pickerCount}/${runtime.palCount} Pals`);
+  const pickerNumbers = await page.locator("#palPickerGrid [data-picker-pal] small").allTextContents();
+  if (!pickerNumbers.some(label => {
+    const match = label.match(/No\.(\d+)/);
+    return match && Number(match[1]) > 121;
+  })) throw new Error("Parent picker does not contain any Pal after No.121");
+  const lastPickerButton = pickerButtons.last();
+  const lastPickerId = await lastPickerButton.getAttribute("data-picker-pal");
+  await lastPickerButton.scrollIntoViewIfNeeded();
+  await lastPickerButton.click();
+  const selectedParentId = await page.evaluate(() => window.eval("state").pickerValues.recordParentA);
+  if (!lastPickerId || selectedParentId !== lastPickerId) throw new Error("A Pal at the end of the parent picker could not be selected");
+  await page.evaluate(() => document.querySelector("#recordDialog")?.close());
+
   await page.click('[data-view="paldex"]');
   await page.waitForSelector(".pal-card-button img");
   const imageAudit = await auditLazyPalImages(page, 30);
@@ -121,4 +141,4 @@ async function auditLazyPalImages(page, requestedCount = 30) {
 }
 
 await browser.close();
-console.log("Browser smoke tests passed for normal load, image outage, and mobile layout.");
+console.log("Browser smoke tests passed for full parent picker, normal load, image outage, and mobile layout.");
