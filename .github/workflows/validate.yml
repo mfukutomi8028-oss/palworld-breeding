@@ -14,8 +14,10 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check ui-shell.js
+          node --check app-discovery-shell.js
           node --check app-core.js
           node --check app-records.js
+          node --check app-discovery.js
           node --check app-explore.js
           node --check app-review.js
           node --check app-status.js
@@ -36,8 +38,11 @@ jobs:
           assert not missing, f'Missing entrypoint files: {missing}'
           assert 'app-data.js' in refs, 'Local-first data runtime is not loaded'
           assert 'app-status.js' in refs, 'Separated status reporting is not loaded'
+          assert 'app-discovery.js' in refs, 'Discovery runtime is not loaded'
+          assert 'app-discovery-shell.js' in refs, 'Discovery shell is not loaded'
+          assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=104' in html, 'v104 cache busting is missing'
+          assert '?v=105' in html, 'v105 cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -66,11 +71,11 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-          shell = Path('ui-shell.js').read_text(encoding='utf-8')
+          shell = Path('ui-shell.js').read_text(encoding='utf-8') + Path('app-discovery-shell.js').read_text(encoding='utf-8')
           ids = re.findall(r'\bid="([^"]+)"', shell)
           dup = sorted({item for item in ids if ids.count(item) > 1})
           assert not dup, f'Duplicate IDs: {dup}'
-          for path in ['style-foundation.css','style-components.css','style-responsive.css']:
+          for path in ['style-foundation.css','style-components.css','style-responsive.css','style-discovery-v105.css']:
               text = Path(path).read_text(encoding='utf-8')
               assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
           print(f'Validated {len(ids)} unique IDs')
@@ -112,16 +117,16 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v104 deployment
+      - name: Wait for GitHub Pages v105 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 30); do
-            if curl -fsS "$URL" | grep -q 'app-data.js?v=104'; then
+            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=105'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v104 within the expected time."
+          echo "GitHub Pages did not publish v105 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
