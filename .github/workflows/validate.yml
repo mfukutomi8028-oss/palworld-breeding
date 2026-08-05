@@ -42,7 +42,7 @@ jobs:
           assert 'app-discovery-shell.js' in refs, 'Discovery shell is not loaded'
           assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=105' in html, 'v105 cache busting is missing'
+          assert '?v=106' in html, 'v106 cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -117,16 +117,16 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v105 deployment
+      - name: Wait for GitHub Pages v106 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 30); do
-            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=105'; then
+            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=106'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v105 within the expected time."
+          echo "GitHub Pages did not publish v106 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
