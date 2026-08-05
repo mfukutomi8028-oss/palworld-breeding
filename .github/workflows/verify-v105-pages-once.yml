@@ -1,3 +1,4 @@
+# Triggered after workflow registration.
 name: Verify v105 published Pages once
 
 on:
