@@ -22,13 +22,19 @@ async function inspectRuntime(page) {
 async function openApp(context, suffix) {
   const page = await context.newPage();
   const errors = [];
+  const room = `ci-v103-${suffix}-${Date.now()}`;
+  await page.addInitScript(roomId => {
+    localStorage.setItem(`pal-breeding-current-user:${roomId}`, "福冨");
+    localStorage.setItem("palBoardRecorder", "福冨");
+  }, room);
   page.on("pageerror", error => errors.push(`pageerror: ${error.message}`));
   page.on("console", message => {
     if (message.type() === "error") errors.push(`console: ${message.text()}`);
   });
-  await page.goto(`${baseUrl}#room=ci-v103-${suffix}-${Date.now()}`, { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.goto(`${baseUrl}#room=${room}`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForFunction(() => document.querySelector("#app")?.dataset.ready === "true", null, { timeout: 60000 });
-  if (await page.locator("dialog[open]").count()) await page.keyboard.press("Escape");
+  await page.waitForFunction(() => document.querySelector("#bootScreen")?.classList.contains("is-hidden"), null, { timeout: 10000 });
+  await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close()));
   return { page, errors };
 }
 
