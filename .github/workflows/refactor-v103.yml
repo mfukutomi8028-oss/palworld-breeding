@@ -1,0 +1,34 @@
+name: Apply v103 data runtime refactor
+
+on:
+  push:
+    branches: [fix-data-recovery-v103]
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    if: ${{ !contains(github.event.head_commit.message, '[refactor-v103]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-data-recovery-v103
+          fetch-depth: 0
+      - name: Apply deterministic refactor
+        run: node scripts/apply-v103-refactor.mjs
+      - name: Check syntax before commit
+        run: |
+          node --check app-core.js
+          node --check app-records.js
+          node --check app-data.js
+          node --check app-review.js
+          node --check app-actions.js
+      - name: Commit refactor
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "[refactor-v103] Integrate local-first Pal data runtime"
+          git push origin HEAD:fix-data-recovery-v103
