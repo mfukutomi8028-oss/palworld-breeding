@@ -25,6 +25,8 @@ jobs:
           node --check app-actions.js
           node --check scripts/validate-v103-data.mjs
           node --check scripts/smoke-browser.mjs
+          node --check scripts/smoke-browser-http-aware.mjs
+          node --check scripts/smoke-v107.mjs
 
       - name: Validate entrypoint and local assets
         run: |
@@ -42,7 +44,7 @@ jobs:
           assert 'app-discovery-shell.js' in refs, 'Discovery shell is not loaded'
           assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=106' in html, 'v106 cache busting is missing'
+          assert '?v=107' in html, 'v107 cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -105,7 +107,9 @@ jobs:
       - name: Browser smoke tests
         env:
           APP_URL: http://127.0.0.1:4173/
-        run: node scripts/smoke-browser.mjs
+        run: |
+          node scripts/smoke-browser-http-aware.mjs
+          node scripts/smoke-v107.mjs
 
   public-pages-smoke:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -117,18 +121,20 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v106 deployment
+      - name: Wait for GitHub Pages v107 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 30); do
-            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=106'; then
+            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=107'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v106 within the expected time."
+          echo "GitHub Pages did not publish v107 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
           APP_URL: https://mfukutomi8028-oss.github.io/palworld-breeding/
-        run: node scripts/smoke-browser.mjs
+        run: |
+          node scripts/smoke-browser-http-aware.mjs
+          node scripts/smoke-v107.mjs
