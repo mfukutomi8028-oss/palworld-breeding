@@ -1,0 +1,109 @@
+name: Apply picker v104 fix
+
+on:
+  push:
+    branches: [fix-picker-all-pals-v104]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[picker-v104]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix-picker-all-pals-v104
+          fetch-depth: 0
+
+      - name: Apply deterministic picker fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              text = Path(path).read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one match, found {count}: {old!r}')
+              Path(path).write_text(text.replace(old, new), encoding='utf-8')
+
+          replace_once(
+              'app-actions.js',
+              ").includes(q)).slice(0,180);byId('palPickerGrid')",
+              ").includes(q));byId('palPickerGrid')",
+          )
+
+          index = Path('index.html')
+          index_text = index.read_text(encoding='utf-8')
+          if '?v=103' not in index_text:
+              raise SystemExit('index.html: v103 references not found')
+          index.write_text(index_text.replace('?v=103', '?v=104'), encoding='utf-8')
+
+          replace_once(
+              'config.js',
+              'window.palSiteVersion = "103";',
+              'window.palSiteVersion = "104";',
+          )
+
+          validate = Path('.github/workflows/validate.yml')
+          validate_text = validate.read_text(encoding='utf-8')
+          validate_text = validate_text.replace("assert '?v=103' in html, 'v103 cache busting is missing'", "assert '?v=104' in html, 'v104 cache busting is missing'")
+          validate.write_text(validate_text, encoding='utf-8')
+
+          smoke = Path('scripts/smoke-browser.mjs')
+          smoke_text = smoke.read_text(encoding='utf-8')
+          marker = "  if (new Set(runtime.unnumberedIds).size !== 11) throw new Error(`Expected 11 unique unnumbered IDs, got ${runtime.unnumberedIds.length}`);\n\n  await page.click('[data-view=\"paldex\"]');"
+          picker_test = """  if (new Set(runtime.unnumberedIds).size !== 11) throw new Error(`Expected 11 unique unnumbered IDs, got ${runtime.unnumberedIds.length}`);
+
+  // Parent picker must expose every Pal, including entries after No.121.
+  await page.click('#addRecord');
+  await page.click('[data-open-picker=\"recordParentA\"]');
+  await page.waitForSelector('#palPickerDialog[open] [data-picker-pal]');
+  const pickerButtons = page.locator('#palPickerGrid [data-picker-pal]');
+  const pickerCount = await pickerButtons.count();
+  if (pickerCount !== runtime.palCount) throw new Error(`Parent picker rendered ${pickerCount}/${runtime.palCount} Pals`);
+  const pickerNumbers = await page.locator('#palPickerGrid [data-picker-pal] small').allTextContents();
+  if (!pickerNumbers.some(label => {
+    const match = label.match(/No\\.(\\d+)/);
+    return match && Number(match[1]) > 121;
+  })) throw new Error('Parent picker does not contain any Pal after No.121');
+  const lastPickerButton = pickerButtons.last();
+  const lastPickerId = await lastPickerButton.getAttribute('data-picker-pal');
+  await lastPickerButton.scrollIntoViewIfNeeded();
+  await lastPickerButton.click();
+  const selectedParentId = await page.evaluate(() => window.eval('state').pickerValues.recordParentA);
+  if (!lastPickerId || selectedParentId !== lastPickerId) throw new Error('A Pal at the end of the parent picker could not be selected');
+  await page.evaluate(() => document.querySelector('#recordDialog')?.close());
+
+  await page.click('[data-view=\"paldex\"]');"""
+          if smoke_text.count(marker) != 1:
+              raise SystemExit('scripts/smoke-browser.mjs: insertion marker not found exactly once')
+          smoke.write_text(smoke_text.replace(marker, picker_test), encoding='utf-8')
+
+          architecture = Path('ARCHITECTURE.md')
+          architecture_text = architecture.read_text(encoding='utf-8')
+          architecture_text = architecture_text.replace('# パル配合ノート v103 アーキテクチャ', '# パル配合ノート v104 アーキテクチャ', 1)
+          quality_marker = '- `main` 反映後のGitHub Pages実画面'
+          quality_replacement = '- 親パル選択画面がパルマスター全件を表示し、No.121より後のパルも選択できること\n- `main` 反映後のGitHub Pages実画面'
+          if quality_marker not in architecture_text:
+              raise SystemExit('ARCHITECTURE.md: quality marker not found')
+          architecture.write_text(architecture_text.replace(quality_marker, quality_replacement, 1), encoding='utf-8')
+          PY
+
+      - name: Validate changed files
+        run: |
+          node --check app-actions.js
+          node --check scripts/smoke-browser.mjs
+          grep -q "?v=104" index.html
+          grep -q "window.palSiteVersion = \"104\"" config.js
+          ! grep -q "slice(0,180)" app-actions.js
+
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app-actions.js index.html config.js .github/workflows/validate.yml scripts/smoke-browser.mjs ARCHITECTURE.md
+          git commit -m "[picker-v104] Show every Pal in parent picker"
+          git push origin HEAD:fix-picker-all-pals-v104
