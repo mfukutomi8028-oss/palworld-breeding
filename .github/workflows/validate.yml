@@ -18,6 +18,7 @@ jobs:
           node --check app-core.js
           node --check app-records.js
           node --check app-discovery.js
+          node --check hint-v108.js
           node --check app-explore.js
           node --check app-review.js
           node --check app-status.js
@@ -27,6 +28,7 @@ jobs:
           node --check scripts/smoke-browser.mjs
           node --check scripts/smoke-browser-http-aware.mjs
           node --check scripts/smoke-v107.mjs
+          node --check scripts/smoke-v108-hint.mjs
 
       - name: Validate entrypoint and local assets
         run: |
@@ -42,9 +44,10 @@ jobs:
           assert 'app-status.js' in refs, 'Separated status reporting is not loaded'
           assert 'app-discovery.js' in refs, 'Discovery runtime is not loaded'
           assert 'app-discovery-shell.js' in refs, 'Discovery shell is not loaded'
+          assert 'hint-v108.js' in refs, 'v108 hint correction is not loaded'
           assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=107' in html, 'v107 cache busting is missing'
+          assert '?v=108' in html, 'v108 cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -110,6 +113,7 @@ jobs:
         run: |
           node scripts/smoke-browser-http-aware.mjs
           node scripts/smoke-v107.mjs
+          node scripts/smoke-v108-hint.mjs
 
   public-pages-smoke:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -121,16 +125,16 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v107 deployment
+      - name: Wait for GitHub Pages v108 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 30); do
-            if curl -fsS "$URL" | grep -q 'app-discovery.js?v=107'; then
+            if curl -fsS "$URL" | grep -q 'hint-v108.js?v=108'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v107 within the expected time."
+          echo "GitHub Pages did not publish v108 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
@@ -138,3 +142,4 @@ jobs:
         run: |
           node scripts/smoke-browser-http-aware.mjs
           node scripts/smoke-v107.mjs
+          node scripts/smoke-v108-hint.mjs
