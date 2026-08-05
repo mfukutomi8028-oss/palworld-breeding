@@ -38,6 +38,38 @@ async function openApp(context, suffix) {
   return { page, errors };
 }
 
+async function auditLazyPalImages(page, requestedCount = 30) {
+  const locator = page.locator(".pal-card-button img");
+  const total = Math.min(requestedCount, await locator.count());
+  const results = [];
+
+  for (let index = 0; index < total; index += 1) {
+    const image = locator.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await image.evaluate(async element => {
+      if (element.complete && element.naturalWidth > 0) return;
+      await new Promise(resolve => {
+        const finish = () => {
+          clearTimeout(timer);
+          resolve();
+        };
+        const timer = setTimeout(finish, 15000);
+        element.addEventListener("load", finish, { once: true });
+        element.addEventListener("error", finish, { once: true });
+      });
+    });
+    results.push(await image.evaluate(element => ({
+      src: element.getAttribute("src"),
+      currentSrc: element.currentSrc,
+      width: element.naturalWidth,
+      complete: element.complete,
+      alt: element.getAttribute("alt"),
+    })));
+  }
+
+  return results;
+}
+
 // Normal load: all core and image data should come from the repository itself.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
@@ -53,11 +85,8 @@ async function openApp(context, suffix) {
 
   await page.click('[data-view="paldex"]');
   await page.waitForSelector(".pal-card-button img");
-  const imageAudit = await page.evaluate(() => {
-    const images = [...document.querySelectorAll(".pal-card-button img")].slice(0, 30);
-    return images.map(image => ({ src: image.getAttribute("src"), width: image.naturalWidth, alt: image.getAttribute("alt") }));
-  });
-  const broken = imageAudit.filter(image => image.width <= 0 || !image.src?.includes("assets/pals/"));
+  const imageAudit = await auditLazyPalImages(page, 30);
+  const broken = imageAudit.filter(image => image.width <= 0 || !image.currentSrc.includes("/assets/pals/"));
   if (broken.length) throw new Error(`Local Pal image audit failed: ${JSON.stringify(broken.slice(0, 5))}`);
   if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
   await context.close();
