@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build the fixed Palworld 1.0 species-stat dataset from PalDB.
+"""Build a fixed Palworld 1.0 species-stat snapshot from PalDB.
 
-The PalDB Stats /299 table is the canonical source for the species scaling
-values shown in each Pal page's Stats panel: HP, Attack and Defense.
-The script also verifies the existing HP/Defense values before adding Attack.
+PalDB exposes the ordinary roster in the ``Stats /288`` table and the 11
+unnumbered collaboration Pals only on their individual pages.  This builder
+combines both sources, verifies the existing HP/Defense fields, and writes the
+PalDB Attack value (the game's ranged/ShotAttack species scaling value).
 """
 
 from __future__ import annotations
@@ -18,11 +19,13 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString, Tag
 
 SOURCE_URL = "https://paldb.cc/en/Pal_Stats"
 USER_AGENT = "pal-breeding-note/1.0 PalDB stat snapshot builder"
 EXPECTED_COUNT = 299
+EXPECTED_TABLE_COUNT = 288
+EXPECTED_INDIVIDUAL_COUNT = EXPECTED_COUNT - EXPECTED_TABLE_COUNT
 
 
 def normalized(value: Any) -> str:
@@ -56,23 +59,29 @@ def fetch_html(url: str) -> str:
         return response.read().decode("utf-8", errors="replace")
 
 
-def find_base_stats_table(soup: BeautifulSoup):
+def heading_text(heading: Tag) -> str:
+    return " ".join(heading.get_text(" ", strip=True).split())
+
+
+def find_base_stats_table(soup: BeautifulSoup) -> tuple[Tag, int]:
     for heading in soup.find_all(re.compile(r"^h[1-6]$")):
-        title = " ".join(heading.get_text(" ", strip=True).split())
-        if re.fullmatch(r"Stats\s*/\s*299", title, flags=re.IGNORECASE):
-            table = heading.find_next("table")
-            if table is None:
-                raise RuntimeError("PalDB Stats /299 heading has no following table")
-            return table
-    raise RuntimeError("PalDB Stats /299 table was not found")
+        title = heading_text(heading)
+        match = re.fullmatch(r"Stats\s*/\s*(\d+)", title, flags=re.IGNORECASE)
+        if not match:
+            continue
+        table = heading.find_next("table")
+        if table is None:
+            raise RuntimeError(f"PalDB {title} heading has no following table")
+        return table, int(match.group(1))
+    raise RuntimeError("PalDB base Stats /N table was not found")
 
 
-def parse_stats(html: str) -> list[dict[str, Any]]:
+def parse_base_stats(html: str) -> list[dict[str, Any]]:
     soup = BeautifulSoup(html, "html.parser")
-    table = find_base_stats_table(soup)
+    table, declared_count = find_base_stats_table(soup)
     rows = table.find_all("tr")
     if not rows:
-        raise RuntimeError("PalDB Stats /299 table is empty")
+        raise RuntimeError("PalDB base Stats table is empty")
 
     header = [normalized(cell.get_text(" ", strip=True)) for cell in rows[0].find_all(["th", "td"])]
     expected = ["name", "element", "total", "hp", "attack", "defense"]
@@ -102,12 +111,100 @@ def parse_stats(html: str) -> list[dict[str, Any]]:
                 "attack": attack,
                 "defense": defense,
                 "total": total,
+                "sourceType": "PalDB Stats table",
             }
         )
 
-    if len(results) != EXPECTED_COUNT:
-        raise RuntimeError(f"Expected {EXPECTED_COUNT} PalDB stat rows, got {len(results)}")
+    if declared_count != EXPECTED_TABLE_COUNT:
+        raise RuntimeError(
+            f"Expected PalDB base heading Stats /{EXPECTED_TABLE_COUNT}, got Stats /{declared_count}"
+        )
+    if len(results) != declared_count:
+        raise RuntimeError(f"PalDB declared {declared_count} base rows, parsed {len(results)}")
     return results
+
+
+def section_tokens(heading: Tag) -> list[str]:
+    """Collect visible text after a heading until the next heading."""
+
+    tokens: list[str] = []
+    current = heading.next_sibling
+    while current is not None:
+        if isinstance(current, Tag) and re.fullmatch(r"h[1-6]", current.name or "", flags=re.IGNORECASE):
+            break
+        if isinstance(current, NavigableString):
+            text = " ".join(str(current).split())
+            if text:
+                tokens.append(text)
+        elif isinstance(current, Tag):
+            tokens.extend(" ".join(text.split()) for text in current.stripped_strings if text.strip())
+        current = current.next_sibling
+
+    if tokens:
+        return tokens
+
+    # Some PalDB layouts wrap the heading and values in different containers.
+    for element in heading.next_elements:
+        if element is heading:
+            continue
+        if isinstance(element, Tag) and re.fullmatch(r"h[1-6]", element.name or "", flags=re.IGNORECASE):
+            break
+        if isinstance(element, NavigableString):
+            text = " ".join(str(element).split())
+            if text:
+                tokens.append(text)
+    return tokens
+
+
+def numeric_after(tokens: list[str], label: str) -> int:
+    label_key = normalized(label)
+    for index, token in enumerate(tokens):
+        if normalized(token) != label_key:
+            continue
+        for candidate in tokens[index + 1 :]:
+            stripped = candidate.replace(",", "").strip()
+            if re.fullmatch(r"-?\d+(?:\.\d+)?", stripped):
+                return int(float(stripped))
+            # A new stat label means the requested value was not found.
+            if normalized(candidate) in {
+                "health",
+                "food",
+                "meleeattack",
+                "attack",
+                "defense",
+                "workspeed",
+                "support",
+            }:
+                break
+    raise RuntimeError(f"Could not find numeric value after {label!r}; tokens={tokens[:80]!r}")
+
+
+def parse_individual_stats(html: str, name: str, url: str) -> dict[str, Any]:
+    soup = BeautifulSoup(html, "html.parser")
+    heading = next(
+        (
+            item
+            for item in soup.find_all(re.compile(r"^h[1-6]$"))
+            if re.fullmatch(r"Stats", heading_text(item), flags=re.IGNORECASE)
+        ),
+        None,
+    )
+    if heading is None:
+        raise RuntimeError(f"{name}: individual PalDB Stats heading not found at {url}")
+
+    tokens = section_tokens(heading)
+    hp = numeric_after(tokens, "Health")
+    attack = numeric_after(tokens, "Attack")
+    defense = numeric_after(tokens, "Defense")
+    return {
+        "name": name,
+        "slug": source_slug(url),
+        "hp": hp,
+        "attack": attack,
+        "defense": defense,
+        "total": hp + attack + defense,
+        "sourceType": "Individual PalDB Stats panel",
+    }
 
 
 def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> None:
@@ -118,9 +215,31 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
             f"Expected {EXPECTED_COUNT} local Pal records, got {len(records) if isinstance(records, list) else 'invalid'}"
         )
 
-    stats = parse_stats(fetch_html(SOURCE_URL))
+    stats = parse_base_stats(fetch_html(SOURCE_URL))
     by_slug = {normalized(row["slug"]): row for row in stats if row["slug"]}
     by_name = {normalized(row["name"]): row for row in stats}
+
+    missing_records: list[dict[str, Any]] = []
+    for record in records:
+        slug = source_slug(str(record.get("sourceUrl") or ""))
+        if by_slug.get(normalized(slug)) or by_name.get(normalized(record.get("name"))):
+            continue
+        missing_records.append(record)
+
+    if len(missing_records) != EXPECTED_INDIVIDUAL_COUNT:
+        names = [f"{record.get('number')} {record.get('name')}" for record in missing_records]
+        raise RuntimeError(
+            f"Expected {EXPECTED_INDIVIDUAL_COUNT} individual-page Pals, got {len(missing_records)}: {names}"
+        )
+
+    for record in missing_records:
+        url = str(record.get("sourceUrl") or "").strip()
+        if not url:
+            raise RuntimeError(f"{record.get('name')}: sourceUrl is missing")
+        stat = parse_individual_stats(fetch_html(url), str(record.get("name") or ""), url)
+        stats.append(stat)
+        by_slug[normalized(stat["slug"])] = stat
+        by_name[normalized(stat["name"])] = stat
 
     snapshot_records: list[dict[str, Any]] = []
     missing: list[str] = []
@@ -157,6 +276,7 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
                 "defense": stat["defense"],
                 "total": stat["total"],
                 "sourceUrl": str(record.get("sourceUrl") or ""),
+                "sourceType": stat["sourceType"],
             }
         )
 
@@ -166,6 +286,10 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
         raise RuntimeError("Existing HP/Defense differs from PalDB:\n" + "\n".join(mismatches))
     if len(snapshot_records) != EXPECTED_COUNT:
         raise RuntimeError(f"Built {len(snapshot_records)} stat records")
+
+    identities = {(row["number"], row["name"]) for row in snapshot_records}
+    if len(identities) != EXPECTED_COUNT:
+        raise RuntimeError(f"Species-stat identities are not unique: {len(identities)}")
 
     lamball = next(row for row in snapshot_records if row["name"] == "Lamball")
     if (lamball["hp"], lamball["attack"], lamball["defense"], lamball["total"]) != (
@@ -178,7 +302,7 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
 
     retrieved = dt.date.today().isoformat()
     snapshot = {
-        "source": "PalDB Stats /299 and individual Pal Stats panels",
+        "source": "PalDB Stats /288 plus 11 individual Pal Stats panels",
         "sourceUrl": SOURCE_URL,
         "gameVersion": "Palworld 1.0",
         "retrieved": retrieved,
@@ -188,6 +312,8 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
             "defense": "Species Defense scaling value shown in PalDB",
             "total": "HP + Attack + Defense",
         },
+        "tableCount": EXPECTED_TABLE_COUNT,
+        "individualPageCount": EXPECTED_INDIVIDUAL_COUNT,
         "count": len(snapshot_records),
         "records": snapshot_records,
     }
@@ -207,7 +333,8 @@ def build_snapshot(pals_path: Path, output_path: Path, update_pals: bool) -> Non
         )
 
     print(
-        f"Built {len(snapshot_records)} PalDB species stat rows. "
+        f"Built {len(snapshot_records)} PalDB species stat rows "
+        f"({EXPECTED_TABLE_COUNT} table + {EXPECTED_INDIVIDUAL_COUNT} individual). "
         f"Lamball={lamball['hp']}/{lamball['attack']}/{lamball['defense']} total={lamball['total']}"
     )
 
