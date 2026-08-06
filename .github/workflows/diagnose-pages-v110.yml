@@ -13,16 +13,15 @@ jobs:
   diagnose:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Show repository versions
+      - name: Inspect repository main without external actions
         run: |
-          echo '--- index.html version refs ---'
-          grep -oE '\?v=[0-9]+' index.html | sort -u
-          echo '--- config.js site version ---'
-          grep 'palSiteVersion' config.js
-          echo '--- commit ---'
-          git rev-parse HEAD
+          base='https://raw.githubusercontent.com/mfukutomi8028-oss/palworld-breeding/main'
+          curl -fsSL "${base}/index.html?sha=${GITHUB_SHA}" -o /tmp/main-index.html
+          curl -fsSL "${base}/config.js?sha=${GITHUB_SHA}" -o /tmp/main-config.js
+          echo '--- main index.html version refs ---'
+          grep -oE '\?v=[0-9]+' /tmp/main-index.html | sort -u
+          echo '--- main config.js site version ---'
+          grep 'palSiteVersion' /tmp/main-config.js
 
       - name: Inspect GitHub Pages configuration
         env:
@@ -35,20 +34,22 @@ jobs:
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
           echo "Pages API HTTP ${status}"
           cat /tmp/pages.json
+          test "$status" = '200'
 
       - name: Inspect published files without browser cache
         run: |
           base='https://mfukutomi8028-oss.github.io/palworld-breeding'
           stamp="${GITHUB_SHA}-$(date +%s)"
           for path in index.html config.js app-discovery.js; do
-            echo "--- ${path} ---"
-            curl -fsSL -D "/tmp/${path//\//_}.headers" "${base}/${path}?diagnostic=${stamp}" -o "/tmp/${path//\//_}.body"
-            cat "/tmp/${path//\//_}.headers"
+            safe="${path//\//_}"
+            echo "--- published ${path} ---"
+            curl -fsSL -D "/tmp/${safe}.headers" "${base}/${path}?diagnostic=${stamp}" -o "/tmp/${safe}.body"
+            cat "/tmp/${safe}.headers"
             if [ "$path" = 'index.html' ]; then
-              grep -oE '\?v=[0-9]+' "/tmp/${path//\//_}.body" | sort -u || true
+              grep -oE '\?v=[0-9]+' "/tmp/${safe}.body" | sort -u || true
             elif [ "$path" = 'config.js' ]; then
-              grep 'palSiteVersion' "/tmp/${path//\//_}.body" || true
+              grep 'palSiteVersion' "/tmp/${safe}.body" || true
             else
-              grep -E 'romajiConsonantHint|ヒント3・ローマ字' "/tmp/${path//\//_}.body" | head -n 3 || true
+              grep -E 'romajiConsonantHint|ヒント3・ローマ字' "/tmp/${safe}.body" | head -n 3 || true
             fi
           done
