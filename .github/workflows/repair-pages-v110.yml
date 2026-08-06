@@ -5,7 +5,6 @@ on:
     branches: [main]
 
 permissions:
-  actions: read
   contents: read
   pages: write
 
@@ -13,90 +12,28 @@ jobs:
   repair:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel stale Pages deployments and request a new legacy build
+      - name: Switch GitHub Pages to Actions deployment
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          python - <<'PY'
-          import datetime as dt
-          import json
-          import os
-          import time
-          import urllib.error
-          import urllib.request
+          status="$(curl -sS -o /tmp/pages-update.json -w '%{http_code}' -X PUT \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -H 'Content-Type: application/json' \
+            -d '{"build_type":"workflow"}' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
+          echo "Pages update HTTP ${status}"
+          cat /tmp/pages-update.json
+          test "$status" = '204' -o "$status" = '200'
 
-          repo = os.environ['GITHUB_REPOSITORY']
-          token = os.environ['GH_TOKEN']
-          api = f'https://api.github.com/repos/{repo}'
-          headers = {
-              'Accept': 'application/vnd.github+json',
-              'Authorization': f'Bearer {token}',
-              'X-GitHub-Api-Version': '2022-11-28',
-          }
-
-          def request(path, method='GET', body=None, allow=(200, 201, 202, 204)):
-              data = None if body is None else json.dumps(body).encode()
-              req = urllib.request.Request(api + path, data=data, method=method, headers=headers)
-              try:
-                  with urllib.request.urlopen(req, timeout=30) as response:
-                      raw = response.read()
-                      result = json.loads(raw) if raw else None
-                      print(method, path, response.status, json.dumps(result, ensure_ascii=False)[:4000])
-                      return response.status, result
-              except urllib.error.HTTPError as error:
-                  raw = error.read().decode(errors='replace')
-                  print(method, path, error.code, raw)
-                  if error.code not in allow:
-                      raise
-                  return error.code, json.loads(raw) if raw else None
-
-          # Pages deployments can remain queued after superseded legacy/Actions attempts.
-          status, deployments = request('/pages/deployments?per_page=100')
-          if not isinstance(deployments, list):
-              deployments = []
-
-          stale_states = {'queued', 'in_progress', 'deployment_queued', 'building'}
-          for deployment in deployments:
-              deployment_id = deployment.get('id') or deployment.get('page_url') or deployment.get('pages_build_version')
-              deployment_status = str(deployment.get('status') or '').lower()
-              if not deployment_id or deployment_status not in stale_states:
-                  continue
-              try:
-                  request(f'/pages/deployments/{deployment_id}/cancel', method='POST', allow=(202, 204, 409))
-              except Exception as error:
-                  print('Could not cancel deployment', deployment_id, repr(error))
-
-          # Request a clean build from the configured main/root legacy source.
-          request('/pages/builds', method='POST', allow=(201, 202))
-
-          # Wait for the build stage to finish. Publication is checked separately.
-          deadline = time.time() + 600
-          while time.time() < deadline:
-              _, build = request('/pages/builds/latest')
-              build_status = str((build or {}).get('status') or '').lower()
-              if build_status in {'built', 'success'}:
-                  print('Pages build completed successfully.')
-                  break
-              if build_status in {'errored', 'error', 'failed'}:
-                  raise SystemExit(f'Pages build failed: {json.dumps(build, ensure_ascii=False)}')
-              time.sleep(10)
-          else:
-              raise SystemExit('Timed out waiting for the Pages build stage.')
-          PY
-
-      - name: Wait for the published site to become v109
+      - name: Verify Pages configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          base='https://mfukutomi8028-oss.github.io/palworld-breeding'
-          for attempt in $(seq 1 90); do
-            stamp="$(date +%s)-${attempt}"
-            published="$(curl -fsSL "${base}/config.js?repair=${stamp}" | grep -oE 'palSiteVersion = "[0-9]+"' || true)"
-            echo "Attempt ${attempt}: ${published:-no version}"
-            if echo "$published" | grep -q '"109"'; then
-              curl -fsSL "${base}/index.html?repair=${stamp}" | grep -q '?v=109'
-              echo 'Published GitHub Pages is now v109.'
-              exit 0
-            fi
-            sleep 10
-          done
-          echo 'GitHub Pages did not publish v109 within 15 minutes.'
-          exit 1
+          curl -fsSL \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages" | tee /tmp/pages.json
+          grep -q '"build_type": "workflow"' /tmp/pages.json
