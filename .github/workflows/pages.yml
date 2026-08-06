@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: Build and Deploy GitHub Pages
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -15,13 +15,84 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      generated: ${{ steps.generate.outputs.generated }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect whether the v110 fixed dataset is already committed
+        id: need
+        run: |
+          if [ -f data/pal-stats-v1.json ] && grep -q '?v=110' index.html && grep -q 'palSiteVersion = "110"' config.js; then
+            echo 'required=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'required=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install PalDB snapshot parser
+        if: steps.need.outputs.required == 'true'
+        run: python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
+
+      - name: Generate verified PalDB fixed data and integrate the Paldex
+        if: steps.need.outputs.required == 'true'
+        run: |
+          python scripts/build-paldb-stats.py --update-pals
+          python scripts/apply-paldex-stats-v110.py
+          node scripts/validate-pal-stats-v110.mjs
+          node --check app-data.js
+          node --check app-explore.js
+          node --check app-actions.js
+
+      - name: Commit first-time v110 generated files
+        id: generate
+        if: steps.need.outputs.required == 'true'
+        run: |
+          if git diff --quiet; then
+            echo 'generated=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
+            app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
+            style-components.css style-responsive.css index.html config.js
+          git commit -m '[pal-stats-v110] Add verified PalDB stats and Paldex sorting'
+          git push origin HEAD:main
+          echo 'generated=true' >> "$GITHUB_OUTPUT"
+
+      - name: Mark unchanged build
+        if: steps.need.outputs.required != 'true'
+        run: echo 'v110 fixed data is already committed; proceeding to deployment.'
+
   deploy:
+    if: needs.prepare.outputs.generated != 'true'
+    needs: prepare
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Ensure GitHub Pages uses Actions deployments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status="$(curl -sS -o /tmp/pages-update.json -w '%{http_code}' -X PUT \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            -H 'Content-Type: application/json' \
+            -d '{"build_type":"workflow"}' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
+          cat /tmp/pages-update.json
+          test "$status" = '204' -o "$status" = '200'
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
