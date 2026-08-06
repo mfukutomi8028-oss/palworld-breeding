@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: paldb-stats-v110-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   generate:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
@@ -23,7 +27,10 @@ jobs:
       - name: Build fixed PalDB HP Attack Defense snapshot
         run: python scripts/build-paldb-stats.py --update-pals
 
-      - name: Validate generated values
+      - name: Integrate Paldex stats and sorting
+        run: python scripts/apply-paldex-stats-v110.py
+
+      - name: Validate generated values and JavaScript
         run: |
           python - <<'PY'
           import json
@@ -40,17 +47,25 @@ jobs:
           assert all(row.get('statTotal') == row['hp'] + row['attack'] + row['defense'] for row in pals['records'])
           lamball = next(row for row in pals['records'] if row['name'] == 'Lamball')
           assert (lamball['hp'], lamball['attack'], lamball['defense'], lamball['statTotal']) == (70, 70, 70, 210)
+          assert '?v=110' in Path('index.html').read_text(encoding='utf-8')
+          assert 'palSiteVersion = "110"' in Path('config.js').read_text(encoding='utf-8')
           print('Validated 299 PalDB species-stat records and Lamball 70/70/70.')
           PY
+          node --check app-data.js
+          node --check app-explore.js
+          node --check app-actions.js
 
-      - name: Commit generated fixed data
+      - name: Commit generated data and integrated UI
         run: |
-          if git diff --quiet -- data/pals-v1.json data/pal-stats-v1.json; then
-            echo 'PalDB stats are already current.'
+          if git diff --quiet; then
+            echo 'PalDB stats and v110 UI are already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/pals-v1.json data/pal-stats-v1.json
-          git commit -m '[pal-stats-v110] Add verified PalDB HP Attack Defense values'
+          git add \
+            data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
+            app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
+            style-components.css style-responsive.css index.html config.js
+          git commit -m '[pal-stats-v110] Add verified PalDB stats and Paldex sorting'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
