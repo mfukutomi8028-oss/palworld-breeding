@@ -1,0 +1,1 @@
+Requested v109: replace English-name hint with romaji consonant hints, add discovery-aligned experiment planning, and improve hint/reset UX.
