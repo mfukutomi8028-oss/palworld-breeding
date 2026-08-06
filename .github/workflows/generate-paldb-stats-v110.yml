@@ -1,25 +1,24 @@
 name: Generate PalDB Stats v110
 
 on:
-  push:
-    branches: [fix-pages-v110]
-  workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
 
 concurrency:
-  group: paldb-stats-v110
+  group: paldb-stats-v110-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   generate:
-    if: ${{ !contains(github.event.head_commit.message || '', '[pal-stats-v110]') }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix-pages-v110
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Install parser dependency
@@ -69,4 +68,4 @@ jobs:
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
           git commit -m '[pal-stats-v110] Add verified PalDB stats and Paldex sorting'
-          git push origin HEAD:fix-pages-v110
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
