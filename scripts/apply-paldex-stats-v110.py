@@ -94,7 +94,9 @@ replace_once(
 )
 
 explore_helpers = r'''function palStatValue(pal,key){
-  const value=Number(pal?.[key]);
+  const raw=pal?.[key];
+  if(raw===null||raw===undefined||raw==="")return null;
+  const value=Number(raw);
   return Number.isFinite(value)?value:null;
 }
 
@@ -200,11 +202,12 @@ append_once(
     r'''## PalDB species stats v110
 
 - Source: `https://paldb.cc/en/Pal_Stats`
-- Table: `Stats /299`
-- Fields: HP, Attack, Defense, Total
+- Ordinary roster: PalDB `Stats /288` table.
+- Unnumbered collaboration roster: 11 individual PalDB `Stats` panels.
+- Fields: HP, Attack, Defense, Total.
 - `Attack` is PalDB's ranged/ShotAttack species scaling value, not MeleeAttack.
 - Generated reproducibly with `scripts/build-paldb-stats.py`.
-- The generator verifies all 299 rows, checks `Total = HP + Attack + Defense`, and compares the existing HP/Defense values before writing Attack.
+- The generator verifies 288 + 11 = 299 rows, checks `Total = HP + Attack + Defense`, and compares the existing HP/Defense values before writing Attack.
 ''',
 )
 
