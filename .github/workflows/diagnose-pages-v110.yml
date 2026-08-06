@@ -5,6 +5,7 @@ on:
     branches: [main]
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -35,6 +36,69 @@ jobs:
           echo "Pages API HTTP ${status}"
           cat /tmp/pages.json
           test "$status" = '200'
+
+      - name: Inspect recent Pages build failures
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          headers = {
+              'Accept': 'application/vnd.github+json',
+              'Authorization': f'Bearer {token}',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+
+          def get_json(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req) as response:
+                  return json.load(response)
+
+          runs = get_json(f'https://api.github.com/repos/{repo}/actions/runs?per_page=100').get('workflow_runs', [])
+          pages_runs = [run for run in runs if run.get('name') == 'pages build and deployment']
+          print('Recent legacy Pages runs:')
+          for run in pages_runs[:10]:
+              print(json.dumps({
+                  'id': run.get('id'),
+                  'head_sha': run.get('head_sha'),
+                  'status': run.get('status'),
+                  'conclusion': run.get('conclusion'),
+                  'created_at': run.get('created_at'),
+                  'html_url': run.get('html_url'),
+              }, ensure_ascii=False))
+
+          failed = next((run for run in pages_runs if run.get('conclusion') == 'failure'), None)
+          if not failed:
+              print('No failed legacy Pages run found in the latest 100 runs.')
+              raise SystemExit(0)
+
+          jobs = get_json(f"https://api.github.com/repos/{repo}/actions/runs/{failed['id']}/jobs?per_page=100").get('jobs', [])
+          print(f"Inspecting failed Pages run {failed['id']}")
+          for job in jobs:
+              print(json.dumps({
+                  'job_id': job.get('id'),
+                  'name': job.get('name'),
+                  'status': job.get('status'),
+                  'conclusion': job.get('conclusion'),
+                  'steps': [{
+                      'name': step.get('name'),
+                      'conclusion': step.get('conclusion'),
+                  } for step in job.get('steps', [])],
+              }, ensure_ascii=False))
+              if job.get('conclusion') != 'failure':
+                  continue
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{job['id']}/logs",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req) as response:
+                  text = response.read().decode('utf-8', errors='replace')
+              important = [line for line in text.splitlines() if any(word in line.lower() for word in ('error', 'failed', 'jekyll', 'pages', 'artifact'))]
+              print('\n'.join(important[-120:]))
+          PY
 
       - name: Inspect published files without browser cache
         run: |
