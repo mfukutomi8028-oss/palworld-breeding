@@ -1,12 +1,17 @@
 name: Repair Pages v110
 
 on:
-  pull_request:
-    branches: [main]
+  push:
+    branches: [fix-pages-v110]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
+
+concurrency:
+  group: repair-pages-v110
+  cancel-in-progress: true
 
 jobs:
   repair:
