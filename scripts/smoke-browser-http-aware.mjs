@@ -25,13 +25,42 @@ if (!source.includes(original)) {
 }
 source = source.replace(original, replacement);
 
-const fixedLastPositionClick = `  await firstReverse.locator('[data-reverse-position$="|japanese|last"]').click();`;
-const availablePositionClick = `  await firstReverse.locator('[data-reverse-position*="|japanese|"]:not([disabled])').first().click();`;
-if (!source.includes(fixedLastPositionClick)) {
-  throw new Error("Could not install short-name-aware reverse hint test.");
-}
-source = source.replace(fixedLastPositionClick, availablePositionClick);
+const updates = [
+  [
+    `  if (await page.locator('#hintBoard [data-forward-position^="english|"]').count() !== 7) throw new Error("English hint does not have seven fixed positions");`,
+    `  const forwardRomajiSlots = await page.evaluate(() => romajiHintSlotCount());\n  if (await page.locator('#hintBoard [data-forward-position^="romaji|"]').count() !== forwardRomajiSlots) throw new Error("Romaji consonant hint does not use the global longest-name slot count");`,
+  ],
+  [
+    `  await page.click('[data-forward-position="english|last"]');`,
+    `  await page.click('[data-forward-position="romaji|slot-0"]');`,
+  ],
+  [
+    `  await page.click('[data-forward-position="japanese|middle"]');`,
+    `  await page.locator('[data-forward-position^="japanese|"]:not(:disabled)').first().click();`,
+  ],
+  [
+    `  if (await firstReverse.locator('[data-reverse-position*="|english|"]').count() !== 7) throw new Error("Reverse English hint does not keep a fixed seven-position layout");`,
+    `  const reverseRomajiSlots = await page.evaluate(() => romajiHintSlotCount());\n  if (await firstReverse.locator('[data-reverse-position*="|romaji|"]').count() !== reverseRomajiSlots) throw new Error("Reverse Romaji hint does not use the global longest-name slot count");`,
+  ],
+  [
+    `  await firstReverse.locator('[data-reverse-position$="|english|first"]').click();`,
+    `  await firstReverse.locator('[data-reverse-position*="|romaji|"]:not(:disabled)').first().click();`,
+  ],
+  [
+    `  await firstReverse.locator('[data-reverse-position$="|japanese|last"]').click();`,
+    `  await firstReverse.locator('[data-reverse-position*="|japanese|"]:not(:disabled)').first().click();`,
+  ],
+];
 
+for (const [before, after] of updates) {
+  if (!source.includes(before)) throw new Error(`Could not update legacy hint regression step: ${before}`);
+  source = source.replace(before, after);
+}
+
+source = source.replace(
+  "Forward hint page uses fixed position choices instead of revealing name length.",
+  "Forward hint page uses a global fixed slot count instead of revealing each name length.",
+);
 writeFileSync(runtimePath, source, "utf8");
 
 try {
