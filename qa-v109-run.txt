@@ -1,1 +1,1 @@
-Temporary QA trigger for v109 romaji hints and discovery-trial workflow. This branch will not be merged.
+Inspect the explicit GitHub Pages workflow triggered by main commit 16d372a827f1d827b5ed06416b28f2d0db8cf50c.
