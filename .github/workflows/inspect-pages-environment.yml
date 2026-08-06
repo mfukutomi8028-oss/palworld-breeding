@@ -1,0 +1,35 @@
+name: Inspect github-pages environment
+
+on:
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+  deployments: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read github-pages environment settings
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -fsSL \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/environments/github-pages" | tee /tmp/environment.json
+          echo
+          python - <<'PY'
+          import json
+          data=json.load(open('/tmp/environment.json',encoding='utf-8'))
+          print(json.dumps({
+            'name':data.get('name'),
+            'protected_branches':data.get('protected_branches'),
+            'protection_rules':data.get('protection_rules'),
+            'deployment_branch_policy':data.get('deployment_branch_policy'),
+            'can_admins_bypass':data.get('can_admins_bypass'),
+          },ensure_ascii=False,indent=2))
+          PY
