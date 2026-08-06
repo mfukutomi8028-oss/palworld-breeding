@@ -1,0 +1,24 @@
+name: Inspect published v109
+
+on:
+  pull_request:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect GitHub Pages without CDN cache
+        run: |
+          URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
+          for attempt in $(seq 1 60); do
+            HTML="$(curl -fsS "$URL?cache=v109-${GITHUB_RUN_ID}-${attempt}-$(date +%s)")"
+            VERSION="$(printf '%s' "$HTML" | grep -oE 'app-discovery\.js\?v=[0-9]+' | head -1 || true)"
+            echo "Attempt $attempt: ${VERSION:-version-not-found}"
+            if printf '%s' "$HTML" | grep -q 'app-discovery.js?v=109'; then
+              echo "Published v109 detected."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Published v109 was not detected."
+          exit 1
