@@ -1,1 +1,1 @@
-Inspect the explicit GitHub Pages workflow triggered by main commit 16d372a827f1d827b5ed06416b28f2d0db8cf50c.
+Inspect the hardened GitHub Pages workflow triggered by main commit c0d33ba277dc9a220bd603cc3d80d3de3818b495.
