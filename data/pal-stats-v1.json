@@ -1,0 +1,3007 @@
+{
+  "source": "PalDB Stats /288 plus 11 individual Pal Stats panels",
+  "sourceUrl": "https://paldb.cc/en/Pal_Stats",
+  "gameVersion": "Palworld 1.0",
+  "retrieved": "2026-08-06",
+  "definition": {
+    "hp": "Species HP scaling value shown as Health in PalDB",
+    "attack": "Species ranged/ShotAttack scaling value shown as Attack in PalDB",
+    "defense": "Species Defense scaling value shown in PalDB",
+    "total": "HP + Attack + Defense"
+  },
+  "tableCount": 288,
+  "individualPageCount": 11,
+  "count": 299,
+  "records": [
+    {
+      "number": "1",
+      "name": "Lamball",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Lamball",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "2",
+      "name": "Cattiva",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Cattiva",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "3",
+      "name": "Chikipi",
+      "hp": 60,
+      "attack": 60,
+      "defense": 60,
+      "total": 180,
+      "sourceUrl": "https://paldb.cc/en/Chikipi",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "4",
+      "name": "Lifmunk",
+      "hp": 75,
+      "attack": 70,
+      "defense": 70,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Lifmunk",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "5",
+      "name": "Fuack",
+      "hp": 60,
+      "attack": 80,
+      "defense": 60,
+      "total": 200,
+      "sourceUrl": "https://paldb.cc/en/Fuack",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "5B",
+      "name": "Fuack Ignis",
+      "hp": 60,
+      "attack": 85,
+      "defense": 60,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Fuack_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "6",
+      "name": "Vixy",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Vixy",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "7",
+      "name": "Celaray",
+      "hp": 80,
+      "attack": 70,
+      "defense": 80,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Celaray",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "7B",
+      "name": "Celaray Lux",
+      "hp": 80,
+      "attack": 75,
+      "defense": 80,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Celaray_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "8",
+      "name": "Cremis",
+      "hp": 70,
+      "attack": 70,
+      "defense": 75,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Cremis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "9",
+      "name": "Croajiro",
+      "hp": 80,
+      "attack": 100,
+      "defense": 85,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Croajiro",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "9B",
+      "name": "Croajiro Noct",
+      "hp": 85,
+      "attack": 110,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Croajiro_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "10",
+      "name": "Herbil",
+      "hp": 80,
+      "attack": 75,
+      "defense": 75,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Herbil",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "11",
+      "name": "Teafant",
+      "hp": 70,
+      "attack": 60,
+      "defense": 70,
+      "total": 200,
+      "sourceUrl": "https://paldb.cc/en/Teafant",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "12",
+      "name": "Gumoss",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Gumoss",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "13",
+      "name": "Pupperai",
+      "hp": 70,
+      "attack": 80,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Pupperai",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "14",
+      "name": "Clovee",
+      "hp": 80,
+      "attack": 65,
+      "defense": 65,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Clovee",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "15",
+      "name": "Jolthog",
+      "hp": 70,
+      "attack": 75,
+      "defense": 70,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Jolthog",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "15B",
+      "name": "Jolthog Cryst",
+      "hp": 70,
+      "attack": 75,
+      "defense": 80,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Jolthog_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "16",
+      "name": "Depresso",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Depresso",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "17",
+      "name": "Pengullet",
+      "hp": 70,
+      "attack": 75,
+      "defense": 70,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Pengullet",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "17B",
+      "name": "Pengullet Lux",
+      "hp": 70,
+      "attack": 80,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Pengullet_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "18",
+      "name": "Penking",
+      "hp": 95,
+      "attack": 95,
+      "defense": 95,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Penking",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "18B",
+      "name": "Penking Lux",
+      "hp": 100,
+      "attack": 100,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Penking_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "19",
+      "name": "Hoocrates",
+      "hp": 70,
+      "attack": 70,
+      "defense": 80,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Hoocrates",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "20",
+      "name": "Melpaca",
+      "hp": 90,
+      "attack": 75,
+      "defense": 90,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Melpaca",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "21",
+      "name": "Kingpaca",
+      "hp": 120,
+      "attack": 85,
+      "defense": 90,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Kingpaca",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "21B",
+      "name": "Kingpaca Cryst",
+      "hp": 120,
+      "attack": 85,
+      "defense": 90,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Kingpaca_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "22",
+      "name": "Daedream",
+      "hp": 70,
+      "attack": 75,
+      "defense": 60,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Daedream",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "23",
+      "name": "Tanzee",
+      "hp": 80,
+      "attack": 70,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Tanzee",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "23B",
+      "name": "Tanzee Ignis",
+      "hp": 80,
+      "attack": 75,
+      "defense": 70,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Tanzee_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "24",
+      "name": "Nox",
+      "hp": 75,
+      "attack": 85,
+      "defense": 70,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Nox",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "25",
+      "name": "Flambelle",
+      "hp": 60,
+      "attack": 70,
+      "defense": 80,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Flambelle",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "26",
+      "name": "Rooby",
+      "hp": 75,
+      "attack": 70,
+      "defense": 75,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Rooby",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "27",
+      "name": "Mau",
+      "hp": 70,
+      "attack": 60,
+      "defense": 70,
+      "total": 200,
+      "sourceUrl": "https://paldb.cc/en/Mau",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "27B",
+      "name": "Mau Cryst",
+      "hp": 70,
+      "attack": 65,
+      "defense": 70,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Mau_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "28",
+      "name": "Rushoar",
+      "hp": 80,
+      "attack": 70,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Rushoar",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "29",
+      "name": "Foxparks",
+      "hp": 65,
+      "attack": 75,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Foxparks",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "29B",
+      "name": "Foxparks Cryst",
+      "hp": 65,
+      "attack": 80,
+      "defense": 70,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Foxparks_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "30",
+      "name": "Killamari",
+      "hp": 60,
+      "attack": 60,
+      "defense": 70,
+      "total": 190,
+      "sourceUrl": "https://paldb.cc/en/Killamari",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "30B",
+      "name": "Killamari Primo",
+      "hp": 70,
+      "attack": 60,
+      "defense": 70,
+      "total": 200,
+      "sourceUrl": "https://paldb.cc/en/Killamari_Primo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "31",
+      "name": "Fuddler",
+      "hp": 65,
+      "attack": 80,
+      "defense": 50,
+      "total": 195,
+      "sourceUrl": "https://paldb.cc/en/Fuddler",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "32",
+      "name": "Eikthyrdeer",
+      "hp": 95,
+      "attack": 80,
+      "defense": 80,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "32B",
+      "name": "Eikthyrdeer Terra",
+      "hp": 95,
+      "attack": 80,
+      "defense": 80,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "33",
+      "name": "Direhowl",
+      "hp": 80,
+      "attack": 90,
+      "defense": 75,
+      "total": 245,
+      "sourceUrl": "https://paldb.cc/en/Direhowl",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "34",
+      "name": "Caprity",
+      "hp": 100,
+      "attack": 70,
+      "defense": 90,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Caprity",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "34B",
+      "name": "Caprity Noct",
+      "hp": 100,
+      "attack": 75,
+      "defense": 90,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Caprity_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "35",
+      "name": "Swee",
+      "hp": 60,
+      "attack": 60,
+      "defense": 60,
+      "total": 180,
+      "sourceUrl": "https://paldb.cc/en/Swee",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "36",
+      "name": "Sweepa",
+      "hp": 100,
+      "attack": 90,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Sweepa",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "37",
+      "name": "Turtacle",
+      "hp": 75,
+      "attack": 75,
+      "defense": 115,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Turtacle",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "37B",
+      "name": "Turtacle Terra",
+      "hp": 85,
+      "attack": 85,
+      "defense": 125,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Turtacle_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "38",
+      "name": "Hangyu",
+      "hp": 80,
+      "attack": 70,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Hangyu",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "38B",
+      "name": "Hangyu Cryst",
+      "hp": 80,
+      "attack": 80,
+      "defense": 70,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Hangyu_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "39",
+      "name": "Woolipop",
+      "hp": 70,
+      "attack": 70,
+      "defense": 90,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Woolipop",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "39B",
+      "name": "Woolipop Terra",
+      "hp": 70,
+      "attack": 70,
+      "defense": 95,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Woolipop_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "40",
+      "name": "Mozzarina",
+      "hp": 90,
+      "attack": 50,
+      "defense": 80,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Mozzarina",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "41",
+      "name": "Azurobe",
+      "hp": 110,
+      "attack": 100,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Azurobe",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "41B",
+      "name": "Azurobe Cryst",
+      "hp": 115,
+      "attack": 105,
+      "defense": 105,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Azurobe_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "42",
+      "name": "Sparkit",
+      "hp": 60,
+      "attack": 75,
+      "defense": 70,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Sparkit",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "43",
+      "name": "Kelpsea",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Kelpsea",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "43B",
+      "name": "Kelpsea Ignis",
+      "hp": 70,
+      "attack": 70,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Kelpsea_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "44",
+      "name": "Ribbuny",
+      "hp": 75,
+      "attack": 65,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Ribbuny",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "44B",
+      "name": "Ribbuny Botan",
+      "hp": 80,
+      "attack": 65,
+      "defense": 70,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Ribbuny_Botan",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "45",
+      "name": "Jelliette",
+      "hp": 75,
+      "attack": 90,
+      "defense": 70,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Jelliette",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "46",
+      "name": "Jellroy",
+      "hp": 90,
+      "attack": 75,
+      "defense": 75,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Jellroy",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "47",
+      "name": "Amione",
+      "hp": 65,
+      "attack": 70,
+      "defense": 65,
+      "total": 200,
+      "sourceUrl": "https://paldb.cc/en/Amione",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "48",
+      "name": "Gloopie",
+      "hp": 70,
+      "attack": 85,
+      "defense": 70,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Gloopie",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "48B",
+      "name": "Gloopie Primo",
+      "hp": 75,
+      "attack": 85,
+      "defense": 70,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Gloopie_Primo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "49",
+      "name": "Galeclaw",
+      "hp": 75,
+      "attack": 85,
+      "defense": 60,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Galeclaw",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "50",
+      "name": "Wispaw",
+      "hp": 85,
+      "attack": 95,
+      "defense": 70,
+      "total": 250,
+      "sourceUrl": "https://paldb.cc/en/Wispaw",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "51",
+      "name": "Nitewing",
+      "hp": 100,
+      "attack": 95,
+      "defense": 80,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Nitewing",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "52",
+      "name": "Tombat",
+      "hp": 95,
+      "attack": 95,
+      "defense": 80,
+      "total": 270,
+      "sourceUrl": "https://paldb.cc/en/Tombat",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "53",
+      "name": "Tocotoco",
+      "hp": 60,
+      "attack": 75,
+      "defense": 70,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Tocotoco",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "54",
+      "name": "Univolt",
+      "hp": 80,
+      "attack": 105,
+      "defense": 105,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Univolt",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "54B",
+      "name": "Univolt Cryst",
+      "hp": 80,
+      "attack": 105,
+      "defense": 110,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Univolt_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "55",
+      "name": "Gobfin",
+      "hp": 90,
+      "attack": 90,
+      "defense": 75,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Gobfin",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "55B",
+      "name": "Gobfin Ignis",
+      "hp": 90,
+      "attack": 90,
+      "defense": 75,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Gobfin_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "56",
+      "name": "Loupmoon",
+      "hp": 80,
+      "attack": 100,
+      "defense": 80,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Loupmoon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "56B",
+      "name": "Loupmoon Cryst",
+      "hp": 80,
+      "attack": 105,
+      "defense": 80,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Loupmoon_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "57",
+      "name": "Cawgnito",
+      "hp": 75,
+      "attack": 95,
+      "defense": 80,
+      "total": 250,
+      "sourceUrl": "https://paldb.cc/en/Cawgnito",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "58",
+      "name": "Arsox",
+      "hp": 85,
+      "attack": 95,
+      "defense": 95,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Arsox",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "59",
+      "name": "Muffly",
+      "hp": 60,
+      "attack": 80,
+      "defense": 55,
+      "total": 195,
+      "sourceUrl": "https://paldb.cc/en/Muffly",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "60",
+      "name": "Bristla",
+      "hp": 80,
+      "attack": 80,
+      "defense": 80,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Bristla",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "61",
+      "name": "Cinnamoth",
+      "hp": 70,
+      "attack": 80,
+      "defense": 80,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Cinnamoth",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "62",
+      "name": "Puffolt",
+      "hp": 75,
+      "attack": 80,
+      "defense": 70,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Puffolt",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "63",
+      "name": "Elphidran",
+      "hp": 110,
+      "attack": 80,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Elphidran",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "63B",
+      "name": "Elphidran Aqua",
+      "hp": 115,
+      "attack": 80,
+      "defense": 95,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Elphidran_Aqua",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "64",
+      "name": "Vanwyrm",
+      "hp": 90,
+      "attack": 115,
+      "defense": 90,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Vanwyrm",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "64B",
+      "name": "Vanwyrm Cryst",
+      "hp": 90,
+      "attack": 120,
+      "defense": 95,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Vanwyrm_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "65",
+      "name": "Felbat",
+      "hp": 100,
+      "attack": 105,
+      "defense": 110,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Felbat",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "66",
+      "name": "Vaelet",
+      "hp": 100,
+      "attack": 100,
+      "defense": 120,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Vaelet",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "67",
+      "name": "Beegarde",
+      "hp": 80,
+      "attack": 90,
+      "defense": 90,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Beegarde",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "68",
+      "name": "Elizabee",
+      "hp": 90,
+      "attack": 105,
+      "defense": 100,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Elizabee",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "69",
+      "name": "Lovander",
+      "hp": 120,
+      "attack": 70,
+      "defense": 70,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Lovander",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "70",
+      "name": "Grintale",
+      "hp": 110,
+      "attack": 80,
+      "defense": 80,
+      "total": 270,
+      "sourceUrl": "https://paldb.cc/en/Grintale",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "71",
+      "name": "Tarantriss",
+      "hp": 110,
+      "attack": 100,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Tarantriss",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "72",
+      "name": "Polapup",
+      "hp": 95,
+      "attack": 105,
+      "defense": 105,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Polapup",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "72B",
+      "name": "Polapup Terra",
+      "hp": 95,
+      "attack": 105,
+      "defense": 110,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Polapup_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "73",
+      "name": "Leezpunk",
+      "hp": 80,
+      "attack": 80,
+      "defense": 50,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Leezpunk",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "73B",
+      "name": "Leezpunk Ignis",
+      "hp": 80,
+      "attack": 80,
+      "defense": 50,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Leezpunk_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "74",
+      "name": "Gorirat",
+      "hp": 90,
+      "attack": 95,
+      "defense": 90,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Gorirat",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "74B",
+      "name": "Gorirat Terra",
+      "hp": 90,
+      "attack": 100,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Gorirat_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "75",
+      "name": "Surfent",
+      "hp": 90,
+      "attack": 90,
+      "defense": 80,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Surfent",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "75B",
+      "name": "Surfent Terra",
+      "hp": 90,
+      "attack": 90,
+      "defense": 100,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Surfent_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "76",
+      "name": "Robinquill",
+      "hp": 90,
+      "attack": 105,
+      "defense": 80,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Robinquill",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "76B",
+      "name": "Robinquill Terra",
+      "hp": 90,
+      "attack": 105,
+      "defense": 80,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Robinquill_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "77",
+      "name": "Flopie",
+      "hp": 75,
+      "attack": 65,
+      "defense": 70,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Flopie",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "78",
+      "name": "Wixen",
+      "hp": 90,
+      "attack": 110,
+      "defense": 80,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Wixen",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "78B",
+      "name": "Wixen Noct",
+      "hp": 90,
+      "attack": 110,
+      "defense": 85,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Wixen_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "79",
+      "name": "Katress",
+      "hp": 90,
+      "attack": 105,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Katress",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "79B",
+      "name": "Katress Ignis",
+      "hp": 95,
+      "attack": 105,
+      "defense": 90,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Katress_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "80",
+      "name": "Helzephyr",
+      "hp": 100,
+      "attack": 125,
+      "defense": 100,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Helzephyr",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "80B",
+      "name": "Helzephyr Lux",
+      "hp": 105,
+      "attack": 125,
+      "defense": 100,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Helzephyr_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "81",
+      "name": "Elgrove",
+      "hp": 110,
+      "attack": 105,
+      "defense": 105,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Elgrove",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "81B",
+      "name": "Elgrove Cryst",
+      "hp": 120,
+      "attack": 100,
+      "defense": 105,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Elgrove_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "82",
+      "name": "Lunaris",
+      "hp": 90,
+      "attack": 100,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Lunaris",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "83",
+      "name": "Fenglope",
+      "hp": 110,
+      "attack": 110,
+      "defense": 90,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Fenglope",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "83B",
+      "name": "Fenglope Lux",
+      "hp": 110,
+      "attack": 115,
+      "defense": 90,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Fenglope_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "84",
+      "name": "Dinossom",
+      "hp": 110,
+      "attack": 85,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Dinossom",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "84B",
+      "name": "Dinossom Lux",
+      "hp": 110,
+      "attack": 90,
+      "defense": 90,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Dinossom_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "85",
+      "name": "Bushi",
+      "hp": 80,
+      "attack": 125,
+      "defense": 80,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Bushi",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "85B",
+      "name": "Bushi Noct",
+      "hp": 80,
+      "attack": 130,
+      "defense": 80,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Bushi_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "86",
+      "name": "Munchill",
+      "hp": 75,
+      "attack": 80,
+      "defense": 85,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Munchill",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "87",
+      "name": "Mammorest",
+      "hp": 150,
+      "attack": 85,
+      "defense": 90,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Mammorest",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "87B",
+      "name": "Mammorest Cryst",
+      "hp": 150,
+      "attack": 85,
+      "defense": 90,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Mammorest_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "88",
+      "name": "Finsider",
+      "hp": 75,
+      "attack": 85,
+      "defense": 80,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Finsider",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "88B",
+      "name": "Finsider Ignis",
+      "hp": 75,
+      "attack": 90,
+      "defense": 80,
+      "total": 245,
+      "sourceUrl": "https://paldb.cc/en/Finsider_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "89",
+      "name": "Petallia",
+      "hp": 100,
+      "attack": 95,
+      "defense": 100,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Petallia",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "89B",
+      "name": "Petallia Ignis",
+      "hp": 95,
+      "attack": 105,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Petallia_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "90",
+      "name": "Leafan",
+      "hp": 100,
+      "attack": 115,
+      "defense": 95,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Leafan",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "91",
+      "name": "Incineram",
+      "hp": 95,
+      "attack": 100,
+      "defense": 85,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Incineram",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "91B",
+      "name": "Incineram Noct",
+      "hp": 95,
+      "attack": 105,
+      "defense": 85,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Incineram_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "92",
+      "name": "Dazzi",
+      "hp": 70,
+      "attack": 80,
+      "defense": 70,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Dazzi",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "92B",
+      "name": "Dazzi Noct",
+      "hp": 70,
+      "attack": 80,
+      "defense": 75,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Dazzi_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "93",
+      "name": "Pyrin",
+      "hp": 100,
+      "attack": 95,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Pyrin",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "93B",
+      "name": "Pyrin Noct",
+      "hp": 100,
+      "attack": 95,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Pyrin_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "94",
+      "name": "Relaxaurus",
+      "hp": 120,
+      "attack": 115,
+      "defense": 110,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Relaxaurus",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "94B",
+      "name": "Relaxaurus Lux",
+      "hp": 120,
+      "attack": 120,
+      "defense": 110,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Relaxaurus_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "95",
+      "name": "Foxcicle",
+      "hp": 90,
+      "attack": 95,
+      "defense": 105,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Foxcicle",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "96",
+      "name": "Beakon",
+      "hp": 105,
+      "attack": 115,
+      "defense": 80,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Beakon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "96B",
+      "name": "Beakon Cryst",
+      "hp": 105,
+      "attack": 115,
+      "defense": 85,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Beakon_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "97",
+      "name": "Ghangler",
+      "hp": 90,
+      "attack": 125,
+      "defense": 105,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Ghangler",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "97B",
+      "name": "Ghangler Ignis",
+      "hp": 90,
+      "attack": 130,
+      "defense": 105,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Ghangler_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "98",
+      "name": "Rayhound",
+      "hp": 90,
+      "attack": 100,
+      "defense": 80,
+      "total": 270,
+      "sourceUrl": "https://paldb.cc/en/Rayhound",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "98B",
+      "name": "Rayhound Cryst",
+      "hp": 90,
+      "attack": 105,
+      "defense": 80,
+      "total": 275,
+      "sourceUrl": "https://paldb.cc/en/Rayhound_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "99",
+      "name": "Menasting",
+      "hp": 100,
+      "attack": 100,
+      "defense": 130,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Menasting",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "99B",
+      "name": "Menasting Terra",
+      "hp": 100,
+      "attack": 105,
+      "defense": 130,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Menasting_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "100",
+      "name": "Needoll",
+      "hp": 75,
+      "attack": 85,
+      "defense": 70,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Needoll",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "100B",
+      "name": "Needoll Noct",
+      "hp": 75,
+      "attack": 90,
+      "defense": 70,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Needoll_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "101",
+      "name": "Reindrix",
+      "hp": 100,
+      "attack": 85,
+      "defense": 110,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Reindrix",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "102",
+      "name": "Mossanda",
+      "hp": 100,
+      "attack": 90,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Mossanda",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "102B",
+      "name": "Mossanda Lux",
+      "hp": 100,
+      "attack": 100,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Mossanda_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "103",
+      "name": "Chillet",
+      "hp": 90,
+      "attack": 80,
+      "defense": 80,
+      "total": 250,
+      "sourceUrl": "https://paldb.cc/en/Chillet",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "103B",
+      "name": "Chillet Ignis",
+      "hp": 90,
+      "attack": 85,
+      "defense": 80,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Chillet_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "104",
+      "name": "Ragnahawk",
+      "hp": 95,
+      "attack": 105,
+      "defense": 120,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Ragnahawk",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "105",
+      "name": "Moldron",
+      "hp": 110,
+      "attack": 125,
+      "defense": 115,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Moldron",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "105B",
+      "name": "Moldron Cryst",
+      "hp": 110,
+      "attack": 125,
+      "defense": 120,
+      "total": 355,
+      "sourceUrl": "https://paldb.cc/en/Moldron_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "106",
+      "name": "Palumba",
+      "hp": 105,
+      "attack": 110,
+      "defense": 115,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Palumba",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "107",
+      "name": "Digtoise",
+      "hp": 80,
+      "attack": 95,
+      "defense": 120,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Digtoise",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "108",
+      "name": "Broncherry",
+      "hp": 120,
+      "attack": 90,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Broncherry",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "108B",
+      "name": "Broncherry Aqua",
+      "hp": 120,
+      "attack": 95,
+      "defense": 100,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Broncherry_Aqua",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "109",
+      "name": "Dumud",
+      "hp": 100,
+      "attack": 70,
+      "defense": 95,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Dumud",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "109B",
+      "name": "Dumud Gild",
+      "hp": 105,
+      "attack": 75,
+      "defense": 100,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Dumud_Gild",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "110",
+      "name": "Braloha",
+      "hp": 130,
+      "attack": 95,
+      "defense": 120,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Braloha",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "111",
+      "name": "Kitsun",
+      "hp": 100,
+      "attack": 115,
+      "defense": 100,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Kitsun",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "111B",
+      "name": "Kitsun Noct",
+      "hp": 100,
+      "attack": 115,
+      "defense": 105,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Kitsun_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "112",
+      "name": "Blazehowl",
+      "hp": 105,
+      "attack": 110,
+      "defense": 80,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Blazehowl",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "112B",
+      "name": "Blazehowl Noct",
+      "hp": 105,
+      "attack": 115,
+      "defense": 80,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Blazehowl_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "113",
+      "name": "Warsect",
+      "hp": 120,
+      "attack": 100,
+      "defense": 120,
+      "total": 340,
+      "sourceUrl": "https://paldb.cc/en/Warsect",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "113B",
+      "name": "Warsect Terra",
+      "hp": 120,
+      "attack": 105,
+      "defense": 120,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Warsect_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "114",
+      "name": "Frostplume",
+      "hp": 110,
+      "attack": 100,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Frostplume",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "115",
+      "name": "Majex",
+      "hp": 110,
+      "attack": 115,
+      "defense": 90,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Majex",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "116",
+      "name": "Sibelyx",
+      "hp": 110,
+      "attack": 90,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Sibelyx",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "116B",
+      "name": "Sibelyx Primo",
+      "hp": 115,
+      "attack": 90,
+      "defense": 100,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Sibelyx_Primo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "117",
+      "name": "Maraith",
+      "hp": 75,
+      "attack": 105,
+      "defense": 80,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Maraith",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "118",
+      "name": "Shroomer",
+      "hp": 110,
+      "attack": 80,
+      "defense": 90,
+      "total": 280,
+      "sourceUrl": "https://paldb.cc/en/Shroomer",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "118B",
+      "name": "Shroomer Noct",
+      "hp": 110,
+      "attack": 85,
+      "defense": 90,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Shroomer_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "119",
+      "name": "Icelyn",
+      "hp": 95,
+      "attack": 115,
+      "defense": 105,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Icelyn",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "120",
+      "name": "Gildra",
+      "hp": 105,
+      "attack": 120,
+      "defense": 105,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Gildra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "121",
+      "name": "Jormuntide",
+      "hp": 130,
+      "attack": 120,
+      "defense": 100,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Jormuntide",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "121B",
+      "name": "Jormuntide Ignis",
+      "hp": 130,
+      "attack": 130,
+      "defense": 100,
+      "total": 360,
+      "sourceUrl": "https://paldb.cc/en/Jormuntide_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "122",
+      "name": "Suzaku",
+      "hp": 120,
+      "attack": 105,
+      "defense": 105,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Suzaku",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "122B",
+      "name": "Suzaku Aqua",
+      "hp": 125,
+      "attack": 105,
+      "defense": 105,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Suzaku_Aqua",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "123",
+      "name": "Dazemu",
+      "hp": 95,
+      "attack": 90,
+      "defense": 80,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Dazemu",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "124",
+      "name": "Quivern",
+      "hp": 105,
+      "attack": 100,
+      "defense": 100,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Quivern",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "124B",
+      "name": "Quivern Botan",
+      "hp": 105,
+      "attack": 105,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Quivern_Botan",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "125",
+      "name": "Lullu",
+      "hp": 90,
+      "attack": 90,
+      "defense": 80,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Lullu",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "126",
+      "name": "Kikit",
+      "hp": 75,
+      "attack": 70,
+      "defense": 90,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Kikit",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "127",
+      "name": "Yakumo",
+      "hp": 85,
+      "attack": 85,
+      "defense": 85,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Yakumo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "128",
+      "name": "Skutlass",
+      "hp": 70,
+      "attack": 100,
+      "defense": 80,
+      "total": 250,
+      "sourceUrl": "https://paldb.cc/en/Skutlass",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "128B",
+      "name": "Skutlass Ignis",
+      "hp": 70,
+      "attack": 105,
+      "defense": 80,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Skutlass_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "129",
+      "name": "Reptyro",
+      "hp": 110,
+      "attack": 105,
+      "defense": 120,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Reptyro",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "129B",
+      "name": "Reptyro Cryst",
+      "hp": 110,
+      "attack": 105,
+      "defense": 130,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Reptyro_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "130",
+      "name": "Starryon",
+      "hp": 110,
+      "attack": 100,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Starryon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "130B",
+      "name": "Starryon Primo",
+      "hp": 110,
+      "attack": 105,
+      "defense": 100,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Starryon_Primo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "131",
+      "name": "Pierdon",
+      "hp": 100,
+      "attack": 105,
+      "defense": 120,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Pierdon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "131B",
+      "name": "Pierdon Cryst",
+      "hp": 100,
+      "attack": 110,
+      "defense": 120,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Pierdon_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "132",
+      "name": "Cryolinx",
+      "hp": 100,
+      "attack": 100,
+      "defense": 110,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Cryolinx",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "132B",
+      "name": "Cryolinx Terra",
+      "hp": 100,
+      "attack": 105,
+      "defense": 110,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Cryolinx_Terra",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "133",
+      "name": "Snugloo",
+      "hp": 80,
+      "attack": 75,
+      "defense": 85,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Snugloo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "134",
+      "name": "Wumpo",
+      "hp": 140,
+      "attack": 80,
+      "defense": 100,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Wumpo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "134B",
+      "name": "Wumpo Botan",
+      "hp": 140,
+      "attack": 80,
+      "defense": 110,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Wumpo_Botan",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "135",
+      "name": "Sootseer",
+      "hp": 105,
+      "attack": 125,
+      "defense": 90,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Sootseer",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "136",
+      "name": "Carnibora",
+      "hp": 85,
+      "attack": 90,
+      "defense": 85,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Carnibora",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "137",
+      "name": "Blazamut",
+      "hp": 100,
+      "attack": 125,
+      "defense": 120,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Blazamut",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "137B",
+      "name": "Blazamut Ryu",
+      "hp": 105,
+      "attack": 130,
+      "defense": 125,
+      "total": 360,
+      "sourceUrl": "https://paldb.cc/en/Blazamut_Ryu",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "138",
+      "name": "Dualith",
+      "hp": 110,
+      "attack": 105,
+      "defense": 125,
+      "total": 340,
+      "sourceUrl": "https://paldb.cc/en/Dualith",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "138B",
+      "name": "Dualith Noct",
+      "hp": 110,
+      "attack": 110,
+      "defense": 125,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Dualith_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "139",
+      "name": "Anubis",
+      "hp": 120,
+      "attack": 130,
+      "defense": 100,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Anubis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "140",
+      "name": "Sekhmet",
+      "hp": 110,
+      "attack": 115,
+      "defense": 100,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Sekhmet",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "141",
+      "name": "Prixter",
+      "hp": 90,
+      "attack": 110,
+      "defense": 90,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Prixter",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "141B",
+      "name": "Prixter Lux",
+      "hp": 90,
+      "attack": 115,
+      "defense": 90,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Prixter_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "142",
+      "name": "Tetroise",
+      "hp": 95,
+      "attack": 100,
+      "defense": 135,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Tetroise",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "142B",
+      "name": "Tetroise Primo",
+      "hp": 95,
+      "attack": 100,
+      "defense": 140,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Tetroise_Primo",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "143",
+      "name": "Nyafia",
+      "hp": 110,
+      "attack": 100,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Nyafia",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "144",
+      "name": "Mimog",
+      "hp": 60,
+      "attack": 60,
+      "defense": 130,
+      "total": 250,
+      "sourceUrl": "https://paldb.cc/en/Mimog",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "145",
+      "name": "Xenovader",
+      "hp": 90,
+      "attack": 125,
+      "defense": 85,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Xenovader",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "146",
+      "name": "Xenogard",
+      "hp": 110,
+      "attack": 120,
+      "defense": 130,
+      "total": 360,
+      "sourceUrl": "https://paldb.cc/en/Xenogard",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "147",
+      "name": "Prunelia",
+      "hp": 105,
+      "attack": 95,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Prunelia",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "148",
+      "name": "Nitemary",
+      "hp": 105,
+      "attack": 95,
+      "defense": 105,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Nitemary",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "148B",
+      "name": "Nitemary Botan",
+      "hp": 110,
+      "attack": 95,
+      "defense": 105,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Nitemary_Botan",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "149",
+      "name": "Smokie",
+      "hp": 85,
+      "attack": 90,
+      "defense": 85,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Smokie",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "149B",
+      "name": "Smokie Cryst",
+      "hp": 85,
+      "attack": 90,
+      "defense": 90,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Smokie_Cryst",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "150",
+      "name": "Omascul",
+      "hp": 95,
+      "attack": 105,
+      "defense": 100,
+      "total": 300,
+      "sourceUrl": "https://paldb.cc/en/Omascul",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "151",
+      "name": "Whalaska",
+      "hp": 105,
+      "attack": 115,
+      "defense": 110,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Whalaska",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "151B",
+      "name": "Whalaska Ignis",
+      "hp": 105,
+      "attack": 120,
+      "defense": 110,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Whalaska_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "152",
+      "name": "Verdash",
+      "hp": 90,
+      "attack": 115,
+      "defense": 90,
+      "total": 295,
+      "sourceUrl": "https://paldb.cc/en/Verdash",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "153",
+      "name": "Splatterina",
+      "hp": 95,
+      "attack": 115,
+      "defense": 105,
+      "total": 315,
+      "sourceUrl": "https://paldb.cc/en/Splatterina",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "154",
+      "name": "Gildane",
+      "hp": 120,
+      "attack": 110,
+      "defense": 110,
+      "total": 340,
+      "sourceUrl": "https://paldb.cc/en/Gildane",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "155",
+      "name": "Dogen",
+      "hp": 90,
+      "attack": 100,
+      "defense": 100,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Dogen",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "156",
+      "name": "Bulldosu",
+      "hp": 115,
+      "attack": 95,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Bulldosu",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "157",
+      "name": "Celesdir",
+      "hp": 120,
+      "attack": 110,
+      "defense": 100,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Celesdir",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "157B",
+      "name": "Celesdir Noct",
+      "hp": 120,
+      "attack": 115,
+      "defense": 100,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Celesdir_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "158",
+      "name": "Astegon",
+      "hp": 100,
+      "attack": 125,
+      "defense": 125,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Astegon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "159",
+      "name": "Knocklem",
+      "hp": 105,
+      "attack": 110,
+      "defense": 135,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Knocklem",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "159B",
+      "name": "Knocklem Ignis",
+      "hp": 105,
+      "attack": 115,
+      "defense": 135,
+      "total": 355,
+      "sourceUrl": "https://paldb.cc/en/Knocklem_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "160",
+      "name": "Silvegis",
+      "hp": 120,
+      "attack": 110,
+      "defense": 115,
+      "total": 345,
+      "sourceUrl": "https://paldb.cc/en/Silvegis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "161",
+      "name": "Azurmane",
+      "hp": 130,
+      "attack": 120,
+      "defense": 110,
+      "total": 360,
+      "sourceUrl": "https://paldb.cc/en/Azurmane",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "162",
+      "name": "Valentail",
+      "hp": 75,
+      "attack": 80,
+      "defense": 70,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Valentail",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "163",
+      "name": "Snock",
+      "hp": 65,
+      "attack": 70,
+      "defense": 75,
+      "total": 210,
+      "sourceUrl": "https://paldb.cc/en/Snock",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "163B",
+      "name": "Snock Lux",
+      "hp": 65,
+      "attack": 70,
+      "defense": 80,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Snock_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "164",
+      "name": "Souffline",
+      "hp": 70,
+      "attack": 75,
+      "defense": 60,
+      "total": 205,
+      "sourceUrl": "https://paldb.cc/en/Souffline",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "165",
+      "name": "Lapiron",
+      "hp": 70,
+      "attack": 75,
+      "defense": 80,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Lapiron",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "166",
+      "name": "Hoodle",
+      "hp": 70,
+      "attack": 85,
+      "defense": 80,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Hoodle",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "167",
+      "name": "Slowatt",
+      "hp": 80,
+      "attack": 75,
+      "defense": 70,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Slowatt",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "168",
+      "name": "Bakemi",
+      "hp": 70,
+      "attack": 85,
+      "defense": 80,
+      "total": 235,
+      "sourceUrl": "https://paldb.cc/en/Bakemi",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "169",
+      "name": "Solmora",
+      "hp": 90,
+      "attack": 90,
+      "defense": 85,
+      "total": 265,
+      "sourceUrl": "https://paldb.cc/en/Solmora",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "169B",
+      "name": "Solmora Lux",
+      "hp": 90,
+      "attack": 95,
+      "defense": 85,
+      "total": 270,
+      "sourceUrl": "https://paldb.cc/en/Solmora_Lux",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "170",
+      "name": "Lapure",
+      "hp": 105,
+      "attack": 100,
+      "defense": 100,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Lapure",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "171",
+      "name": "Eidrolon",
+      "hp": 115,
+      "attack": 125,
+      "defense": 120,
+      "total": 360,
+      "sourceUrl": "https://paldb.cc/en/Eidrolon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "171B",
+      "name": "Eidrolon Ignis",
+      "hp": 115,
+      "attack": 130,
+      "defense": 120,
+      "total": 365,
+      "sourceUrl": "https://paldb.cc/en/Eidrolon_Ignis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "172",
+      "name": "Dynamoff",
+      "hp": 75,
+      "attack": 85,
+      "defense": 80,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Dynamoff",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "173",
+      "name": "Tropicaw",
+      "hp": 85,
+      "attack": 85,
+      "defense": 90,
+      "total": 260,
+      "sourceUrl": "https://paldb.cc/en/Tropicaw",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "174",
+      "name": "Flaracle",
+      "hp": 110,
+      "attack": 125,
+      "defense": 105,
+      "total": 340,
+      "sourceUrl": "https://paldb.cc/en/Flaracle",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "175",
+      "name": "Ophydia",
+      "hp": 130,
+      "attack": 115,
+      "defense": 120,
+      "total": 365,
+      "sourceUrl": "https://paldb.cc/en/Ophydia",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "176",
+      "name": "Dupin",
+      "hp": 100,
+      "attack": 110,
+      "defense": 100,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Dupin",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "177",
+      "name": "Roujay",
+      "hp": 110,
+      "attack": 115,
+      "defense": 95,
+      "total": 320,
+      "sourceUrl": "https://paldb.cc/en/Roujay",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "178",
+      "name": "Venusa",
+      "hp": 80,
+      "attack": 85,
+      "defense": 90,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Venusa",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "179",
+      "name": "Mycora",
+      "hp": 105,
+      "attack": 95,
+      "defense": 90,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Mycora",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "180",
+      "name": "Loomen",
+      "hp": 90,
+      "attack": 100,
+      "defense": 95,
+      "total": 285,
+      "sourceUrl": "https://paldb.cc/en/Loomen",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "181",
+      "name": "Wistella",
+      "hp": 80,
+      "attack": 90,
+      "defense": 60,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Wistella",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "182",
+      "name": "Solenne",
+      "hp": 110,
+      "attack": 115,
+      "defense": 115,
+      "total": 340,
+      "sourceUrl": "https://paldb.cc/en/Solenne",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "183",
+      "name": "Renjishi",
+      "hp": 105,
+      "attack": 120,
+      "defense": 100,
+      "total": 325,
+      "sourceUrl": "https://paldb.cc/en/Renjishi",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "184",
+      "name": "Aegidron",
+      "hp": 105,
+      "attack": 125,
+      "defense": 140,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Aegidron",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "185",
+      "name": "Grizzbolt",
+      "hp": 120,
+      "attack": 105,
+      "defense": 105,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Grizzbolt",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "186",
+      "name": "Lyleen",
+      "hp": 120,
+      "attack": 120,
+      "defense": 110,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Lyleen",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "186B",
+      "name": "Lyleen Noct",
+      "hp": 115,
+      "attack": 120,
+      "defense": 115,
+      "total": 350,
+      "sourceUrl": "https://paldb.cc/en/Lyleen_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "187",
+      "name": "Orserk",
+      "hp": 120,
+      "attack": 130,
+      "defense": 115,
+      "total": 365,
+      "sourceUrl": "https://paldb.cc/en/Orserk",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "188",
+      "name": "Faleris",
+      "hp": 105,
+      "attack": 110,
+      "defense": 115,
+      "total": 330,
+      "sourceUrl": "https://paldb.cc/en/Faleris",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "188B",
+      "name": "Faleris Aqua",
+      "hp": 110,
+      "attack": 110,
+      "defense": 115,
+      "total": 335,
+      "sourceUrl": "https://paldb.cc/en/Faleris_Aqua",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "189",
+      "name": "Shadowbeak",
+      "hp": 120,
+      "attack": 120,
+      "defense": 140,
+      "total": 380,
+      "sourceUrl": "https://paldb.cc/en/Shadowbeak",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "190",
+      "name": "Selyne",
+      "hp": 130,
+      "attack": 115,
+      "defense": 110,
+      "total": 355,
+      "sourceUrl": "https://paldb.cc/en/Selyne",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "191",
+      "name": "Bastigor",
+      "hp": 140,
+      "attack": 130,
+      "defense": 120,
+      "total": 390,
+      "sourceUrl": "https://paldb.cc/en/Bastigor",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "192",
+      "name": "Shaolong",
+      "hp": 140,
+      "attack": 135,
+      "defense": 120,
+      "total": 395,
+      "sourceUrl": "https://paldb.cc/en/Shaolong",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "193",
+      "name": "Silvance",
+      "hp": 140,
+      "attack": 120,
+      "defense": 110,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Silvance",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "194",
+      "name": "Dandilord",
+      "hp": 125,
+      "attack": 135,
+      "defense": 110,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Dandilord",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "195",
+      "name": "Bellanoir",
+      "hp": 120,
+      "attack": 150,
+      "defense": 100,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Bellanoir",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "195B",
+      "name": "Bellanoir Libero",
+      "hp": 120,
+      "attack": 150,
+      "defense": 100,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Bellanoir_Libero",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "196",
+      "name": "Xenolord",
+      "hp": 130,
+      "attack": 120,
+      "defense": 120,
+      "total": 370,
+      "sourceUrl": "https://paldb.cc/en/Xenolord",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "197",
+      "name": "Hartalis",
+      "hp": 135,
+      "attack": 130,
+      "defense": 110,
+      "total": 375,
+      "sourceUrl": "https://paldb.cc/en/Hartalis",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "198",
+      "name": "Paladius",
+      "hp": 130,
+      "attack": 120,
+      "defense": 145,
+      "total": 395,
+      "sourceUrl": "https://paldb.cc/en/Paladius",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "199",
+      "name": "Necromus",
+      "hp": 130,
+      "attack": 145,
+      "defense": 120,
+      "total": 395,
+      "sourceUrl": "https://paldb.cc/en/Necromus",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "200",
+      "name": "Frostallion",
+      "hp": 140,
+      "attack": 140,
+      "defense": 120,
+      "total": 400,
+      "sourceUrl": "https://paldb.cc/en/Frostallion",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "200B",
+      "name": "Frostallion Noct",
+      "hp": 140,
+      "attack": 140,
+      "defense": 135,
+      "total": 415,
+      "sourceUrl": "https://paldb.cc/en/Frostallion_Noct",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "201",
+      "name": "Neptilius",
+      "hp": 105,
+      "attack": 145,
+      "defense": 125,
+      "total": 375,
+      "sourceUrl": "https://paldb.cc/en/Neptilius",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "202",
+      "name": "Jetragon",
+      "hp": 115,
+      "attack": 140,
+      "defense": 120,
+      "total": 375,
+      "sourceUrl": "https://paldb.cc/en/Jetragon",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "203",
+      "name": "Panthalus",
+      "hp": 180,
+      "attack": 120,
+      "defense": 200,
+      "total": 500,
+      "sourceUrl": "https://paldb.cc/en/Panthalus",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "204",
+      "name": "Astralym",
+      "hp": 200,
+      "attack": 200,
+      "defense": 200,
+      "total": 600,
+      "sourceUrl": "https://paldb.cc/en/Astralym",
+      "sourceType": "PalDB Stats table"
+    },
+    {
+      "number": "—",
+      "name": "Green Slime",
+      "hp": 65,
+      "attack": 70,
+      "defense": 80,
+      "total": 215,
+      "sourceUrl": "https://paldb.cc/en/Green_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Blue Slime",
+      "hp": 70,
+      "attack": 70,
+      "defense": 80,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Blue_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Red Slime",
+      "hp": 70,
+      "attack": 75,
+      "defense": 85,
+      "total": 230,
+      "sourceUrl": "https://paldb.cc/en/Red_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Purple Slime",
+      "hp": 75,
+      "attack": 70,
+      "defense": 80,
+      "total": 225,
+      "sourceUrl": "https://paldb.cc/en/Purple_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Illuminant Slime",
+      "hp": 80,
+      "attack": 75,
+      "defense": 85,
+      "total": 240,
+      "sourceUrl": "https://paldb.cc/en/Illuminant_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Rainbow Slime",
+      "hp": 105,
+      "attack": 95,
+      "defense": 105,
+      "total": 305,
+      "sourceUrl": "https://paldb.cc/en/Rainbow_Slime",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Enchanted Sword",
+      "hp": 95,
+      "attack": 105,
+      "defense": 90,
+      "total": 290,
+      "sourceUrl": "https://paldb.cc/en/Enchanted_Sword",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Cave Bat",
+      "hp": 65,
+      "attack": 75,
+      "defense": 80,
+      "total": 220,
+      "sourceUrl": "https://paldb.cc/en/Cave_Bat",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Illuminant Bat",
+      "hp": 80,
+      "attack": 80,
+      "defense": 95,
+      "total": 255,
+      "sourceUrl": "https://paldb.cc/en/Illuminant_Bat",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Eye of Cthulhu",
+      "hp": 110,
+      "attack": 105,
+      "defense": 95,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Eye_of_Cthulhu",
+      "sourceType": "Individual PalDB Stats panel"
+    },
+    {
+      "number": "—",
+      "name": "Demon Eye",
+      "hp": 105,
+      "attack": 110,
+      "defense": 95,
+      "total": 310,
+      "sourceUrl": "https://paldb.cc/en/Demon_Eye",
+      "sourceType": "Individual PalDB Stats panel"
+    }
+  ]
+}
