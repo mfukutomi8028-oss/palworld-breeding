@@ -1,0 +1,54 @@
+name: Diagnose Pages v110
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show repository versions
+        run: |
+          echo '--- index.html version refs ---'
+          grep -oE '\?v=[0-9]+' index.html | sort -u
+          echo '--- config.js site version ---'
+          grep 'palSiteVersion' config.js
+          echo '--- commit ---'
+          git rev-parse HEAD
+
+      - name: Inspect GitHub Pages configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status="$(curl -sS -o /tmp/pages.json -w '%{http_code}' \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
+          echo "Pages API HTTP ${status}"
+          cat /tmp/pages.json
+
+      - name: Inspect published files without browser cache
+        run: |
+          base='https://mfukutomi8028-oss.github.io/palworld-breeding'
+          stamp="${GITHUB_SHA}-$(date +%s)"
+          for path in index.html config.js app-discovery.js; do
+            echo "--- ${path} ---"
+            curl -fsSL -D "/tmp/${path//\//_}.headers" "${base}/${path}?diagnostic=${stamp}" -o "/tmp/${path//\//_}.body"
+            cat "/tmp/${path//\//_}.headers"
+            if [ "$path" = 'index.html' ]; then
+              grep -oE '\?v=[0-9]+' "/tmp/${path//\//_}.body" | sort -u || true
+            elif [ "$path" = 'config.js' ]; then
+              grep 'palSiteVersion' "/tmp/${path//\//_}.body" || true
+            else
+              grep -E 'romajiConsonantHint|ヒント3・ローマ字' "/tmp/${path//\//_}.body" | head -n 3 || true
+            fi
+          done
