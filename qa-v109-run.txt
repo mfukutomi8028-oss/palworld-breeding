@@ -1,1 +1,1 @@
-Inspect the hardened GitHub Pages workflow triggered by main commit c0d33ba277dc9a220bd603cc3d80d3de3818b495.
+Inspect the clean branch-based GitHub Pages deployment triggered by main commit e596600d71e6616a1fceafe1ff2f371d4ecaf828.
