@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   prepare:
-    if: ${{ !contains(github.event.head_commit.message, '[resume-v110-config]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[resume-v110-config]') && !contains(github.event.head_commit.message, '[run-resume-v110]') }}
     runs-on: ubuntu-latest
     outputs:
       generated: ${{ steps.commit.outputs.generated }}
