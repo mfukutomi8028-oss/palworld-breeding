@@ -39,14 +39,14 @@ jobs:
           node --check scripts/validate-pal-details-v111.mjs
           node scripts/validate-pal-details-v111.mjs
 
-      - name: Commit generated fixed data and final cleanup
+      - name: Commit generated fixed data and parser
         run: |
-          if git diff --quiet -- data/pal-details-v1.json scripts/build-paldb-details-v111.py scripts/apply-paldb-finalize-v111.py .github/workflows/generate-pal-details-v111.yml; then
-            echo 'No generated detail or cleanup changes.'
+          if git diff --quiet -- data/pal-details-v1.json scripts/build-paldb-details-v111.py; then
+            echo 'No generated detail or parser changes.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A data/pal-details-v1.json scripts/build-paldb-details-v111.py scripts/apply-paldb-finalize-v111.py .github/workflows/generate-pal-details-v111.yml
+          git add data/pal-details-v1.json scripts/build-paldb-details-v111.py
           git commit -m '[pal-details-v111-data] Finalize fixed details and drop parsing'
           git push origin HEAD:${TARGET_BRANCH}
