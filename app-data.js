@@ -3,12 +3,12 @@
 (() => {
   "use strict";
 
-  const DATA_CACHE_VERSION = "103";
+  const DATA_CACHE_VERSION = "110";
   const LOCAL_SOURCES = {
-    pals: "data/pals-v1.json",
-    localization: "data/pal-localization-ja-v1.json",
-    breeding: "data/breeding-v1.json",
-    images: "data/pal-images-v1.json",
+    pals: "data/pals-v1.json?v=110",
+    localization: "data/pal-localization-ja-v1.json?v=110",
+    breeding: "data/breeding-v1.json?v=110",
+    images: "data/pal-images-v1.json?v=110",
   };
   const EXTERNAL_SOURCES = {
     pals: DATA_SOURCES.pals,
@@ -169,6 +169,10 @@
       const number = normalizedDeckNumber(record.number);
       const enginePal = (number && engineByDeck.get(number)) || engineByName.get(normalizeText(enName));
       const name = JP_NAME_OVERRIDES[enName] || translations.get(enName) || enName;
+      const hp = Number(record.hp);
+      const attack = Number(record.attack);
+      const defense = Number(record.defense);
+      const statTotal = Number(record.statTotal);
       return {
         id: number || stableSpecialId(enginePal, enName, order),
         no: number || "—",
@@ -180,6 +184,10 @@
         works: parseWorks(record.work),
         power: Number(enginePal?.rank ?? record.breedingPower),
         rarity: Number(record.rarity || 0),
+        hp: Number.isFinite(hp) ? hp : null,
+        attack: Number.isFinite(attack) ? attack : null,
+        defense: Number.isFinite(defense) ? defense : null,
+        statTotal: Number.isFinite(statTotal) ? statTotal : (Number.isFinite(hp + attack + defense) ? hp + attack + defense : null),
         icon: PLACEHOLDER,
         iconFallbacks: [],
         sourceUrl: String(record.sourceUrl || ""),
@@ -206,6 +214,10 @@
         works: [],
         power: Number(enginePal.rank),
         rarity: 0,
+        hp: null,
+        attack: null,
+        defense: null,
+        statTotal: null,
         icon: PLACEHOLDER,
         iconFallbacks: [],
         sourceUrl: "",

@@ -220,7 +220,7 @@ async function auditLazyPalImages(page, requestedCount = 30) {
 // Image manifest outage must not damage names, numbers or full guide mode.
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-  await context.route("**/data/pal-images-v1.json", route => route.abort());
+  await context.route("**/data/pal-images-v1.json*", route => route.abort());
   await context.route("**/palworld-icon-manifest.json", route => route.abort());
   const { page } = await openApp(context, "image-outage");
   const runtime = await inspectRuntime(page);

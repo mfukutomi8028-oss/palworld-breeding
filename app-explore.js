@@ -56,14 +56,58 @@ function renderTargetResults() {
 
 function populateFilters(){byId("paldexElement").innerHTML=`<option value="">すべて</option>${ELEMENTS.map(v=>`<option>${v}</option>`).join("")}`;byId("paldexWork").innerHTML=`<option value="">すべて</option>${WORKS.map(v=>`<option>${v}</option>`).join("")}`;}
 
-function filteredPals(){const q=normalizeText(byId("paldexSearch")?.value),element=byId("paldexElement")?.value,work=byId("paldexWork")?.value;return availablePalsForPaldex().filter(p=>(!q||normalizeText(`${p.name} ${p.enName} ${p.no}`).includes(q))&&(!element||p.elements.includes(element))&&(!work||p.works.some(w=>w.name===work)));}
+function palStatValue(pal,key){
+  const raw=pal?.[key];
+  if(raw===null||raw===undefined||raw==="")return null;
+  const value=Number(raw);
+  return Number.isFinite(value)?value:null;
+}
+
+function palStatsMarkup(pal,variant="card"){
+  const stats=[
+    ["HP",palStatValue(pal,"hp")],
+    ["攻撃",palStatValue(pal,"attack")],
+    ["防御",palStatValue(pal,"defense")],
+    ["合計",palStatValue(pal,"statTotal")],
+  ];
+  return `<div class="pal-stats pal-stats--${variant}">${stats.map(([label,value])=>`<span><small>${label}</small><strong>${value??"—"}</strong></span>`).join("")}</div>`;
+}
+
+function paldexNumberCompare(a,b){
+  return String(a.no||"").localeCompare(String(b.no||""),"ja",{numeric:true,sensitivity:"base"});
+}
+
+function sortPaldexPals(pals){
+  const mode=state.paldexSort||"numberAsc";
+  const sorted=[...pals];
+  const fallback=(a,b)=>paldexNumberCompare(a,b)||a.name.localeCompare(b.name,"ja");
+  sorted.sort((a,b)=>{
+    if(mode==="nameAsc")return a.name.localeCompare(b.name,"ja")||fallback(a,b);
+    if(mode==="numberAsc")return fallback(a,b);
+    const descending=mode.endsWith("Desc"),key=mode.replace(/(?:Asc|Desc)$/u,"");
+    const statKey=key==="total"?"statTotal":key;
+    const left=palStatValue(a,statKey),right=palStatValue(b,statKey);
+    if(left===null&&right===null)return fallback(a,b);
+    if(left===null)return 1;
+    if(right===null)return -1;
+    const difference=left-right;
+    return (descending?-difference:difference)||fallback(a,b);
+  });
+  return sorted;
+}
+
+function filteredPals(){
+  const q=normalizeText(byId("paldexSearch")?.value),element=byId("paldexElement")?.value,work=byId("paldexWork")?.value;
+  const filtered=availablePalsForPaldex().filter(p=>(!q||normalizeText(`${p.name} ${p.enName} ${p.no}`).includes(q))&&(!element||p.elements.includes(element))&&(!work||p.works.some(w=>w.name===work)));
+  return sortPaldexPals(filtered);
+}
 
 function renderPaldex(){
   const pals=filteredPals(),available=availablePalsForPaldex();
   if(state.selectedPalId&&!available.some(p=>p.id===state.selectedPalId))state.selectedPalId="";
   byId("paldexCount").textContent=state.guideUnlocked?`${pals.length}体`:`発見 ${pals.length} / ${state.pals.length}体`;
   const visible=pals;
-  byId("paldexGrid").innerHTML=visible.length?visible.map(p=>`<button class="pal-card-button${state.selectedPalId===p.id?" is-selected":""}" type="button" data-pal-detail="${p.id}"><span class="pal-card-button__no">No.${escapeHtml(p.no)}</span><img ${palImageAttrs(p)}><strong>${escapeHtml(p.name)}</strong><div class="element-list">${p.elements.map(e=>`<span class="element-tag">${e}</span>`).join("")}</div></button>`).join(""):`<div class="empty-state paldex-empty"><img src="${PLAIN_EGG_ICON}" alt=""><div><h3>まだ発見したパルがいません</h3><p>配合記録へ親または結果パルを登録すると、図鑑に追加されます。</p></div></div>`;
+  byId("paldexGrid").innerHTML=visible.length?visible.map(p=>`<button class="pal-card-button${state.selectedPalId===p.id?" is-selected":""}" type="button" data-pal-detail="${p.id}"><span class="pal-card-button__no">No.${escapeHtml(p.no)}</span><img ${palImageAttrs(p)}><strong>${escapeHtml(p.name)}</strong><div class="element-list">${p.elements.map(e=>`<span class="element-tag">${e}</span>`).join("")}</div>${palStatsMarkup(p)}</button>`).join(""):`<div class="empty-state paldex-empty"><img src="${PLAIN_EGG_ICON}" alt=""><div><h3>まだ発見したパルがいません</h3><p>配合記録へ親または結果パルを登録すると、図鑑に追加されます。</p></div></div>`;
   byId("paldexLoadMore").hidden=true;
   $$('[data-pal-detail]',byId("paldexGrid")).forEach(button=>button.addEventListener("click",()=>{state.selectedPalId=button.dataset.palDetail;renderPaldex();renderPalDetail();if(matchMedia("(max-width:680px)").matches)openPalModal();}));attachImageFallbacks(byId("paldexGrid"));renderPalDetail();
 }
@@ -81,7 +125,7 @@ function renderPalDetail(root=byId("palDetail")){
     children=state.records.filter(record=>record.resultPal&&(normalizeText(record.parentA)===normalizeText(pal.name)||normalizeText(record.parentB)===normalizeText(pal.name))).slice(0,8).map(record=>({partner:getPal(normalizeText(record.parentA)===normalizeText(pal.name)?record.parentB:record.parentA),child:getPal(record.resultPal)})).filter(item=>item.partner&&item.child);
   }
   const roomRecords=state.records.filter(r=>[r.parentA,r.parentB,r.resultPal].some(n=>normalizeText(n)===normalizeText(pal.name)));
-  root.innerHTML=`<div class="pal-detail-hero"><img ${palImageAttrs(pal)}><span class="section-kicker">PALDECK No.${escapeHtml(pal.no)}</span><h2>${escapeHtml(pal.name)}</h2><p>${escapeHtml(pal.enName)}</p><div class="element-list">${pal.elements.map(e=>`<span class="element-tag">${e}</span>`).join("")}</div></div><div class="pal-detail-body"><section class="detail-section"><h3>作業適性</h3><div class="work-list">${pal.works.length?pal.works.map(w=>`<span class="work-tag">${w.name} Lv.${w.level}</span>`).join(""):`<span class="work-tag">データなし</span>`}</div></section><section class="detail-section"><h3>${state.guideUnlocked?"このパルを作れる配合":"このルームで発見した作り方"}</h3><div class="relation-list">${parents.length?parents.map(c=>relationRow(getPal(c.a),getPal(c.b),pal)).join(""):`<p class="form-help">記録済みの配合はありません。</p>`}</div></section><section class="detail-section"><h3>${state.guideUnlocked?"このパルを親にした配合":"このルームで発見した派生先"}</h3><div class="relation-list">${children.length?children.map(c=>relationRow(pal,c.partner,c.child)).join(""):`<p class="form-help">記録済みの派生配合はありません。</p>`}</div></section><section class="detail-section"><h3>このルームの関連記録</h3><p>${roomRecords.length}件</p><button class="button button--primary button--block" type="button" data-add-pal-record="${pal.id}">このパルを親Aにして記録</button></section></div>`;
+  root.innerHTML=`<div class="pal-detail-hero"><img ${palImageAttrs(pal)}><span class="section-kicker">PALDECK No.${escapeHtml(pal.no)}</span><h2>${escapeHtml(pal.name)}</h2><p>${escapeHtml(pal.enName)}</p><div class="element-list">${pal.elements.map(e=>`<span class="element-tag">${e}</span>`).join("")}</div></div><div class="pal-detail-body"><section class="detail-section pal-stat-section"><h3>種族値</h3>${palStatsMarkup(pal,"detail")}<p class="form-help">PalDBの種族別係数です。攻撃はPalDBのAttack（ShotAttack）を使用し、合計はHP＋攻撃＋防御です。</p></section><section class="detail-section"><h3>作業適性</h3><div class="work-list">${pal.works.length?pal.works.map(w=>`<span class="work-tag">${w.name} Lv.${w.level}</span>`).join(""):`<span class="work-tag">データなし</span>`}</div></section><section class="detail-section"><h3>${state.guideUnlocked?"このパルを作れる配合":"このルームで発見した作り方"}</h3><div class="relation-list">${parents.length?parents.map(c=>relationRow(getPal(c.a),getPal(c.b),pal)).join(""):`<p class="form-help">記録済みの配合はありません。</p>`}</div></section><section class="detail-section"><h3>${state.guideUnlocked?"このパルを親にした配合":"このルームで発見した派生先"}</h3><div class="relation-list">${children.length?children.map(c=>relationRow(pal,c.partner,c.child)).join(""):`<p class="form-help">記録済みの派生配合はありません。</p>`}</div></section><section class="detail-section"><h3>このルームの関連記録</h3><p>${roomRecords.length}件</p><button class="button button--primary button--block" type="button" data-add-pal-record="${pal.id}">このパルを親Aにして記録</button></section></div>`;
   $('[data-add-pal-record]',root)?.addEventListener("click",()=>openRecordDialog("",{parentA:pal.name}));attachImageFallbacks(root);
 }
 

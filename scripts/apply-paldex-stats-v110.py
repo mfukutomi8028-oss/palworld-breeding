@@ -122,7 +122,8 @@ function sortPaldexPals(pals){
     if(mode==="nameAsc")return a.name.localeCompare(b.name,"ja")||fallback(a,b);
     if(mode==="numberAsc")return fallback(a,b);
     const descending=mode.endsWith("Desc"),key=mode.replace(/(?:Asc|Desc)$/u,"");
-    const left=palStatValue(a,key),right=palStatValue(b,key);
+    const statKey=key==="total"?"statTotal":key;
+    const left=palStatValue(a,statKey),right=palStatValue(b,statKey);
     if(left===null&&right===null)return fallback(a,b);
     if(left===null)return 1;
     if(right===null)return -1;
@@ -193,7 +194,12 @@ append_once(
 ''',
 )
 
-replace_once("index.html", "?v=109", "?v=110")
+index_file = Path("index.html")
+index_text = index_file.read_text(encoding="utf-8")
+version_count = index_text.count("?v=109")
+if version_count < 1:
+    raise RuntimeError("index.html: no v109 cache references were found")
+index_file.write_text(index_text.replace("?v=109", "?v=110"), encoding="utf-8")
 replace_once("config.js", 'window.palSiteVersion = "109";', 'window.palSiteVersion = "110";')
 
 append_once(
