@@ -122,7 +122,8 @@ function sortPaldexPals(pals){
     if(mode==="nameAsc")return a.name.localeCompare(b.name,"ja")||fallback(a,b);
     if(mode==="numberAsc")return fallback(a,b);
     const descending=mode.endsWith("Desc"),key=mode.replace(/(?:Asc|Desc)$/u,"");
-    const left=palStatValue(a,key),right=palStatValue(b,key);
+    const statKey=key==="total"?"statTotal":key;
+    const left=palStatValue(a,statKey),right=palStatValue(b,statKey);
     if(left===null&&right===null)return fallback(a,b);
     if(left===null)return 1;
     if(right===null)return -1;
