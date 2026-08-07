@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   prepare:
+    if: ${{ !contains(github.event.head_commit.message, '[resume-v110-once]') }}
     runs-on: ubuntu-latest
     outputs:
       generated: ${{ steps.generate.outputs.generated }}
