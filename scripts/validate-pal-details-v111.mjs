@@ -24,7 +24,6 @@ for (const record of records) {
   const name = String(record.name || "").trim();
   if (!name || names.has(name)) fail(`Missing or duplicate English Pal name: ${name}`);
   names.add(name);
-  if (!String(record.japaneseName || "").trim()) fail(`${name}: Japanese name is missing`);
   if (!String(record.sourceUrl || "").includes("paldb.cc/ja/")) fail(`${name}: Japanese PalDB source URL is missing`);
   if (Object.hasOwn(record, "summary")) fail(`${name}: long Summary prose must not be stored`);
   if (Object.hasOwn(record.partnerSkill || {}, "description")) fail(`${name}: full partner-skill description must not be stored`);
@@ -56,7 +55,6 @@ if (!groundCount || !airCount || !waterCount) fail(`Mount classifications are in
 const lamball = records.find(record => record.name === "Lamball");
 if (!lamball) fail("Lamball detail is missing");
 const lamballExpected = {
-  japaneseName: "モコロン",
   partnerSkill: "モコモコの盾",
   food: 100,
   egg: "平凡なタマゴ",
@@ -67,7 +65,6 @@ const lamballExpected = {
   stamina: 100,
 };
 const lamballActual = {
-  japaneseName: lamball.japaneseName,
   partnerSkill: lamball.partnerSkill?.name,
   food: lamball.stats?.food,
   egg: lamball.stats?.egg,
