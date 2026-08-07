@@ -295,9 +295,20 @@ def parse_drops(soup: BeautifulSoup) -> list[dict[str, str]]:
     drops: list[dict[str, str]] = []
     for row in table.find_all("tr"):
         cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in row.find_all(["th", "td"])]
-        if len(cells) < 2 or norm(cells[0]) in {"item", "アイテム"}:
+        if len(cells) < 2:
             continue
-        drops.append({"item": cells[0], "probability": cells[-1]})
+        raw_item = cells[0].strip()
+        probability = cells[-1].strip()
+        raw_key = norm(raw_item)
+        if raw_key in {"item", "アイテム", "itemqtyprobability", "アイテム数量確率"} or norm(probability) == "probability":
+            continue
+        item = raw_item
+        if probability and item.endswith(probability):
+            item = item[: -len(probability)].rstrip()
+        item = re.sub(r"\s+\d+(?:[–—-]\d+)?$", "", item).strip()
+        if not item:
+            continue
+        drops.append({"item": item, "probability": probability})
     return drops[:20]
 
 
