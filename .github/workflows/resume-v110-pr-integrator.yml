@@ -1,0 +1,54 @@
+name: Integrate resumed v110 PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.event.pull_request.head.ref == 'resume-v110-integrated' && !contains(github.event.pull_request.head.sha, '0000000')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: resume-v110-integrated
+          fetch-depth: 0
+
+      - name: Stop when the v110 integration is already present
+        id: state
+        run: |
+          if grep -q '?v=110' index.html && grep -q 'palSiteVersion = "110"' config.js; then
+            echo 'complete=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'complete=false' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Apply only the unfinished v110 integration
+        if: steps.state.outputs.complete != 'true'
+        run: |
+          test -s data/pal-stats-v1.json
+          test -s data/pals-v1.json
+          python scripts/apply-paldex-stats-v110.py
+          node scripts/validate-pal-stats-v110.mjs
+          node --check app-core.js
+          node --check app-data.js
+          node --check app-explore.js
+          node --check app-actions.js
+          grep -q '?v=110' index.html
+          grep -q 'palSiteVersion = "110"' config.js
+
+      - name: Commit integrated artifacts to the PR branch
+        if: steps.state.outputs.complete != 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
+            app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
+            style-components.css style-responsive.css index.html config.js
+          git commit -m '[pal-stats-v110] Complete verified stats and Paldex integration'
+          git push origin HEAD:resume-v110-integrated
