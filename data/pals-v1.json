@@ -19,7 +19,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Lamball"
+      "sourceUrl": "https://paldb.cc/en/Lamball",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Cattiva",
@@ -36,7 +38,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Cattiva"
+      "sourceUrl": "https://paldb.cc/en/Cattiva",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Chikipi",
@@ -53,7 +57,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 375,
-      "sourceUrl": "https://paldb.cc/en/Chikipi"
+      "sourceUrl": "https://paldb.cc/en/Chikipi",
+      "attack": 60,
+      "statTotal": 180
     },
     {
       "name": "Lifmunk",
@@ -70,7 +76,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Lifmunk"
+      "sourceUrl": "https://paldb.cc/en/Lifmunk",
+      "attack": 70,
+      "statTotal": 215
     },
     {
       "name": "Fuack",
@@ -87,7 +95,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Fuack"
+      "sourceUrl": "https://paldb.cc/en/Fuack",
+      "attack": 80,
+      "statTotal": 200
     },
     {
       "name": "Fuack Ignis",
@@ -104,7 +114,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Fuack_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Fuack_Ignis",
+      "attack": 85,
+      "statTotal": 205
     },
     {
       "name": "Vixy",
@@ -121,7 +133,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 350,
-      "sourceUrl": "https://paldb.cc/en/Vixy"
+      "sourceUrl": "https://paldb.cc/en/Vixy",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Celaray",
@@ -138,7 +152,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Celaray"
+      "sourceUrl": "https://paldb.cc/en/Celaray",
+      "attack": 70,
+      "statTotal": 230
     },
     {
       "name": "Celaray Lux",
@@ -155,7 +171,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Celaray_Lux"
+      "sourceUrl": "https://paldb.cc/en/Celaray_Lux",
+      "attack": 75,
+      "statTotal": 235
     },
     {
       "name": "Cremis",
@@ -172,7 +190,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Cremis"
+      "sourceUrl": "https://paldb.cc/en/Cremis",
+      "attack": 70,
+      "statTotal": 215
     },
     {
       "name": "Croajiro",
@@ -189,7 +209,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Croajiro"
+      "sourceUrl": "https://paldb.cc/en/Croajiro",
+      "attack": 100,
+      "statTotal": 265
     },
     {
       "name": "Croajiro Noct",
@@ -206,7 +228,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Croajiro_Noct"
+      "sourceUrl": "https://paldb.cc/en/Croajiro_Noct",
+      "attack": 110,
+      "statTotal": 285
     },
     {
       "name": "Herbil",
@@ -223,7 +247,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 350,
-      "sourceUrl": "https://paldb.cc/en/Herbil"
+      "sourceUrl": "https://paldb.cc/en/Herbil",
+      "attack": 75,
+      "statTotal": 230
     },
     {
       "name": "Teafant",
@@ -240,7 +266,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Teafant"
+      "sourceUrl": "https://paldb.cc/en/Teafant",
+      "attack": 60,
+      "statTotal": 200
     },
     {
       "name": "Gumoss",
@@ -257,7 +285,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Gumoss"
+      "sourceUrl": "https://paldb.cc/en/Gumoss",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Pupperai",
@@ -274,7 +304,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Pupperai"
+      "sourceUrl": "https://paldb.cc/en/Pupperai",
+      "attack": 80,
+      "statTotal": 220
     },
     {
       "name": "Clovee",
@@ -291,7 +323,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Clovee"
+      "sourceUrl": "https://paldb.cc/en/Clovee",
+      "attack": 65,
+      "statTotal": 210
     },
     {
       "name": "Jolthog",
@@ -308,7 +342,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Jolthog"
+      "sourceUrl": "https://paldb.cc/en/Jolthog",
+      "attack": 75,
+      "statTotal": 215
     },
     {
       "name": "Jolthog Cryst",
@@ -325,7 +361,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Jolthog_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Jolthog_Cryst",
+      "attack": 75,
+      "statTotal": 225
     },
     {
       "name": "Depresso",
@@ -342,7 +380,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Depresso"
+      "sourceUrl": "https://paldb.cc/en/Depresso",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Pengullet",
@@ -359,7 +399,9 @@
       "stamina": 100,
       "rideSprint": 650,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Pengullet"
+      "sourceUrl": "https://paldb.cc/en/Pengullet",
+      "attack": 75,
+      "statTotal": 215
     },
     {
       "name": "Pengullet Lux",
@@ -376,7 +418,9 @@
       "stamina": 100,
       "rideSprint": 650,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Pengullet_Lux"
+      "sourceUrl": "https://paldb.cc/en/Pengullet_Lux",
+      "attack": 80,
+      "statTotal": 220
     },
     {
       "name": "Penking",
@@ -393,7 +437,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Penking"
+      "sourceUrl": "https://paldb.cc/en/Penking",
+      "attack": 95,
+      "statTotal": 285
     },
     {
       "name": "Penking Lux",
@@ -410,7 +456,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Penking_Lux"
+      "sourceUrl": "https://paldb.cc/en/Penking_Lux",
+      "attack": 100,
+      "statTotal": 300
     },
     {
       "name": "Hoocrates",
@@ -427,7 +475,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 380,
-      "sourceUrl": "https://paldb.cc/en/Hoocrates"
+      "sourceUrl": "https://paldb.cc/en/Hoocrates",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Melpaca",
@@ -444,7 +494,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Melpaca"
+      "sourceUrl": "https://paldb.cc/en/Melpaca",
+      "attack": 75,
+      "statTotal": 255
     },
     {
       "name": "Kingpaca",
@@ -461,7 +513,9 @@
       "stamina": 170,
       "rideSprint": 1040,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kingpaca"
+      "sourceUrl": "https://paldb.cc/en/Kingpaca",
+      "attack": 85,
+      "statTotal": 295
     },
     {
       "name": "Kingpaca Cryst",
@@ -478,7 +532,9 @@
       "stamina": 170,
       "rideSprint": 1040,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kingpaca_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Kingpaca_Cryst",
+      "attack": 85,
+      "statTotal": 295
     },
     {
       "name": "Daedream",
@@ -495,7 +551,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Daedream"
+      "sourceUrl": "https://paldb.cc/en/Daedream",
+      "attack": 75,
+      "statTotal": 205
     },
     {
       "name": "Tanzee",
@@ -512,7 +570,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Tanzee"
+      "sourceUrl": "https://paldb.cc/en/Tanzee",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Tanzee Ignis",
@@ -529,7 +589,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Tanzee_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Tanzee_Ignis",
+      "attack": 75,
+      "statTotal": 225
     },
     {
       "name": "Nox",
@@ -546,7 +608,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Nox"
+      "sourceUrl": "https://paldb.cc/en/Nox",
+      "attack": 85,
+      "statTotal": 230
     },
     {
       "name": "Flambelle",
@@ -563,7 +627,9 @@
       "stamina": 100,
       "rideSprint": 375,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Flambelle"
+      "sourceUrl": "https://paldb.cc/en/Flambelle",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Rooby",
@@ -580,7 +646,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Rooby"
+      "sourceUrl": "https://paldb.cc/en/Rooby",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Mau",
@@ -597,7 +665,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 475,
-      "sourceUrl": "https://paldb.cc/en/Mau"
+      "sourceUrl": "https://paldb.cc/en/Mau",
+      "attack": 60,
+      "statTotal": 200
     },
     {
       "name": "Mau Cryst",
@@ -614,7 +684,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 475,
-      "sourceUrl": "https://paldb.cc/en/Mau_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Mau_Cryst",
+      "attack": 65,
+      "statTotal": 205
     },
     {
       "name": "Rushoar",
@@ -631,7 +703,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Rushoar"
+      "sourceUrl": "https://paldb.cc/en/Rushoar",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Foxparks",
@@ -648,7 +722,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Foxparks"
+      "sourceUrl": "https://paldb.cc/en/Foxparks",
+      "attack": 75,
+      "statTotal": 210
     },
     {
       "name": "Foxparks Cryst",
@@ -665,7 +741,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Foxparks_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Foxparks_Cryst",
+      "attack": 80,
+      "statTotal": 215
     },
     {
       "name": "Killamari",
@@ -682,7 +760,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Killamari"
+      "sourceUrl": "https://paldb.cc/en/Killamari",
+      "attack": 60,
+      "statTotal": 190
     },
     {
       "name": "Killamari Primo",
@@ -699,7 +779,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Killamari_Primo"
+      "sourceUrl": "https://paldb.cc/en/Killamari_Primo",
+      "attack": 60,
+      "statTotal": 200
     },
     {
       "name": "Fuddler",
@@ -716,7 +798,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Fuddler"
+      "sourceUrl": "https://paldb.cc/en/Fuddler",
+      "attack": 80,
+      "statTotal": 195
     },
     {
       "name": "Eikthyrdeer",
@@ -733,7 +817,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer"
+      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer",
+      "attack": 80,
+      "statTotal": 255
     },
     {
       "name": "Eikthyrdeer Terra",
@@ -750,7 +836,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer_Terra"
+      "sourceUrl": "https://paldb.cc/en/Eikthyrdeer_Terra",
+      "attack": 80,
+      "statTotal": 255
     },
     {
       "name": "Direhowl",
@@ -767,7 +855,9 @@
       "stamina": 70,
       "rideSprint": 1050,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Direhowl"
+      "sourceUrl": "https://paldb.cc/en/Direhowl",
+      "attack": 90,
+      "statTotal": 245
     },
     {
       "name": "Caprity",
@@ -784,7 +874,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Caprity"
+      "sourceUrl": "https://paldb.cc/en/Caprity",
+      "attack": 70,
+      "statTotal": 260
     },
     {
       "name": "Caprity Noct",
@@ -801,7 +893,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Caprity_Noct"
+      "sourceUrl": "https://paldb.cc/en/Caprity_Noct",
+      "attack": 75,
+      "statTotal": 265
     },
     {
       "name": "Swee",
@@ -818,7 +912,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Swee"
+      "sourceUrl": "https://paldb.cc/en/Swee",
+      "attack": 60,
+      "statTotal": 180
     },
     {
       "name": "Sweepa",
@@ -835,7 +931,9 @@
       "stamina": 120,
       "rideSprint": 1020,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Sweepa"
+      "sourceUrl": "https://paldb.cc/en/Sweepa",
+      "attack": 90,
+      "statTotal": 280
     },
     {
       "name": "Turtacle",
@@ -852,7 +950,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 320,
-      "sourceUrl": "https://paldb.cc/en/Turtacle"
+      "sourceUrl": "https://paldb.cc/en/Turtacle",
+      "attack": 75,
+      "statTotal": 265
     },
     {
       "name": "Turtacle Terra",
@@ -869,7 +969,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 320,
-      "sourceUrl": "https://paldb.cc/en/Turtacle_Terra"
+      "sourceUrl": "https://paldb.cc/en/Turtacle_Terra",
+      "attack": 85,
+      "statTotal": 295
     },
     {
       "name": "Hangyu",
@@ -886,7 +988,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Hangyu"
+      "sourceUrl": "https://paldb.cc/en/Hangyu",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Hangyu Cryst",
@@ -903,7 +1007,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Hangyu_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Hangyu_Cryst",
+      "attack": 80,
+      "statTotal": 230
     },
     {
       "name": "Woolipop",
@@ -920,7 +1026,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Woolipop"
+      "sourceUrl": "https://paldb.cc/en/Woolipop",
+      "attack": 70,
+      "statTotal": 230
     },
     {
       "name": "Woolipop Terra",
@@ -937,7 +1045,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Woolipop_Terra"
+      "sourceUrl": "https://paldb.cc/en/Woolipop_Terra",
+      "attack": 70,
+      "statTotal": 235
     },
     {
       "name": "Mozzarina",
@@ -954,7 +1064,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 580,
-      "sourceUrl": "https://paldb.cc/en/Mozzarina"
+      "sourceUrl": "https://paldb.cc/en/Mozzarina",
+      "attack": 50,
+      "statTotal": 220
     },
     {
       "name": "Azurobe",
@@ -971,7 +1083,9 @@
       "stamina": 160,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Azurobe"
+      "sourceUrl": "https://paldb.cc/en/Azurobe",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Azurobe Cryst",
@@ -988,7 +1102,9 @@
       "stamina": 160,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Azurobe_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Azurobe_Cryst",
+      "attack": 105,
+      "statTotal": 325
     },
     {
       "name": "Sparkit",
@@ -1005,7 +1121,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 350,
-      "sourceUrl": "https://paldb.cc/en/Sparkit"
+      "sourceUrl": "https://paldb.cc/en/Sparkit",
+      "attack": 75,
+      "statTotal": 205
     },
     {
       "name": "Kelpsea",
@@ -1022,7 +1140,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kelpsea"
+      "sourceUrl": "https://paldb.cc/en/Kelpsea",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Kelpsea Ignis",
@@ -1039,7 +1159,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kelpsea_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Kelpsea_Ignis",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Ribbuny",
@@ -1056,7 +1178,9 @@
       "stamina": 100,
       "rideSprint": 350,
       "run": 245,
-      "sourceUrl": "https://paldb.cc/en/Ribbuny"
+      "sourceUrl": "https://paldb.cc/en/Ribbuny",
+      "attack": 65,
+      "statTotal": 210
     },
     {
       "name": "Ribbuny Botan",
@@ -1073,7 +1197,9 @@
       "stamina": 100,
       "rideSprint": 350,
       "run": 245,
-      "sourceUrl": "https://paldb.cc/en/Ribbuny_Botan"
+      "sourceUrl": "https://paldb.cc/en/Ribbuny_Botan",
+      "attack": 65,
+      "statTotal": 215
     },
     {
       "name": "Jelliette",
@@ -1090,7 +1216,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 240,
-      "sourceUrl": "https://paldb.cc/en/Jelliette"
+      "sourceUrl": "https://paldb.cc/en/Jelliette",
+      "attack": 90,
+      "statTotal": 235
     },
     {
       "name": "Jellroy",
@@ -1107,7 +1235,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Jellroy"
+      "sourceUrl": "https://paldb.cc/en/Jellroy",
+      "attack": 75,
+      "statTotal": 240
     },
     {
       "name": "Amione",
@@ -1124,7 +1254,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Amione"
+      "sourceUrl": "https://paldb.cc/en/Amione",
+      "attack": 70,
+      "statTotal": 200
     },
     {
       "name": "Gloopie",
@@ -1141,7 +1273,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Gloopie"
+      "sourceUrl": "https://paldb.cc/en/Gloopie",
+      "attack": 85,
+      "statTotal": 225
     },
     {
       "name": "Gloopie Primo",
@@ -1158,7 +1292,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Gloopie_Primo"
+      "sourceUrl": "https://paldb.cc/en/Gloopie_Primo",
+      "attack": 85,
+      "statTotal": 230
     },
     {
       "name": "Galeclaw",
@@ -1175,7 +1311,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Galeclaw"
+      "sourceUrl": "https://paldb.cc/en/Galeclaw",
+      "attack": 85,
+      "statTotal": 220
     },
     {
       "name": "Wispaw",
@@ -1192,7 +1330,9 @@
       "stamina": 100,
       "rideSprint": 540,
       "run": 360,
-      "sourceUrl": "https://paldb.cc/en/Wispaw"
+      "sourceUrl": "https://paldb.cc/en/Wispaw",
+      "attack": 95,
+      "statTotal": 250
     },
     {
       "name": "Nitewing",
@@ -1209,7 +1349,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Nitewing"
+      "sourceUrl": "https://paldb.cc/en/Nitewing",
+      "attack": 95,
+      "statTotal": 275
     },
     {
       "name": "Tombat",
@@ -1226,7 +1368,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Tombat"
+      "sourceUrl": "https://paldb.cc/en/Tombat",
+      "attack": 95,
+      "statTotal": 270
     },
     {
       "name": "Tocotoco",
@@ -1243,7 +1387,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Tocotoco"
+      "sourceUrl": "https://paldb.cc/en/Tocotoco",
+      "attack": 75,
+      "statTotal": 205
     },
     {
       "name": "Univolt",
@@ -1260,7 +1406,9 @@
       "stamina": 100,
       "rideSprint": 1100,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Univolt"
+      "sourceUrl": "https://paldb.cc/en/Univolt",
+      "attack": 105,
+      "statTotal": 290
     },
     {
       "name": "Univolt Cryst",
@@ -1277,7 +1425,9 @@
       "stamina": 100,
       "rideSprint": 1100,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Univolt_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Univolt_Cryst",
+      "attack": 105,
+      "statTotal": 295
     },
     {
       "name": "Gobfin",
@@ -1294,7 +1444,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Gobfin"
+      "sourceUrl": "https://paldb.cc/en/Gobfin",
+      "attack": 90,
+      "statTotal": 255
     },
     {
       "name": "Gobfin Ignis",
@@ -1311,7 +1463,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Gobfin_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Gobfin_Ignis",
+      "attack": 90,
+      "statTotal": 255
     },
     {
       "name": "Loupmoon",
@@ -1328,7 +1482,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Loupmoon"
+      "sourceUrl": "https://paldb.cc/en/Loupmoon",
+      "attack": 100,
+      "statTotal": 260
     },
     {
       "name": "Loupmoon Cryst",
@@ -1345,7 +1501,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Loupmoon_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Loupmoon_Cryst",
+      "attack": 105,
+      "statTotal": 265
     },
     {
       "name": "Cawgnito",
@@ -1362,7 +1520,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 920,
-      "sourceUrl": "https://paldb.cc/en/Cawgnito"
+      "sourceUrl": "https://paldb.cc/en/Cawgnito",
+      "attack": 95,
+      "statTotal": 250
     },
     {
       "name": "Arsox",
@@ -1379,7 +1539,9 @@
       "stamina": 120,
       "rideSprint": 1050,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Arsox"
+      "sourceUrl": "https://paldb.cc/en/Arsox",
+      "attack": 95,
+      "statTotal": 275
     },
     {
       "name": "Muffly",
@@ -1396,7 +1558,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Muffly"
+      "sourceUrl": "https://paldb.cc/en/Muffly",
+      "attack": 80,
+      "statTotal": 195
     },
     {
       "name": "Bristla",
@@ -1413,7 +1577,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Bristla"
+      "sourceUrl": "https://paldb.cc/en/Bristla",
+      "attack": 80,
+      "statTotal": 240
     },
     {
       "name": "Cinnamoth",
@@ -1430,7 +1596,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Cinnamoth"
+      "sourceUrl": "https://paldb.cc/en/Cinnamoth",
+      "attack": 80,
+      "statTotal": 230
     },
     {
       "name": "Puffolt",
@@ -1447,7 +1615,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 200,
-      "sourceUrl": "https://paldb.cc/en/Puffolt"
+      "sourceUrl": "https://paldb.cc/en/Puffolt",
+      "attack": 80,
+      "statTotal": 225
     },
     {
       "name": "Elphidran",
@@ -1464,7 +1634,9 @@
       "stamina": 130,
       "rideSprint": 1000,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Elphidran"
+      "sourceUrl": "https://paldb.cc/en/Elphidran",
+      "attack": 80,
+      "statTotal": 280
     },
     {
       "name": "Elphidran Aqua",
@@ -1481,7 +1653,9 @@
       "stamina": 130,
       "rideSprint": 1000,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Elphidran_Aqua"
+      "sourceUrl": "https://paldb.cc/en/Elphidran_Aqua",
+      "attack": 80,
+      "statTotal": 290
     },
     {
       "name": "Vanwyrm",
@@ -1498,7 +1672,9 @@
       "stamina": 150,
       "rideSprint": 850,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Vanwyrm"
+      "sourceUrl": "https://paldb.cc/en/Vanwyrm",
+      "attack": 115,
+      "statTotal": 295
     },
     {
       "name": "Vanwyrm Cryst",
@@ -1515,7 +1691,9 @@
       "stamina": 150,
       "rideSprint": 850,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Vanwyrm_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Vanwyrm_Cryst",
+      "attack": 120,
+      "statTotal": 305
     },
     {
       "name": "Felbat",
@@ -1532,7 +1710,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Felbat"
+      "sourceUrl": "https://paldb.cc/en/Felbat",
+      "attack": 105,
+      "statTotal": 315
     },
     {
       "name": "Vaelet",
@@ -1549,7 +1729,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Vaelet"
+      "sourceUrl": "https://paldb.cc/en/Vaelet",
+      "attack": 100,
+      "statTotal": 320
     },
     {
       "name": "Beegarde",
@@ -1566,7 +1748,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Beegarde"
+      "sourceUrl": "https://paldb.cc/en/Beegarde",
+      "attack": 90,
+      "statTotal": 260
     },
     {
       "name": "Elizabee",
@@ -1583,7 +1767,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Elizabee"
+      "sourceUrl": "https://paldb.cc/en/Elizabee",
+      "attack": 105,
+      "statTotal": 295
     },
     {
       "name": "Lovander",
@@ -1600,7 +1786,9 @@
       "stamina": 100,
       "rideSprint": 850,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Lovander"
+      "sourceUrl": "https://paldb.cc/en/Lovander",
+      "attack": 70,
+      "statTotal": 260
     },
     {
       "name": "Grintale",
@@ -1617,7 +1805,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Grintale"
+      "sourceUrl": "https://paldb.cc/en/Grintale",
+      "attack": 80,
+      "statTotal": 270
     },
     {
       "name": "Tarantriss",
@@ -1634,7 +1824,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 640,
-      "sourceUrl": "https://paldb.cc/en/Tarantriss"
+      "sourceUrl": "https://paldb.cc/en/Tarantriss",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Polapup",
@@ -1651,7 +1843,9 @@
       "stamina": 120,
       "rideSprint": 375,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Polapup"
+      "sourceUrl": "https://paldb.cc/en/Polapup",
+      "attack": 105,
+      "statTotal": 305
     },
     {
       "name": "Polapup Terra",
@@ -1668,7 +1862,9 @@
       "stamina": 120,
       "rideSprint": 375,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Polapup_Terra"
+      "sourceUrl": "https://paldb.cc/en/Polapup_Terra",
+      "attack": 105,
+      "statTotal": 310
     },
     {
       "name": "Leezpunk",
@@ -1685,7 +1881,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Leezpunk"
+      "sourceUrl": "https://paldb.cc/en/Leezpunk",
+      "attack": 80,
+      "statTotal": 210
     },
     {
       "name": "Leezpunk Ignis",
@@ -1702,7 +1900,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Leezpunk_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Leezpunk_Ignis",
+      "attack": 80,
+      "statTotal": 210
     },
     {
       "name": "Gorirat",
@@ -1719,7 +1919,9 @@
       "stamina": 100,
       "rideSprint": 720,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Gorirat"
+      "sourceUrl": "https://paldb.cc/en/Gorirat",
+      "attack": 95,
+      "statTotal": 275
     },
     {
       "name": "Gorirat Terra",
@@ -1736,7 +1938,9 @@
       "stamina": 100,
       "rideSprint": 720,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Gorirat_Terra"
+      "sourceUrl": "https://paldb.cc/en/Gorirat_Terra",
+      "attack": 100,
+      "statTotal": 280
     },
     {
       "name": "Surfent",
@@ -1753,7 +1957,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Surfent"
+      "sourceUrl": "https://paldb.cc/en/Surfent",
+      "attack": 90,
+      "statTotal": 260
     },
     {
       "name": "Surfent Terra",
@@ -1770,7 +1976,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Surfent_Terra"
+      "sourceUrl": "https://paldb.cc/en/Surfent_Terra",
+      "attack": 90,
+      "statTotal": 280
     },
     {
       "name": "Robinquill",
@@ -1787,7 +1995,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Robinquill"
+      "sourceUrl": "https://paldb.cc/en/Robinquill",
+      "attack": 105,
+      "statTotal": 275
     },
     {
       "name": "Robinquill Terra",
@@ -1804,7 +2014,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Robinquill_Terra"
+      "sourceUrl": "https://paldb.cc/en/Robinquill_Terra",
+      "attack": 105,
+      "statTotal": 275
     },
     {
       "name": "Flopie",
@@ -1821,7 +2033,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Flopie"
+      "sourceUrl": "https://paldb.cc/en/Flopie",
+      "attack": 65,
+      "statTotal": 210
     },
     {
       "name": "Wixen",
@@ -1838,7 +2052,9 @@
       "stamina": 100,
       "rideSprint": 620,
       "run": 440,
-      "sourceUrl": "https://paldb.cc/en/Wixen"
+      "sourceUrl": "https://paldb.cc/en/Wixen",
+      "attack": 110,
+      "statTotal": 280
     },
     {
       "name": "Wixen Noct",
@@ -1855,7 +2071,9 @@
       "stamina": 100,
       "rideSprint": 620,
       "run": 440,
-      "sourceUrl": "https://paldb.cc/en/Wixen_Noct"
+      "sourceUrl": "https://paldb.cc/en/Wixen_Noct",
+      "attack": 110,
+      "statTotal": 285
     },
     {
       "name": "Katress",
@@ -1872,7 +2090,9 @@
       "stamina": 100,
       "rideSprint": 620,
       "run": 440,
-      "sourceUrl": "https://paldb.cc/en/Katress"
+      "sourceUrl": "https://paldb.cc/en/Katress",
+      "attack": 105,
+      "statTotal": 285
     },
     {
       "name": "Katress Ignis",
@@ -1889,7 +2109,9 @@
       "stamina": 100,
       "rideSprint": 620,
       "run": 440,
-      "sourceUrl": "https://paldb.cc/en/Katress_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Katress_Ignis",
+      "attack": 105,
+      "statTotal": 290
     },
     {
       "name": "Helzephyr",
@@ -1906,7 +2128,9 @@
       "stamina": 170,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Helzephyr"
+      "sourceUrl": "https://paldb.cc/en/Helzephyr",
+      "attack": 125,
+      "statTotal": 325
     },
     {
       "name": "Helzephyr Lux",
@@ -1923,7 +2147,9 @@
       "stamina": 170,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Helzephyr_Lux"
+      "sourceUrl": "https://paldb.cc/en/Helzephyr_Lux",
+      "attack": 125,
+      "statTotal": 330
     },
     {
       "name": "Elgrove",
@@ -1940,7 +2166,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Elgrove"
+      "sourceUrl": "https://paldb.cc/en/Elgrove",
+      "attack": 105,
+      "statTotal": 320
     },
     {
       "name": "Elgrove Cryst",
@@ -1957,7 +2185,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Elgrove_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Elgrove_Cryst",
+      "attack": 100,
+      "statTotal": 325
     },
     {
       "name": "Lunaris",
@@ -1974,7 +2204,9 @@
       "stamina": 100,
       "rideSprint": 650,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Lunaris"
+      "sourceUrl": "https://paldb.cc/en/Lunaris",
+      "attack": 100,
+      "statTotal": 280
     },
     {
       "name": "Fenglope",
@@ -1991,7 +2223,9 @@
       "stamina": 140,
       "rideSprint": 1050,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Fenglope"
+      "sourceUrl": "https://paldb.cc/en/Fenglope",
+      "attack": 110,
+      "statTotal": 310
     },
     {
       "name": "Fenglope Lux",
@@ -2008,7 +2242,9 @@
       "stamina": 140,
       "rideSprint": 1050,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Fenglope_Lux"
+      "sourceUrl": "https://paldb.cc/en/Fenglope_Lux",
+      "attack": 115,
+      "statTotal": 315
     },
     {
       "name": "Dinossom",
@@ -2025,7 +2261,9 @@
       "stamina": 130,
       "rideSprint": 1030,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Dinossom"
+      "sourceUrl": "https://paldb.cc/en/Dinossom",
+      "attack": 85,
+      "statTotal": 285
     },
     {
       "name": "Dinossom Lux",
@@ -2042,7 +2280,9 @@
       "stamina": 130,
       "rideSprint": 1030,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Dinossom_Lux"
+      "sourceUrl": "https://paldb.cc/en/Dinossom_Lux",
+      "attack": 90,
+      "statTotal": 290
     },
     {
       "name": "Bushi",
@@ -2059,7 +2299,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Bushi"
+      "sourceUrl": "https://paldb.cc/en/Bushi",
+      "attack": 125,
+      "statTotal": 285
     },
     {
       "name": "Bushi Noct",
@@ -2076,7 +2318,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Bushi_Noct"
+      "sourceUrl": "https://paldb.cc/en/Bushi_Noct",
+      "attack": 130,
+      "statTotal": 290
     },
     {
       "name": "Munchill",
@@ -2093,7 +2337,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Munchill"
+      "sourceUrl": "https://paldb.cc/en/Munchill",
+      "attack": 80,
+      "statTotal": 240
     },
     {
       "name": "Mammorest",
@@ -2110,7 +2356,9 @@
       "stamina": 180,
       "rideSprint": 1030,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Mammorest"
+      "sourceUrl": "https://paldb.cc/en/Mammorest",
+      "attack": 85,
+      "statTotal": 325
     },
     {
       "name": "Mammorest Cryst",
@@ -2127,7 +2375,9 @@
       "stamina": 180,
       "rideSprint": 1030,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Mammorest_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Mammorest_Cryst",
+      "attack": 85,
+      "statTotal": 325
     },
     {
       "name": "Finsider",
@@ -2144,7 +2394,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Finsider"
+      "sourceUrl": "https://paldb.cc/en/Finsider",
+      "attack": 85,
+      "statTotal": 240
     },
     {
       "name": "Finsider Ignis",
@@ -2161,7 +2413,9 @@
       "stamina": 100,
       "rideSprint": 400,
       "run": 250,
-      "sourceUrl": "https://paldb.cc/en/Finsider_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Finsider_Ignis",
+      "attack": 90,
+      "statTotal": 245
     },
     {
       "name": "Petallia",
@@ -2178,7 +2432,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Petallia"
+      "sourceUrl": "https://paldb.cc/en/Petallia",
+      "attack": 95,
+      "statTotal": 295
     },
     {
       "name": "Petallia Ignis",
@@ -2195,7 +2451,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Petallia_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Petallia_Ignis",
+      "attack": 105,
+      "statTotal": 300
     },
     {
       "name": "Leafan",
@@ -2212,7 +2470,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Leafan"
+      "sourceUrl": "https://paldb.cc/en/Leafan",
+      "attack": 115,
+      "statTotal": 310
     },
     {
       "name": "Incineram",
@@ -2229,7 +2489,9 @@
       "stamina": 100,
       "rideSprint": 960,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Incineram"
+      "sourceUrl": "https://paldb.cc/en/Incineram",
+      "attack": 100,
+      "statTotal": 280
     },
     {
       "name": "Incineram Noct",
@@ -2246,7 +2508,9 @@
       "stamina": 100,
       "rideSprint": 960,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Incineram_Noct"
+      "sourceUrl": "https://paldb.cc/en/Incineram_Noct",
+      "attack": 105,
+      "statTotal": 285
     },
     {
       "name": "Dazzi",
@@ -2263,7 +2527,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Dazzi"
+      "sourceUrl": "https://paldb.cc/en/Dazzi",
+      "attack": 80,
+      "statTotal": 220
     },
     {
       "name": "Dazzi Noct",
@@ -2280,7 +2546,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Dazzi_Noct"
+      "sourceUrl": "https://paldb.cc/en/Dazzi_Noct",
+      "attack": 80,
+      "statTotal": 225
     },
     {
       "name": "Pyrin",
@@ -2297,7 +2565,9 @@
       "stamina": 100,
       "rideSprint": 1300,
       "run": 850,
-      "sourceUrl": "https://paldb.cc/en/Pyrin"
+      "sourceUrl": "https://paldb.cc/en/Pyrin",
+      "attack": 95,
+      "statTotal": 285
     },
     {
       "name": "Pyrin Noct",
@@ -2314,7 +2584,9 @@
       "stamina": 100,
       "rideSprint": 1300,
       "run": 850,
-      "sourceUrl": "https://paldb.cc/en/Pyrin_Noct"
+      "sourceUrl": "https://paldb.cc/en/Pyrin_Noct",
+      "attack": 95,
+      "statTotal": 285
     },
     {
       "name": "Relaxaurus",
@@ -2331,7 +2603,9 @@
       "stamina": 200,
       "rideSprint": 1000,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Relaxaurus"
+      "sourceUrl": "https://paldb.cc/en/Relaxaurus",
+      "attack": 115,
+      "statTotal": 345
     },
     {
       "name": "Relaxaurus Lux",
@@ -2348,7 +2622,9 @@
       "stamina": 200,
       "rideSprint": 1000,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Relaxaurus_Lux"
+      "sourceUrl": "https://paldb.cc/en/Relaxaurus_Lux",
+      "attack": 120,
+      "statTotal": 350
     },
     {
       "name": "Foxcicle",
@@ -2365,7 +2641,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Foxcicle"
+      "sourceUrl": "https://paldb.cc/en/Foxcicle",
+      "attack": 95,
+      "statTotal": 290
     },
     {
       "name": "Beakon",
@@ -2382,7 +2660,9 @@
       "stamina": 160,
       "rideSprint": 1200,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Beakon"
+      "sourceUrl": "https://paldb.cc/en/Beakon",
+      "attack": 115,
+      "statTotal": 300
     },
     {
       "name": "Beakon Cryst",
@@ -2399,7 +2679,9 @@
       "stamina": 160,
       "rideSprint": 1200,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Beakon_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Beakon_Cryst",
+      "attack": 115,
+      "statTotal": 305
     },
     {
       "name": "Ghangler",
@@ -2416,7 +2698,9 @@
       "stamina": 320,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Ghangler"
+      "sourceUrl": "https://paldb.cc/en/Ghangler",
+      "attack": 125,
+      "statTotal": 320
     },
     {
       "name": "Ghangler Ignis",
@@ -2433,7 +2717,9 @@
       "stamina": 320,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Ghangler_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Ghangler_Ignis",
+      "attack": 130,
+      "statTotal": 325
     },
     {
       "name": "Rayhound",
@@ -2450,7 +2736,9 @@
       "stamina": 100,
       "rideSprint": 1150,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Rayhound"
+      "sourceUrl": "https://paldb.cc/en/Rayhound",
+      "attack": 100,
+      "statTotal": 270
     },
     {
       "name": "Rayhound Cryst",
@@ -2467,7 +2755,9 @@
       "stamina": 100,
       "rideSprint": 1150,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Rayhound_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Rayhound_Cryst",
+      "attack": 105,
+      "statTotal": 275
     },
     {
       "name": "Menasting",
@@ -2484,7 +2774,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Menasting"
+      "sourceUrl": "https://paldb.cc/en/Menasting",
+      "attack": 100,
+      "statTotal": 330
     },
     {
       "name": "Menasting Terra",
@@ -2501,7 +2793,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Menasting_Terra"
+      "sourceUrl": "https://paldb.cc/en/Menasting_Terra",
+      "attack": 105,
+      "statTotal": 335
     },
     {
       "name": "Needoll",
@@ -2518,7 +2812,9 @@
       "stamina": 100,
       "rideSprint": 630,
       "run": 525,
-      "sourceUrl": "https://paldb.cc/en/Needoll"
+      "sourceUrl": "https://paldb.cc/en/Needoll",
+      "attack": 85,
+      "statTotal": 230
     },
     {
       "name": "Needoll Noct",
@@ -2535,7 +2831,9 @@
       "stamina": 100,
       "rideSprint": 630,
       "run": 525,
-      "sourceUrl": "https://paldb.cc/en/Needoll_Noct"
+      "sourceUrl": "https://paldb.cc/en/Needoll_Noct",
+      "attack": 90,
+      "statTotal": 235
     },
     {
       "name": "Reindrix",
@@ -2552,7 +2850,9 @@
       "stamina": 140,
       "rideSprint": 1070,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Reindrix"
+      "sourceUrl": "https://paldb.cc/en/Reindrix",
+      "attack": 85,
+      "statTotal": 295
     },
     {
       "name": "Mossanda",
@@ -2569,7 +2869,9 @@
       "stamina": 130,
       "rideSprint": 1000,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Mossanda"
+      "sourceUrl": "https://paldb.cc/en/Mossanda",
+      "attack": 90,
+      "statTotal": 280
     },
     {
       "name": "Mossanda Lux",
@@ -2586,7 +2888,9 @@
       "stamina": 130,
       "rideSprint": 1000,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Mossanda_Lux"
+      "sourceUrl": "https://paldb.cc/en/Mossanda_Lux",
+      "attack": 100,
+      "statTotal": 300
     },
     {
       "name": "Chillet",
@@ -2603,7 +2907,9 @@
       "stamina": 100,
       "rideSprint": 1050,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Chillet"
+      "sourceUrl": "https://paldb.cc/en/Chillet",
+      "attack": 80,
+      "statTotal": 250
     },
     {
       "name": "Chillet Ignis",
@@ -2620,7 +2926,9 @@
       "stamina": 100,
       "rideSprint": 1050,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Chillet_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Chillet_Ignis",
+      "attack": 85,
+      "statTotal": 255
     },
     {
       "name": "Ragnahawk",
@@ -2637,7 +2945,9 @@
       "stamina": 150,
       "rideSprint": 1300,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Ragnahawk"
+      "sourceUrl": "https://paldb.cc/en/Ragnahawk",
+      "attack": 105,
+      "statTotal": 320
     },
     {
       "name": "Moldron",
@@ -2654,7 +2964,9 @@
       "stamina": 270,
       "rideSprint": 850,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Moldron"
+      "sourceUrl": "https://paldb.cc/en/Moldron",
+      "attack": 125,
+      "statTotal": 350
     },
     {
       "name": "Moldron Cryst",
@@ -2671,7 +2983,9 @@
       "stamina": 270,
       "rideSprint": 850,
       "run": 650,
-      "sourceUrl": "https://paldb.cc/en/Moldron_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Moldron_Cryst",
+      "attack": 125,
+      "statTotal": 355
     },
     {
       "name": "Palumba",
@@ -2688,7 +3002,9 @@
       "stamina": 180,
       "rideSprint": 1000,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Palumba"
+      "sourceUrl": "https://paldb.cc/en/Palumba",
+      "attack": 110,
+      "statTotal": 330
     },
     {
       "name": "Digtoise",
@@ -2705,7 +3021,9 @@
       "stamina": 100,
       "rideSprint": 420,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Digtoise"
+      "sourceUrl": "https://paldb.cc/en/Digtoise",
+      "attack": 95,
+      "statTotal": 295
     },
     {
       "name": "Broncherry",
@@ -2722,7 +3040,9 @@
       "stamina": 150,
       "rideSprint": 1020,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Broncherry"
+      "sourceUrl": "https://paldb.cc/en/Broncherry",
+      "attack": 90,
+      "statTotal": 310
     },
     {
       "name": "Broncherry Aqua",
@@ -2739,7 +3059,9 @@
       "stamina": 150,
       "rideSprint": 1020,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Broncherry_Aqua"
+      "sourceUrl": "https://paldb.cc/en/Broncherry_Aqua",
+      "attack": 95,
+      "statTotal": 315
     },
     {
       "name": "Dumud",
@@ -2756,7 +3078,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Dumud"
+      "sourceUrl": "https://paldb.cc/en/Dumud",
+      "attack": 70,
+      "statTotal": 265
     },
     {
       "name": "Dumud Gild",
@@ -2773,7 +3097,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Dumud_Gild"
+      "sourceUrl": "https://paldb.cc/en/Dumud_Gild",
+      "attack": 75,
+      "statTotal": 280
     },
     {
       "name": "Braloha",
@@ -2790,7 +3116,9 @@
       "stamina": 270,
       "rideSprint": 1020,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Braloha"
+      "sourceUrl": "https://paldb.cc/en/Braloha",
+      "attack": 95,
+      "statTotal": 345
     },
     {
       "name": "Kitsun",
@@ -2807,7 +3135,9 @@
       "stamina": 140,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kitsun"
+      "sourceUrl": "https://paldb.cc/en/Kitsun",
+      "attack": 115,
+      "statTotal": 315
     },
     {
       "name": "Kitsun Noct",
@@ -2824,7 +3154,9 @@
       "stamina": 140,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Kitsun_Noct"
+      "sourceUrl": "https://paldb.cc/en/Kitsun_Noct",
+      "attack": 115,
+      "statTotal": 320
     },
     {
       "name": "Blazehowl",
@@ -2841,7 +3173,9 @@
       "stamina": 150,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Blazehowl"
+      "sourceUrl": "https://paldb.cc/en/Blazehowl",
+      "attack": 110,
+      "statTotal": 295
     },
     {
       "name": "Blazehowl Noct",
@@ -2858,7 +3192,9 @@
       "stamina": 150,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Blazehowl_Noct"
+      "sourceUrl": "https://paldb.cc/en/Blazehowl_Noct",
+      "attack": 115,
+      "statTotal": 300
     },
     {
       "name": "Warsect",
@@ -2875,7 +3211,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Warsect"
+      "sourceUrl": "https://paldb.cc/en/Warsect",
+      "attack": 100,
+      "statTotal": 340
     },
     {
       "name": "Warsect Terra",
@@ -2892,7 +3230,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Warsect_Terra"
+      "sourceUrl": "https://paldb.cc/en/Warsect_Terra",
+      "attack": 105,
+      "statTotal": 345
     },
     {
       "name": "Frostplume",
@@ -2909,7 +3249,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Frostplume"
+      "sourceUrl": "https://paldb.cc/en/Frostplume",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Majex",
@@ -2926,7 +3268,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Majex"
+      "sourceUrl": "https://paldb.cc/en/Majex",
+      "attack": 115,
+      "statTotal": 315
     },
     {
       "name": "Sibelyx",
@@ -2943,7 +3287,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Sibelyx"
+      "sourceUrl": "https://paldb.cc/en/Sibelyx",
+      "attack": 90,
+      "statTotal": 300
     },
     {
       "name": "Sibelyx Primo",
@@ -2960,7 +3306,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Sibelyx_Primo"
+      "sourceUrl": "https://paldb.cc/en/Sibelyx_Primo",
+      "attack": 90,
+      "statTotal": 305
     },
     {
       "name": "Maraith",
@@ -2977,7 +3325,9 @@
       "stamina": 130,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Maraith"
+      "sourceUrl": "https://paldb.cc/en/Maraith",
+      "attack": 105,
+      "statTotal": 260
     },
     {
       "name": "Shroomer",
@@ -2994,7 +3344,9 @@
       "stamina": 220,
       "rideSprint": 1050,
       "run": 740,
-      "sourceUrl": "https://paldb.cc/en/Shroomer"
+      "sourceUrl": "https://paldb.cc/en/Shroomer",
+      "attack": 80,
+      "statTotal": 280
     },
     {
       "name": "Shroomer Noct",
@@ -3011,7 +3363,9 @@
       "stamina": 220,
       "rideSprint": 1050,
       "run": 740,
-      "sourceUrl": "https://paldb.cc/en/Shroomer_Noct"
+      "sourceUrl": "https://paldb.cc/en/Shroomer_Noct",
+      "attack": 85,
+      "statTotal": 285
     },
     {
       "name": "Icelyn",
@@ -3028,7 +3382,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Icelyn"
+      "sourceUrl": "https://paldb.cc/en/Icelyn",
+      "attack": 115,
+      "statTotal": 315
     },
     {
       "name": "Gildra",
@@ -3045,7 +3401,9 @@
       "stamina": 100,
       "rideSprint": 720,
       "run": 480,
-      "sourceUrl": "https://paldb.cc/en/Gildra"
+      "sourceUrl": "https://paldb.cc/en/Gildra",
+      "attack": 120,
+      "statTotal": 330
     },
     {
       "name": "Jormuntide",
@@ -3062,7 +3420,9 @@
       "stamina": 150,
       "rideSprint": 1000,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Jormuntide"
+      "sourceUrl": "https://paldb.cc/en/Jormuntide",
+      "attack": 120,
+      "statTotal": 350
     },
     {
       "name": "Jormuntide Ignis",
@@ -3079,7 +3439,9 @@
       "stamina": 150,
       "rideSprint": 1000,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Jormuntide_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Jormuntide_Ignis",
+      "attack": 130,
+      "statTotal": 360
     },
     {
       "name": "Suzaku",
@@ -3096,7 +3458,9 @@
       "stamina": 350,
       "rideSprint": 1100,
       "run": 850,
-      "sourceUrl": "https://paldb.cc/en/Suzaku"
+      "sourceUrl": "https://paldb.cc/en/Suzaku",
+      "attack": 105,
+      "statTotal": 330
     },
     {
       "name": "Suzaku Aqua",
@@ -3113,7 +3477,9 @@
       "stamina": 350,
       "rideSprint": 1100,
       "run": 850,
-      "sourceUrl": "https://paldb.cc/en/Suzaku_Aqua"
+      "sourceUrl": "https://paldb.cc/en/Suzaku_Aqua",
+      "attack": 105,
+      "statTotal": 335
     },
     {
       "name": "Dazemu",
@@ -3130,7 +3496,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Dazemu"
+      "sourceUrl": "https://paldb.cc/en/Dazemu",
+      "attack": 90,
+      "statTotal": 265
     },
     {
       "name": "Quivern",
@@ -3147,7 +3515,9 @@
       "stamina": 220,
       "rideSprint": 1400,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Quivern"
+      "sourceUrl": "https://paldb.cc/en/Quivern",
+      "attack": 100,
+      "statTotal": 305
     },
     {
       "name": "Quivern Botan",
@@ -3164,7 +3534,9 @@
       "stamina": 220,
       "rideSprint": 1400,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Quivern_Botan"
+      "sourceUrl": "https://paldb.cc/en/Quivern_Botan",
+      "attack": 105,
+      "statTotal": 310
     },
     {
       "name": "Lullu",
@@ -3181,7 +3553,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Lullu"
+      "sourceUrl": "https://paldb.cc/en/Lullu",
+      "attack": 90,
+      "statTotal": 260
     },
     {
       "name": "Kikit",
@@ -3198,7 +3572,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Kikit"
+      "sourceUrl": "https://paldb.cc/en/Kikit",
+      "attack": 70,
+      "statTotal": 235
     },
     {
       "name": "Yakumo",
@@ -3215,7 +3591,9 @@
       "stamina": 140,
       "rideSprint": 1080,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Yakumo"
+      "sourceUrl": "https://paldb.cc/en/Yakumo",
+      "attack": 85,
+      "statTotal": 255
     },
     {
       "name": "Skutlass",
@@ -3232,7 +3610,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Skutlass"
+      "sourceUrl": "https://paldb.cc/en/Skutlass",
+      "attack": 100,
+      "statTotal": 250
     },
     {
       "name": "Skutlass Ignis",
@@ -3249,7 +3629,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Skutlass_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Skutlass_Ignis",
+      "attack": 105,
+      "statTotal": 255
     },
     {
       "name": "Reptyro",
@@ -3266,7 +3648,9 @@
       "stamina": 220,
       "rideSprint": 1000,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Reptyro"
+      "sourceUrl": "https://paldb.cc/en/Reptyro",
+      "attack": 105,
+      "statTotal": 335
     },
     {
       "name": "Reptyro Cryst",
@@ -3283,7 +3667,9 @@
       "stamina": 220,
       "rideSprint": 1000,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Reptyro_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Reptyro_Cryst",
+      "attack": 105,
+      "statTotal": 345
     },
     {
       "name": "Starryon",
@@ -3300,7 +3686,9 @@
       "stamina": 230,
       "rideSprint": 1250,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Starryon"
+      "sourceUrl": "https://paldb.cc/en/Starryon",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Starryon Primo",
@@ -3317,7 +3705,9 @@
       "stamina": 230,
       "rideSprint": 1250,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Starryon_Primo"
+      "sourceUrl": "https://paldb.cc/en/Starryon_Primo",
+      "attack": 105,
+      "statTotal": 315
     },
     {
       "name": "Pierdon",
@@ -3334,7 +3724,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 350,
-      "sourceUrl": "https://paldb.cc/en/Pierdon"
+      "sourceUrl": "https://paldb.cc/en/Pierdon",
+      "attack": 105,
+      "statTotal": 325
     },
     {
       "name": "Pierdon Cryst",
@@ -3351,7 +3743,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 350,
-      "sourceUrl": "https://paldb.cc/en/Pierdon_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Pierdon_Cryst",
+      "attack": 110,
+      "statTotal": 330
     },
     {
       "name": "Cryolinx",
@@ -3368,7 +3762,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Cryolinx"
+      "sourceUrl": "https://paldb.cc/en/Cryolinx",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Cryolinx Terra",
@@ -3385,7 +3781,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Cryolinx_Terra"
+      "sourceUrl": "https://paldb.cc/en/Cryolinx_Terra",
+      "attack": 105,
+      "statTotal": 315
     },
     {
       "name": "Snugloo",
@@ -3402,7 +3800,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Snugloo"
+      "sourceUrl": "https://paldb.cc/en/Snugloo",
+      "attack": 75,
+      "statTotal": 240
     },
     {
       "name": "Wumpo",
@@ -3419,7 +3819,9 @@
       "stamina": 240,
       "rideSprint": 1050,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Wumpo"
+      "sourceUrl": "https://paldb.cc/en/Wumpo",
+      "attack": 80,
+      "statTotal": 320
     },
     {
       "name": "Wumpo Botan",
@@ -3436,7 +3838,9 @@
       "stamina": 240,
       "rideSprint": 1050,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Wumpo_Botan"
+      "sourceUrl": "https://paldb.cc/en/Wumpo_Botan",
+      "attack": 80,
+      "statTotal": 330
     },
     {
       "name": "Sootseer",
@@ -3453,7 +3857,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Sootseer"
+      "sourceUrl": "https://paldb.cc/en/Sootseer",
+      "attack": 125,
+      "statTotal": 320
     },
     {
       "name": "Carnibora",
@@ -3470,7 +3876,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Carnibora"
+      "sourceUrl": "https://paldb.cc/en/Carnibora",
+      "attack": 90,
+      "statTotal": 260
     },
     {
       "name": "Blazamut",
@@ -3487,7 +3895,9 @@
       "stamina": 190,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Blazamut"
+      "sourceUrl": "https://paldb.cc/en/Blazamut",
+      "attack": 125,
+      "statTotal": 345
     },
     {
       "name": "Blazamut Ryu",
@@ -3504,7 +3914,9 @@
       "stamina": 190,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Blazamut_Ryu"
+      "sourceUrl": "https://paldb.cc/en/Blazamut_Ryu",
+      "attack": 130,
+      "statTotal": 360
     },
     {
       "name": "Dualith",
@@ -3521,7 +3933,9 @@
       "stamina": 210,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Dualith"
+      "sourceUrl": "https://paldb.cc/en/Dualith",
+      "attack": 105,
+      "statTotal": 340
     },
     {
       "name": "Dualith Noct",
@@ -3538,7 +3952,9 @@
       "stamina": 210,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Dualith_Noct"
+      "sourceUrl": "https://paldb.cc/en/Dualith_Noct",
+      "attack": 110,
+      "statTotal": 345
     },
     {
       "name": "Anubis",
@@ -3555,7 +3971,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Anubis"
+      "sourceUrl": "https://paldb.cc/en/Anubis",
+      "attack": 130,
+      "statTotal": 350
     },
     {
       "name": "Sekhmet",
@@ -3572,7 +3990,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Sekhmet"
+      "sourceUrl": "https://paldb.cc/en/Sekhmet",
+      "attack": 115,
+      "statTotal": 325
     },
     {
       "name": "Prixter",
@@ -3589,7 +4009,9 @@
       "stamina": 100,
       "rideSprint": 50,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Prixter"
+      "sourceUrl": "https://paldb.cc/en/Prixter",
+      "attack": 110,
+      "statTotal": 290
     },
     {
       "name": "Prixter Lux",
@@ -3606,7 +4028,9 @@
       "stamina": 100,
       "rideSprint": 50,
       "run": 720,
-      "sourceUrl": "https://paldb.cc/en/Prixter_Lux"
+      "sourceUrl": "https://paldb.cc/en/Prixter_Lux",
+      "attack": 115,
+      "statTotal": 295
     },
     {
       "name": "Tetroise",
@@ -3623,7 +4047,9 @@
       "stamina": 200,
       "rideSprint": 540,
       "run": 360,
-      "sourceUrl": "https://paldb.cc/en/Tetroise"
+      "sourceUrl": "https://paldb.cc/en/Tetroise",
+      "attack": 100,
+      "statTotal": 330
     },
     {
       "name": "Tetroise Primo",
@@ -3640,7 +4066,9 @@
       "stamina": 200,
       "rideSprint": 540,
       "run": 360,
-      "sourceUrl": "https://paldb.cc/en/Tetroise_Primo"
+      "sourceUrl": "https://paldb.cc/en/Tetroise_Primo",
+      "attack": 100,
+      "statTotal": 335
     },
     {
       "name": "Nyafia",
@@ -3657,7 +4085,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Nyafia"
+      "sourceUrl": "https://paldb.cc/en/Nyafia",
+      "attack": 100,
+      "statTotal": 310
     },
     {
       "name": "Mimog",
@@ -3674,7 +4104,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 2000,
-      "sourceUrl": "https://paldb.cc/en/Mimog"
+      "sourceUrl": "https://paldb.cc/en/Mimog",
+      "attack": 60,
+      "statTotal": 250
     },
     {
       "name": "Xenovader",
@@ -3691,7 +4123,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Xenovader"
+      "sourceUrl": "https://paldb.cc/en/Xenovader",
+      "attack": 125,
+      "statTotal": 300
     },
     {
       "name": "Xenogard",
@@ -3708,7 +4142,9 @@
       "stamina": 250,
       "rideSprint": 1200,
       "run": 790,
-      "sourceUrl": "https://paldb.cc/en/Xenogard"
+      "sourceUrl": "https://paldb.cc/en/Xenogard",
+      "attack": 120,
+      "statTotal": 360
     },
     {
       "name": "Prunelia",
@@ -3725,7 +4161,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Prunelia"
+      "sourceUrl": "https://paldb.cc/en/Prunelia",
+      "attack": 95,
+      "statTotal": 300
     },
     {
       "name": "Nitemary",
@@ -3742,7 +4180,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 380,
-      "sourceUrl": "https://paldb.cc/en/Nitemary"
+      "sourceUrl": "https://paldb.cc/en/Nitemary",
+      "attack": 95,
+      "statTotal": 305
     },
     {
       "name": "Nitemary Botan",
@@ -3759,7 +4199,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 380,
-      "sourceUrl": "https://paldb.cc/en/Nitemary_Botan"
+      "sourceUrl": "https://paldb.cc/en/Nitemary_Botan",
+      "attack": 95,
+      "statTotal": 310
     },
     {
       "name": "Smokie",
@@ -3776,7 +4218,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Smokie"
+      "sourceUrl": "https://paldb.cc/en/Smokie",
+      "attack": 90,
+      "statTotal": 260
     },
     {
       "name": "Smokie Cryst",
@@ -3793,7 +4237,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Smokie_Cryst"
+      "sourceUrl": "https://paldb.cc/en/Smokie_Cryst",
+      "attack": 90,
+      "statTotal": 265
     },
     {
       "name": "Omascul",
@@ -3810,7 +4256,9 @@
       "stamina": 100,
       "rideSprint": 520,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Omascul"
+      "sourceUrl": "https://paldb.cc/en/Omascul",
+      "attack": 105,
+      "statTotal": 300
     },
     {
       "name": "Whalaska",
@@ -3827,7 +4275,9 @@
       "stamina": 200,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Whalaska"
+      "sourceUrl": "https://paldb.cc/en/Whalaska",
+      "attack": 115,
+      "statTotal": 330
     },
     {
       "name": "Whalaska Ignis",
@@ -3844,7 +4294,9 @@
       "stamina": 200,
       "rideSprint": 750,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Whalaska_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Whalaska_Ignis",
+      "attack": 120,
+      "statTotal": 335
     },
     {
       "name": "Verdash",
@@ -3861,7 +4313,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Verdash"
+      "sourceUrl": "https://paldb.cc/en/Verdash",
+      "attack": 115,
+      "statTotal": 295
     },
     {
       "name": "Splatterina",
@@ -3878,7 +4332,9 @@
       "stamina": 100,
       "rideSprint": 660,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Splatterina"
+      "sourceUrl": "https://paldb.cc/en/Splatterina",
+      "attack": 115,
+      "statTotal": 315
     },
     {
       "name": "Gildane",
@@ -3895,7 +4351,9 @@
       "stamina": 200,
       "rideSprint": 1260,
       "run": 840,
-      "sourceUrl": "https://paldb.cc/en/Gildane"
+      "sourceUrl": "https://paldb.cc/en/Gildane",
+      "attack": 110,
+      "statTotal": 340
     },
     {
       "name": "Dogen",
@@ -3912,7 +4370,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Dogen"
+      "sourceUrl": "https://paldb.cc/en/Dogen",
+      "attack": 100,
+      "statTotal": 290
     },
     {
       "name": "Bulldosu",
@@ -3929,7 +4389,9 @@
       "stamina": 110,
       "rideSprint": 810,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Bulldosu"
+      "sourceUrl": "https://paldb.cc/en/Bulldosu",
+      "attack": 95,
+      "statTotal": 310
     },
     {
       "name": "Celesdir",
@@ -3946,7 +4408,9 @@
       "stamina": 260,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Celesdir"
+      "sourceUrl": "https://paldb.cc/en/Celesdir",
+      "attack": 110,
+      "statTotal": 330
     },
     {
       "name": "Celesdir Noct",
@@ -3963,7 +4427,9 @@
       "stamina": 260,
       "rideSprint": 1200,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Celesdir_Noct"
+      "sourceUrl": "https://paldb.cc/en/Celesdir_Noct",
+      "attack": 115,
+      "statTotal": 335
     },
     {
       "name": "Astegon",
@@ -3980,7 +4446,9 @@
       "stamina": 300,
       "rideSprint": 1100,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Astegon"
+      "sourceUrl": "https://paldb.cc/en/Astegon",
+      "attack": 125,
+      "statTotal": 350
     },
     {
       "name": "Knocklem",
@@ -3997,7 +4465,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Knocklem"
+      "sourceUrl": "https://paldb.cc/en/Knocklem",
+      "attack": 110,
+      "statTotal": 350
     },
     {
       "name": "Knocklem Ignis",
@@ -4014,7 +4484,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 550,
-      "sourceUrl": "https://paldb.cc/en/Knocklem_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Knocklem_Ignis",
+      "attack": 115,
+      "statTotal": 355
     },
     {
       "name": "Silvegis",
@@ -4031,7 +4503,9 @@
       "stamina": 280,
       "rideSprint": 1050,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Silvegis"
+      "sourceUrl": "https://paldb.cc/en/Silvegis",
+      "attack": 110,
+      "statTotal": 345
     },
     {
       "name": "Azurmane",
@@ -4048,7 +4522,9 @@
       "stamina": 220,
       "rideSprint": 1260,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Azurmane"
+      "sourceUrl": "https://paldb.cc/en/Azurmane",
+      "attack": 120,
+      "statTotal": 360
     },
     {
       "name": "Valentail",
@@ -4065,7 +4541,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Valentail"
+      "sourceUrl": "https://paldb.cc/en/Valentail",
+      "attack": 80,
+      "statTotal": 225
     },
     {
       "name": "Snock",
@@ -4082,7 +4560,9 @@
       "stamina": 100,
       "rideSprint": 945,
       "run": 360,
-      "sourceUrl": "https://paldb.cc/en/Snock"
+      "sourceUrl": "https://paldb.cc/en/Snock",
+      "attack": 70,
+      "statTotal": 210
     },
     {
       "name": "Snock Lux",
@@ -4099,7 +4579,9 @@
       "stamina": 100,
       "rideSprint": 945,
       "run": 360,
-      "sourceUrl": "https://paldb.cc/en/Snock_Lux"
+      "sourceUrl": "https://paldb.cc/en/Snock_Lux",
+      "attack": 70,
+      "statTotal": 215
     },
     {
       "name": "Souffline",
@@ -4116,7 +4598,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Souffline"
+      "sourceUrl": "https://paldb.cc/en/Souffline",
+      "attack": 75,
+      "statTotal": 205
     },
     {
       "name": "Lapiron",
@@ -4133,7 +4617,9 @@
       "stamina": 100,
       "rideSprint": 720,
       "run": 480,
-      "sourceUrl": "https://paldb.cc/en/Lapiron"
+      "sourceUrl": "https://paldb.cc/en/Lapiron",
+      "attack": 75,
+      "statTotal": 225
     },
     {
       "name": "Hoodle",
@@ -4150,7 +4636,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Hoodle"
+      "sourceUrl": "https://paldb.cc/en/Hoodle",
+      "attack": 85,
+      "statTotal": 235
     },
     {
       "name": "Slowatt",
@@ -4167,7 +4655,9 @@
       "stamina": 100,
       "rideSprint": 390,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Slowatt"
+      "sourceUrl": "https://paldb.cc/en/Slowatt",
+      "attack": 75,
+      "statTotal": 225
     },
     {
       "name": "Bakemi",
@@ -4184,7 +4674,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Bakemi"
+      "sourceUrl": "https://paldb.cc/en/Bakemi",
+      "attack": 85,
+      "statTotal": 235
     },
     {
       "name": "Solmora",
@@ -4201,7 +4693,9 @@
       "stamina": 220,
       "rideSprint": 900,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Solmora"
+      "sourceUrl": "https://paldb.cc/en/Solmora",
+      "attack": 90,
+      "statTotal": 265
     },
     {
       "name": "Solmora Lux",
@@ -4218,7 +4712,9 @@
       "stamina": 220,
       "rideSprint": 900,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Solmora_Lux"
+      "sourceUrl": "https://paldb.cc/en/Solmora_Lux",
+      "attack": 95,
+      "statTotal": 270
     },
     {
       "name": "Lapure",
@@ -4235,7 +4731,9 @@
       "stamina": 100,
       "rideSprint": 700,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Lapure"
+      "sourceUrl": "https://paldb.cc/en/Lapure",
+      "attack": 100,
+      "statTotal": 305
     },
     {
       "name": "Eidrolon",
@@ -4252,7 +4750,9 @@
       "stamina": 130,
       "rideSprint": 2750,
       "run": 1400,
-      "sourceUrl": "https://paldb.cc/en/Eidrolon"
+      "sourceUrl": "https://paldb.cc/en/Eidrolon",
+      "attack": 125,
+      "statTotal": 360
     },
     {
       "name": "Eidrolon Ignis",
@@ -4269,7 +4769,9 @@
       "stamina": 130,
       "rideSprint": 2750,
       "run": 1400,
-      "sourceUrl": "https://paldb.cc/en/Eidrolon_Ignis"
+      "sourceUrl": "https://paldb.cc/en/Eidrolon_Ignis",
+      "attack": 130,
+      "statTotal": 365
     },
     {
       "name": "Dynamoff",
@@ -4286,7 +4788,9 @@
       "stamina": 140,
       "rideSprint": 1000,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Dynamoff"
+      "sourceUrl": "https://paldb.cc/en/Dynamoff",
+      "attack": 85,
+      "statTotal": 240
     },
     {
       "name": "Tropicaw",
@@ -4303,7 +4807,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Tropicaw"
+      "sourceUrl": "https://paldb.cc/en/Tropicaw",
+      "attack": 85,
+      "statTotal": 260
     },
     {
       "name": "Flaracle",
@@ -4320,7 +4826,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Flaracle"
+      "sourceUrl": "https://paldb.cc/en/Flaracle",
+      "attack": 125,
+      "statTotal": 340
     },
     {
       "name": "Ophydia",
@@ -4337,7 +4845,9 @@
       "stamina": 100,
       "rideSprint": 1500,
       "run": 700,
-      "sourceUrl": "https://paldb.cc/en/Ophydia"
+      "sourceUrl": "https://paldb.cc/en/Ophydia",
+      "attack": 115,
+      "statTotal": 365
     },
     {
       "name": "Dupin",
@@ -4354,7 +4864,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Dupin"
+      "sourceUrl": "https://paldb.cc/en/Dupin",
+      "attack": 110,
+      "statTotal": 310
     },
     {
       "name": "Roujay",
@@ -4371,7 +4883,9 @@
       "stamina": 200,
       "rideSprint": 1350,
       "run": 950,
-      "sourceUrl": "https://paldb.cc/en/Roujay"
+      "sourceUrl": "https://paldb.cc/en/Roujay",
+      "attack": 115,
+      "statTotal": 320
     },
     {
       "name": "Venusa",
@@ -4388,7 +4902,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Venusa"
+      "sourceUrl": "https://paldb.cc/en/Venusa",
+      "attack": 85,
+      "statTotal": 255
     },
     {
       "name": "Mycora",
@@ -4405,7 +4921,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Mycora"
+      "sourceUrl": "https://paldb.cc/en/Mycora",
+      "attack": 95,
+      "statTotal": 290
     },
     {
       "name": "Loomen",
@@ -4422,7 +4940,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Loomen"
+      "sourceUrl": "https://paldb.cc/en/Loomen",
+      "attack": 100,
+      "statTotal": 285
     },
     {
       "name": "Wistella",
@@ -4439,7 +4959,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Wistella"
+      "sourceUrl": "https://paldb.cc/en/Wistella",
+      "attack": 90,
+      "statTotal": 230
     },
     {
       "name": "Solenne",
@@ -4456,7 +4978,9 @@
       "stamina": 100,
       "rideSprint": 600,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Solenne"
+      "sourceUrl": "https://paldb.cc/en/Solenne",
+      "attack": 115,
+      "statTotal": 340
     },
     {
       "name": "Renjishi",
@@ -4473,7 +4997,9 @@
       "stamina": 100,
       "rideSprint": 500,
       "run": 400,
-      "sourceUrl": "https://paldb.cc/en/Renjishi"
+      "sourceUrl": "https://paldb.cc/en/Renjishi",
+      "attack": 120,
+      "statTotal": 325
     },
     {
       "name": "Aegidron",
@@ -4490,7 +5016,9 @@
       "stamina": 300,
       "rideSprint": 1100,
       "run": 850,
-      "sourceUrl": "https://paldb.cc/en/Aegidron"
+      "sourceUrl": "https://paldb.cc/en/Aegidron",
+      "attack": 125,
+      "statTotal": 370
     },
     {
       "name": "Grizzbolt",
@@ -4507,7 +5035,9 @@
       "stamina": 180,
       "rideSprint": 1000,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Grizzbolt"
+      "sourceUrl": "https://paldb.cc/en/Grizzbolt",
+      "attack": 105,
+      "statTotal": 330
     },
     {
       "name": "Lyleen",
@@ -4524,7 +5054,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Lyleen"
+      "sourceUrl": "https://paldb.cc/en/Lyleen",
+      "attack": 120,
+      "statTotal": 350
     },
     {
       "name": "Lyleen Noct",
@@ -4541,7 +5073,9 @@
       "stamina": 100,
       "rideSprint": 550,
       "run": 450,
-      "sourceUrl": "https://paldb.cc/en/Lyleen_Noct"
+      "sourceUrl": "https://paldb.cc/en/Lyleen_Noct",
+      "attack": 120,
+      "statTotal": 350
     },
     {
       "name": "Orserk",
@@ -4558,7 +5092,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Orserk"
+      "sourceUrl": "https://paldb.cc/en/Orserk",
+      "attack": 130,
+      "statTotal": 365
     },
     {
       "name": "Faleris",
@@ -4575,7 +5111,9 @@
       "stamina": 230,
       "rideSprint": 1400,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Faleris"
+      "sourceUrl": "https://paldb.cc/en/Faleris",
+      "attack": 110,
+      "statTotal": 330
     },
     {
       "name": "Faleris Aqua",
@@ -4592,7 +5130,9 @@
       "stamina": 230,
       "rideSprint": 1400,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Faleris_Aqua"
+      "sourceUrl": "https://paldb.cc/en/Faleris_Aqua",
+      "attack": 110,
+      "statTotal": 335
     },
     {
       "name": "Shadowbeak",
@@ -4609,7 +5149,9 @@
       "stamina": 250,
       "rideSprint": 1600,
       "run": 1100,
-      "sourceUrl": "https://paldb.cc/en/Shadowbeak"
+      "sourceUrl": "https://paldb.cc/en/Shadowbeak",
+      "attack": 120,
+      "statTotal": 380
     },
     {
       "name": "Selyne",
@@ -4626,7 +5168,9 @@
       "stamina": 300,
       "rideSprint": 1600,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Selyne"
+      "sourceUrl": "https://paldb.cc/en/Selyne",
+      "attack": 115,
+      "statTotal": 355
     },
     {
       "name": "Bastigor",
@@ -4643,7 +5187,9 @@
       "stamina": 270,
       "rideSprint": 1100,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Bastigor"
+      "sourceUrl": "https://paldb.cc/en/Bastigor",
+      "attack": 130,
+      "statTotal": 390
     },
     {
       "name": "Shaolong",
@@ -4660,7 +5206,9 @@
       "stamina": 100,
       "rideSprint": 2800,
       "run": 1400,
-      "sourceUrl": "https://paldb.cc/en/Shaolong"
+      "sourceUrl": "https://paldb.cc/en/Shaolong",
+      "attack": 135,
+      "statTotal": 395
     },
     {
       "name": "Silvance",
@@ -4677,7 +5225,9 @@
       "stamina": 100,
       "rideSprint": 750,
       "run": 500,
-      "sourceUrl": "https://paldb.cc/en/Silvance"
+      "sourceUrl": "https://paldb.cc/en/Silvance",
+      "attack": 120,
+      "statTotal": 370
     },
     {
       "name": "Dandilord",
@@ -4694,7 +5244,9 @@
       "stamina": 100,
       "rideSprint": 1000,
       "run": 1000,
-      "sourceUrl": "https://paldb.cc/en/Dandilord"
+      "sourceUrl": "https://paldb.cc/en/Dandilord",
+      "attack": 135,
+      "statTotal": 370
     },
     {
       "name": "Bellanoir",
@@ -4711,7 +5263,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Bellanoir"
+      "sourceUrl": "https://paldb.cc/en/Bellanoir",
+      "attack": 150,
+      "statTotal": 370
     },
     {
       "name": "Bellanoir Libero",
@@ -4728,7 +5282,9 @@
       "stamina": 100,
       "rideSprint": 800,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Bellanoir_Libero"
+      "sourceUrl": "https://paldb.cc/en/Bellanoir_Libero",
+      "attack": 150,
+      "statTotal": 370
     },
     {
       "name": "Xenolord",
@@ -4745,7 +5301,9 @@
       "stamina": 300,
       "rideSprint": 2700,
       "run": 1700,
-      "sourceUrl": "https://paldb.cc/en/Xenolord"
+      "sourceUrl": "https://paldb.cc/en/Xenolord",
+      "attack": 120,
+      "statTotal": 370
     },
     {
       "name": "Hartalis",
@@ -4762,7 +5320,9 @@
       "stamina": 400,
       "rideSprint": 1900,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Hartalis"
+      "sourceUrl": "https://paldb.cc/en/Hartalis",
+      "attack": 130,
+      "statTotal": 375
     },
     {
       "name": "Paladius",
@@ -4779,7 +5339,9 @@
       "stamina": 400,
       "rideSprint": 1800,
       "run": 800,
-      "sourceUrl": "https://paldb.cc/en/Paladius"
+      "sourceUrl": "https://paldb.cc/en/Paladius",
+      "attack": 120,
+      "statTotal": 395
     },
     {
       "name": "Necromus",
@@ -4796,7 +5358,9 @@
       "stamina": 350,
       "rideSprint": 1900,
       "run": 1300,
-      "sourceUrl": "https://paldb.cc/en/Necromus"
+      "sourceUrl": "https://paldb.cc/en/Necromus",
+      "attack": 145,
+      "statTotal": 395
     },
     {
       "name": "Frostallion",
@@ -4813,7 +5377,9 @@
       "stamina": 300,
       "rideSprint": 1800,
       "run": 1200,
-      "sourceUrl": "https://paldb.cc/en/Frostallion"
+      "sourceUrl": "https://paldb.cc/en/Frostallion",
+      "attack": 140,
+      "statTotal": 400
     },
     {
       "name": "Frostallion Noct",
@@ -4830,7 +5396,9 @@
       "stamina": 300,
       "rideSprint": 1800,
       "run": 1200,
-      "sourceUrl": "https://paldb.cc/en/Frostallion_Noct"
+      "sourceUrl": "https://paldb.cc/en/Frostallion_Noct",
+      "attack": 140,
+      "statTotal": 415
     },
     {
       "name": "Neptilius",
@@ -4847,7 +5415,9 @@
       "stamina": 410,
       "rideSprint": 1120,
       "run": 750,
-      "sourceUrl": "https://paldb.cc/en/Neptilius"
+      "sourceUrl": "https://paldb.cc/en/Neptilius",
+      "attack": 145,
+      "statTotal": 375
     },
     {
       "name": "Jetragon",
@@ -4864,7 +5434,9 @@
       "stamina": 110,
       "rideSprint": 3300,
       "run": 1700,
-      "sourceUrl": "https://paldb.cc/en/Jetragon"
+      "sourceUrl": "https://paldb.cc/en/Jetragon",
+      "attack": 140,
+      "statTotal": 375
     },
     {
       "name": "Panthalus",
@@ -4881,7 +5453,9 @@
       "stamina": 100,
       "rideSprint": 3000,
       "run": 3000,
-      "sourceUrl": "https://paldb.cc/en/Panthalus"
+      "sourceUrl": "https://paldb.cc/en/Panthalus",
+      "attack": 120,
+      "statTotal": 500
     },
     {
       "name": "Astralym",
@@ -4898,7 +5472,9 @@
       "stamina": 100,
       "rideSprint": null,
       "run": null,
-      "sourceUrl": "https://paldb.cc/en/Astralym"
+      "sourceUrl": "https://paldb.cc/en/Astralym",
+      "attack": 200,
+      "statTotal": 600
     },
     {
       "name": "Green Slime",
@@ -4915,7 +5491,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Green_Slime"
+      "sourceUrl": "https://paldb.cc/en/Green_Slime",
+      "attack": 70,
+      "statTotal": 215
     },
     {
       "name": "Blue Slime",
@@ -4932,7 +5510,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Blue_Slime"
+      "sourceUrl": "https://paldb.cc/en/Blue_Slime",
+      "attack": 70,
+      "statTotal": 220
     },
     {
       "name": "Red Slime",
@@ -4949,7 +5529,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Red_Slime"
+      "sourceUrl": "https://paldb.cc/en/Red_Slime",
+      "attack": 75,
+      "statTotal": 230
     },
     {
       "name": "Purple Slime",
@@ -4966,7 +5548,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Purple_Slime"
+      "sourceUrl": "https://paldb.cc/en/Purple_Slime",
+      "attack": 70,
+      "statTotal": 225
     },
     {
       "name": "Illuminant Slime",
@@ -4983,7 +5567,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Illuminant_Slime"
+      "sourceUrl": "https://paldb.cc/en/Illuminant_Slime",
+      "attack": 75,
+      "statTotal": 240
     },
     {
       "name": "Rainbow Slime",
@@ -5000,7 +5586,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Rainbow_Slime"
+      "sourceUrl": "https://paldb.cc/en/Rainbow_Slime",
+      "attack": 95,
+      "statTotal": 305
     },
     {
       "name": "Enchanted Sword",
@@ -5017,7 +5605,9 @@
       "stamina": 100,
       "rideSprint": 900,
       "run": 600,
-      "sourceUrl": "https://paldb.cc/en/Enchanted_Sword"
+      "sourceUrl": "https://paldb.cc/en/Enchanted_Sword",
+      "attack": 105,
+      "statTotal": 290
     },
     {
       "name": "Cave Bat",
@@ -5034,7 +5624,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Cave_Bat"
+      "sourceUrl": "https://paldb.cc/en/Cave_Bat",
+      "attack": 75,
+      "statTotal": 220
     },
     {
       "name": "Illuminant Bat",
@@ -5051,7 +5643,9 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Illuminant_Bat"
+      "sourceUrl": "https://paldb.cc/en/Illuminant_Bat",
+      "attack": 80,
+      "statTotal": 255
     },
     {
       "name": "Eye of Cthulhu",
@@ -5068,7 +5662,9 @@
       "stamina": 100,
       "rideSprint": 1200,
       "run": 900,
-      "sourceUrl": "https://paldb.cc/en/Eye_of_Cthulhu"
+      "sourceUrl": "https://paldb.cc/en/Eye_of_Cthulhu",
+      "attack": 105,
+      "statTotal": 310
     },
     {
       "name": "Demon Eye",
@@ -5085,7 +5681,12 @@
       "stamina": 100,
       "rideSprint": 450,
       "run": 300,
-      "sourceUrl": "https://paldb.cc/en/Demon_Eye"
+      "sourceUrl": "https://paldb.cc/en/Demon_Eye",
+      "attack": 110,
+      "statTotal": 310
     }
-  ]
+  ],
+  "statsSource": "https://paldb.cc/en/Pal_Stats",
+  "statsRetrieved": "2026-08-06",
+  "statsDefinition": "PalDB species HP / Attack / Defense scaling values"
 }
