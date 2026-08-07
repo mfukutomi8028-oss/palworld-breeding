@@ -63,7 +63,7 @@ jobs:
           grep -q '?v=110' index.html
           grep -q 'palSiteVersion = "110"' config.js
 
-      - name: Make the image-outage test match v110 cache-busted URLs
+      - name: Make regression tests match v110 cache-busted URLs
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -80,6 +80,33 @@ jobs:
           PY
           node --check scripts/smoke-browser.mjs
 
+      - name: Fix total species-stat sorting in runtime and generator
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          runtime = Path('app-explore.js')
+          runtime_text = runtime.read_text(encoding='utf-8')
+          runtime_old = 'const left=palStatValue(a,key),right=palStatValue(b,key);'
+          runtime_new = 'const statKey=key==="total"?"statTotal":key;\n    const left=palStatValue(a,statKey),right=palStatValue(b,statKey);'
+          if runtime_old in runtime_text:
+              runtime_text = runtime_text.replace(runtime_old, runtime_new, 1)
+              runtime.write_text(runtime_text, encoding='utf-8')
+          elif runtime_new not in runtime_text:
+              raise SystemExit('Unexpected app-explore.js total-sort state')
+
+          generator = Path('scripts/apply-paldex-stats-v110.py')
+          generator_text = generator.read_text(encoding='utf-8')
+          generator_old = '    const left=palStatValue(a,key),right=palStatValue(b,key);'
+          generator_new = '    const statKey=key==="total"?"statTotal":key;\n    const left=palStatValue(a,statKey),right=palStatValue(b,statKey);'
+          if generator_old in generator_text:
+              generator_text = generator_text.replace(generator_old, generator_new, 1)
+              generator.write_text(generator_text, encoding='utf-8')
+          elif generator_new not in generator_text:
+              raise SystemExit('Unexpected apply-paldex-stats-v110.py total-sort state')
+          PY
+          node --check app-explore.js
+
       - name: Commit integrated artifacts to the PR branch
         run: |
           if git diff --quiet; then
@@ -93,5 +120,5 @@ jobs:
             data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
-          git commit -m '[pal-stats-v110] Complete verified stats, Paldex integration, and outage regression'
+          git commit -m '[pal-stats-v110] Complete verified stats, sorting, and outage regression'
           git push origin HEAD:resume-v110-finalize
