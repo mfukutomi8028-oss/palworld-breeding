@@ -16,41 +16,57 @@ concurrency:
 
 jobs:
   prepare:
-    if: ${{ !contains(github.event.head_commit.message, '[resume-v110-once]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[resume-v110-config]') }}
     runs-on: ubuntu-latest
     outputs:
-      generated: ${{ steps.generate.outputs.generated }}
+      generated: ${{ steps.commit.outputs.generated }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Detect whether the v110 fixed dataset is already committed
-        id: need
+      - name: Detect completed and incomplete v110 artifacts
+        id: state
         run: |
-          if [ -f data/pal-stats-v1.json ] && grep -q '?v=110' index.html && grep -q 'palSiteVersion = "110"' config.js; then
-            echo 'required=false' >> "$GITHUB_OUTPUT"
-          else
-            echo 'required=true' >> "$GITHUB_OUTPUT"
+          data_ready=false
+          ui_ready=false
+          if [ -s data/pal-stats-v1.json ] && [ -s data/pals-v1.json ]; then
+            data_ready=true
           fi
+          if grep -q '?v=110' index.html && grep -q 'palSiteVersion = "110"' config.js; then
+            ui_ready=true
+          fi
+          echo "data_ready=${data_ready}" >> "$GITHUB_OUTPUT"
+          echo "ui_ready=${ui_ready}" >> "$GITHUB_OUTPUT"
+          echo "Fixed data ready: ${data_ready}"
+          echo "v110 UI ready: ${ui_ready}"
 
-      - name: Install PalDB snapshot parser
-        if: steps.need.outputs.required == 'true'
+      - name: Install PalDB snapshot parser only when fixed data is absent
+        if: steps.state.outputs.data_ready != 'true'
         run: python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
 
-      - name: Generate verified PalDB fixed data and integrate the Paldex
-        if: steps.need.outputs.required == 'true'
+      - name: Generate fixed PalDB data only when no verified snapshot exists
+        if: steps.state.outputs.data_ready != 'true'
+        run: python scripts/build-paldb-stats.py --update-pals
+
+      - name: Integrate the existing fixed data into the Paldex only when needed
+        if: steps.state.outputs.ui_ready != 'true'
+        run: python scripts/apply-paldex-stats-v110.py
+
+      - name: Validate resumed v110 artifacts before committing
+        if: steps.state.outputs.data_ready != 'true' || steps.state.outputs.ui_ready != 'true'
         run: |
-          python scripts/build-paldb-stats.py --update-pals
-          python scripts/apply-paldex-stats-v110.py
           node scripts/validate-pal-stats-v110.mjs
+          node --check app-core.js
           node --check app-data.js
           node --check app-explore.js
           node --check app-actions.js
+          grep -q '?v=110' index.html
+          grep -q 'palSiteVersion = "110"' config.js
 
-      - name: Commit first-time v110 generated files
-        id: generate
-        if: steps.need.outputs.required == 'true'
+      - name: Commit only missing v110 artifacts
+        id: commit
+        if: steps.state.outputs.data_ready != 'true' || steps.state.outputs.ui_ready != 'true'
         run: |
           if git diff --quiet; then
             echo 'generated=false' >> "$GITHUB_OUTPUT"
@@ -62,13 +78,15 @@ jobs:
             data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
-          git commit -m '[pal-stats-v110] Add verified PalDB stats and Paldex sorting'
+          git commit -m '[pal-stats-v110] Complete verified stats and Paldex integration'
           git push origin HEAD:main
           echo 'generated=true' >> "$GITHUB_OUTPUT"
 
-      - name: Mark unchanged build
-        if: steps.need.outputs.required != 'true'
-        run: echo 'v110 fixed data is already committed; proceeding to deployment.'
+      - name: Mark already complete build
+        if: steps.state.outputs.data_ready == 'true' && steps.state.outputs.ui_ready == 'true'
+        run: |
+          echo 'generated=false' >> "$GITHUB_OUTPUT"
+          echo 'v110 fixed data and UI are already committed; proceeding to deployment.'
 
   deploy:
     if: needs.prepare.outputs.generated != 'true'
