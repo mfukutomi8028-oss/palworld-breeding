@@ -27,6 +27,28 @@ jobs:
             echo 'complete=false' >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Repair the interrupted integrator without regenerating data
+        if: steps.state.outputs.complete != 'true'
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/apply-paldex-stats-v110.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'replace_once("index.html", "?v=109", "?v=110")'
+          new = '''index_file = Path("index.html")
+          index_text = index_file.read_text(encoding="utf-8")
+          version_count = index_text.count("?v=109")
+          if version_count < 1:
+              raise RuntimeError("index.html: no v109 cache references were found")
+          index_file.write_text(index_text.replace("?v=109", "?v=110"), encoding="utf-8")'''
+          if old in text:
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          elif 'version_count = index_text.count("?v=109")' not in text:
+              raise SystemExit('Unexpected apply-paldex-stats-v110.py state')
+          PY
+
       - name: Apply only the unfinished v110 integration
         if: steps.state.outputs.complete != 'true'
         run: |
@@ -47,6 +69,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
+            scripts/apply-paldex-stats-v110.py \
             data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
