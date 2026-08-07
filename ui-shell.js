@@ -104,6 +104,7 @@ document.body.innerHTML = String.raw`
           <label class="search-field search-field--large"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="paldexSearch" type="search" placeholder="パル名・英語名・図鑑番号で検索"></label>
           <label class="select-field"><span>属性</span><select id="paldexElement"><option value="">すべて</option></select></label>
           <label class="select-field"><span>作業適性</span><select id="paldexWork"><option value="">すべて</option></select></label>
+          <label class="select-field"><span>並び順</span><select id="paldexSort"><option value="numberAsc">図鑑番号順</option><option value="nameAsc">名前順</option><option value="hpDesc">HPが高い順</option><option value="hpAsc">HPが低い順</option><option value="attackDesc">攻撃が高い順</option><option value="attackAsc">攻撃が低い順</option><option value="defenseDesc">防御が高い順</option><option value="defenseAsc">防御が低い順</option><option value="totalDesc">合計が高い順</option><option value="totalAsc">合計が低い順</option></select></label>
           <span class="result-count" id="paldexCount">0体</span>
         </section>
         <div class="paldex-layout">
