@@ -10,12 +10,12 @@ permissions:
 
 jobs:
   integrate:
-    if: github.event.pull_request.head.ref == 'resume-v110-integrated' && !contains(github.event.pull_request.head.sha, '0000000')
+    if: github.event.pull_request.head.ref == 'resume-v110-finalize'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: resume-v110-integrated
+          ref: resume-v110-finalize
           fetch-depth: 0
 
       - name: Stop when the v110 integration is already present
@@ -51,4 +51,4 @@ jobs:
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
           git commit -m '[pal-stats-v110] Complete verified stats and Paldex integration'
-          git push origin HEAD:resume-v110-integrated
+          git push origin HEAD:resume-v110-finalize
