@@ -5,17 +5,23 @@ on:
     branches: [feature/pal-details-v111]
     paths:
       - .github/workflows/generate-pal-details-v111.yml
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   generate:
+    if: github.event_name == 'push' || github.head_ref == 'feature/pal-details-v111'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
 
       - name: Install fixed parser dependencies
@@ -40,4 +46,4 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/pal-details-v1.json
           git commit -m '[pal-details-v111-data] Add fixed Japanese PalDB details for 299 Pals'
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git push origin HEAD:${TARGET_BRANCH}
