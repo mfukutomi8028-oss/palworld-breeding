@@ -63,15 +63,35 @@ jobs:
           grep -q '?v=110' index.html
           grep -q 'palSiteVersion = "110"' config.js
 
-      - name: Commit integrated artifacts to the PR branch
-        if: steps.state.outputs.complete != 'true'
+      - name: Make the image-outage test match v110 cache-busted URLs
         run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/smoke-browser.mjs')
+          text = path.read_text(encoding='utf-8')
+          old = 'await context.route("**/data/pal-images-v1.json", route => route.abort());'
+          new = 'await context.route("**/data/pal-images-v1.json*", route => route.abort());'
+          if old in text:
+              text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          elif new not in text:
+              raise SystemExit('Unexpected smoke-browser.mjs image route state')
+          PY
+          node --check scripts/smoke-browser.mjs
+
+      - name: Commit integrated artifacts to the PR branch
+        run: |
+          if git diff --quiet; then
+            echo 'No additional integration changes are required.'
+            exit 0
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
-            scripts/apply-paldex-stats-v110.py \
+            scripts/apply-paldex-stats-v110.py scripts/smoke-browser.mjs \
             data/pals-v1.json data/pal-stats-v1.json data/SOURCES.md \
             app-core.js app-data.js app-explore.js app-actions.js ui-shell.js \
             style-components.css style-responsive.css index.html config.js
-          git commit -m '[pal-stats-v110] Complete verified stats and Paldex integration'
+          git commit -m '[pal-stats-v110] Complete verified stats, Paldex integration, and outage regression'
           git push origin HEAD:resume-v110-finalize
