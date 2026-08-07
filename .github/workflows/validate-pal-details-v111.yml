@@ -1,0 +1,45 @@
+name: Validate Pal details v111
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pal-details:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate source and fixed data
+        run: |
+          node --check app-pal-details-v111.js
+          node --check scripts/validate-pal-details-v111.mjs
+          node --check scripts/smoke-pal-details-v111.mjs
+          python -m py_compile scripts/build-paldb-details-v111.py
+          node scripts/validate-pal-details-v111.mjs
+
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start GitHub Pages-compatible local server
+        run: |
+          python3 -m http.server 4173 > /tmp/pal-v111-site.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/pal-v111-site.log
+          exit 1
+
+      - name: Test Pal detail UI
+        env:
+          APP_URL: http://127.0.0.1:4173/
+        run: node scripts/smoke-pal-details-v111.mjs
