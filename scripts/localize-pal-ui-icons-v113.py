@@ -47,7 +47,7 @@ def download(url: str, destination: Path) -> None:
     destination.write_bytes(data)
 
 
-def localize(url: str, category: str, asset_root: Path, seen: dict[str, str]) -> str:
+def localize(url: str, category: str, repo_root: Path, seen: dict[str, str]) -> str:
     raw = str(url or "").strip()
     if not raw:
         return ""
@@ -56,7 +56,7 @@ def localize(url: str, category: str, asset_root: Path, seen: dict[str, str]) ->
     if raw in seen:
         return seen[raw]
     relative = Path("assets") / "paldb-ui-v113" / category / safe_basename(raw)
-    destination = asset_root.parent / relative
+    destination = repo_root / relative
     download(raw, destination)
     local_path = relative.as_posix()
     seen[raw] = local_path
