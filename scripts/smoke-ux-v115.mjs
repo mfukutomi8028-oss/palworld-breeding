@@ -33,14 +33,30 @@ const palId = await page.evaluate(() => {
 });
 
 await page.waitForFunction(() => {
-  return document.querySelector("#paldexGrid .element-icon-v113") &&
-    document.querySelector("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113") &&
-    document.querySelector("#palDetail .element-icon-v113") &&
-    document.querySelector("#palDetail .work-icon-v113");
+  const selectors = [
+    "#paldexGrid .element-icon-v113",
+    "#paldexGrid .pal-card-work-icons-v113 .work-icon-v113",
+    "#palDetail .element-icon-v113",
+    "#palDetail .work-icon-v113",
+  ];
+  return selectors.every(selector => [...document.querySelectorAll(selector)].some(node => {
+    const rect = node.getBoundingClientRect();
+    const style = getComputedStyle(node);
+    return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
+  }));
 }, null, { timeout: 60000 });
 
-async function sizeOf(locator, label) {
-  const box = await locator.first().boundingBox();
+async function visibleSize(selector, label) {
+  const box = await page.locator(selector).evaluateAll(nodes => {
+    for (const node of nodes) {
+      const rect = node.getBoundingClientRect();
+      const style = getComputedStyle(node);
+      if (rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden") {
+        return { width: rect.width, height: rect.height };
+      }
+    }
+    return null;
+  });
   if (!box) throw new Error(`${label} is not visible`);
   return box;
 }
@@ -50,10 +66,10 @@ function within(box, min, max, label) {
   }
 }
 
-within(await sizeOf(page.locator("#paldexGrid .element-icon-v113"), "Paldex card element icon"), 18, 24, "Paldex card element icon");
-within(await sizeOf(page.locator("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113"), "Paldex card work icon"), 17, 22, "Paldex card work icon");
-within(await sizeOf(page.locator("#palDetail .element-icon-v113"), "Preview element icon"), 20, 24, "Preview element icon");
-within(await sizeOf(page.locator("#palDetail .work-icon-v113"), "Preview work icon"), 18, 22, "Preview work icon");
+within(await visibleSize("#paldexGrid .element-icon-v113", "Paldex card element icon"), 18, 24, "Paldex card element icon");
+within(await visibleSize("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113", "Paldex card work icon"), 17, 22, "Paldex card work icon");
+within(await visibleSize("#palDetail .element-icon-v113", "Preview element icon"), 20, 24, "Preview element icon");
+within(await visibleSize("#palDetail .work-icon-v113", "Preview work icon"), 18, 22, "Preview work icon");
 const portrait = await page.locator("#palDetail .pal-detail-hero > img").first().boundingBox();
 if (!portrait || portrait.width < 100 || portrait.height < 100) throw new Error(`Main Pal portrait was accidentally reduced: ${JSON.stringify(portrait)}`);
 
@@ -66,8 +82,8 @@ const profileRoute = await page.evaluate(() => ({
 if (profileRoute.view !== "paldex" || new URLSearchParams(profileRoute.hash.replace(/^#/, "")).get("pal") !== palId) {
   throw new Error(`Pal profile route did not open correctly: ${JSON.stringify(profileRoute)}`);
 }
-within(await sizeOf(page.locator("#palDetail .element-icon-v113"), "Profile element icon"), 20, 24, "Profile element icon");
-within(await sizeOf(page.locator("#palDetail .work-icon-v113"), "Profile work icon"), 18, 22, "Profile work icon");
+within(await visibleSize("#palDetail .element-icon-v113", "Profile element icon"), 20, 24, "Profile element icon");
+within(await visibleSize("#palDetail .work-icon-v113", "Profile work icon"), 18, 22, "Profile work icon");
 
 // Regression: leaving a profile through the left navigation must not be bounced
 // back to Paldex by the remaining `pal` hash parameter.
