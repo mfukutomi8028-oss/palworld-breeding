@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Localize PalDB UI icons referenced by data/pal-ui-v113.json.
 
-The PalDB pages are the data source, but the production site should not depend
-on hundreds of third-party image requests at runtime. This script downloads the
-verified icon snapshot into the repository and rewrites JSON icon fields to
-local paths. Text labels remain the functional fallback in the browser.
+The PalDB pages remain the data source, but production never hot-links the
+third-party icon CDN. v114 also localizes condition/boss markers found in drop
+rows.
 """
 
 from __future__ import annotations
@@ -17,7 +16,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-USER_AGENT = "pal-breeding-note/1.0 v113 icon snapshot localizer"
+USER_AGENT = "pal-breeding-note/1.0 v114 icon snapshot localizer"
 
 
 def safe_basename(url: str) -> str:
@@ -74,6 +73,8 @@ def localize_payload(payload: dict[str, Any], repo_root: Path) -> dict[str, Any]
         partner["icon"] = localize(partner.get("icon", ""), "partner", repo_root, seen)
         for drop in record.get("drops") or []:
             drop["icon"] = localize(drop.get("icon", ""), "items", repo_root, seen)
+            if drop.get("conditionIcon"):
+                drop["conditionIcon"] = localize(drop.get("conditionIcon", ""), "conditions", repo_root, seen)
 
     payload["iconStorage"] = {
         "mode": "local-snapshot",
@@ -92,7 +93,11 @@ def validate_local(payload: dict[str, Any], repo_root: Path) -> None:
         icon = (record.get("partnerSkill") or {}).get("icon")
         if icon:
             paths.append(icon)
-        paths.extend(drop.get("icon") for drop in record.get("drops") or [] if drop.get("icon"))
+        for drop in record.get("drops") or []:
+            if drop.get("icon"):
+                paths.append(drop["icon"])
+            if drop.get("conditionIcon"):
+                paths.append(drop["conditionIcon"])
     external = [path for path in paths if str(path).startswith(("http://", "https://"))]
     missing = [path for path in paths if not (repo_root / str(path)).is_file()]
     if external:
