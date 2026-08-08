@@ -1,0 +1,116 @@
+/* v114: correct PalDB icon sizing/visibility and structured drop-condition layout. */
+
+/* PalDB partner-skill assets are mostly bright monochrome masks. Reduce the
+   solid-white fill so their internal silhouette remains legible on the dark UI. */
+.partner-skill-icon-image-v113{
+  opacity:.68;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+}
+
+/* style-components.css intentionally makes the main Pal portrait 150px via
+   `.pal-detail-hero img`. Attribute icons live inside the same hero, so reset
+   only those nested icons with stronger specificity. */
+.pal-detail-hero .element-tag--icon-v113 img.element-icon-v113{
+  display:inline-block!important;
+  width:17px!important;
+  height:17px!important;
+  margin:0!important;
+  object-fit:contain!important;
+  filter:none!important;
+  vertical-align:middle;
+}
+.pal-detail-hero .element-tag--icon-v113{
+  width:auto;
+  min-width:0;
+  height:auto;
+}
+
+/* Desktop: icon / item / level-condition / quantity / probability. */
+.pal-drop-row-v113{
+  grid-template-columns:38px minmax(0,1fr) minmax(58px,auto) auto auto!important;
+}
+.pal-drop-condition-v114{
+  display:inline-flex;
+  min-width:58px;
+  min-height:28px;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  color:var(--text-soft);
+  font-size:10px;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.pal-drop-condition-v114>strong{
+  color:var(--text-soft);
+  font-size:10px;
+}
+.pal-drop-condition-icon-v114{
+  display:block;
+  width:18px;
+  height:18px;
+  flex:0 0 auto;
+  object-fit:contain;
+  margin:0;
+  filter:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-user-drag:none;
+}
+.pal-drop-boss-fallback-v114{
+  display:inline-flex;
+  align-items:center;
+  min-height:18px;
+  padding:1px 5px;
+  border:1px solid rgba(255,205,62,.32);
+  border-radius:999px;
+  color:#ffd45f;
+  background:rgba(255,205,62,.08);
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+
+@media(max-width:900px){
+  .pal-drop-row-v113{
+    grid-template-columns:36px minmax(0,1fr) minmax(52px,auto) auto auto!important;
+  }
+}
+
+@media(max-width:680px){
+  .pal-drop-row-v113{
+    grid-template-columns:30px minmax(0,1fr) auto!important;
+    grid-template-rows:auto auto!important;
+    column-gap:8px!important;
+    row-gap:4px!important;
+  }
+  .pal-drop-icon-v113{
+    grid-column:1;
+    grid-row:1/3;
+    align-self:center;
+  }
+  .pal-drop-name-v113{
+    grid-column:2;
+    grid-row:1;
+  }
+  .pal-drop-prob-v113{
+    grid-column:3;
+    grid-row:1;
+    align-self:center;
+  }
+  .pal-drop-condition-v114{
+    grid-column:2;
+    grid-row:2;
+    min-width:0;
+    min-height:20px;
+    justify-content:flex-start;
+  }
+  .pal-drop-qty-v113{
+    display:grid!important;
+    grid-column:3;
+    grid-row:2;
+    align-self:center;
+  }
+}
