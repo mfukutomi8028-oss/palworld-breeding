@@ -8,4 +8,4 @@ window.firebaseConfig = {
   appId: "1:657534681097:web:b031035357baa6df2a38d8",
   measurementId: "G-3SKBN4JL7B"
 };
-window.palSiteVersion = "110";
+window.palSiteVersion = "116";
