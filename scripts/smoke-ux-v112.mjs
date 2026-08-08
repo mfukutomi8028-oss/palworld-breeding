@@ -47,6 +47,7 @@ await page.evaluate(() => {
   renderPaldex();
 });
 await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("モコモコの盾"));
+await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("近接攻撃係数"), null, { timeout: 60000 });
 const detailText = await page.locator("#palDetail").innerText();
 for (const removed of ["このルームで発見した作り方", "このルームで発見した派生先", "このパルを作れる配合", "このパルを親にした配合"]) {
   if (detailText.includes(removed)) throw new Error(`Redundant breeding section remains: ${removed}`);
