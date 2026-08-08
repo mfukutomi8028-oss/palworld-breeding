@@ -1,0 +1,13 @@
+/* v116: unify hint-card reveal behavior and keep comparison UI inside Paldex context. */
+
+.hint-position.is-missing{
+  border-color:rgba(255,104,122,.5)!important;
+  background:rgba(255,104,122,.08)!important;
+}
+.hint-position.is-missing strong{
+  color:#ff7889!important;
+}
+
+body:not([data-current-view="paldex"]) #palCompareTray{
+  display:none!important;
+}
