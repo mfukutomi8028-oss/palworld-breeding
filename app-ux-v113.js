@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const RICH_DATA_URL = "data/pal-ui-v113.json?v=113";
-  const RICH_CACHE_KEY = "pal-breeding-note:pal-ui:113";
+  const RICH_DATA_URL = "data/pal-ui-v113.json?v=114";
+  const RICH_CACHE_KEY = "pal-breeding-note:pal-ui:114";
   const richState = { status: "loading", error: "", byName: new Map(), elementIcons: {}, workIcons: {}, coverage: {} };
   let pendingPalCardClick = null;
 
@@ -26,7 +26,7 @@
 
   function iconMarkup(src, alt, className = "game-icon-v113") {
     if (!src) return "";
-    return `<img class="${className}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+    return `<img class="${className}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" draggable="false" onerror="this.style.display='none'">`;
   }
 
   function compareButtonState(root, pal) {
@@ -81,6 +81,16 @@
     </div>`;
   }
 
+  function dropConditionMarkup(drop) {
+    const level = String(drop?.level || "").trim();
+    const conditionIcon = drop?.conditionIcon
+      ? iconMarkup(drop.conditionIcon, drop.isBoss ? "ボス条件" : "追加条件", "pal-drop-condition-icon-v114")
+      : "";
+    const bossFallback = drop?.isBoss && !conditionIcon ? `<span class="pal-drop-boss-fallback-v114">BOSS</span>` : "";
+    if (!level && !conditionIcon && !bossFallback) return `<span class="pal-drop-condition-v114" aria-hidden="true"></span>`;
+    return `<span class="pal-drop-condition-v114">${level ? `<strong>Lv.${escapeHtml(level)}</strong>` : ""}${conditionIcon}${bossFallback}</span>`;
+  }
+
   function upgradeDrops(root, pal) {
     const detail = richRecordForPal(pal);
     if (!Array.isArray(detail?.drops)) return;
@@ -91,7 +101,7 @@
       body.innerHTML = `<p class="form-help">確認できるドロップ情報はありません。</p>`;
       return;
     }
-    body.innerHTML = `<div class="pal-drop-list pal-drop-list-v113">${detail.drops.slice(0, 12).map(drop => {
+    body.innerHTML = `<div class="pal-drop-list pal-drop-list-v113">${detail.drops.slice(0, 40).map(drop => {
       const item = escapeHtml(drop.item || "不明");
       const label = drop.sourceUrl
         ? `<a href="${escapeHtml(drop.sourceUrl)}" target="_blank" rel="noopener noreferrer">${item}</a>`
@@ -99,6 +109,7 @@
       return `<div class="pal-drop-row-v113">
         <span class="pal-drop-icon-v113">${iconMarkup(drop.icon, drop.item || "ドロップアイテム", "pal-drop-icon-image-v113")}<i aria-hidden="true">◆</i></span>
         <span class="pal-drop-name-v113">${label}</span>
+        ${dropConditionMarkup(drop)}
         <span class="pal-drop-qty-v113"><small>数量</small><strong>${escapeHtml(drop.quantity || "—")}</strong></span>
         <span class="pal-drop-prob-v113"><small>確率</small><strong>${escapeHtml(drop.probability || "—")}</strong></span>
       </div>`;
@@ -267,7 +278,7 @@
       upgradeElementTags(document);
       upgradeWorkTags(document);
     } catch (error) {
-      console.warn("v113 rich Pal UI data load failed", error);
+      console.warn("v114 rich Pal UI data load failed", error);
       richState.status = "error";
       richState.error = error.message;
     }
