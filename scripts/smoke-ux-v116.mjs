@@ -74,14 +74,14 @@ await page.waitForTimeout(100);
 if (!(await page.locator("#palCompareTray").isVisible())) throw new Error("Compare tray did not return when Paldex was reopened");
 if (await page.locator("#palCompareTray [data-compare-remove]").count() !== 1) throw new Error("Compare selection was lost after navigation");
 
-// Version shown in settings must follow the release version in config.js.
+// Version shown in settings must follow the current release version in config.js.
 await page.evaluate(() => switchView("settings"));
 await page.waitForFunction(() => document.querySelector("#systemStatus")?.textContent.includes("サイト版"));
 const versionState = await page.evaluate(() => ({
-  configured: window.palSiteVersion,
+  configured: String(window.palSiteVersion || ""),
   statusText: document.querySelector("#systemStatus")?.textContent || "",
 }));
-if (versionState.configured !== "116" || !versionState.statusText.includes("v116")) throw new Error(`Site version is inconsistent: ${JSON.stringify(versionState)}`);
+if (!versionState.configured || !versionState.statusText.includes(`v${versionState.configured}`)) throw new Error(`Site version is inconsistent: ${JSON.stringify(versionState)}`);
 
 await page.setViewportSize({ width: 390, height: 844 });
 await page.waitForTimeout(100);
