@@ -233,13 +233,15 @@ def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
         probability = texts[-1].strip()
         if norm(probability) == "probability":
             continue
-        item = texts[0].strip()
-        quantity = texts[1].strip() if len(texts) >= 3 else ""
+        link = cells[0].find("a", href=True)
+        item = " ".join(link.get_text(" ", strip=True).split()) if link else texts[0].strip()
         if not item:
             continue
+        quantity_raw = texts[1].strip() if len(texts) >= 3 else ""
+        quantity_match = re.search(r"\d+(?:[–—-]\d+)?", quantity_raw)
+        quantity = quantity_match.group(0) if quantity_match else quantity_raw.replace(probability, "").strip()
         image = cells[0].find("img")
         icon = img_src(image, page_url)
-        link = cells[0].find("a", href=True)
         item_url = urllib.parse.urljoin(page_url, str(link.get("href"))) if link else ""
         drops.append(
             {
@@ -306,6 +308,9 @@ def build(pals_path: Path, output_path: Path, workers: int) -> None:
         raise RuntimeError("Lamball partner skill description is empty")
     if not lamball["partnerSkill"]["icon"].endswith("T_icon_skill_pal_005.webp"):
         raise RuntimeError(f"Lamball partner icon mismatch: {lamball['partnerSkill']['icon']}")
+    wool = next((drop for drop in lamball["drops"] if drop["item"] == "羊毛"), None)
+    if not wool or wool["quantity"] != "1–3" or wool["probability"] != "100%":
+        raise RuntimeError(f"Lamball wool drop mismatch: {wool}")
 
     element_icons = {
         label: f"{CDN_BASE}/T_Icon_element_s_{index:02d}.webp"
