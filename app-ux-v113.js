@@ -4,6 +4,7 @@
   const RICH_DATA_URL = "data/pal-ui-v113.json?v=113";
   const RICH_CACHE_KEY = "pal-breeding-note:pal-ui:113";
   const richState = { status: "loading", error: "", byName: new Map(), elementIcons: {}, workIcons: {}, coverage: {} };
+  let pendingPalCardClick = null;
 
   const originalRenderPalDetailV113 = window.renderPalDetail;
   const originalRenderPaldexV113 = window.renderPaldex;
@@ -189,13 +190,33 @@
     else renderPaldex();
   }
 
-  document.addEventListener("dblclick", event => {
+  function openPreviewById(palId) {
+    const pal = getPal(palId);
+    if (!pal) return;
+    state.selectedPalId = pal.id;
+    renderPaldex();
+    if (matchMedia("(max-width:680px)").matches) openPalModal();
+  }
+
+  document.addEventListener("click", event => {
     const card = event.target.closest("#paldexGrid [data-pal-detail]");
-    if (!card) return;
-    if (event.target.closest("a,input,select,textarea,[data-compare-pal]")) return;
+    if (!card || event.detail === 0 || event.target.closest("a,input,select,textarea,[data-compare-pal]")) return;
     event.preventDefault();
-    openProfileById(card.dataset.palDetail);
-  });
+    event.stopPropagation();
+    const palId = card.dataset.palDetail;
+    if (pendingPalCardClick?.palId === palId) {
+      clearTimeout(pendingPalCardClick.timer);
+      pendingPalCardClick = null;
+      openProfileById(palId);
+      return;
+    }
+    if (pendingPalCardClick) clearTimeout(pendingPalCardClick.timer);
+    const timer = setTimeout(() => {
+      pendingPalCardClick = null;
+      openPreviewById(palId);
+    }, 240);
+    pendingPalCardClick = { palId, timer };
+  }, true);
 
   document.addEventListener("click", event => {
     if (!event.target.closest("[data-compare-pal]")) return;
