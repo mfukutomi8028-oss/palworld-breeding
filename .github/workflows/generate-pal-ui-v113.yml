@@ -1,0 +1,40 @@
+name: Generate PalDB UI snapshot v113
+
+on:
+  push:
+    branches: [feature/paldex-rich-icons-v113]
+    paths:
+      - scripts/build-paldb-ui-v113.py
+      - data/pals-v1.json
+      - .github/workflows/generate-pal-ui-v113.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/paldex-rich-icons-v113
+
+      - name: Install parser dependency
+        run: python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
+
+      - name: Build PalDB UI snapshot
+        run: python scripts/build-paldb-ui-v113.py --workers 4
+
+      - name: Commit generated snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/pal-ui-v113.json
+          if git diff --cached --quiet; then
+            echo "Snapshot is already current."
+            exit 0
+          fi
+          git commit -m "[generated-v113] Refresh PalDB UI snapshot"
+          git push origin HEAD:feature/paldex-rich-icons-v113
