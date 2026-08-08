@@ -214,6 +214,24 @@ def find_heading(soup: BeautifulSoup, title: str) -> Tag | None:
     return None
 
 
+def split_drop_label(raw: str, probability: str) -> tuple[str, str]:
+    """Split PalDB's repeated display text into an item label and quantity.
+
+    PalDB currently exposes rows such as `羊毛 1–3 100%` in more than one
+    descendant cell. We therefore normalize the visible first cell instead of
+    trusting a fixed column count.
+    """
+    text = " ".join(str(raw or "").split()).strip()
+    if probability:
+        text = re.sub(rf"\s*{re.escape(probability)}\s*$", "", text).strip()
+    match = re.search(r"(?:\bx\s*)?(\d+(?:\s*[–—-]\s*\d+)?)\s*$", text, re.IGNORECASE)
+    if not match:
+        return text, ""
+    quantity = re.sub(r"\s+", "", match.group(1))
+    item = text[: match.start()].strip()
+    return item, quantity
+
+
 def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
     heading = find_heading(soup, "Possible Drops")
     if heading is None:
@@ -233,15 +251,16 @@ def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
         probability = texts[-1].strip()
         if norm(probability) == "probability":
             continue
-        link = cells[0].find("a", href=True)
-        item = " ".join(link.get_text(" ", strip=True).split()) if link else texts[0].strip()
+
+        item, quantity = split_drop_label(texts[0], probability)
+        if not quantity and len(texts) >= 3:
+            _, quantity = split_drop_label(texts[1], probability)
         if not item:
             continue
-        quantity_raw = texts[1].strip() if len(texts) >= 3 else ""
-        quantity_match = re.search(r"\d+(?:[–—-]\d+)?", quantity_raw)
-        quantity = quantity_match.group(0) if quantity_match else quantity_raw.replace(probability, "").strip()
+
         image = cells[0].find("img")
         icon = img_src(image, page_url)
+        link = cells[0].find("a", href=True)
         item_url = urllib.parse.urljoin(page_url, str(link.get("href"))) if link else ""
         drops.append(
             {
