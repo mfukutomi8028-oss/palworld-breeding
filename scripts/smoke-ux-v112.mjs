@@ -47,13 +47,18 @@ await page.evaluate(() => {
   renderPaldex();
 });
 await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("モコモコの盾"));
-await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("近接攻撃係数"), null, { timeout: 60000 });
-const detailText = await page.locator("#palDetail").innerText();
+await page.waitForFunction(() => document.querySelector("#palDetail .pal-advanced-stats-v112"), null, { timeout: 60000 });
+let detailText = await page.locator("#palDetail").innerText();
 for (const removed of ["このルームで発見した作り方", "このルームで発見した派生先", "このパルを作れる配合", "このパルを親にした配合"]) {
   if (detailText.includes(removed)) throw new Error(`Redundant breeding section remains: ${removed}`);
 }
-for (const expected of ["配合記録へのショートカット", "詳細ステータス", "近接攻撃係数", "捕獲補正", "オス確率"]) {
+for (const expected of ["配合記録へのショートカット", "詳細ステータス"]) {
   if (!detailText.includes(expected)) throw new Error(`Enhanced Pal detail is missing: ${expected}`);
+}
+await page.locator("#palDetail .pal-advanced-stats-v112 summary").click();
+detailText = await page.locator("#palDetail").innerText();
+for (const expected of ["近接攻撃係数", "捕獲補正", "オス確率"]) {
+  if (!detailText.includes(expected)) throw new Error(`Opened advanced stats are missing: ${expected}`);
 }
 
 await page.fill("#paldexSearch", "モコロン");
