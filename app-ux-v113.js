@@ -29,7 +29,7 @@
   }
 
   function compareButtonState(root, pal) {
-    const existing = root.querySelector(`.pal-extra-v111 [data-compare-pal="${CSS.escape(pal.id)}"]`);
+    const existing = root.querySelector(`[data-compare-pal="${CSS.escape(pal.id)}"]`);
     const selected = existing?.getAttribute("aria-pressed") === "true";
     return { selected, label: selected ? "比較から外す" : "比較に追加" };
   }
@@ -41,8 +41,9 @@
   function ensurePrimaryActions(root, pal) {
     const hero = root.querySelector(".pal-detail-hero");
     if (!hero) return;
-    hero.querySelector(".pal-primary-actions-v113")?.remove();
     const compare = compareButtonState(root, pal);
+    hero.querySelector(".pal-primary-actions-v113")?.remove();
+    root.querySelector(".pal-extra-heading__actions")?.remove();
     const profile = isFullProfile(root);
     const markup = profile
       ? `<div class="pal-primary-actions-v113 pal-primary-actions-v113--profile" aria-label="パルの主要操作">
