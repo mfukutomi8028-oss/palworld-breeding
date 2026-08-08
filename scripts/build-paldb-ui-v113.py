@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 """Build supplemental PalDB UI data for the Palworld breeding note.
 
-This snapshot is intentionally separate from the v111 stat dataset so existing
-room/Firebase and Pal detail behavior remain backwards compatible. It adds the
-fields requested for richer presentation:
-- Japanese partner-skill description and partner-skill icon URL
-- drop quantity/probability plus item icon URL when PalDB exposes it
-- canonical PalDB element/work-suitability icon URLs
-
-The generated JSON is consumed as an optional enhancement. The application
-keeps text fallbacks when an external icon cannot be loaded.
+The snapshot remains separate from the core room/Firebase data. v114 fixes the
+PalDB Possible Drops parser so item names, quantities, level requirements and
+condition markers are stored independently instead of shifting columns.
 """
 
 from __future__ import annotations
@@ -28,7 +22,7 @@ from typing import Any
 from bs4 import BeautifulSoup, Tag
 
 EXPECTED_COUNT = 299
-USER_AGENT = "pal-breeding-note/1.0 v113 PalDB UI snapshot builder"
+USER_AGENT = "pal-breeding-note/1.0 v114 PalDB UI snapshot builder"
 CDN_BASE = "https://cdn.paldb.cc/image/Pal/Texture/UI/InGame"
 
 ELEMENT_ICON_INDEX = {
@@ -56,6 +50,9 @@ WORK_ICON_INDEX = {
     "運搬": 10,
     "牧場": 11,
 }
+
+PERCENT_RE = re.compile(r"\b\d+(?:\.\d+)?%")
+DROP_NUMBER_RE = re.compile(r"(?<![\d.])(?:x\s*)?(\d+(?:\s*[–—-]\s*\d+)?)(?!\s*%)(?![\d.])", re.IGNORECASE)
 
 
 def norm(value: Any) -> str:
@@ -202,7 +199,9 @@ def parse_partner_skill(soup: BeautifulSoup, record: dict[str, Any], page_url: s
         description = clean_description(parts)
         break
 
-    icon = partner_icon_from_record(record) or find_partner_icon(soup, page_url)
+    # Prefer the icon actually exposed by the current PalDB page. The local
+    # source record remains a fallback only when the page does not expose one.
+    icon = find_partner_icon(soup, page_url) or partner_icon_from_record(record)
     return {"name": name, "description": description, "icon": icon}
 
 
@@ -214,25 +213,32 @@ def find_heading(soup: BeautifulSoup, title: str) -> Tag | None:
     return None
 
 
-def split_drop_label(raw: str, probability: str) -> tuple[str, str]:
-    """Split PalDB's repeated display text into an item label and quantity.
+def normalize_drop_number(value: str) -> str:
+    return re.sub(r"\s+", "", str(value or "").replace("—", "–").replace("-", "–"))
 
-    PalDB currently exposes rows such as `羊毛 1–3 100%` in more than one
-    descendant cell. We therefore normalize the visible first cell instead of
-    trusting a fixed column count.
-    """
-    text = " ".join(str(raw or "").split()).strip()
+
+def extract_drop_numbers(text: str, item: str, probability: str) -> list[str]:
+    working = " ".join(str(text or "").split())
+    if item:
+        working = working.replace(item, " ")
     if probability:
-        text = re.sub(rf"\s*{re.escape(probability)}\s*$", "", text).strip()
-    match = re.search(r"(?:\bx\s*)?(\d+(?:\s*[–—-]\s*\d+)?)\s*$", text, re.IGNORECASE)
-    if not match:
-        return text, ""
-    quantity = re.sub(r"\s+", "", match.group(1))
-    item = text[: match.start()].strip()
-    return item, quantity
+        working = working.replace(probability, " ")
+    working = re.sub(r"\b(?:item|qty|quantity|probability|level|lv\.?)\b", " ", working, flags=re.IGNORECASE)
+    return [normalize_drop_number(match.group(1)) for match in DROP_NUMBER_RE.finditer(working)]
 
 
-def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
+def condition_icon_from_row(row: Tag, item_icon: str, page_url: str) -> str:
+    for image in row.find_all("img"):
+        src = img_src(image, page_url)
+        if not src or src == item_icon:
+            continue
+        if "itemicon" in src.casefold():
+            continue
+        return src
+    return ""
+
+
+def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, Any]]:
     heading = find_heading(soup, "Possible Drops")
     if heading is None:
         return []
@@ -240,38 +246,60 @@ def parse_drops(soup: BeautifulSoup, page_url: str) -> list[dict[str, str]]:
     if table is None:
         return []
 
-    drops: list[dict[str, str]] = []
+    drops: list[dict[str, Any]] = []
     for row in table.find_all("tr"):
         cells = row.find_all(["th", "td"])
         if len(cells) < 2:
             continue
-        texts = [" ".join(cell.get_text(" ", strip=True).split()) for cell in cells]
-        if not texts or norm(texts[0]) in {"item", "アイテム"}:
-            continue
-        probability = texts[-1].strip()
-        if norm(probability) == "probability":
+        row_text = " ".join(row.get_text(" ", strip=True).split())
+        if not row_text or norm(row_text).startswith("item"):
             continue
 
-        item, quantity = split_drop_label(texts[0], probability)
-        if not quantity and len(texts) >= 3:
-            _, quantity = split_drop_label(texts[1], probability)
+        link = row.find("a", href=True)
+        item = " ".join(link.get_text(" ", strip=True).split()) if link else ""
         if not item:
+            first_text = " ".join(cells[0].get_text(" ", strip=True).split())
+            if norm(first_text) in {"item", "アイテム"}:
+                continue
+            item = first_text
+
+        percentages = PERCENT_RE.findall(row_text)
+        probability = percentages[-1] if percentages else ""
+        if not probability:
             continue
 
-        image = cells[0].find("img")
-        icon = img_src(image, page_url)
-        link = cells[0].find("a", href=True)
+        # PalDB's responsive markup may repeat Qty/Level/Probability inside the
+        # first visual cell. Once the exact item-link label and probability are
+        # removed, the first two numeric tokens are respectively Qty and Level.
+        numbers = extract_drop_numbers(cells[0].get_text(" ", strip=True), item, probability)
+        if not numbers:
+            numbers = extract_drop_numbers(row_text, item, probability)
+        quantity = numbers[0] if numbers else ""
+        level = numbers[1] if len(numbers) >= 2 and re.fullmatch(r"\d+", numbers[1]) else ""
+
+        item_image = cells[0].find("img")
+        icon = img_src(item_image, page_url)
+        condition_icon = condition_icon_from_row(row, icon, page_url)
         item_url = urllib.parse.urljoin(page_url, str(link.get("href"))) if link else ""
+        marker_text = " ".join(
+            " ".join(filter(None, [str(image.get("alt") or ""), str(image.get("title") or ""), " ".join(image.get("class") or [])]))
+            for image in row.find_all("img")
+        )
+        is_boss = bool(condition_icon) or bool(re.search(r"boss|alpha|ボス|強敵", marker_text, re.IGNORECASE))
+
         drops.append(
             {
                 "item": item,
                 "quantity": quantity,
                 "probability": probability,
+                "level": level,
+                "conditionIcon": condition_icon,
+                "isBoss": is_boss,
                 "icon": icon,
                 "sourceUrl": item_url,
             }
         )
-    return drops[:20]
+    return drops[:40]
 
 
 def parse_page(record: dict[str, Any]) -> dict[str, Any]:
@@ -287,6 +315,10 @@ def parse_page(record: dict[str, Any]) -> dict[str, Any]:
         "partnerSkill": parse_partner_skill(soup, record, page_url),
         "drops": parse_drops(soup, page_url),
     }
+
+
+def find_drop(record: dict[str, Any], item: str, level: str = "") -> dict[str, Any] | None:
+    return next((drop for drop in record["drops"] if drop["item"] == item and drop.get("level", "") == level), None)
 
 
 def build(pals_path: Path, output_path: Path, workers: int) -> None:
@@ -325,11 +357,26 @@ def build(pals_path: Path, output_path: Path, workers: int) -> None:
         raise RuntimeError(f"Lamball partner skill mismatch: {lamball['partnerSkill']}")
     if not lamball["partnerSkill"]["description"]:
         raise RuntimeError("Lamball partner skill description is empty")
-    if not lamball["partnerSkill"]["icon"].endswith("T_icon_skill_pal_005.webp"):
-        raise RuntimeError(f"Lamball partner icon mismatch: {lamball['partnerSkill']['icon']}")
-    wool = next((drop for drop in lamball["drops"] if drop["item"] == "羊毛"), None)
-    if not wool or wool["quantity"] != "1–3" or wool["probability"] != "100%":
+    wool = find_drop(lamball, "羊毛")
+    if not wool or wool["quantity"] != "1–3" or wool["probability"] != "100%" or wool["level"]:
         raise RuntimeError(f"Lamball wool drop mismatch: {wool}")
+
+    lyleen = next(item for item in final_records if item["name"] == "Lyleen")
+    fixed_checks = [
+        ("高品質な回復薬", "", "1–3", "100%"),
+        ("きれいな花", "", "1–2", "100%"),
+        ("革新的な技術書", "", "1", "10%"),
+        ("世界樹の聖水", "70", "1–3", "50%"),
+        ("古代文明の朽ちた遺物", "70", "1–10", "10%"),
+        ("草の輝石", "80", "10–20", "100%"),
+        ("古代文明の朽ちた遺物", "80", "30–50", "100%"),
+    ]
+    for item_name, level, quantity, probability in fixed_checks:
+        drop = find_drop(lyleen, item_name, level)
+        if not drop or drop["quantity"] != quantity or drop["probability"] != probability:
+            raise RuntimeError(f"Lyleen drop mismatch {item_name} Lv.{level or '-'}: {drop}")
+        if re.search(r"\s\d+(?:[–—-]\d+)?$", drop["item"]):
+            raise RuntimeError(f"Quantity leaked into Lyleen item label: {drop['item']}")
 
     element_icons = {
         label: f"{CDN_BASE}/T_Icon_element_s_{index:02d}.webp"
@@ -344,17 +391,25 @@ def build(pals_path: Path, output_path: Path, workers: int) -> None:
     partner_icons = sum(bool(item["partnerSkill"]["icon"]) for item in final_records)
     drop_rows = [drop for item in final_records for drop in item["drops"]]
     drop_icons = sum(bool(drop["icon"]) for drop in drop_rows)
+    condition_icons = sum(bool(drop.get("conditionIcon")) for drop in drop_rows)
+    boss_rows = sum(bool(drop.get("isBoss")) for drop in drop_rows)
+    level_rows = sum(bool(drop.get("level")) for drop in drop_rows)
 
     output = {
         "source": "PalDB Japanese individual Pal pages",
         "sourceUrl": "https://paldb.cc/ja/Pals",
         "gameVersion": "Palworld 1.0",
+        "schemaVersion": 114,
         "retrieved": dt.date.today().isoformat(),
         "count": len(final_records),
         "fields": {
             "partnerSkill.description": "Japanese partner-skill effect text shown by PalDB",
-            "partnerSkill.icon": "PalDB CDN partner-skill icon URL",
-            "drops.icon": "PalDB Possible Drops item icon URL when exposed in page markup",
+            "partnerSkill.icon": "PalDB partner-skill icon exposed by the current Pal page",
+            "drops.quantity": "Drop quantity/range independent from item name",
+            "drops.level": "Optional PalDB drop level condition",
+            "drops.conditionIcon": "Optional additional PalDB condition marker from the drop row",
+            "drops.isBoss": "Whether the row carries a PalDB boss/special-condition marker",
+            "drops.icon": "PalDB Possible Drops item icon",
             "elementIcons": "PalDB element icon URLs",
             "workIcons": "PalDB work-suitability icon URLs",
         },
@@ -363,6 +418,9 @@ def build(pals_path: Path, output_path: Path, workers: int) -> None:
             "partnerIcons": partner_icons,
             "dropRows": len(drop_rows),
             "dropIcons": drop_icons,
+            "levelRows": level_rows,
+            "conditionIcons": condition_icons,
+            "bossRows": boss_rows,
         },
         "elementIcons": element_icons,
         "workIcons": work_icons,
@@ -371,8 +429,8 @@ def build(pals_path: Path, output_path: Path, workers: int) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(
-        f"Built {len(final_records)} records; descriptions={descriptions}, "
-        f"partnerIcons={partner_icons}, dropIcons={drop_icons}/{len(drop_rows)}"
+        f"Built {len(final_records)} records; descriptions={descriptions}, partnerIcons={partner_icons}, "
+        f"dropIcons={drop_icons}/{len(drop_rows)}, levelRows={level_rows}, conditionIcons={condition_icons}, bossRows={boss_rows}"
     )
 
 
