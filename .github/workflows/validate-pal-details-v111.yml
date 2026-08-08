@@ -18,11 +18,16 @@ jobs:
         run: |
           node --check app-pal-details-v111.js
           node --check app-ux-v112.js
+          node --check app-ux-v113.js
           node --check scripts/validate-pal-details-v111.mjs
+          node --check scripts/validate-pal-ui-v113.mjs
           node --check scripts/smoke-pal-details-v111.mjs
           node --check scripts/smoke-ux-v112.mjs
+          node --check scripts/smoke-ux-v113.mjs
           python -m py_compile scripts/build-paldb-details-v111.py
+          python -m py_compile scripts/build-paldb-ui-v113.py
           node scripts/validate-pal-details-v111.mjs
+          node scripts/validate-pal-ui-v113.mjs
 
       - name: Install browser test runtime
         run: |
@@ -31,14 +36,14 @@ jobs:
 
       - name: Start GitHub Pages-compatible local server
         run: |
-          python3 -m http.server 4173 > /tmp/pal-v112-site.log 2>&1 &
+          python3 -m http.server 4173 > /tmp/pal-v113-site.log 2>&1 &
           for attempt in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:4173/ >/dev/null; then
               exit 0
             fi
             sleep 1
           done
-          cat /tmp/pal-v112-site.log
+          cat /tmp/pal-v113-site.log
           exit 1
 
       - name: Test Pal detail UI
@@ -50,3 +55,8 @@ jobs:
         env:
           APP_URL: http://127.0.0.1:4173/
         run: node scripts/smoke-ux-v112.mjs
+
+      - name: Test v113 rich Paldex flows
+        env:
+          APP_URL: http://127.0.0.1:4173/
+        run: node scripts/smoke-ux-v113.mjs
