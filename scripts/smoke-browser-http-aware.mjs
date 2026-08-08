@@ -57,6 +57,10 @@ for (const [before, after] of updates) {
   source = source.replace(before, after);
 }
 
+const palImageAuditSelector = `const locator = page.locator(".pal-card-button img");`;
+if (!source.includes(palImageAuditSelector)) throw new Error("Could not scope Pal portrait audit after icon-rich Paldex update.");
+source = source.replace(palImageAuditSelector, `const locator = page.locator(".pal-card-button img[data-pal-image]");`);
+
 source = source.replace(
   "Forward hint page uses fixed position choices instead of revealing name length.",
   "Forward hint page uses a global fixed slot count instead of revealing each name length.",
