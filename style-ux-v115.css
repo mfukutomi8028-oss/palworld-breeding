@@ -1,0 +1,78 @@
+/* v115: improve Paldex element/work icon readability without returning to oversized hero icons. */
+
+/* Paldex cards: increase visual recognition while preserving card density. */
+#paldexGrid .element-tag--icon-v113{
+  gap:6px;
+  padding:5px 8px;
+  font-size:10px;
+}
+#paldexGrid .element-tag--icon-v113 img.element-icon-v113{
+  width:20px!important;
+  height:20px!important;
+  margin:0!important;
+  object-fit:contain!important;
+  filter:none!important;
+}
+#paldexGrid .pal-card-work-icons-v113>span{
+  min-height:26px;
+  gap:3px;
+  padding:3px 6px;
+}
+#paldexGrid .pal-card-work-icons-v113 .work-icon-v113{
+  width:18px;
+  height:18px;
+}
+#paldexGrid .pal-card-work-icons-v113 b{
+  font-size:10px;
+}
+
+/* Right-side preview, modal and full profile: make element/work badges easier to scan. */
+.pal-detail-panel .element-tag--icon-v113,
+#palModalBody .element-tag--icon-v113{
+  gap:6px;
+  padding:5px 9px;
+  font-size:11px;
+}
+.pal-detail-panel .pal-detail-hero .element-tag--icon-v113 img.element-icon-v113,
+#palModalBody .pal-detail-hero .element-tag--icon-v113 img.element-icon-v113{
+  width:22px!important;
+  height:22px!important;
+  margin:0!important;
+  object-fit:contain!important;
+  filter:none!important;
+}
+.pal-detail-panel .work-tag--icon-v113,
+#palModalBody .work-tag--icon-v113{
+  gap:6px;
+  padding:5px 9px;
+  font-size:11px;
+}
+.pal-detail-panel .work-tag--icon-v113 img.work-icon-v113,
+#palModalBody .work-tag--icon-v113 img.work-icon-v113{
+  width:20px!important;
+  height:20px!important;
+}
+
+@media(max-width:680px){
+  #paldexGrid .element-tag--icon-v113{
+    padding:4px 7px;
+  }
+  #paldexGrid .element-tag--icon-v113 img.element-icon-v113{
+    width:19px!important;
+    height:19px!important;
+  }
+  #paldexGrid .pal-card-work-icons-v113>span{
+    min-height:25px;
+    padding:3px 5px;
+  }
+  #paldexGrid .pal-card-work-icons-v113 .work-icon-v113{
+    width:17px;
+    height:17px;
+  }
+  .pal-detail-panel .element-tag--icon-v113,
+  #palModalBody .element-tag--icon-v113,
+  .pal-detail-panel .work-tag--icon-v113,
+  #palModalBody .work-tag--icon-v113{
+    padding:5px 8px;
+  }
+}
