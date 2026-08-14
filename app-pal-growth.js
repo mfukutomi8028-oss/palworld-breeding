@@ -64,45 +64,20 @@
   function workBoostState(pal, star) {
     const works = Array.isArray(pal?.works) ? pal.works : [];
     if (!works.length) return [];
-    if (star <= 0) return works.map(work => ({ ...work, boost: "none", displayLevel: work.level }));
-    if (star >= 4) return works.map(work => ({ ...work, boost: "guaranteed", displayLevel: work.level + 1 }));
-
-    const groups = new Map();
-    for (const work of works) {
-      const level = Number(work.level || 0);
-      if (!groups.has(level)) groups.set(level, []);
-      groups.get(level).push(work);
-    }
-    const sortedLevels = [...groups.keys()].sort((a, b) => b - a);
-    let remaining = star;
-    const status = new Map();
-    for (const level of sortedLevels) {
-      const group = groups.get(level).sort((a, b) => WORK_ORDER.indexOf(a.name) - WORK_ORDER.indexOf(b.name));
-      if (remaining <= 0) {
-        group.forEach(work => status.set(work.name, "none"));
-        continue;
-      }
-      if (group.length <= remaining) {
-        group.forEach(work => status.set(work.name, "guaranteed"));
-        remaining -= group.length;
-      } else {
-        group.forEach(work => status.set(work.name, "candidate"));
-        remaining = 0;
-      }
-    }
-    return works.map(work => {
-      const boost = status.get(work.name) || "none";
-      return { ...work, boost, displayLevel: work.level + (boost === "guaranteed" ? 1 : 0) };
-    });
+    const boosted = Number(star) >= 4;
+    return works.map(work => ({
+      ...work,
+      boost: boosted ? "guaranteed" : "none",
+      displayLevel: Number(work.level || 0) + (boosted ? 1 : 0),
+    }));
   }
 
   function workPreview(pal, star) {
     const works = workBoostState(pal, star);
     if (!works.length) return `<p class="form-help">作業適性はありません。</p>`;
     return `<div class="growth-work-grid">${works.map(work => {
-      const candidate = work.boost === "candidate";
       const changed = work.boost === "guaranteed";
-      return `<span class="growth-work-chip${changed ? " is-boosted" : ""}${candidate ? " is-candidate" : ""}"><small>${escapeHtml(work.name)}</small><strong>Lv.${escapeHtml(work.displayLevel)}</strong>${changed ? `<em>+1</em>` : candidate ? `<em>+1候補</em>` : ""}</span>`;
+      return `<span class="growth-work-chip${changed ? " is-boosted" : ""}"><small>${escapeHtml(work.name)}</small><strong>Lv.${escapeHtml(work.displayLevel)}</strong>${changed ? `<em>+1</em>` : ""}</span>`;
     }).join("")}</div>`;
   }
 
@@ -153,7 +128,7 @@
         ${starTabs(pal, star)}
         <div class="growth-star-detail">
           ${partnerStarMarkup(growth, star)}
-          <div class="growth-work-panel"><div class="growth-subheading"><strong>作業適性</strong><span>${star === 4 ? "★4は全適性+1" : star > 0 ? `★${star}は上位${star}枠まで+1` : "基礎値"}</span></div>${workPreview(pal, star)}${star > 0 && star < 4 ? `<p class="form-help growth-work-note">同じLvの適性が境界に並ぶ場合は対象候補として表示します。★4ではすべての既存適性が確実に+1されます。</p>` : ""}</div>
+          <div class="growth-work-panel"><div class="growth-subheading"><strong>作業適性</strong><span>${star === 4 ? "★4で全適性+1" : star > 0 ? `★${star}では適性Lvは基礎値のまま` : "基礎値"}</span></div>${workPreview(pal, star)}${star > 0 && star < 4 ? `<p class="form-help growth-work-note">★1〜3では作業適性Lvは変化しません。★4になると、元から持つすべての作業適性が+1されます。</p>` : ""}</div>
         </div>
       </section>
       <details class="detail-section pal-growth-section pal-growth-skills" open>
