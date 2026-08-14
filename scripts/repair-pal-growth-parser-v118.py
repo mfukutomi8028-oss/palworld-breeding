@@ -16,14 +16,14 @@ replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str,
     if not segment:
         return []
 
-    entries = re.split(r"(?=Lv\.\s*\d+\s+)", segment)
+    entries = re.split(r"(?=Lv\s*\.\s*\d+\s+)", segment)
     skills: list[dict[str, Any]] = []
     element_pattern = "|".join(sorted((re.escape(value) for value in ELEMENTS), key=len, reverse=True))
     for entry in entries:
         entry = " ".join(entry.split()).strip()
-        if not entry.startswith("Lv."):
+        if not entry.startswith("Lv"):
             continue
-        header = re.match(rf"^Lv\.\s*(\d+)\s+(.+?)\s+({element_pattern})\s+", entry)
+        header = re.match(rf"^Lv\s*\.\s*(\d+)\s+(.+?)\s+({element_pattern})\s+", entry)
         if not header:
             continue
         level = int(header.group(1))
