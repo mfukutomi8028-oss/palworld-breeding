@@ -1,0 +1,45 @@
+name: Probe v118 PalDB HTML
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install beautifulsoup4
+      - name: Probe repaired parser against Lamball
+        run: |
+          python scripts/repair-pal-growth-parser-v118.py
+          python - <<'PY'
+          import importlib.util, inspect, re
+          from bs4 import BeautifulSoup
+          spec=importlib.util.spec_from_file_location('growth','scripts/build-pal-growth-v118.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          html=mod.fetch_html('https://paldb.cc/ja/Lamball')
+          soup=BeautifulSoup(html,'html.parser')
+          text=' '.join(soup.get_text(' ',strip=True).split())
+          start=text.find('Active Skills')
+          end=text.find('Passive Skills',start+1)
+          segment=text[start+len('Active Skills'):end]
+          print('PARSER SOURCE')
+          print(inspect.getsource(mod.parse_active_skills))
+          print('SEGMENT',repr(segment[:1500]))
+          print('LV SPLITS',len(re.split(r'(?=Lv\s*\.\s*\d+\s+)',segment)))
+          print('FIRST MATCH',re.search(r'Lv\s*\.\s*(\d+)\s+',segment).group(0) if re.search(r'Lv\s*\.\s*(\d+)\s+',segment) else None)
+          skills=mod.parse_active_skills(soup)
+          print('SKILLS',skills)
+          assert len(skills)>=10, len(skills)
+          bylv={s['level']:s for s in skills}
+          assert bylv[40]['name']=='パワーボム', bylv.get(40)
+          assert bylv[40]['ct']==8 and bylv[40]['power']==120, bylv[40]
+          PY
