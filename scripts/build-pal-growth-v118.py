@@ -201,15 +201,17 @@ def parse_partner_stars(soup: BeautifulSoup) -> tuple[str, list[dict[str, Any]]]
         cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in tr.find_all(["th", "td"])]
         if not cells:
             continue
-        level_match = re.search(r"(?<!\d)([1-5])(?!\d)", cells[0])
-        if level_match:
-            current_level = int(level_match.group(1))
+        any_level = re.search(r"(?<!\d)(\d{1,2})(?!\d)", cells[0])
+        if any_level:
+            detected = int(any_level.group(1))
+            if detected < 1 or detected > 5:
+                current_level = None
+                continue
+            current_level = detected
             effect_cells = cells[1:]
         elif current_level is not None:
             effect_cells = cells
         else:
-            continue
-        if current_level < 1 or current_level > 5:
             continue
         raw = " ".join(effect_cells).strip()
         if not raw:
@@ -230,7 +232,7 @@ def parse_partner_stars(soup: BeautifulSoup) -> tuple[str, list[dict[str, Any]]]
             "star": level - 1,
             "partnerLevel": level,
             "effects": bucket["effects"][:8],
-            "rawValue": " | ".join(bucket["raw"])[:500],
+            "rawValue": " | ".join(bucket["raw"])[:300],
         })
     return partner_name, rows
 
