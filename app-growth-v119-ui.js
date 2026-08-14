@@ -65,7 +65,7 @@
       levels.set(target.name, Math.min(10, (levels.get(target.name) || 0) + 1));
     }
     if (rank >= 4) {
-      works.forEach(work => levels.set(work.name, Math.min(10, (levels.get(work.name) || 0) + 1));
+      works.forEach(work => levels.set(work.name, Math.min(10, (levels.get(work.name) || 0) + 1)));
     }
     return works.map(work => ({ ...work, level: levels.get(work.name) || 0 }));
   }
