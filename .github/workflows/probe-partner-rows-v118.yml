@@ -1,0 +1,49 @@
+name: Probe raw Partner Skill rows v118
+
+on:
+  push:
+    branches: [feature-paldex-growth-v118]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: contains(github.event.head_commit.message, 'Probe raw PalDB Partner Skill rows v118')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install beautifulsoup4
+      - name: Print raw Partner Skill rows
+        run: |
+          python - <<'PY'
+          import re, urllib.request
+          from bs4 import BeautifulSoup, Tag
+          HEADINGS=re.compile(r'^h[1-6]$',re.I)
+          def norm(v): return re.sub(r'[\s:：・_\-/]+','',str(v or '').strip().casefold())
+          for en in ['Daedream','Lifmunk','Menasting','Lamball','Cattiva']:
+            req=urllib.request.Request(f'https://paldb.cc/ja/{en}',headers={'User-Agent':'pal-breeding-note/1.0','Accept-Language':'ja'})
+            soup=BeautifulSoup(urllib.request.urlopen(req,timeout=60).read().decode('utf-8','replace'),'html.parser')
+            heading=None
+            for h in soup.find_all(HEADINGS):
+              t=' '.join(h.get_text(' ',strip=True).split())
+              if norm(t).startswith(norm('Partner Skill:')) or norm(t).startswith(norm('パートナースキル:')):
+                heading=h; break
+            print('\n===',en,'HEADING',repr(' '.join(heading.get_text(' ',strip=True).split()) if heading else None),'===')
+            count=0
+            if heading:
+              for element in heading.next_elements:
+                if isinstance(element,Tag) and HEADINGS.fullmatch(element.name or ''):
+                  title=' '.join(element.get_text(' ',strip=True).split())
+                  if norm(title) in {norm('Active Skills'),norm('Passive Skills'),norm('Possible Drops')}:
+                    print('STOP HEADING',repr(title)); break
+                if not isinstance(element,Tag) or element.name!='tr': continue
+                count+=1
+                direct=[' '.join(c.get_text(' ',strip=True).split()) for c in element.find_all(['th','td'],recursive=False)]
+                allcells=[' '.join(c.get_text(' ',strip=True).split()) for c in element.find_all(['th','td'])]
+                print('TR',count,'DIRECT',repr(direct),'ALL',repr(allcells),'HTML',str(element)[:900])
+            print('TR COUNT',count)
+          PY
