@@ -18,11 +18,23 @@ if (/##\s+v\d+\s+修正内容/u.test(readme)) throw new Error("README still cont
 const latest = changelog.match(/^##\s+v(\d+)\b/m)?.[1];
 if (latest !== version) throw new Error(`CHANGELOG latest version v${latest || "?"} does not match v${version}`);
 
-for (const asset of [`config.js?v=${version}`, `app-core.js?v=${version}`, `app-ux-v${version}.js?v=${version}`]) {
+for (const asset of [`config.js?v=${version}`, `app-core.js?v=${version}`]) {
   if (!index.includes(asset)) throw new Error(`index.html is missing current release asset: ${asset}`);
 }
 
-if (!fs.existsSync(`app-ux-v${version}.js`)) throw new Error(`Current release script app-ux-v${version}.js does not exist`);
+const refs = [...index.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css))\?v=(\d+)["']/g)];
+if (!refs.length) throw new Error("index.html has no versioned JS/CSS assets");
+for (const [, path, assetVersion] of refs) {
+  if (assetVersion !== version) throw new Error(`${path} uses v${assetVersion}, expected v${version}`);
+  if (!fs.existsSync(path)) throw new Error(`Referenced release asset does not exist: ${path}`);
+}
+
+if (version === "118") {
+  for (const path of ["app-pal-growth.js", "style-pal-growth.css", "data/pal-growth-v1.json", "scripts/validate-pal-growth-v118.mjs"]) {
+    if (!fs.existsSync(path)) throw new Error(`v118 release file is missing: ${path}`);
+  }
+}
+
 if (!fs.existsSync(`docs/V${version}_IMPLEMENTATION_PROMPT.md`)) throw new Error(`Current release implementation prompt docs/V${version}_IMPLEMENTATION_PROMPT.md does not exist`);
 
-console.log(`Site release metadata is consistent at v${version}.`);
+console.log(`Site release metadata and ${refs.length} versioned assets are consistent at v${version}.`);
