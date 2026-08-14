@@ -15,28 +15,45 @@ partner_replacement = r'''def parse_partner_stars(soup: BeautifulSoup) -> tuple[
         return "", []
     title = heading_text(heading)
     partner_name = re.split(r"[:：]", title, maxsplit=1)[1].strip() if re.search(r"[:：]", title) else ""
-    table = next_table_in_section(heading)
-    if table is None:
-        return partner_name, []
 
     grouped: dict[int, dict[str, Any]] = {}
     current_level: int | None = None
-    for tr in table.find_all("tr"):
-        cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in tr.find_all(["th", "td"])]
+    seen_rows: set[int] = set()
+
+    for element in heading.next_elements:
+        if element is heading:
+            continue
+        if isinstance(element, Tag) and HEADINGS.fullmatch(element.name or ""):
+            section_title = norm(heading_text(element))
+            if section_title in {norm("Active Skills"), norm("Passive Skills"), norm("Possible Drops"), norm("アクティブスキル"), norm("パッシブスキル"), norm("ドロップ")}:
+                break
+        if not isinstance(element, Tag) or element.name != "tr":
+            continue
+        identity = id(element)
+        if identity in seen_rows:
+            continue
+        seen_rows.add(identity)
+
+        cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in element.find_all(["th", "td"], recursive=False)]
+        if not cells:
+            cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in element.find_all(["th", "td"])]
         if not cells:
             continue
-        any_level = re.search(r"(?<!\d)(\d{1,2})(?!\d)", cells[0])
-        if any_level:
-            detected = int(any_level.group(1))
-            if detected < 1 or detected > 5:
-                current_level = None
-                continue
-            current_level = detected
+
+        header_key = norm(cells[0])
+        if header_key in {"lv", "level", "range", "value"} or any(norm(cell) in {"level", "value", "range"} for cell in cells[:2]):
+            current_level = None
+            continue
+
+        level_match = re.fullmatch(r"(?:Lv\s*\.?)?\s*([1-5])", cells[0], re.I)
+        if level_match:
+            current_level = int(level_match.group(1))
             effect_cells = cells[1:]
         elif current_level is not None:
             effect_cells = cells
         else:
             continue
+
         raw = " ".join(effect_cells).strip()
         if not raw:
             continue
