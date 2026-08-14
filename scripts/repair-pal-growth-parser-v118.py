@@ -7,9 +7,63 @@ text = path.read_text(encoding="utf-8")
 if '"Thunder": "雷",' not in text:
     text = text.replace('    "Electric": "雷",', '    "Electric": "雷", "Thunder": "雷",', 1)
 
-start = text.index("def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:")
-end = text.index("\ndef parse_record(record: dict[str, Any]) -> dict[str, Any]:", start)
-replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
+partner_start = text.index("def parse_partner_stars(soup: BeautifulSoup) -> tuple[str, list[dict[str, Any]]]:")
+partner_end = text.index("\ndef skill_headings(active_heading: Tag):", partner_start)
+partner_replacement = r'''def parse_partner_stars(soup: BeautifulSoup) -> tuple[str, list[dict[str, Any]]]:
+    heading = find_partner_heading(soup)
+    if heading is None:
+        return "", []
+    title = heading_text(heading)
+    partner_name = re.split(r"[:：]", title, maxsplit=1)[1].strip() if re.search(r"[:：]", title) else ""
+    table = next_table_in_section(heading)
+    if table is None:
+        return partner_name, []
+
+    grouped: dict[int, dict[str, Any]] = {}
+    current_level: int | None = None
+    for tr in table.find_all("tr"):
+        cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in tr.find_all(["th", "td"])]
+        if not cells:
+            continue
+        level_match = re.fullmatch(r"\s*([1-5])\s*", cells[0])
+        if level_match:
+            current_level = int(level_match.group(1))
+            effect_cells = cells[1:]
+        elif current_level is not None:
+            effect_cells = cells
+        else:
+            continue
+        if current_level < 1 or current_level > 5:
+            continue
+        raw = " ".join(effect_cells).strip()
+        if not raw:
+            continue
+        bucket = grouped.setdefault(current_level, {"raw": [], "effects": []})
+        if raw not in bucket["raw"]:
+            bucket["raw"].append(raw)
+        for effect in decode_partner_effects(raw):
+            if effect not in bucket["effects"]:
+                bucket["effects"].append(effect)
+
+    rows: list[dict[str, Any]] = []
+    for level in range(1, 6):
+        bucket = grouped.get(level)
+        if not bucket:
+            continue
+        rows.append({
+            "star": level - 1,
+            "partnerLevel": level,
+            "effects": bucket["effects"][:8],
+            "rawValue": " | ".join(bucket["raw"])[:500],
+        })
+    return partner_name, rows
+
+'''
+text = text[:partner_start] + partner_replacement + text[partner_end + 1:]
+
+active_start = text.index("def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:")
+active_end = text.index("\ndef parse_record(record: dict[str, Any]) -> dict[str, Any]:", active_start)
+active_replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
     active = find_heading(soup, lambda value: norm(value) == norm("Active Skills"))
     if active is None:
         return []
@@ -80,5 +134,7 @@ replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str,
     return sorted(deduped, key=lambda skill: (skill["level"], skill["name"]))
 
 '''
-path.write_text(text[:start] + replacement + text[end + 1:], encoding="utf-8")
+text = text[:active_start] + active_replacement + text[active_end + 1:]
+
+path.write_text(text, encoding="utf-8")
 print("Repaired", path)
