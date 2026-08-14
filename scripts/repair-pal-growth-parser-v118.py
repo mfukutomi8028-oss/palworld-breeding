@@ -16,8 +16,42 @@ partner_replacement = r'''def parse_partner_stars(soup: BeautifulSoup) -> tuple[
     title = heading_text(heading)
     partner_name = re.split(r"[:：]", title, maxsplit=1)[1].strip() if re.search(r"[:：]", title) else ""
 
+    def direct_string(cell: Tag) -> str:
+        values = [" ".join(str(value).split()) for value in cell.find_all(string=True, recursive=False)]
+        return " ".join(value for value in values if value).strip()
+
+    def text_before_nested_row(cell: Tag) -> str:
+        parts: list[str] = []
+        for child in cell.children:
+            if isinstance(child, Tag) and child.name == "tr":
+                break
+            if isinstance(child, NavigableString):
+                value = " ".join(str(child).split()).strip()
+                if value:
+                    parts.append(value)
+            elif isinstance(child, Tag):
+                # PalDB's malformed tables nest the next <tr> inside the second <td>.
+                # Only read content before that nested row.
+                nested_row = child.find("tr")
+                if nested_row is not None:
+                    for subchild in child.children:
+                        if isinstance(subchild, Tag) and subchild.name == "tr":
+                            break
+                        if isinstance(subchild, NavigableString):
+                            value = " ".join(str(subchild).split()).strip()
+                        elif isinstance(subchild, Tag):
+                            value = " ".join(subchild.get_text(" ", strip=True).split())
+                        else:
+                            value = ""
+                        if value:
+                            parts.append(value)
+                    break
+                value = " ".join(child.get_text(" ", strip=True).split())
+                if value:
+                    parts.append(value)
+        return " ".join(parts).strip()
+
     grouped: dict[int, dict[str, Any]] = {}
-    current_level: int | None = None
     seen_rows: set[int] = set()
 
     for element in heading.next_elements:
@@ -34,30 +68,33 @@ partner_replacement = r'''def parse_partner_stars(soup: BeautifulSoup) -> tuple[
             continue
         seen_rows.add(identity)
 
-        cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in element.find_all(["th", "td"], recursive=False)]
-        if not cells:
-            cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in element.find_all(["th", "td"])]
-        if not cells:
+        direct_cells = element.find_all(["th", "td"], recursive=False)
+        if not direct_cells:
+            continue
+        first_cell = direct_cells[0]
+        level_text = direct_string(first_cell)
+        if not level_text:
+            continue
+        if norm(level_text) in {"lv", "level", "range", "value"}:
+            continue
+        level_match = re.fullmatch(r"(?:Lv\s*\.?)?\s*(\d{1,2})", level_text, re.I)
+        if not level_match:
+            continue
+        level = int(level_match.group(1))
+        if level < 1 or level > 5:
             continue
 
-        header_key = norm(cells[0])
-        if header_key in {"lv", "level", "range", "value"} or any(norm(cell) in {"level", "value", "range"} for cell in cells[:2]):
-            current_level = None
-            continue
-
-        level_match = re.fullmatch(r"(?:Lv\s*\.?)?\s*([1-5])", cells[0], re.I)
-        if level_match:
-            current_level = int(level_match.group(1))
-            effect_cells = cells[1:]
-        elif current_level is not None:
-            effect_cells = cells
+        if len(direct_cells) >= 2:
+            effect_cell = direct_cells[1]
         else:
+            effect_cell = first_cell.find(["th", "td"], recursive=False)
+        if effect_cell is None:
             continue
-
-        raw = " ".join(effect_cells).strip()
+        raw = text_before_nested_row(effect_cell)
         if not raw:
             continue
-        bucket = grouped.setdefault(current_level, {"raw": [], "effects": []})
+
+        bucket = grouped.setdefault(level, {"raw": [], "effects": []})
         if raw not in bucket["raw"]:
             bucket["raw"].append(raw)
         for effect in decode_partner_effects(raw):
