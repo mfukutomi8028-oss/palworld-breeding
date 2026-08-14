@@ -25,7 +25,7 @@ partner_replacement = r'''def parse_partner_stars(soup: BeautifulSoup) -> tuple[
         cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in tr.find_all(["th", "td"])]
         if not cells:
             continue
-        level_match = re.fullmatch(r"\s*([1-5])\s*", cells[0])
+        level_match = re.search(r"(?<!\d)([1-5])(?!\d)", cells[0])
         if level_match:
             current_level = int(level_match.group(1))
             effect_cells = cells[1:]
