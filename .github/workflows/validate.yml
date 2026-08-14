@@ -136,7 +136,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Wait for current GitHub Pages deployment
         run: |
-          VERSION="$(node -e 'require("vm").runInNewContext(require("fs").readFileSync("config.js","utf8"), {window:{}}); const text=require("fs").readFileSync("config.js","utf8"); console.log(text.match(/palSiteVersion\s*=\s*["'"'](\d+)["'"']/)[1])')"
+          VERSION="$(node -p 'require("fs").readFileSync("config.js","utf8").match(/palSiteVersion\D+(\d+)/)[1]')"
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 60); do
             if curl -fsS "${URL}?check=${GITHUB_SHA}-${attempt}" | grep -q "app-ux-v${VERSION}.js?v=${VERSION}"; then
