@@ -29,8 +29,9 @@ jobs:
           node --check app-actions.js
           node --check app-ux-v118.js
           node --check app-ux-v118-work.js
-          node --check app-growth-v118-data.js
-          node --check app-growth-v118-ui.js
+          node --check app-growth-v119-data.js
+          node --check app-growth-v119-ui.js
+          node --check app-ux-v119.js
 
       - name: Confirm repository Pages source is legacy main/root
         env:

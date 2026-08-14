@@ -23,6 +23,9 @@ jobs:
           node --check app-status.js
           node --check app-data.js
           node --check app-actions.js
+          node --check app-growth-v119-data.js
+          node --check app-growth-v119-ui.js
+          node --check app-ux-v119.js
           node --check scripts/validate-v103-data.mjs
           node --check scripts/validate-pal-stats-v110.mjs
           node --check scripts/smoke-browser.mjs
@@ -30,6 +33,7 @@ jobs:
           node --check scripts/smoke-v107.mjs
           node --check scripts/smoke-hints.mjs
           node --check scripts/smoke-pal-stats-v110.mjs
+          node --check scripts/smoke-ux-v119.mjs
 
       - name: Validate entrypoint and local assets
         run: |
@@ -48,7 +52,7 @@ jobs:
           assert 'hint-v108.js' not in refs, 'Legacy hint correction is still loaded'
           assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=110' in html, 'v110 cache busting is missing'
+          assert '?v=110' in html, 'Stable legacy asset cache busting is missing'
 
           required = [
               'data/pals-v1.json',
@@ -82,7 +86,7 @@ jobs:
           ids = re.findall(r'\bid="([^"]+)"', shell)
           dup = sorted({item for item in ids if ids.count(item) > 1})
           assert not dup, f'Duplicate IDs: {dup}'
-          for path in ['style-foundation.css','style-components.css','style-responsive.css','style-discovery-v105.css']:
+          for path in ['style-foundation.css','style-components.css','style-responsive.css','style-discovery-v105.css','style-ux-v119.css']:
               text = Path(path).read_text(encoding='utf-8')
               assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
           print(f'Validated {len(ids)} unique IDs')
@@ -130,16 +134,17 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v110 deployment
+      - name: Wait for current GitHub Pages deployment
         run: |
+          VERSION="$(node -p 'require("fs").readFileSync("config.js","utf8").match(/palSiteVersion\D+(\d+)/)[1]')"
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
           for attempt in $(seq 1 60); do
-            if curl -fsS "${URL}?check=${GITHUB_SHA}-${attempt}" | grep -q 'app-discovery.js?v=110'; then
+            if curl -fsS "${URL}?check=${GITHUB_SHA}-${attempt}" | grep -q "app-ux-v${VERSION}.js?v=${VERSION}"; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v110 within the expected time."
+          echo "GitHub Pages did not publish v${VERSION} within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
