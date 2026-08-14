@@ -11,9 +11,7 @@ if (stats.count !== 299 || !Array.isArray(stats.records) || stats.records.length
 }
 
 const growthByName = new Map(growth.records.map(record => [record.enName, record]));
-const statsByName = new Map(stats.records.map(record => [record.enName, record]));
-if (growthByName.size !== 299) throw new Error("Growth record English names are not unique");
-if (statsByName.size !== 299) throw new Error("Stat record English names are not unique");
+if (growthByName.size !== 299) throw new Error("Growth snapshot English names are not unique; matching would be ambiguous");
 
 for (const record of growth.records) {
   if (!record.enName) throw new Error("Growth record without enName");
@@ -35,9 +33,16 @@ for (const record of growth.records) {
 if (Number(growth.partnerStarCoverage) !== 299) throw new Error(`Partner-star coverage ${growth.partnerStarCoverage}/299`);
 if (Number(growth.activeSkillCoverage) < 295) throw new Error(`Active-skill coverage too low: ${growth.activeSkillCoverage}/299`);
 
+function statRow(name) {
+  const matches = stats.records.filter(row => row.enName === name);
+  if (!matches.length) throw new Error(`Missing stat row: ${name}`);
+  const complete = matches.find(row => [row.hp,row.attack,row.defense,row.statTotal].every(value => Number.isFinite(Number(value))));
+  if (!complete) throw new Error(`No complete stat row for ${name}`);
+  return complete;
+}
+
 function assertStats(name, hp, attack, defense, total) {
-  const row = statsByName.get(name);
-  if (!row) throw new Error(`Missing stat row: ${name}`);
+  const row = statRow(name);
   const actual = [row.hp, row.attack, row.defense, row.statTotal].map(Number);
   const expected = [hp, attack, defense, total];
   if (actual.join(",") !== expected.join(",")) throw new Error(`${name} stats ${actual} != ${expected}`);
@@ -68,4 +73,4 @@ if (!menasting40 || menasting40.name !== "ロックランス" || Number(menastin
 const oversized = growth.records.flatMap(record => (record.activeSkills || []).filter(skill => JSON.stringify(skill).length > 1500));
 if (oversized.length) throw new Error("Growth snapshot contains unexpectedly long copied prose");
 
-console.log(`Validated v118: ${growth.records.length} Pals, Partner Skills ${growth.partnerStarCoverage}/299, Active Skills ${growth.activeSkillCoverage}/299`);
+console.log(`Validated v118: ${growth.records.length} Pals, Partner Skills ${growth.partnerStarCoverage}/299, Active Skills ${growth.activeSkillCoverage}/299; stat rows remain 299 even where English form names repeat.`);
