@@ -1,0 +1,67 @@
+name: Repair v118 growth data
+
+on:
+  push:
+    branches: [feature-paldex-growth-v118]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: contains(github.event.head_commit.message, 'Repair active skill parser')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature-paldex-growth-v118
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install beautifulsoup4
+      - name: Repair skill heading iterator
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('scripts/build-pal-growth-v118.py')
+          text=path.read_text(encoding='utf-8')
+          old='''def skill_headings(active_heading: Tag):\n    started = False\n    for tag in active_heading.find_all_next(HEADINGS):\n        if tag is active_heading:\n            started = True\n            continue\n        if not started:\n            continue\n        text = heading_text(tag)\n'''
+          new='''def skill_headings(active_heading: Tag):\n    for tag in active_heading.find_all_next(HEADINGS):\n        text = heading_text(tag)\n'''
+          if old not in text:
+              raise SystemExit('skill_headings target not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+      - name: Rebuild snapshot
+        run: python scripts/build-pal-growth-v118.py
+      - name: Validate representative data
+        run: |
+          python - <<'PY'
+          import json
+          data=json.load(open('data/pal-growth-v1.json',encoding='utf-8'))
+          assert data['count']==299
+          assert data['partnerStarCoverage']==299
+          assert data['activeSkillCoverage']>=295, data['activeSkillCoverage']
+          rows={r['enName']:r for r in data['records']}
+          lamball=rows['Lamball']
+          bylv={s['level']:s for s in lamball['activeSkills']}
+          assert bylv[40]['name']=='パワーボム', bylv.get(40)
+          assert bylv[40]['ct']==8 and bylv[40]['power']==120, bylv[40]
+          assert bylv[50]['power']==450 and bylv[70]['power']==700
+          men=rows['Menasting']
+          assert len(men['partnerSkill']['stars'])==5
+          assert any('40' in e for e in men['partnerSkill']['stars'][0]['effects'])
+          assert any('80' in e for e in men['partnerSkill']['stars'][4]['effects'])
+          assert any('5' in e for e in men['partnerSkill']['stars'][0]['effects'])
+          assert any('10' in e for e in men['partnerSkill']['stars'][4]['effects'])
+          print('coverage',data['partnerStarCoverage'],data['activeSkillCoverage'])
+          print('Lamball Lv40',bylv[40])
+          print('Menasting stars',men['partnerSkill']['stars'])
+          PY
+      - name: Commit repaired builder and fixed data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/build-pal-growth-v118.py data/pal-growth-v1.json
+          git commit -m '[v118-data] Fix active skill parser and add growth snapshot'
+          git push origin HEAD:feature-paldex-growth-v118
