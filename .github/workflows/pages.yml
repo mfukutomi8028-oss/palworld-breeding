@@ -23,17 +23,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Validate the committed v110 release
+      - name: Validate the committed release
         run: |
           test -s data/pal-stats-v1.json
           test -s data/pals-v1.json
           node scripts/validate-pal-stats-v110.mjs
+          node scripts/validate-pal-details-v111.mjs
+          node scripts/validate-pal-ui-v113.mjs
+          node scripts/validate-site-version.mjs
           node --check app-core.js
           node --check app-data.js
           node --check app-explore.js
           node --check app-actions.js
-          grep -q '?v=110' index.html
-          grep -q 'palSiteVersion = "110"' config.js
+          node --check app-ux-v118.js
+          node --check app-ux-v118-work.js
+          node --check app-growth-v118-data.js
+          node --check app-growth-v118-ui.js
 
       - name: Ensure GitHub Pages uses Actions deployments
         env:
