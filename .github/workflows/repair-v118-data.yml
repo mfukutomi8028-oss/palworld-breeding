@@ -24,13 +24,16 @@ jobs:
         run: python scripts/repair-pal-growth-parser-v118.py
       - name: Rebuild fixed PalDB snapshot
         run: python scripts/build-pal-growth-v118.py
-      - name: Validate representative data
+      - name: Validate representative data and report gaps
         run: |
           python - <<'PY'
           import json
           data=json.load(open('data/pal-growth-v1.json',encoding='utf-8'))
           assert data['count']==299
-          assert data['partnerStarCoverage']==299
+          missing=[(r['enName'],[(s.get('star'),s.get('effects')) for s in r.get('partnerSkill',{}).get('stars',[])],r.get('partnerSkill',{}).get('name')) for r in data['records'] if len(r.get('partnerSkill',{}).get('stars',[]))!=5]
+          print('PARTNER STAR GAPS',json.dumps(missing,ensure_ascii=False,indent=2))
+          assert data['partnerStarCoverage']==299, data['partnerStarCoverage']
+          assert not missing, missing
           assert data['activeSkillCoverage']>=295, data['activeSkillCoverage']
           rows={r['enName']:r for r in data['records']}
           lamball=rows['Lamball']
