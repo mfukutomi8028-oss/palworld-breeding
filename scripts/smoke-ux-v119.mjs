@@ -85,7 +85,7 @@ const statText = (await page.locator("#palDetail .pal-stats-rank-v118").innerTex
 if (!statText.includes("位 / 299")) throw new Error(`Stat ranks were not rendered: ${statText}`);
 
 const sourceText = (await page.locator("#palDetail").innerText()).replace(/\s+/g, " ");
-for (const hiddenText of ["PalDBの種族別係数", "参照: PalDB", "palworld-kb", "固定データ取得日"]) {
+for (const hiddenText of ["PalDB", "参照:", "palworld-kb", "固定データ取得日", "ゲーム抽出データ"]) {
   if (sourceText.includes(hiddenText)) throw new Error(`Visible source label remained: ${hiddenText}`);
 }
 
