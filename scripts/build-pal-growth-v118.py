@@ -27,7 +27,7 @@ HEADINGS = re.compile(r"^h[1-6]$", re.I)
 ELEMENTS = {"無属性", "炎属性", "水属性", "草属性", "雷属性", "氷属性", "地属性", "闇属性", "竜属性"}
 ELEMENT_CODE = {
     "Normal": "無", "Fire": "炎", "Aqua": "水", "Water": "水", "Leaf": "草",
-    "Electric": "雷", "Ice": "氷", "Earth": "地", "Ground": "地", "Dark": "闇", "Dragon": "竜",
+    "Electric": "雷", "Thunder": "雷", "Ice": "氷", "Earth": "地", "Ground": "地", "Dark": "闇", "Dragon": "竜",
 }
 
 
@@ -192,29 +192,47 @@ def parse_partner_stars(soup: BeautifulSoup) -> tuple[str, list[dict[str, Any]]]
     title = heading_text(heading)
     partner_name = re.split(r"[:：]", title, maxsplit=1)[1].strip() if re.search(r"[:：]", title) else ""
     table = next_table_in_section(heading)
-    rows: list[dict[str, Any]] = []
     if table is None:
-        return partner_name, rows
+        return partner_name, []
+
+    grouped: dict[int, dict[str, Any]] = {}
+    current_level: int | None = None
     for tr in table.find_all("tr"):
         cells = [" ".join(cell.get_text(" ", strip=True).split()) for cell in tr.find_all(["th", "td"])]
-        if len(cells) < 2:
+        if not cells:
             continue
-        match = re.search(r"\d+", cells[0])
-        if not match:
+        level_match = re.search(r"(?<!\d)([1-5])(?!\d)", cells[0])
+        if level_match:
+            current_level = int(level_match.group(1))
+            effect_cells = cells[1:]
+        elif current_level is not None:
+            effect_cells = cells
+        else:
             continue
-        level = int(match.group())
-        if level < 1 or level > 5:
+        if current_level < 1 or current_level > 5:
             continue
-        raw = " ".join(cells[1:]).strip()
+        raw = " ".join(effect_cells).strip()
+        if not raw:
+            continue
+        bucket = grouped.setdefault(current_level, {"raw": [], "effects": []})
+        if raw not in bucket["raw"]:
+            bucket["raw"].append(raw)
+        for effect in decode_partner_effects(raw):
+            if effect not in bucket["effects"]:
+                bucket["effects"].append(effect)
+
+    rows: list[dict[str, Any]] = []
+    for level in range(1, 6):
+        bucket = grouped.get(level)
+        if not bucket:
+            continue
         rows.append({
             "star": level - 1,
             "partnerLevel": level,
-            "effects": decode_partner_effects(raw),
-            "rawValue": raw[:300],
+            "effects": bucket["effects"][:8],
+            "rawValue": " | ".join(bucket["raw"])[:500],
         })
-    rows.sort(key=lambda row: row["star"])
-    return partner_name, rows[:5]
-
+    return partner_name, rows
 
 def skill_headings(active_heading: Tag):
     started = False
@@ -251,26 +269,48 @@ def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
     active = find_heading(soup, lambda value: norm(value) == norm("Active Skills"))
     if active is None:
         return []
-    skills: list[dict[str, Any]] = []
-    for heading, level, name in skill_headings(active):
-        tokens = section_tokens(heading)
-        joined = " ".join(tokens)
-        element = next((token for token in tokens if token in ELEMENTS), "")
-        power_match = re.search(r"威力\s*[:：]?\s*(\d+)", joined)
-        power = int(power_match.group(1)) if power_match else None
-        ct = None
-        power_index = next((i for i, token in enumerate(tokens) if token.startswith("威力")), len(tokens))
-        for token in reversed(tokens[:power_index]):
-            value = re.fullmatch(r"(?:Image\s*:\s*)?(\d+)", token)
-            if value:
-                ct = int(value.group(1))
+
+    tokens: list[str] = []
+    for element in active.next_elements:
+        if element is active:
+            continue
+        if isinstance(element, Tag) and HEADINGS.fullmatch(element.name or ""):
+            title = norm(heading_text(element))
+            if title in {norm("Passive Skills"), norm("Possible Drops"), norm("パッシブスキル"), norm("ドロップ")}:
                 break
+        if isinstance(element, NavigableString):
+            value = " ".join(str(element).split()).strip()
+            if value:
+                tokens.append(value)
+    segment = " ".join(tokens).strip()
+    if not segment:
+        return []
+
+    entries = re.split(r"(?=Lv\s*\.\s*\d+\s+)", segment)
+    skills: list[dict[str, Any]] = []
+    element_pattern = "|".join(sorted((re.escape(value) for value in ELEMENTS), key=len, reverse=True))
+    for entry in entries:
+        entry = " ".join(entry.split()).strip()
+        if not entry.startswith("Lv"):
+            continue
+        header = re.match(rf"^Lv\s*\.\s*(\d+)\s+(.+?)\s+({element_pattern})\s+", entry)
+        if not header:
+            continue
+        level = int(header.group(1))
+        name = header.group(2).strip()
+        element = header.group(3).strip()
+        rest = entry[header.end():].strip()
+        power_match = re.search(r"威力\s*[:：]\s*(\d+)", rest)
+        power = int(power_match.group(1)) if power_match else None
+        before_power = rest[:power_match.start()] if power_match else rest
+        ct_matches = re.findall(r"(?<!\d)(\d+)(?!\d)", before_power)
+        ct = int(ct_matches[-1]) if ct_matches else None
         statuses: list[dict[str, Any]] = []
-        for match in re.finditer(r"蓄積値\s*[:：]?\s*([^\d]+?)\s+(\d+)", joined):
+        for match in re.finditer(r"蓄積値\s*[:：]\s*([^\d]+?)\s+(\d+)", rest):
             label = " ".join(match.group(1).split()).strip(" :：")
             if label:
                 statuses.append({"name": label[:30], "value": int(match.group(2))})
-        effects = effect_tags_from_text(joined)
+        effects = effect_tags_from_text(rest)
         for status in statuses:
             label = f"{status['name']} {status['value']}"
             if label not in effects:
@@ -282,9 +322,9 @@ def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
             "ct": ct,
             "power": power,
             "effects": effects[:6],
-            "exclusive": "専用スキル" in joined,
+            "exclusive": "専用スキル" in rest,
         })
-    # PalDB may render the same Active Skills section twice; dedupe by level/name.
+
     deduped: list[dict[str, Any]] = []
     seen = set()
     for skill in skills:
@@ -294,7 +334,6 @@ def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
         seen.add(key)
         deduped.append(skill)
     return sorted(deduped, key=lambda skill: (skill["level"], skill["name"]))
-
 
 def parse_record(record: dict[str, Any]) -> dict[str, Any]:
     en_url = str(record.get("sourceUrl") or "").strip()
