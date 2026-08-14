@@ -23,13 +23,19 @@ jobs:
           node --check app-status.js
           node --check app-data.js
           node --check app-actions.js
+          node --check app-pal-details-v111.js
+          node --check app-ux-v117.js
+          node --check app-pal-growth.js
           node --check scripts/validate-v103-data.mjs
           node --check scripts/validate-pal-stats-v110.mjs
+          node --check scripts/validate-pal-growth-v118.mjs
+          node --check scripts/validate-site-version.mjs
           node --check scripts/smoke-browser.mjs
           node --check scripts/smoke-browser-http-aware.mjs
           node --check scripts/smoke-v107.mjs
           node --check scripts/smoke-hints.mjs
           node --check scripts/smoke-pal-stats-v110.mjs
+          node --check scripts/smoke-pal-growth-v118.mjs
 
       - name: Validate entrypoint and local assets
         run: |
@@ -41,23 +47,24 @@ jobs:
           refs = re.findall(r'(?:src|href)="([^"]+\.(?:js|css))(?:\?[^\"]*)?"', html)
           missing = [ref for ref in refs if not Path(ref).exists()]
           assert not missing, f'Missing entrypoint files: {missing}'
-          assert 'app-data.js' in refs, 'Local-first data runtime is not loaded'
-          assert 'app-status.js' in refs, 'Separated status reporting is not loaded'
-          assert 'app-discovery.js' in refs, 'Discovery runtime is not loaded'
-          assert 'app-discovery-shell.js' in refs, 'Discovery shell is not loaded'
+          for required_ref in ['app-data.js','app-status.js','app-discovery.js','app-discovery-shell.js','app-pal-details-v111.js','app-ux-v117.js','app-pal-growth.js','style-pal-growth.css']:
+              assert required_ref in refs, f'Missing release reference: {required_ref}'
           assert 'hint-v108.js' not in refs, 'Legacy hint correction is still loaded'
-          assert 'style-discovery-v105.css' in refs, 'Discovery styles are not loaded'
           assert 'pal-images.js' not in refs, 'The broken v102 loader is still referenced'
-          assert '?v=110' in html, 'v110 cache busting is missing'
+          versions = set(re.findall(r'\?v=(\d+)', html))
+          assert versions == {'118'}, f'Expected only v118 cache busting, got {versions}'
 
           required = [
               'data/pals-v1.json',
               'data/pal-stats-v1.json',
+              'data/pal-growth-v1.json',
+              'data/pal-details-v1.json',
               'data/pal-localization-ja-v1.json',
               'data/breeding-v1.json',
               'data/pal-images-v1.json',
               'data/SOURCES.md',
               'assets/unknown-pal-v8.svg',
+              'docs/V118_IMPLEMENTATION_PROMPT.md',
           ]
           missing_required = [path for path in required if not Path(path).exists()]
           assert not missing_required, f'Missing local data/assets: {missing_required}'
@@ -82,16 +89,18 @@ jobs:
           ids = re.findall(r'\bid="([^"]+)"', shell)
           dup = sorted({item for item in ids if ids.count(item) > 1})
           assert not dup, f'Duplicate IDs: {dup}'
-          for path in ['style-foundation.css','style-components.css','style-responsive.css','style-discovery-v105.css']:
+          for path in ['style-foundation.css','style-components.css','style-responsive.css','style-discovery-v105.css','style-pal-details-v111.css','style-ux-v116.css','style-pal-growth.css']:
               text = Path(path).read_text(encoding='utf-8')
               assert text.count('{') == text.count('}'), f'Unbalanced braces: {path}'
           print(f'Validated {len(ids)} unique IDs')
           PY
 
-      - name: Validate local Palworld data, images, and PalDB species stats
+      - name: Validate local Palworld data, fixed PalDB stats and v118 growth data
         run: |
           node scripts/validate-v103-data.mjs
           node scripts/validate-pal-stats-v110.mjs
+          node scripts/validate-pal-growth-v118.mjs
+          node scripts/validate-site-version.mjs
 
       - name: Install browser test runtime
         run: |
@@ -119,6 +128,7 @@ jobs:
           node scripts/smoke-v107.mjs
           node scripts/smoke-hints.mjs
           node scripts/smoke-pal-stats-v110.mjs
+          node scripts/smoke-pal-growth-v118.mjs
 
   public-pages-smoke:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -130,16 +140,17 @@ jobs:
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for GitHub Pages v110 deployment
+      - name: Wait for GitHub Pages v118 deployment
         run: |
           URL="https://mfukutomi8028-oss.github.io/palworld-breeding/index.html"
-          for attempt in $(seq 1 60); do
-            if curl -fsS "${URL}?check=${GITHUB_SHA}-${attempt}" | grep -q 'app-discovery.js?v=110'; then
+          for attempt in $(seq 1 90); do
+            body="$(curl -fsS "${URL}?check=${GITHUB_SHA}-${attempt}-$(date +%s)" || true)"
+            if echo "$body" | grep -q 'app-pal-growth.js?v=118'; then
               exit 0
             fi
             sleep 10
           done
-          echo "GitHub Pages did not publish v110 within the expected time."
+          echo "GitHub Pages did not publish v118 within the expected time."
           exit 1
       - name: Test published GitHub Pages
         env:
@@ -149,3 +160,4 @@ jobs:
           node scripts/smoke-v107.mjs
           node scripts/smoke-hints.mjs
           node scripts/smoke-pal-stats-v110.mjs
+          node scripts/smoke-pal-growth-v118.mjs
