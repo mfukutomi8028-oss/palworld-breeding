@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   build:
-    if: ${{ !contains(github.event.pull_request.head.sha, '[v118-data]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +50,7 @@ jobs:
           print('Menasting ★0',star0)
           print('Menasting ★4',star4)
           PY
-      - name: Commit repaired builder and fixed snapshot
+      - name: Commit repaired builder and fixed snapshot safely
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -61,4 +60,6 @@ jobs:
             exit 0
           fi
           git commit -m '[v118-data] Add validated PalDB growth snapshot'
+          git fetch origin feature-paldex-growth-v118
+          git rebase origin/feature-paldex-growth-v118
           git push origin HEAD:feature-paldex-growth-v118
