@@ -16,29 +16,30 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install beautifulsoup4
-      - name: Print Lamball PalDB heading structure
+      - name: Probe repaired parser against Lamball
         run: |
+          python scripts/repair-pal-growth-parser-v118.py
           python - <<'PY'
-          import re, urllib.request
+          import importlib.util, inspect, re
           from bs4 import BeautifulSoup
-          url='https://paldb.cc/ja/Lamball'
-          req=urllib.request.Request(url,headers={'User-Agent':'pal-breeding-note/1.0','Accept-Language':'ja'})
-          html=urllib.request.urlopen(req,timeout=60).read().decode('utf-8','replace')
+          spec=importlib.util.spec_from_file_location('growth','scripts/build-pal-growth-v118.py')
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          html=mod.fetch_html('https://paldb.cc/ja/Lamball')
           soup=BeautifulSoup(html,'html.parser')
-          print('HTML bytes',len(html))
-          print('HEADINGS')
-          for h in soup.find_all(re.compile(r'^h[1-6]$',re.I)):
-              print(h.name,repr(' '.join(h.get_text(' ',strip=True).split())))
-          print('TEXT MATCHES')
-          for needle in ['Active Skills','アクティブ','Lv. 40','パワーボム','コロコロモコロン']:
-              print(needle, html.find(needle), soup.get_text(' ',strip=True).find(needle))
           text=' '.join(soup.get_text(' ',strip=True).split())
-          idx=text.find('パワーボム')
-          print('CONTEXT',repr(text[max(0,idx-500):idx+1200]))
-          print('PARENTS')
-          node=soup.find(string=lambda s:s and 'パワーボム' in s)
-          for i in range(8):
-              if node is None: break
-              node=node.parent
-              print(i,node.name if node else None,repr(' '.join(node.get_text(' ',strip=True).split())[:1200]) if node else '')
+          start=text.find('Active Skills')
+          end=text.find('Passive Skills',start+1)
+          segment=text[start+len('Active Skills'):end]
+          print('PARSER SOURCE')
+          print(inspect.getsource(mod.parse_active_skills))
+          print('SEGMENT',repr(segment[:1500]))
+          print('LV SPLITS',len(re.split(r'(?=Lv\s*\.\s*\d+\s+)',segment)))
+          print('FIRST MATCH',re.search(r'Lv\s*\.\s*(\d+)\s+',segment).group(0) if re.search(r'Lv\s*\.\s*(\d+)\s+',segment) else None)
+          skills=mod.parse_active_skills(soup)
+          print('SKILLS',skills)
+          assert len(skills)>=10, len(skills)
+          bylv={s['level']:s for s in skills}
+          assert bylv[40]['name']=='パワーボム', bylv.get(40)
+          assert bylv[40]['ct']==8 and bylv[40]['power']==120, bylv[40]
           PY
