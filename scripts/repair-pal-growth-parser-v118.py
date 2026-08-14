@@ -3,6 +3,10 @@ from pathlib import Path
 
 path = Path(__file__).with_name("build-pal-growth-v118.py")
 text = path.read_text(encoding="utf-8")
+
+if '"Thunder": "雷",' not in text:
+    text = text.replace('    "Electric": "雷",', '    "Electric": "雷", "Thunder": "雷",', 1)
+
 start = text.index("def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:")
 end = text.index("\ndef parse_record(record: dict[str, Any]) -> dict[str, Any]:", start)
 replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
