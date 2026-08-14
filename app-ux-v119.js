@@ -128,6 +128,9 @@
 
   function cleanSourceLabels(root = document) {
     root.querySelectorAll(".pal-extra-source,.progression-source-v118").forEach(node => node.remove());
+    root.querySelectorAll(".pal-extra-heading .section-kicker").forEach(node => {
+      if (/PalDB/i.test(node.textContent || "")) node.textContent = "PAL PROFILE";
+    });
     root.querySelectorAll(".form-help,.progression-note-v118").forEach(node => {
       const text = node.textContent || "";
       if (/PalDB|参照:|出典ページ|固定データ取得日|ゲーム抽出データ|palworld-kb/i.test(text)) node.remove();
