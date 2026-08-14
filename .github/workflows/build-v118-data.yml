@@ -1,0 +1,51 @@
+name: Build v118 Pal growth data
+
+on:
+  push:
+    branches: [feature-paldex-growth-v118]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ !contains(github.event.head_commit.message, '[v118-data]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature-paldex-growth-v118
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install beautifulsoup4
+      - name: Build fixed PalDB growth snapshot
+        run: python scripts/build-pal-growth-v118.py
+      - name: Validate key PalDB examples
+        run: |
+          python - <<'PY'
+          import json
+          data=json.load(open('data/pal-growth-v1.json',encoding='utf-8'))
+          assert data['count']==299
+          rows={r['enName']:r for r in data['records']}
+          lamball=rows['Lamball']
+          levels=[s['level'] for s in lamball['activeSkills']]
+          assert 40 in levels and 50 in levels and 70 in levels, levels
+          menasting=rows['Menasting']
+          assert len(menasting['partnerSkill']['stars'])==5, menasting['partnerSkill']
+          star0=' '.join(menasting['partnerSkill']['stars'][0]['effects'])
+          star4=' '.join(menasting['partnerSkill']['stars'][4]['effects'])
+          assert '40' in star0 and '5' in star0, star0
+          assert '80' in star4 and '10' in star4, star4
+          print('Coverage',data['partnerStarCoverage'],data['activeSkillCoverage'])
+          print('Menasting ★0',star0)
+          print('Menasting ★4',star4)
+          PY
+      - name: Commit generated snapshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/pal-growth-v1.json
+          git commit -m '[v118-data] Add fixed PalDB growth snapshot'
+          git push origin HEAD:feature-paldex-growth-v118
