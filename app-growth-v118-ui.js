@@ -4,10 +4,10 @@
   const growth = window.PalGrowthV118;
   if (!growth) return;
   const originalRenderPalDetail = window.renderPalDetail;
-  const ELEMENT_JA = { Neutral: "無", Normal: "無", Fire: "炎", Water: "水", Electric: "雷", Electricity: "雷", Grass: "草", Ice: "氷", Ground: "地", Dark: "闇", Dragon: "竜" };
+  const ELEMENT_JA = { Neutral: "無", Normal: "無", Fire: "炎", Water: "水", Electric: "雷", Electricity: "雷", Thunder: "雷", Grass: "草", Ice: "氷", Ground: "地", Dark: "闇", Dragon: "竜" };
 
   function effectLabel(key, index) {
-    const elements = { Fire: "炎", Water: "水", Electric: "雷", Electricity: "雷", Grass: "草", Ice: "氷", Ground: "地", Dark: "闇", Dragon: "竜", Normal: "無" };
+    const elements = { Fire: "炎", Water: "水", Electric: "雷", Electricity: "雷", Thunder: "雷", Grass: "草", Ice: "氷", Ground: "地", Dark: "闇", Dragon: "竜", Normal: "無" };
     if (/TrainerDEF/i.test(key)) return "プレイヤー防御力";
     if (/TrainerATK/i.test(key)) return "プレイヤー攻撃力";
     if (/TrainerHP/i.test(key)) return "プレイヤーHP";
