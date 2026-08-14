@@ -78,17 +78,20 @@ if (JSON.stringify(lamballActual) !== JSON.stringify(lamballExpected)) {
   fail(`Lamball verification failed: ${JSON.stringify(lamballActual)}`);
 }
 
+const config = fs.readFileSync("config.js", "utf8");
+const version = config.match(/window\.palSiteVersion\s*=\s*["'](\d+)["']/)?.[1];
+if (!version) fail("Site version is missing from config.js");
 const index = fs.readFileSync("index.html", "utf8");
-const actionsPosition = index.indexOf("app-actions.js?v=110");
-const detailsPosition = index.indexOf("app-pal-details-v111.js?v=111");
-if (!index.includes("style-pal-details-v111.css?v=111")) fail("v111 detail CSS is not loaded");
+const actionsPosition = index.indexOf(`app-actions.js?v=${version}`);
+const detailsPosition = index.indexOf(`app-pal-details-v111.js?v=${version}`);
+if (!index.includes(`style-pal-details-v111.css?v=${version}`)) fail(`Pal detail CSS is not loaded with v${version} cache busting`);
 if (actionsPosition < 0 || detailsPosition < 0 || detailsPosition < actionsPosition) {
-  fail("v111 detail runtime must load after app-actions.js");
+  fail("Pal detail runtime must load after app-actions.js");
 }
 
 const runtime = fs.readFileSync("app-pal-details-v111.js", "utf8");
 for (const required of ["paldexPurpose", "rideSprintDesc", "palCompareDialog", "partnerSkill", "mountTypes", "pal-details-v1.json?v=111"]) {
-  if (!runtime.includes(required)) fail(`v111 runtime is missing ${required}`);
+  if (!runtime.includes(required)) fail(`v111 detail runtime is missing ${required}`);
 }
 
 const css = fs.readFileSync("style-pal-details-v111.css", "utf8");
@@ -99,4 +102,4 @@ if (!hintSmoke.includes('audit.murakumo !== "MRKM"') || !hintSmoke.includes('aud
   fail("Required romaji-consonant hint examples are not under regression test");
 }
 
-console.log(`Validated 299 Pal details. Partner skills=${partnerNameCount}, drops=${dropCount}, mounts=${groundCount}/${airCount}/${waterCount}.`);
+console.log(`Validated 299 Pal details against site v${version}. Partner skills=${partnerNameCount}, drops=${dropCount}, mounts=${groundCount}/${airCount}/${waterCount}.`);
