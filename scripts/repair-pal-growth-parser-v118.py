@@ -6,13 +6,23 @@ text = path.read_text(encoding="utf-8")
 start = text.index("def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:")
 end = text.index("\ndef parse_record(record: dict[str, Any]) -> dict[str, Any]:", start)
 replacement = r'''def parse_active_skills(soup: BeautifulSoup) -> list[dict[str, Any]]:
-    text = " ".join(soup.get_text(" ", strip=True).split())
-    start = text.find("Active Skills")
-    if start < 0:
+    active = find_heading(soup, lambda value: norm(value) == norm("Active Skills"))
+    if active is None:
         return []
-    end_candidates = [index for label in ("Passive Skills", "Possible Drops") if (index := text.find(label, start + 1)) >= 0]
-    end = min(end_candidates) if end_candidates else len(text)
-    segment = text[start + len("Active Skills"):end].strip()
+
+    tokens: list[str] = []
+    for element in active.next_elements:
+        if element is active:
+            continue
+        if isinstance(element, Tag) and HEADINGS.fullmatch(element.name or ""):
+            title = norm(heading_text(element))
+            if title in {norm("Passive Skills"), norm("Possible Drops"), norm("パッシブスキル"), norm("ドロップ")}:
+                break
+        if isinstance(element, NavigableString):
+            value = " ".join(str(element).split()).strip()
+            if value:
+                tokens.append(value)
+    segment = " ".join(tokens).strip()
     if not segment:
         return []
 
