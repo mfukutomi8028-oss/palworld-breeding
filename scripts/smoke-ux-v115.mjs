@@ -31,29 +31,18 @@ const palId = await page.evaluate(() => {
   return pal.id;
 });
 
-await page.waitForFunction(() => {
-  const selectors = [
-    "#paldexGrid .element-icon-v113",
-    "#paldexGrid .pal-card-work-icons-v113 .work-icon-v113",
-  ];
-  return selectors.every(selector => [...document.querySelectorAll(selector)].some(node => {
-    const rect = node.getBoundingClientRect();
-    const style = getComputedStyle(node);
-    return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden";
-  }));
-}, null, { timeout: 60000 });
-
 async function visibleSize(selector, label) {
-  const box = await page.locator(selector).evaluateAll(nodes => {
-    for (const node of nodes) {
+  const handle = await page.waitForFunction(sel => {
+    for (const node of document.querySelectorAll(sel)) {
       const rect = node.getBoundingClientRect();
       const style = getComputedStyle(node);
       if (rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden") {
         return { width: rect.width, height: rect.height };
       }
     }
-    return null;
-  });
+    return false;
+  }, selector, { timeout: 60000 });
+  const box = await handle.jsonValue();
   if (!box) throw new Error(`${label} is not visible`);
   return box;
 }
@@ -63,6 +52,9 @@ function within(box, min, max, label) {
   }
 }
 
+// Capture each size atomically at the moment a visible icon exists. The Paldex
+// may rebuild cards asynchronously while rich data finishes loading, so a
+// separate "wait, then query" sequence can race with that rebuild.
 within(await visibleSize("#paldexGrid .element-icon-v113", "Paldex card element icon"), 18, 24, "Paldex card element icon");
 within(await visibleSize("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113", "Paldex card work icon"), 17, 22, "Paldex card work icon");
 
