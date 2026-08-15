@@ -20,18 +20,33 @@ await page.addInitScript(roomId => {
 await page.goto(`${baseUrl}#room=${room}`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForFunction(() => document.querySelector("#app")?.dataset.ready === "true", null, { timeout: 60000 });
 await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close()));
-
 await page.evaluate(() => {
   const current = window.eval("state");
   current.guideUnlocked = true;
-  current.selectedPalId = getPal("モコロン").id;
   switchView("paldex");
   renderPaldex();
 });
+await page.waitForSelector("#paldexGrid .paldex-card-shell-v120");
+
+const openProfileByName = async name => {
+  const card = page.locator("#paldexGrid [data-pal-detail]", { hasText: name }).first();
+  await card.waitFor();
+  const shell = card.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+  await shell.locator("[data-pal-profile-open]").click();
+  await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 10000 });
+};
+
+const closeProfile = async () => {
+  await page.locator("#palDetail [data-pal-profile-close]").click();
+  await page.waitForFunction(() => !document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 10000 });
+  await page.waitForSelector("#paldexGrid .paldex-card-shell-v120");
+};
+
+await openProfileByName("モコロン");
 await page.waitForFunction(() => document.querySelector("#palDetail .partner-skill-card-v113")?.textContent.includes("羊毛"), null, { timeout: 60000 });
 
-if (!(await page.locator('#palDetail .pal-detail-hero [data-pal-profile-open]').isVisible())) throw new Error("Prominent detail-page action is missing from the Pal hero");
-if (!(await page.locator('#palDetail .pal-detail-hero [data-compare-pal]').isVisible())) throw new Error("Prominent comparison action is missing from the Pal hero");
+if (!(await page.locator('#palDetail .pal-primary-actions-v113 [data-compare-pal]').isVisible())) throw new Error("Prominent comparison action is missing from the Pal profile");
+if (!(await page.locator('#palDetail .pal-primary-actions-v113 [data-pal-breeding-target]').isVisible())) throw new Error("Prominent breeding action is missing from the Pal profile");
 const lowActionVisible = await page.locator("#palDetail .pal-extra-heading__actions").evaluateAll(nodes => nodes.some(node => getComputedStyle(node).display !== "none"));
 if (lowActionVisible) throw new Error("Legacy low-position Pal actions are still visible");
 
@@ -56,8 +71,8 @@ const elementSrc = await page.locator("#palDetail .element-icon-v113").first().g
 if (!elementSrc?.includes("T_Icon_element_s_00.webp")) throw new Error(`Unexpected Neutral icon: ${elementSrc}`);
 const workSrc = await page.locator("#palDetail .work-icon-v113").first().getAttribute("src");
 if (!workSrc?.includes("T_icon_palwork_")) throw new Error(`Unexpected work icon: ${workSrc}`);
-const previewElementBox = await page.locator("#palDetail .element-icon-v113").first().boundingBox();
-if (!previewElementBox || previewElementBox.width > 24 || previewElementBox.height > 24) throw new Error(`Preview element icon is oversized: ${JSON.stringify(previewElementBox)}`);
+const profileElementBoxInitial = await page.locator("#palDetail .element-icon-v113").first().boundingBox();
+if (!profileElementBoxInitial || profileElementBoxInitial.width > 24 || profileElementBoxInitial.height > 24) throw new Error(`Profile element icon is oversized: ${JSON.stringify(profileElementBoxInitial)}`);
 
 const drops = page.locator("#palDetail .pal-extra-v111 details", { hasText: "主なドロップ" });
 await drops.evaluate(node => { node.open = true; });
@@ -68,13 +83,8 @@ if (!woolText.includes("1–3") || !woolText.includes("100%")) throw new Error(`
 const woolIcon = await woolRow.locator(".pal-drop-icon-image-v113").getAttribute("src");
 if (!woolIcon?.includes("T_itemicon_Material_Wool.webp")) throw new Error(`Unexpected Wool icon: ${woolIcon}`);
 
-// Regression fixture requested from the live PalDB Lyleen page: item names,
-// quantities, level conditions and the Lv.80 boss marker must remain separate.
-await page.evaluate(() => {
-  const current = window.eval("state");
-  current.selectedPalId = getPal("リリクイン").id;
-  renderPaldex();
-});
+await closeProfile();
+await openProfileByName("リリクイン");
 await page.waitForFunction(() => document.querySelectorAll("#palDetail .pal-drop-row-v113").length >= 20, null, { timeout: 10000 });
 const lyleenRows = await page.locator("#palDetail .pal-drop-row-v113").evaluateAll(rows => rows.map(row => ({
   item: row.querySelector(".pal-drop-name-v113")?.textContent?.trim() || "",
@@ -93,11 +103,12 @@ if (!grass80 || grass80.quantity !== "10–20" || grass80.probability !== "100%"
 if (!grass80.conditionIcon.includes("/conditions/")) throw new Error(`Lyleen Lv.80 boss condition icon missing: ${JSON.stringify(grass80)}`);
 if (lyleenRows.some(row => /\s\d+(?:[–-]\d+)?$/.test(row.item))) throw new Error(`Quantity leaked into Lyleen item label: ${JSON.stringify(lyleenRows.filter(row => /\s\d+(?:[–-]\d+)?$/.test(row.item)).slice(0, 3))}`);
 
+await closeProfile();
 const workIconsOnCards = await page.locator("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113").count();
 if (workIconsOnCards < 1) throw new Error("Paldex cards do not show work-suitability icons");
 
 const cattiva = page.locator('#paldexGrid [data-pal-detail="002"]');
-await cattiva.dblclick();
+await cattiva.dblclick({ delay: 60 });
 await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 10000 });
 const route = await page.evaluate(() => ({ hash: location.hash, selected: window.eval("state").selectedPalId }));
 const params = new URLSearchParams(route.hash.replace(/^#/, ""));
@@ -115,4 +126,4 @@ if (overflow > 2) throw new Error(`Mobile horizontal overflow detected: ${overfl
 if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
 await context.close();
 await browser.close();
-console.log("UX v114 smoke tests passed: partner icon visibility, element sizing, structured drop levels/conditions, existing actions, and mobile layout.");
+console.log("UX v114 smoke tests passed: full-profile partner icons, structured drops, card work icons, double-click routing, and mobile layout.");
