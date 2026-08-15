@@ -68,7 +68,11 @@ for (let index = 1; index < hpAsc.length; index += 1) {
   }
 }
 
-await lamballCard.click();
+const currentLamballCard = page.locator('#paldexGrid .pal-card-button:has-text("モコロン")').first();
+const lamballShell = currentLamballCard.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+await lamballShell.locator("[data-pal-profile-open]").click();
+await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 5000 });
+await page.waitForSelector("#palDetail .pal-stats--detail strong");
 const detailValues = await page.locator("#palDetail .pal-stats--detail strong").allTextContents();
 if (detailValues.join("/") !== "70/70/70/210") {
   throw new Error(`Lamball detail stats are incorrect: ${detailValues.join("/")}`);
@@ -76,4 +80,4 @@ if (detailValues.join("/") !== "70/70/70/210") {
 if (errors.length) throw new Error(errors.join(" | "));
 
 await browser.close();
-console.log("Paldex PalDB stat display and sorting smoke test passed.");
+console.log("Paldex PalDB stat display, sorting, and full-profile detail smoke test passed.");
