@@ -42,10 +42,20 @@ await page.evaluate(() => document.querySelector("#recordDialog")?.close());
 await page.evaluate(() => {
   const current = window.eval("state");
   current.guideUnlocked = true;
-  current.selectedPalId = getPal("モコロン").id;
   switchView("paldex");
   renderPaldex();
 });
+await page.waitForSelector("#paldexGrid .paldex-card-shell-v120");
+
+const openLamballProfile = async () => {
+  const card = page.locator("#paldexGrid [data-pal-detail]", { hasText: "モコロン" }).first();
+  await card.waitFor();
+  const shell = card.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+  await shell.locator("[data-pal-profile-open]").click();
+  await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 5000 });
+};
+
+await openLamballProfile();
 await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("モコモコの盾"));
 await page.waitForFunction(() => document.querySelector("#palDetail .pal-advanced-stats-v112"), null, { timeout: 60000 });
 let detailText = await page.locator("#palDetail").innerText();
@@ -61,19 +71,18 @@ for (const expected of ["近接攻撃係数", "捕獲補正", "オス確率"]) {
   if (!detailText.includes(expected)) throw new Error(`Opened advanced stats are missing: ${expected}`);
 }
 
-await page.fill("#paldexSearch", "モコロン");
-await page.selectOption("#paldexSort", "attackDesc");
-await page.click("#paldexResetFilters");
-if (await page.inputValue("#paldexSearch") !== "") throw new Error("Paldex reset did not clear search");
-if (await page.inputValue("#paldexSort") !== "numberAsc") throw new Error("Paldex reset did not restore number sort");
-
-await page.locator('#palDetail [data-pal-profile-open]').click();
-await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"));
 if (!new URLSearchParams((await page.evaluate(() => location.hash)).replace(/^#/, "")).get("pal")) throw new Error("Pal profile deep link was not added to the URL");
 if (!(await page.locator("#palDetail .pal-profile-nav-v112").isVisible())) throw new Error("Pal profile navigation is not visible");
 if (!(await page.locator("#palDetail [data-pal-breeding-target]").count())) throw new Error("Pal profile breeding shortcut is missing");
 await page.locator("#palDetail [data-pal-profile-close]").click();
 await page.waitForFunction(() => !document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"));
+await page.waitForSelector("#paldexGrid .paldex-card-shell-v120");
+
+await page.fill("#paldexSearch", "モコロン");
+await page.selectOption("#paldexSort", "attackDesc");
+await page.click("#paldexResetFilters");
+if (await page.inputValue("#paldexSearch") !== "") throw new Error("Paldex reset did not clear search");
+if (await page.inputValue("#paldexSort") !== "numberAsc") throw new Error("Paldex reset did not restore number sort");
 
 const lamballId = await page.evaluate(() => getPal("モコロン").id);
 await page.goto(`${baseUrl}#room=${room}&pal=${encodeURIComponent(lamballId)}`, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -90,4 +99,4 @@ if (overflow > 2) throw new Error(`Mobile horizontal overflow detected: ${overfl
 if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
 await context.close();
 await browser.close();
-console.log("UX v112 smoke tests passed: compact egg picker, cleaner Paldex detail, deep-link profiles, reset controls, and mobile layout.");
+console.log("UX v112 smoke tests passed: compact egg picker, full Paldex profiles, deep links, reset controls, and mobile layout.");

@@ -26,7 +26,6 @@ const palId = await page.evaluate(() => {
   const current = window.eval("state");
   current.guideUnlocked = true;
   const pal = getPal("モコロン");
-  current.selectedPalId = pal.id;
   switchView("paldex");
   renderPaldex();
   return pal.id;
@@ -36,8 +35,6 @@ await page.waitForFunction(() => {
   const selectors = [
     "#paldexGrid .element-icon-v113",
     "#paldexGrid .pal-card-work-icons-v113 .work-icon-v113",
-    "#palDetail .element-icon-v113",
-    "#palDetail .work-icon-v113",
   ];
   return selectors.every(selector => [...document.querySelectorAll(selector)].some(node => {
     const rect = node.getBoundingClientRect();
@@ -68,12 +65,10 @@ function within(box, min, max, label) {
 
 within(await visibleSize("#paldexGrid .element-icon-v113", "Paldex card element icon"), 18, 24, "Paldex card element icon");
 within(await visibleSize("#paldexGrid .pal-card-work-icons-v113 .work-icon-v113", "Paldex card work icon"), 17, 22, "Paldex card work icon");
-within(await visibleSize("#palDetail .element-icon-v113", "Preview element icon"), 20, 24, "Preview element icon");
-within(await visibleSize("#palDetail .work-icon-v113", "Preview work icon"), 18, 22, "Preview work icon");
-const portrait = await page.locator("#palDetail .pal-detail-hero > img").first().boundingBox();
-if (!portrait || portrait.width < 100 || portrait.height < 100) throw new Error(`Main Pal portrait was accidentally reduced: ${JSON.stringify(portrait)}`);
 
-await page.locator("#palDetail [data-pal-profile-open]").click();
+const lamballCard = page.locator("#paldexGrid [data-pal-detail]", { hasText: "モコロン" }).first();
+const lamballShell = lamballCard.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+await lamballShell.locator("[data-pal-profile-open]").click();
 await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 10000 });
 const profileRoute = await page.evaluate(() => ({
   view: window.eval("state").currentView,
@@ -84,6 +79,8 @@ if (profileRoute.view !== "paldex" || new URLSearchParams(profileRoute.hash.repl
 }
 within(await visibleSize("#palDetail .element-icon-v113", "Profile element icon"), 20, 24, "Profile element icon");
 within(await visibleSize("#palDetail .work-icon-v113", "Profile work icon"), 18, 22, "Profile work icon");
+const portrait = await page.locator("#palDetail .pal-detail-hero > img").first().boundingBox();
+if (!portrait || portrait.width < 100 || portrait.height < 100) throw new Error(`Main Pal portrait was accidentally reduced: ${JSON.stringify(portrait)}`);
 
 // Regression: leaving a profile through the left navigation must not be bounced
 // back to Paldex by the remaining `pal` hash parameter.
@@ -117,4 +114,4 @@ if (restored.selected !== palId || restored.view !== "paldex") throw new Error(`
 if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
 await context.close();
 await browser.close();
-console.log("UX v115 smoke tests passed: larger element/work icons, profile exit navigation, room preservation, and deep-link restoration.");
+console.log("UX v115 smoke tests passed: larger card/profile icons, profile exit navigation, room preservation, and deep-link restoration.");

@@ -26,15 +26,16 @@
     return response.json();
   }
 
-  function localized(payload) {
-    const map = {};
-    for (const [key, row] of Object.entries(payload || {})) {
-      if (!key.startsWith("ACTION_SKILL_")) continue;
-      const id = key.slice(13);
-      const text = row?.TextData?.LocalizedString ?? row?.TextData?.SourceString ?? "";
-      if (id && text) map[id] = String(text).replace(/\r?\n/g, " ").trim();
+  async function jsonFallback(urls) {
+    let lastError = null;
+    for (const url of urls) {
+      try {
+        return await json(url);
+      } catch (error) {
+        lastError = error;
+      }
     }
-    return map;
+    throw lastError || new Error("No JSON source was available");
   }
 
   function extractedRows(payload) {
@@ -44,6 +45,27 @@
       return rows;
     }
     return payload?.Rows || payload || {};
+  }
+
+  function cleanLocalizedText(value) {
+    return String(value || "")
+      .replace(/\r?\n/g, " ")
+      .replace(/<characterName\s+id=\|[^|]+\|\s*\/>/gi, "")
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+  }
+
+  function localized(payload) {
+    const map = {};
+    for (const [key, row] of Object.entries(extractedRows(payload))) {
+      if (!key.startsWith("ACTION_SKILL_")) continue;
+      const id = key.slice(13);
+      const text = row?.TextData?.LocalizedString ?? row?.TextData?.SourceString ?? "";
+      const cleaned = cleanLocalizedText(text);
+      if (id && cleaned && cleaned !== "-") map[id] = cleaned;
+    }
+    return map;
   }
 
   function learnsets(payload) {
@@ -82,8 +104,8 @@
       json(`${EXTRACTED_BASE}/Waza/DT_WazaMasterLevel.json`),
       json(`${PALEDIT_BASE}/en-GB/attacks.json`),
       json(ACTIVE_SOURCE),
-      json(`${C2T_BASE}/DataTable/Text/SkillNameText.json`),
-      json(`${C2T_BASE}/DataTable/Text/SkillDescText.json`),
+      jsonFallback([`${EXTRACTED_BASE}/Text/DT_SkillNameText.json`, `${C2T_BASE}/DataTable/Text/SkillNameText.json`]),
+      jsonFallback([`${EXTRACTED_BASE}/Text/DT_SkillDescText.json`, `${C2T_BASE}/DataTable/Text/SkillDescText.json`]),
     ]).then(([partner, level, attackNames, active, names, desc]) => {
       data.partner = new Map(Object.entries(partner?.partnerSkills || {}));
       data.learnsets = learnsets(level);

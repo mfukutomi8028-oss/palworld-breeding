@@ -50,12 +50,12 @@ if (!hintFixture.reverseHasHiddenMissing) throw new Error("Reverse Japanese hint
 await page.evaluate(() => {
   const current = window.eval("state");
   current.guideUnlocked = true;
-  current.selectedPalId = getPal("モコロン").id;
   switchView("paldex");
   renderPaldex();
 });
-await page.waitForFunction(() => document.querySelector("#palDetail [data-compare-pal]"), null, { timeout: 60000 });
-await page.locator("#palDetail [data-compare-pal]").first().click();
+const lamballCard = page.locator("#paldexGrid [data-pal-detail]", { hasText: "モコロン" }).first();
+const lamballShell = lamballCard.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+await lamballShell.locator("[data-compare-pal]").click();
 await page.waitForFunction(() => document.querySelectorAll("#palCompareTray [data-compare-remove]").length === 1, null, { timeout: 10000 });
 if (!(await page.locator("#palCompareTray").isVisible())) throw new Error("Compare tray should be visible inside Paldex after selection");
 
@@ -91,4 +91,4 @@ if (overflow > 2) throw new Error(`Mobile horizontal overflow detected: ${overfl
 if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
 await context.close();
 await browser.close();
-console.log("UX v116 smoke tests passed: Japanese hint reveal, scoped compare tray, current site version, and mobile layout.");
+console.log("UX v116 smoke tests passed: Japanese hint reveal, card-based compare tray, current site version, and mobile layout.");
