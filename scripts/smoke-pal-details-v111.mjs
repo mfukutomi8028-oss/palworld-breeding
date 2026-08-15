@@ -19,16 +19,30 @@ await page.addInitScript(roomId => {
 }, room);
 await page.goto(`${baseUrl}#room=${room}`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForFunction(() => document.querySelector("#app")?.dataset.ready === "true", null, { timeout: 60000 });
-await page.waitForFunction(() => document.querySelector("#paldexPurpose") && document.querySelector('[data-extra-pal-id]'), null, { timeout: 60000 });
+await page.waitForFunction(() => document.querySelector("#paldexPurpose") && document.querySelector("#paldexGrid .paldex-card-shell-v120"), null, { timeout: 60000 });
 await page.evaluate(() => document.querySelectorAll("dialog[open]").forEach(dialog => dialog.close()));
+
+const openProfileByName = async name => {
+  const card = page.locator("#paldexGrid [data-pal-detail]", { hasText: name }).first();
+  await card.waitFor();
+  const shell = card.locator("xpath=ancestor::article[contains(@class,'paldex-card-shell-v120')]");
+  await shell.locator("[data-pal-profile-open]").click();
+  await page.waitForFunction(() => document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 5000 });
+};
+
+const closeProfile = async () => {
+  await page.locator("#palDetail [data-pal-profile-close]").click();
+  await page.waitForFunction(() => !document.querySelector("#view-paldex")?.classList.contains("is-pal-profile-open"), null, { timeout: 5000 });
+  await page.waitForSelector("#paldexGrid .paldex-card-shell-v120");
+};
 
 await page.evaluate(() => {
   const current = window.eval("state");
   current.guideUnlocked = true;
-  current.selectedPalId = getPal("モコロン").id;
   switchView("paldex");
   renderPaldex();
 });
+await openProfileByName("モコロン");
 await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("モコモコの盾"));
 
 const lamballText = await page.locator("#palDetail").innerText();
@@ -39,11 +53,8 @@ if (!(await page.locator('#paldexSort option[value="rideSprintDesc"]').count()))
 if (!(await page.locator('#paldexPurpose option[value="air"]').count())) throw new Error("Purpose filters are missing");
 
 await page.locator('#palDetail [data-compare-pal]').click();
-await page.evaluate(() => {
-  const current = window.eval("state");
-  current.selectedPalId = getPal("ツッパニャン").id;
-  renderPaldex();
-});
+await closeProfile();
+await openProfileByName("ツッパニャン");
 await page.waitForFunction(() => document.querySelector("#palDetail")?.textContent.includes("猫の手も借りたい"));
 await page.locator('#palDetail [data-compare-pal]').click();
 if (await page.locator("#palCompareItems .pal-compare-chip").count() !== 2) throw new Error("Two Pals were not added to comparison");
@@ -53,6 +64,7 @@ if (await page.locator("#palCompareDialog thead th").count() !== 3) throw new Er
 if (!(await page.locator("#palCompareDialog tbody th", { hasText: "食事量" }).count())) throw new Error("Food comparison row is missing");
 await page.evaluate(() => document.querySelector("#palCompareDialog")?.close());
 
+await closeProfile();
 await page.selectOption("#paldexPurpose", "air");
 await page.waitForTimeout(100);
 const filteredCount = await page.locator("#paldexGrid [data-pal-detail]").count();
@@ -66,4 +78,4 @@ if (overflow > 2) throw new Error(`Mobile horizontal overflow detected: ${overfl
 if (errors.length) throw new Error(`Browser errors: ${errors.join(" | ")}`);
 await context.close();
 await browser.close();
-console.log("Pal detail v111 smoke tests passed: fixed data, filters, sorting, comparison, and mobile layout.");
+console.log("Pal detail smoke tests passed: full-profile fixed data, filters, sorting, comparison, and mobile layout.");
