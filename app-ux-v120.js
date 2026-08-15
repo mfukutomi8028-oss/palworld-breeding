@@ -123,6 +123,10 @@
 
     const root = byId("palDetail");
     if (isProfileOpen()) {
+      // Full-profile rendering rebuilds the hidden Paldex grid. Decorate that
+      // grid too so closing the profile immediately restores the v120 card
+      // actions without requiring another render cycle.
+      decoratePaldexCards();
       if (root && !root.querySelector(".pal-detail-hero")) originalRenderPalDetail(root);
       rehomeWorkGrowth(root);
       return;
